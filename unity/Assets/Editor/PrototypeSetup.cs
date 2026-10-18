@@ -28,7 +28,7 @@ namespace Expedition.EditorTools
         {
             EditorSettings.serializationMode = SerializationMode.ForceText;
             PlayerSettings.companyName = "ExpeditionPrototype";
-            PlayerSettings.productName = "Expedition Combat Prototype";
+            PlayerSettings.productName = "Ember Expedition Prototype";
             PlayerSettings.bundleVersion = "0.0.1";
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
             PlayerSettings.allowedAutorotateToPortrait = false;

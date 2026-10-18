@@ -1,4 +1,4 @@
-# 원정 전투 시제품 · Unity
+# Ember Expedition · Unity 전투 시제품
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 
@@ -43,6 +43,7 @@ Unity에서 열기 위한 프로젝트 소스를 준비했다. **이 PC에 Unity
 | `Assets/Resources/Art` | 기존 컨셉 아트와 제작 기록 |
 | `Assets/Resources/Audio` | 합성 WAV와 출처 기록 |
 | `../tools/synthesize-combat-audio.py` | 효과음 재생성 |
+| `../tools/check-unity-project.ps1` | 설치된 에디터로 일괄 임포트·컴파일·설정 검증 |
 | `../tests/CombatCoreSmoke/run-smoke.ps1` | Windows 기본 C# 컴파일러로 전투 규칙 검증 |
 
 첫 실행에서 씬 생성·셰이더·텍스처·폰트·배치·공격 타이밍과 효과음을 확인한다. 그다음 Buddy2에서 터치와 백그라운드 복귀를 확인한다. 캐릭터는 정지 이미지를 움직이는 단계이며 걷기·공격의 프레임 애니메이션은 아직 없다. 영입·보상·승급·원정 진행·저장·광고도 후속 작업이다. 앱을 닫으면 현재 전투가 보존되지 않는다.

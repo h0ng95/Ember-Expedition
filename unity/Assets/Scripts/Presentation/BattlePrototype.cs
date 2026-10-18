@@ -364,7 +364,7 @@ namespace Expedition.Presentation
                 new Vector3(viewport.width / UiWidth, viewport.height / UiHeight, 1));
             Fill(new Rect(0, 0, UiWidth, 88), new Color(.035f, .08f, .075f, .95f));
             Fill(new Rect(0, 588, UiWidth, 132), new Color(.035f, .08f, .075f, .96f));
-            GUI.Label(new Rect(26, 10, 650, 40), "EXPEDITION / COMBAT LAB", titleStyle);
+            GUI.Label(new Rect(26, 10, 650, 40), "EMBER EXPEDITION / COMBAT LAB", titleStyle);
             GUI.Label(new Rect(28, 51, 720, 30), running ? "TWO ALLIES  /  ONE ENEMY  /  " + simulation.Elapsed.ToString("0.0") + "s" : "PREPARATION  /  DRAG YOUR ALLIES", smallStyle);
             if (GUI.Button(new Rect(970, 17, 130, 55), lowFrameRate ? "30 FPS" : "60 FPS", buttonStyle))
             { lowFrameRate = !lowFrameRate; Application.targetFrameRate = lowFrameRate ? 30 : 60; }

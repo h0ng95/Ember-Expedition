@@ -1,0 +1,6 @@
+{
+  "name": "Expedition.Core",
+  "rootNamespace": "Expedition.Core",
+  "references": [],
+  "noEngineReferences": true
+}

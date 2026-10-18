@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#142f2d">
+  <title>심층 원정대 — 첫 번째 UI 시안</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-compass" viewBox="0 0 24 24"><path d="M8 2h8v3h3v3h3v8h-3v3h-3v3H8v-3H5v-3H2V8h3V5h3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m15 7-2 6-6 4 3-7z" fill="currentColor"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><path d="M7 3h10v3h3v12h-3v3H7v-3H4V6h3z" fill="currentColor"/><path d="M9 7h6v10H9zm3 0v10" fill="none" stroke="#80552d" stroke-width="2"/></symbol>
+  <symbol id="i-swords" viewBox="0 0 24 24"><path d="m4 3 3 1 11 12-2 2L4 7zm16 0-3 1L6 16l2 2L20 7zM3 17l4 4m10-4 4 4M5 19l-3 3m17-3 3 3" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5h7l2 2 2-2h7v15h-7l-2 2-2-2H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v15M6 9h3m6 0h3M6 13h3m6 0h3" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M3 12h17m-7-7 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z" fill="currentColor"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M4 3h16v12l-8 7-8-7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v12M7 11h10" stroke="currentColor" stroke-width="2"/></symbol>
+</defs></svg>
+
+<main class="design-study">
+  <header class="study-header">
+    <div class="study-identity"><svg class="study-mark"><use href="#i-compass"/></svg><div><strong>심층 원정대</strong><span>EXPEDITION · UI CONCEPT 01</span></div></div>
+    <nav class="preview-nav" aria-label="시안 화면 미리보기">
+      <button type="button" data-preview="prep" aria-pressed="true"><span>01</span> 전투 준비</button>
+      <button type="button" data-preview="battle" aria-pressed="false"><span>02</span> 자동 전투</button>
+      <button type="button" data-preview="reward" aria-pressed="false"><span>03</span> 보상 선택</button>
+    </nav>
+    <span class="draft-label"><i></i> 첫 번째 디자인 제안</span>
+  </header>
+
+  <section id="game" class="game" data-phase="prep" aria-label="심층 원정대 가로 게임 UI 시안">
+    <div class="world-background" aria-hidden="true"></div>
+    <div class="world-shade" aria-hidden="true"></div>
+    <div class="corner corner-tl" aria-hidden="true"></div><div class="corner corner-tr" aria-hidden="true"></div><div class="corner corner-bl" aria-hidden="true"></div><div class="corner corner-br" aria-hidden="true"></div>
+
+    <header class="game-hud">
+      <div class="location"><span class="chapter">Ⅰ</span><div><span class="region-label">제1구역 · 잊힌 숲</span><strong>이끼숲의 입구</strong></div></div>
+      <div class="route" aria-label="원정 진행"><span class="route-dot done"></span><i></i><span class="route-dot done"></span><i></i><span class="route-dot done"></span><i></i><span class="route-dot current" id="wave">4</span><i></i><svg class="boss-mark"><use href="#i-swords"/></svg><span class="route-total">/ 15</span></div>
+      <div class="hud-actions"><span class="gold-count" aria-label="보유 골드"><svg><use href="#i-coin"/></svg><strong id="gold">18</strong></span><button type="button" id="pause-button" class="icon-button" aria-label="일시정지"><svg><use href="#i-pause"/></svg></button></div>
+    </header>
+
+    <div class="phase-heading"><span id="phase-kicker">PREPARE YOUR PARTY</span><h1 id="phase-title">한 걸음 더, 숲의 안쪽으로</h1><p id="phase-hint">동료를 끌어 전투를 준비하세요.</p></div>
+    <button type="button" id="scout-button" class="enemy-scout" aria-label="적의 특징: 가시 껍질 상세 보기"><span class="scout-icon">!</span><span><small>다음 적의 특징</small><strong>가시 껍질</strong><span class="scout-description">가까운 적에게 피해를 되돌립니다.</span></span></button>
+
+    <div id="field" class="field" aria-label="전장. 동료를 선택하고 끌어서 배치합니다.">
+      <div id="deploy-zone" class="deploy-zone" aria-hidden="true"><span>아군 배치 영역</span><i class="zone-corner tl"></i><i class="zone-corner tr"></i><i class="zone-corner bl"></i><i class="zone-corner br"></i></div>
+      <div id="range-ring" class="range-ring" aria-hidden="true"></div>
+      <div id="units"></div>
+      <span class="field-divider" aria-hidden="true">· · ·</span>
+    </div>
+
+    <div class="battle-status"><span class="live-dot"></span> 전투 진행 중 <button type="button" id="speed-button" aria-label="전투 속도 변경">1×</button></div>
+
+    <footer class="command-dock">
+      <section id="selection-panel" class="selection-panel" aria-label="선택한 동료">
+        <div class="portrait-frame"><span id="unit-portrait" class="sprite sprite-1"></span></div>
+        <div class="unit-identity"><span id="unit-role">수호 · 전방</span><h2 id="unit-name">브란</h2><div class="unit-stats"><span><b class="stat-heart">♥</b> <b id="unit-hp">180</b></span><span><svg><use href="#i-swords"/></svg><b id="unit-atk">24</b></span></div></div>
+        <div class="unit-skill"><span>동료 특성</span><p id="unit-description">주변 동료가 받는 피해를 줄여줍니다.</p></div>
+      </section>
+      <div class="dock-actions"><button type="button" id="tactic-button" class="tactic-button"><svg><use href="#i-book"/></svg><span>원정 전술<small>보호의 등불</small></span></button><button type="button" id="start-battle" class="primary-button"><svg><use href="#i-swords"/></svg><span>전투 시작<small>출전 5 / 5</small></span><svg class="start-arrow"><use href="#i-arrow"/></svg></button></div>
+    </footer>
+
+    <section id="reward-overlay" class="reward-overlay" aria-label="전투 보상 선택" hidden>
+      <header class="reward-heading"><span class="ornament">✦</span><small>VICTORY</small><h2>숲이 건넨 작은 선물</h2><p>원정에 함께할 보상 하나를 선택하세요.</p><span class="victory-gold"><svg><use href="#i-coin"/></svg> 전투 승리 <b id="reward-gold">+4</b></span></header>
+      <div id="reward-options" class="reward-options"></div>
+      <footer class="reward-footer"><p id="reward-description" aria-live="polite">보상을 선택하면 효과를 확인할 수 있습니다.</p><button type="button" id="reward-confirm" class="primary-button" disabled><span>선택한 보상 받기</span><svg><use href="#i-arrow"/></svg></button></footer>
+    </section>
+
+    <div id="modal" class="modal-backdrop" hidden><section class="modal-window" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button type="button" id="modal-close" class="icon-button modal-close" aria-label="닫기">×</button><span class="modal-kicker">EXPEDITION</span><h2 id="modal-title">원정 전술</h2><div id="modal-body"></div></section></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div class="rotate-note"><svg><use href="#i-compass"/></svg><strong>조금 더 넓은 전장으로</strong><span>휴대폰을 가로로 돌려주세요.</span></div>
+  </section>
+
+  <footer class="study-footer"><p><span class="tiny-diamond">◆</span> 캐릭터를 드래그하고, 전투와 보상 선택까지 경험해 보세요.</p><div><span class="palette"><i></i><i></i><i></i><i></i></span><span>숲의 유적 · 도트 아트 · 가로 화면</span></div></footer>
+</main>
+</body>
+</html>

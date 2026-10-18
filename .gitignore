@@ -1,0 +1,35 @@
+# Generated Unity files; source assets and .meta files should be tracked.
+unity/[Ll]ibrary/
+unity/[Tt]emp/
+unity/[Oo]bj/
+unity/[Bb]uilds/
+unity/[Ll]ogs/
+unity/[Uu]ser[Ss]ettings/
+unity/[Mm]emoryCaptures/
+unity/[Rr]ecordings/
+unity/[Cc]rashReports/
+unity/*.csproj
+unity/*.sln
+unity/*.slnx
+unity/.vs/
+unity/.idea/
+unity/*.user
+unity/*.suo
+tests/**/bin/
+tests/**/obj/
+tests/**/out/
+*.keystore
+*.jks
+
+# Local reference captures belong to their respective games and are not project assets.
+docs/references/
+
+# Local credentials, caches, and machine-specific scratch files.
+.env
+.env.*
+!.env.example
+.local-tools/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

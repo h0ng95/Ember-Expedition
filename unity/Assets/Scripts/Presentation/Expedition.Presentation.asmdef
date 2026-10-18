@@ -1,0 +1,5 @@
+{
+  "name": "Expedition.Presentation",
+  "rootNamespace": "Expedition.Presentation",
+  "references": ["Expedition.Core"]
+}

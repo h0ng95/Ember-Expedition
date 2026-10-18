@@ -1,0 +1,30 @@
+ORIGINAL SYNTHESIZED PROTOTYPE AUDIO
+
+These five WAV files were synthesized specifically for this project using only
+Python standard-library math, seeded pseudorandom noise, struct, and wave.
+No recordings, external sound libraries, downloaded music, or sampled assets
+were used. There are no third-party source-audio attribution requirements.
+
+Generator: tools/synthesize-combat-audio.py (relative to the repository root)
+Regenerate: python tools/synthesize-combat-audio.py
+Verify only: python tools/synthesize-combat-audio.py --verify-only
+
+Format: mono, 44,100 Hz, signed 16-bit PCM WAV; silent endpoints with smooth fades.
+Every sound has an independent, fixed random seed. Peak amplitude is below 0.65.
+
+File              Seconds  Target peak  Seed       Synthesis
+melee_hit.wav       0.25       0.62      2026101    Low falling thud + damped inharmonic metal
+arrow_launch.wav    0.15       0.45      2026102    Filtered noise rush + falling string tone
+arrow_hit.wav       0.15       0.52      2026103    Damped wooden tones + short bright tick
+defeat.wav          0.30       0.48      2026104    Soft falling synth tone
+ui_confirm.wav      0.10       0.35      2026105    Two short rising sine notes
+
+Unity resource paths omit the .wav extension:
+Audio/melee_hit, Audio/arrow_launch, Audio/arrow_hit, Audio/defeat, Audio/ui_confirm
+
+Validation: the generator checks channel count, sample rate, PCM format,
+duration, sample peak, non-silent content, and quiet/silent edges.
+An audible listening review and an actual Unity/Android playback test have not
+been performed. These are first-pass assets for an in-game listening review.
+Per-voice headroom does not prevent clipping when many sounds overlap: runtime
+mixing still needs conservative gain, concurrent-voice limits, and device review.

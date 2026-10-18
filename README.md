@@ -27,9 +27,9 @@
 | `ui/` | 브라우저에서 검토하는 초기 화면 시안 |
 | `docs/` | 게임 기획서와 전투 연출 분석 |
 
-[첫 전투 조작과 검증 범위](unity/FIRST-SLICE.md) · [현재 중세 판타지 게임 기획서](docs/ember-expedition-design-v0.6.md) · [읽기용 기획서](docs/ember-expedition-design-v0.6.html) · [Slotbound 비교](docs/slotbound-comparison-v0.4.md) · [이전 동양풍 검토안](docs/ember-expedition-design-v0.5.md) · [UI 시안](ui/README.md)
+[첫 전투 조작과 검증 범위](unity/FIRST-SLICE.md) · [월드맵·스테이지 기획 v0.7](docs/stage-plan-v0.7/잔불원정대-월드맵-스테이지-기획.md) · [중세 판타지 기획서 v0.6](docs/ember-expedition-design-v0.6.md) · [읽기용 기획서](docs/ember-expedition-design-v0.6.html) · [Slotbound 비교](docs/slotbound-comparison-v0.4.md) · [이전 동양풍 검토안](docs/ember-expedition-design-v0.5.md) · [UI 시안](ui/README.md)
 
-현재 기획의 중심은 **조합·연쇄 효과의 성장과 배치·보스 공략**이다. 테마는 중세 판타지로 정했고, 0.6에서는 방패 기사·등불 사제·불꽃 마법사로 시작하는 훈련·특성 전승·분기 진화를 설계한다. 기존 도트 시안의 장점을 살려 캐릭터를 다듬는다. 첫 조합의 한 전투가 구현됐으며, 6전투 원정·영입·나머지 계열과 보스는 후속 단계다.
+현재 기획의 중심은 **조합·연쇄 효과의 성장과 배치·보스 공략**이다. 테마는 중세 판타지로 정했고, 0.6에서는 방패 기사·등불 사제·불꽃 마법사로 시작하는 훈련·특성 전승·분기 진화를 설계했다. 0.7에서는 월드맵에서 고르는 짧은 스테이지와 점수·별을 제안한다. 기존 도트 시안의 장점을 살려 캐릭터를 다듬는다. 현재는 첫 조합의 한 전투만 구현됐고, 월드맵·무작위 영입·별 평가는 후속 단계다.
 
 ## 아트와 출처
 

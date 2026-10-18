@@ -23,11 +23,13 @@
 | --- | --- |
 | `unity/` | 실제 게임 시제품 소스, 설정, 컨셉 아트와 합성 효과음 |
 | `tests/CombatCoreSmoke/` | 명중·투사체·표적 변경·배속·전투 종료 규칙 검증 |
-| `tools/` | 효과음 제작 도구 |
+| `tools/` | 효과음 제작, Unity 검증과 기획 문서 생성 도구 |
 | `ui/` | 브라우저에서 검토하는 초기 화면 시안 |
 | `docs/` | 게임 기획서와 전투 연출 분석 |
 
-[현재 기획서](docs/mobile-autobattler-plan-v0.3.md) · [읽기용 기획서](docs/mobile-autobattler-plan-v0.3.html) · [UI 시안](ui/README.md)
+[현재 기획 정리와 Slotbound 비교](docs/slotbound-comparison-v0.4.md) · [읽기용 비교 문서](docs/slotbound-comparison-v0.4.html) · [이전 0.3 기획](docs/mobile-autobattler-plan-v0.3.md) · [UI 시안](ui/README.md)
+
+현재 기획의 중심은 **조합·연쇄 효과의 성장과 배치·보스 공략**이다. 0.3의 인원·전투 수·경제 수치는 검증 전 제안이며, 0.4 비교안에서 성장·전승·진화 구조를 다시 검토한다. 추가 게임 구현은 기획을 정리한 뒤 이어간다.
 
 ## 아트와 출처
 

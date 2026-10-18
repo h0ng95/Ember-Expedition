@@ -40,6 +40,6 @@
 - `main`에서 작동하는 단위로 커밋한다. 작업 규모가 커지면 별도 작업 브랜치를 사용한다.
 - Unity의 `Assets/`, `Packages/`, `ProjectSettings/`와 모든 `.meta` 파일을 함께 관리한다. 첫 에디터 임포트에서 생성되는 `.meta`도 커밋한다.
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
-- Git 원격 저장소 연결과 Unity 실행 검증 상태는 실제 작업 결과로 확인한다. 원격 연결 전에는 이 PC에만 이력이 저장된다.
+- 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
 아직 영입·보상·승급·원정 진행·저장·광고를 연결한 완성 게임은 아니다. 단계별 검증 후 확장한다.

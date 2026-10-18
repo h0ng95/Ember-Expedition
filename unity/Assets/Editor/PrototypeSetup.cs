@@ -43,9 +43,15 @@ namespace Expedition.EditorTools
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.OpenGLES3 });
             PlayerSettings.colorSpace = ColorSpace.Gamma;
-            QualitySettings.vSyncCount = 0;
-            QualitySettings.antiAliasing = 0;
-            QualitySettings.shadows = ShadowQuality.Disable;
+            int originalQuality = QualitySettings.GetQualityLevel();
+            for (int i = 0; i < QualitySettings.names.Length; i++)
+            {
+                QualitySettings.SetQualityLevel(i, false);
+                QualitySettings.vSyncCount = 0;
+                QualitySettings.antiAliasing = 0;
+                QualitySettings.shadows = ShadowQuality.Disable;
+            }
+            QualitySettings.SetQualityLevel(originalQuality, false);
 
             // Ensure Shader.Find works in a player even if no scene material references the shader yet.
             var shader = Shader.Find("Expedition/HitFlash");

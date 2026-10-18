@@ -39,7 +39,7 @@ namespace Expedition.Presentation
         readonly List<Effect> effects = new List<Effect>();
         readonly List<Number> numbers = new List<Number>();
         readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
-        readonly MaterialPropertyBlock flashBlock = new MaterialPropertyBlock();
+        MaterialPropertyBlock flashBlock;
         readonly AudioSource[] voices = new AudioSource[6];
         readonly List<Sprite> ownedSprites = new List<Sprite>();
         Camera gameCamera;
@@ -65,6 +65,7 @@ namespace Expedition.Presentation
 
         void Awake()
         {
+            flashBlock = new MaterialPropertyBlock();
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
             Screen.autorotateToPortrait = false;

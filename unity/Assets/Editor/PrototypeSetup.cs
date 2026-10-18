@@ -37,6 +37,9 @@ namespace Expedition.EditorTools
             PlayerSettings.allowedAutorotateToLandscapeRight = true;
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.expeditionprototype.combatdemo");
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
+            // Runtime-created components and the built-in IMGUI skin must survive prototype builds.
+            // An incremental stripped build omitted MonoScript (class ID 115) on the test device.
+            PlayerSettings.stripEngineCode = false;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
             PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
@@ -102,7 +105,7 @@ namespace Expedition.EditorTools
                 scenes = new[] { ScenePath },
                 target = BuildTarget.Android,
                 locationPathName = "Builds/Android/expedition-combat-prototype.apk",
-                options = BuildOptions.Development
+                options = BuildOptions.Development | BuildOptions.CleanBuildCache
             });
             if (report.summary.result != BuildResult.Succeeded)
                 throw new InvalidOperationException("Android build failed: " + report.summary.result);

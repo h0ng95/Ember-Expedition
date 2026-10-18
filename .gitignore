@@ -13,6 +13,7 @@ unity/*.sln
 unity/*.slnx
 unity/.vs/
 unity/.idea/
+unity/.utmp/
 unity/*.user
 unity/*.suo
 tests/**/bin/

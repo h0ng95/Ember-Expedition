@@ -369,7 +369,7 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(28, 51, 720, 30), running ? "TWO ALLIES  /  ONE ENEMY  /  " + simulation.Elapsed.ToString("0.0") + "s" : "PREPARATION  /  DRAG YOUR ALLIES", smallStyle);
             if (GUI.Button(new Rect(970, 17, 130, 55), lowFrameRate ? "30 FPS" : "60 FPS", buttonStyle))
             { lowFrameRate = !lowFrameRate; Application.targetFrameRate = lowFrameRate ? 30 : 60; }
-            if (GUI.Button(new Rect(1116, 17, 138, 55), muted ? "SOUND OFF" : "SOUND ON", buttonStyle))
+            if (GUI.Button(new Rect(1116, 17, 138, 55), muted ? "MUTED" : "SOUND ON", buttonStyle))
             { muted = !muted; foreach (var voice in voices) voice.mute = muted; }
             if (!running)
             {

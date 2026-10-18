@@ -23,6 +23,13 @@ Covered behavior:
    seconds in both schedules.
 5. Identical spawn positions separate without NaN positions or leaving bounds.
 6. An already-finished battle emits its result once and does not advance time.
+7. Shield expiry, replacement, direct break, and a surviving counter defender follow distinct rules.
+8. The priest moves into shield range; the gate golem locks its warning direction and strikes a cone from a stable origin.
+9. Burn ticks and stack updates continue when a target receives frequent reapplications.
+10. Training, native-trait inheritance, evolution choice, and undo restore the expected preparation state.
+
+The current runner covers 14 scenarios with 285 assertions. The first-combo
+prototype contains one boss fight; the six-fight expedition is still planned.
 
 These checks cover combat logic. They do not measure Unity rendering, Android
 performance, input, audio, installation, or gameplay balance.

@@ -1,10 +1,12 @@
 # Ember Expedition · Unity 전투 시제품
 
+> 2026-10-18 첫 조합 전투 구간의 현재 조작과 구현 범위는 [FIRST-SLICE.md](FIRST-SLICE.md)를 참고한다. 아래 기기 점검 기록은 이전 기사·궁수 시제품의 기록이다.
+
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 
 ## 현재 상태
 
-Unity 6000.3.24f1에서 **임포트·C# 컴파일·씬 생성, Android APK 빌드와 Galaxy Buddy2의 기본 전투 동작을 확인했다.** 장시간 성능과 발열·배터리는 아직 측정하지 않았다. 이 프로젝트는 완성된 게임이나 스토어 제출용 앱이 아니다.
+Unity 6000.3.24f1에서 **임포트·C# 컴파일·씬 생성, Android APK 빌드와 Galaxy Buddy2의 첫 조합 전투를 확인했다.** 방패 기사·등불 사제·불꽃 마법사의 배치, 기사 훈련·특성 전승·분기 진화, 성문 골렘의 예고와 전투 승리가 현재 범위다. 장시간 성능과 발열·배터리는 아직 측정하지 않았다. 이 프로젝트는 완성된 게임이나 스토어 제출용 앱이 아니다.
 
 - 아군 기사·궁수 2명과 적 1명의 전투 계산: 이동, 사거리, 공격 준비, 근접 명중, 투사체, HP, 사망과 종료.
 - 표시 코드: 가로 전장, 전투 전 드래그 배치, 피격 플래시·밀림·피해 숫자·투사체, 1/2배속·일시정지·30/60fps·음소거.
@@ -53,7 +55,7 @@ Unity 6000.3.24f1에서 **임포트·C# 컴파일·씬 생성, Android APK 빌�
 
 UI 문구를 수정한 증분 빌드는 빌드 성공으로 끝났지만, 실기기에서 `Could not produce class with ID 115`와 기본 GUI 스킨 오류가 발생했다. 빌드 로그에는 기존 player data를 재사용한 기록이 남았다. 테스트 APK 메뉴는 이제 `BuildOptions.CleanBuildCache`로 전체 빌드하고, 이 시제품에서 `PlayerSettings.stripEngineCode`를 꺼서 필요한 엔진 코드를 보존한다. 수정 APK를 다시 설치해 UI·전투 정상 동작을 확인했다. APK 생성 성공 뒤에도 반드시 실기기에서 확인한다. 출시용 용량 최적화는 별도 검증 대상이다. [Unity 클린 빌드 API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/BuildOptions.CleanBuildCache.html)
 
-현재 검증 APK: `Builds/Android/expedition-combat-prototype.apk`, 55,705,238바이트. SHA-256: `6D841981EB9826C6EE7FAFF942E7164D0A1AB2F9BAE36BEDB1AE80F38A997ECE`. APK와 실행 로그·화면 캡처는 Git에 포함하지 않는다.
+현재 검증 APK: `Builds/Android/expedition-combat-prototype.apk`, 55,726,334바이트. SHA-256: `B2C68A7E7678F0303CB4FC0B30BD1CEB10628D45287FEDCEABA84C951324CB62`. 이 수정본을 Galaxy Buddy2에 설치해 준비·진화·전승·골렘 예고·반격·승리·재시도·새 원정 복원을 확인했다. `Logs/astra-device/final-runtime.log`에서 Unity 오류·예외·FATAL 패턴이 관찰되지 않았다. 이전 기사·궁수 APK의 해시는 `6D841981EB9826C6EE7FAFF942E7164D0A1AB2F9BAE36BEDB1AE80F38A997ECE`였다. APK와 실행 로그·화면 캡처는 Git에 포함하지 않는다.
 
 ## 구조와 다음 검증
 
@@ -69,4 +71,4 @@ UI 문구를 수정한 증분 빌드는 빌드 성공으로 끝났지만, 실기
 | `../tools/check-unity-project.ps1` | 설치된 에디터로 일괄 임포트·컴파일·설정 검증 |
 | `../tests/CombatCoreSmoke/run-smoke.ps1` | Windows 기본 C# 컴파일러로 전투 규칙 검증 |
 
-다음 검증은 효과음 청취와 장시간 플레이 중 프레임·발열·배터리 측정이다. 캐릭터는 정지 이미지를 움직이는 단계이며 걷기·공격의 프레임 애니메이션은 아직 없다. 영입·보상·승급·원정 진행·저장·광고도 후속 작업이다. 홈 화면에서 돌아오는 동안 상태는 유지됐지만, 앱 프로세스가 종료되면 현재 전투는 보존되지 않는다.
+다음 검증은 효과음 청취와 장시간 플레이 중 프레임·발열·배터리 측정이다. 캐릭터는 정지 이미지를 움직이는 단계이며 걷기·공격의 프레임 애니메이션은 아직 없다. 영입·보상·연속 원정·저장·광고도 후속 작업이다. 홈 화면에서 돌아오는 동안 상태는 유지됐지만, 앱 프로세스가 종료되면 현재 전투는 보존되지 않는다.

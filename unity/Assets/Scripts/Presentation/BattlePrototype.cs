@@ -15,9 +15,11 @@ namespace Expedition.Presentation
         {
             public string Id;
             public Vector2 Position;
+            public Vector2 StartPosition;
             public SpriteRenderer Renderer;
             public float Height, Hit, Punch, Death;
             public CombatUnit Unit;
+            public Color Tint;
         }
         sealed class Effect
         {
@@ -47,12 +49,14 @@ namespace Expedition.Presentation
         Sprite solid;
         Texture2D solidTexture;
         CombatSimulation simulation;
+        ExpeditionPreparation preparation = new ExpeditionPreparation();
+        int selectedRecipient;
         UnitView dragging;
         Vector2 dragOrigin, dragOffset;
         Rect viewport;
         float accumulator, speed = 1f;
         bool running, paused, muted, suspended, lowFrameRate;
-        GUIStyle titleStyle, labelStyle, smallStyle, buttonStyle, numberStyle;
+        GUIStyle titleStyle, labelStyle, smallStyle, buttonStyle, prepButtonStyle, numberStyle;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Bootstrap()
@@ -107,9 +111,11 @@ namespace Expedition.Presentation
                 renderer.color = new Color(.72f, .77f, .72f);
             }
             var sheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
-            AddUnit("knight", new Vector2(-3, -1), sheet, new Rect(493, 641, 302, 423), 1.5f, new Color(.95f, .8f, .35f));
-            AddUnit("archer", new Vector2(-5, -2), sheet, new Rect(896, 641, 284, 393), 1.4f, new Color(.5f, .85f, .7f));
-            AddUnit("beast", new Vector2(4, -1), sheet, new Rect(892, 124, 300, 353), 1.7f, new Color(.85f, .35f, .3f));
+            AddUnit("knight", new Vector2(-2.9f, -.8f), sheet, new Rect(493, 641, 302, 423), 1.5f, Color.white);
+            AddUnit("priest", new Vector2(-4.7f, -1.8f), sheet, new Rect(64, 635, 340, 455), 1.5f, new Color(.9f, 1f, 1f));
+            // The lantern silhouette is a clearly labelled temporary mage proxy until matching art exists.
+            AddUnit("mage", new Vector2(-5.7f, -1f), sheet, new Rect(64, 635, 340, 455), 1.5f, new Color(1f, .68f, .42f));
+            AddUnit("golem", new Vector2(4.1f, -.7f), sheet, new Rect(63, 113, 333, 395), 1.8f, Color.white);
             FitViewport();
         }
 
@@ -135,9 +141,10 @@ namespace Expedition.Presentation
         {
             Sprite sprite = sheet != null ? MakeSprite(sheet, crop, new Vector2(.5f, 0), crop.height / height) : solid;
             var renderer = NewRenderer(id, sprite, 10);
-            if (sheet == null) { renderer.color = fallback; renderer.transform.localScale = new Vector3(.6f, height, 1); }
+            renderer.color = fallback;
+            if (sheet == null) renderer.transform.localScale = new Vector3(.6f, height, 1);
             renderer.transform.position = position;
-            views.Add(id, new UnitView { Id = id, Position = position, Renderer = renderer, Height = height });
+            views.Add(id, new UnitView { Id = id, Position = position, StartPosition = position, Renderer = renderer, Height = height, Tint = fallback });
         }
 
         void FitViewport()
@@ -154,21 +161,38 @@ namespace Expedition.Presentation
             var units = new List<CombatUnit>();
             foreach (var view in views.Values)
             {
-                bool enemy = view.Id == "beast", ranged = view.Id == "archer";
+                bool enemy = view.Id == "golem", ranged = view.Id == "priest" || view.Id == "mage";
+                UnitRole role = view.Id == "knight" ? UnitRole.ShieldKnight :
+                    view.Id == "priest" ? UnitRole.LanternPriest : view.Id == "mage" ? UnitRole.FireMage : UnitRole.GateGolem;
                 var definition = new UnitDefinition
                 {
                     Id = view.Id, Team = enemy ? Team.Enemy : Team.Ally,
                     AttackKind = ranged ? AttackKind.Ranged : AttackKind.Melee,
-                    MaxHp = enemy ? 750 : ranged ? 120 : 200, Damage = enemy ? 8 : ranged ? 22 : 32,
-                    Range = ranged ? 5.8f : 1.15f, MoveSpeed = enemy ? .75f : 1.5f,
-                    Cooldown = enemy ? 1.2f : ranged ? 1.05f : .8f,
-                    Windup = ranged ? .24f : .18f, ProjectileSpeed = 12f, Radius = .32f
+                    MaxHp = enemy ? 650 : role == UnitRole.ShieldKnight ?
+                        (preparation.Evolution == KnightEvolution.None ? 320 : 350) : role == UnitRole.LanternPriest ? 165 : 150,
+                    Damage = enemy ? 25 : role == UnitRole.ShieldKnight ?
+                        (preparation.Evolution == KnightEvolution.CounterKnight ? 30 :
+                        preparation.Evolution == KnightEvolution.GuardianKnight ? 28 : 26) :
+                        role == UnitRole.LanternPriest ? 9 : 23,
+                    Range = ranged ? (role == UnitRole.LanternPriest ? 3.6f : 5.7f) : 1.15f,
+                    MoveSpeed = enemy ? .65f : role == UnitRole.ShieldKnight ? 1.25f : 1.05f,
+                    Cooldown = enemy ? 1.45f : role == UnitRole.ShieldKnight ? .9f : role == UnitRole.LanternPriest ? 1.7f : 1.25f,
+                    Windup = ranged ? .24f : .2f, ProjectileSpeed = 12f, Radius = enemy ? .48f : .32f,
+                    Role = role,
+                    NativeTrait = role == UnitRole.ShieldKnight ? NativeTrait.Resolve :
+                        role == UnitRole.LanternPriest ? NativeTrait.LanternBlessing : role == UnitRole.FireMage ? NativeTrait.Ember : NativeTrait.None,
+                    InheritedTrait = role == UnitRole.ShieldKnight ? preparation.InheritedTrait :
+                        role == UnitRole.LanternPriest ? preparation.PriestInheritedTrait :
+                        role == UnitRole.FireMage ? preparation.MageInheritedTrait : NativeTrait.None,
+                    Evolution = role == UnitRole.ShieldKnight ? preparation.Evolution : KnightEvolution.None
                 };
+                view.StartPosition = view.Position;
                 view.Unit = new CombatUnit(definition, view.Position.x, view.Position.y);
                 units.Add(view.Unit);
             }
             simulation = new CombatSimulation(units);
             simulation.Event += OnCombatEvent;
+            preparation.Commit();
             running = true; paused = false; accumulator = 0;
             PlaySound("ui_confirm");
         }
@@ -181,9 +205,9 @@ namespace Expedition.Presentation
             effects.Clear(); numbers.Clear();
             foreach (var view in views.Values)
             {
-                view.Position = view.Id == "knight" ? new Vector2(-3, -1) : view.Id == "archer" ? new Vector2(-5, -2) : new Vector2(4, -1);
+                view.Position = view.StartPosition;
                 view.Unit = null; view.Hit = view.Punch = view.Death = 0;
-                view.Renderer.color = Color.white;
+                view.Renderer.color = view.Tint;
             }
             foreach (var voice in voices) voice.Stop();
         }
@@ -204,12 +228,12 @@ namespace Expedition.Presentation
                 accumulator += visualDt;
                 int steps = 0;
                 while (accumulator >= Tick && steps++ < 12 && !simulation.IsFinished)
-                { simulation.Step(Tick); accumulator -= Tick; }
+                { simulation.Step(Tick); accumulator -= Tick; if (simulation.Elapsed >= 60f) simulation.EndByTimeout(); }
             }
             foreach (var view in views.Values)
             {
                 if (view.Unit != null) view.Position = new Vector2(view.Unit.X, view.Unit.Y);
-                float direction = view.Id == "beast" ? -1 : 1;
+                float direction = view.Id == "golem" ? -1 : 1;
                 float anticipation = view.Unit != null ? view.Unit.AttackProgress : 0;
                 Vector2 offset = new Vector2(direction * (view.Punch * .22f - anticipation * .08f - view.Hit * .1f), view.Hit * .04f);
                 view.Renderer.transform.position = view.Position + offset;
@@ -217,7 +241,7 @@ namespace Expedition.Presentation
                 flashBlock.SetFloat(FlashId, view.Hit);
                 view.Renderer.SetPropertyBlock(flashBlock);
                 if (view.Unit != null && !view.Unit.IsAlive) view.Death = Mathf.Min(1, view.Death + visualDt * 1.8f);
-                view.Renderer.color = new Color(1, 1, 1, 1 - view.Death);
+                view.Renderer.color = new Color(view.Tint.r, view.Tint.g, view.Tint.b, 1 - view.Death);
             }
         }
 
@@ -234,10 +258,10 @@ namespace Expedition.Presentation
             }
             else { screen = Input.mousePosition; down = Input.GetMouseButtonDown(0); held = Input.GetMouseButton(0); up = Input.GetMouseButtonUp(0); }
             Vector2 ui = ScreenToUi(screen), world = gameCamera.ScreenToWorldPoint(screen);
-            if (down && viewport.Contains(screen) && ui.y > 90 && ui.y < 580)
+            if (down && viewport.Contains(screen) && ui.y > 272 && ui.y < 580)
             {
                 foreach (var view in views.Values)
-                    if (view.Id != "beast" && view.Renderer.bounds.Contains(new Vector3(world.x, world.y, 0)))
+                    if (view.Id != "golem" && view.Renderer.bounds.Contains(new Vector3(world.x, world.y, 0)))
                     { dragging = view; dragOrigin = view.Position; dragOffset = view.Position - world; break; }
             }
             if (dragging != null && held)
@@ -258,6 +282,32 @@ namespace Expedition.Presentation
         {
             views.TryGetValue(e.SourceId ?? "", out UnitView source);
             views.TryGetValue(e.TargetId ?? "", out UnitView target);
+            if (e.Type == CombatEventType.BossTelegraph && source != null)
+            {
+                float baseAngle = Mathf.Atan2(e.Y, e.X) * Mathf.Rad2Deg;
+                for (int i = -1; i <= 1; i++)
+                {
+                    float angle = baseAngle + i * 35f;
+                    Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+                    AddEffect(source.Position + direction * 1.55f, source.Position + direction * 1.55f,
+                        new Vector2(3.1f, i == 0 ? .25f : .09f), new Color(1f, .15f, .12f, .75f), .8f, angle: angle);
+                }
+            }
+            if (e.Type == CombatEventType.BossSlam && source != null)
+                AddEffect(source.Position + Vector2.left * 1.4f, source.Position + Vector2.left * 1.4f,
+                    new Vector2(3.5f, .28f), new Color(1f, .35f, .12f), .3f);
+            if (e.Type == CombatEventType.ShieldApplied && target != null)
+                AddEffect(target.Position + Vector2.up * .65f, target.Position + Vector2.up * .65f,
+                    new Vector2(1.2f, 1.4f), new Color(.3f, .9f, 1f, .65f), .42f);
+            if (e.Type == CombatEventType.ShieldBroken && target != null)
+                AddEffect(target.Position + Vector2.up * .65f, target.Position + Vector2.up * .65f,
+                    new Vector2(1.5f, .14f), new Color(.6f, 1f, 1f), .2f, angle: 35f);
+            if (e.Type == CombatEventType.Counterattack && source != null)
+                AddEffect(source.Position + Vector2.right * .8f, source.Position + Vector2.right * 1.2f,
+                    new Vector2(2.2f, .3f), new Color(.4f, .9f, 1f), .28f);
+            if (e.Type == CombatEventType.BurnApplied && target != null)
+                AddEffect(target.Position + Vector2.up * .35f, target.Position + Vector2.up * 1.2f,
+                    new Vector2(.28f, .48f), new Color(1f, .4f, .08f), .45f);
             if (e.Type == CombatEventType.ProjectileLaunched && source != null && target != null)
             {
                 AddEffect(new Vector2(e.X, e.Y + .8f), target.Position + Vector2.up * .7f,
@@ -279,7 +329,7 @@ namespace Expedition.Presentation
                     AddEffect(impact, impact + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * .55f,
                         new Vector2(.06f, .06f), new Color(1, .78f, .3f), .22f);
                 }
-                if (numbers.Count < 24) numbers.Add(new Number { Position = impact, Damage = (int)e.Damage, AlliedTarget = target.Id != "beast" });
+                if (numbers.Count < 24) numbers.Add(new Number { Position = impact, Damage = (int)e.Damage, AlliedTarget = target.Id != "golem" });
                 for (int i = effects.Count - 1; i >= 0; i--)
                     if (effects[i].Projectile && effects[i].Source == e.SourceId && effects[i].Target == e.TargetId)
                     { Destroy(effects[i].Renderer.gameObject); effects.RemoveAt(i); break; }
@@ -359,34 +409,78 @@ namespace Expedition.Presentation
                 labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 23 };
                 smallStyle = new GUIStyle(GUI.skin.label) { fontSize = 18 };
                 buttonStyle = new GUIStyle(GUI.skin.button) { fontSize = 23, fontStyle = FontStyle.Bold };
+                prepButtonStyle = new GUIStyle(GUI.skin.button) { fontSize = 18, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
                 numberStyle = new GUIStyle(GUI.skin.label) { fontSize = 28, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
             }
             GUI.matrix = Matrix4x4.TRS(new Vector3(viewport.x, Screen.height - viewport.yMax, 0), Quaternion.identity,
                 new Vector3(viewport.width / UiWidth, viewport.height / UiHeight, 1));
             Fill(new Rect(0, 0, UiWidth, 88), new Color(.035f, .08f, .075f, .95f));
             Fill(new Rect(0, 588, UiWidth, 132), new Color(.035f, .08f, .075f, .96f));
-            GUI.Label(new Rect(26, 10, 650, 40), "EMBER EXPEDITION / COMBAT LAB", titleStyle);
-            GUI.Label(new Rect(28, 51, 720, 30), running ? "TWO ALLIES  /  ONE ENEMY  /  " + simulation.Elapsed.ToString("0.0") + "s" : "PREPARATION  /  DRAG YOUR ALLIES", smallStyle);
+            GUI.Label(new Rect(26, 10, 650, 40), "EMBER EXPEDITION / GATE GOLEM", titleStyle);
+            GUI.Label(new Rect(28, 51, 850, 30), running ? "BATTLE  /  " + simulation.Elapsed.ToString("0.0") + "s  /  60s LIMIT" :
+                "PREPARE  /  TRAIN " + preparation.Progress + "/2  /  DRAG ALLIES IN THE LEFT ZONE", smallStyle);
+            GUI.enabled = !running || simulation.IsFinished;
+            if (GUI.Button(new Rect(788, 17, 170, 55), "NEW RUN", buttonStyle))
+            { if (running) ResetBattle(); preparation = new ExpeditionPreparation(); selectedRecipient = 0; }
+            GUI.enabled = true;
             if (GUI.Button(new Rect(970, 17, 130, 55), lowFrameRate ? "30 FPS" : "60 FPS", buttonStyle))
             { lowFrameRate = !lowFrameRate; Application.targetFrameRate = lowFrameRate ? 30 : 60; }
             if (GUI.Button(new Rect(1116, 17, 138, 55), muted ? "MUTED" : "SOUND ON", buttonStyle))
             { muted = !muted; foreach (var voice in voices) voice.mute = muted; }
             if (!running)
             {
-                Fill(new Rect(160, 376, 400, 208), new Color(.5f, .95f, .65f, .07f));
-                Fill(new Rect(160, 376, 400, 2), new Color(.6f, .9f, .6f, .55f));
-                Fill(new Rect(160, 376, 2, 208), new Color(.6f, .9f, .6f, .55f));
-                Fill(new Rect(558, 376, 2, 208), new Color(.6f, .9f, .6f, .55f));
-                Fill(new Rect(160, 582, 400, 2), new Color(.6f, .9f, .6f, .55f));
+                Fill(new Rect(18, 96, 1244, 174), new Color(.025f, .07f, .065f, .93f));
+                GUI.Label(new Rect(28, 98, 1210, 28), "TRAIN KNIGHT +1: choose a reserve to consume. PASS: choose recipient, then donor. UNDO before battle.", smallStyle);
+                string[] donor = { "KNIGHT", "PRIEST", "FIRE MAGE" };
+                string[] recipient = { "KNIGHT", "PRIEST", "MAGE" };
+                if (GUI.Button(new Rect(28, 130, 235, 45), "PASS TO " + recipient[selectedRecipient], prepButtonStyle))
+                    selectedRecipient = (selectedRecipient + 1) % 3;
+                for (int i = 0; i < 3; i++)
+                {
+                    GUI.enabled = preparation.IsReserveAvailable(i) && preparation.Progress < 2 && preparation.Evolution == KnightEvolution.None;
+                    if (GUI.Button(new Rect(272 + i * 258, 130, 250, 45), "USE " + donor[i], prepButtonStyle)) preparation.Train(i);
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    GUI.enabled = preparation.IsReserveAvailable(i) && i != selectedRecipient &&
+                        preparation.InheritedTraitFor(selectedRecipient) != preparation.ReserveTrait(i);
+                    if (GUI.Button(new Rect(28 + i * 199, 181, 192, 49), "PASS " + (i == 2 ? "MAGE" : donor[i]), prepButtonStyle))
+                        preparation.Inherit(i, selectedRecipient);
+                }
+                GUI.enabled = preparation.Progress == 2 && preparation.Evolution == KnightEvolution.None;
+                if (GUI.Button(new Rect(625, 181, 210, 49), "COUNTER", prepButtonStyle)) preparation.Evolve(KnightEvolution.CounterKnight);
+                if (GUI.Button(new Rect(843, 181, 210, 49), "GUARDIAN", prepButtonStyle)) preparation.Evolve(KnightEvolution.GuardianKnight);
+                GUI.enabled = preparation.CanUndo;
+                if (GUI.Button(new Rect(1061, 181, 185, 49), "UNDO", prepButtonStyle)) preparation.Undo();
+                GUI.enabled = true;
+                string available = "Available: ";
+                for (int i = 0; i < 3; i++) available += donor[i] + (preparation.IsReserveAvailable(i) ? " ready" : " used") + (i < 2 ? "  /  " : "");
+                GUI.Label(new Rect(28, 235, 1210, 30), available + "   |   " + recipient[selectedRecipient] +
+                    " inherited: " + preparation.InheritedTraitFor(selectedRecipient).ToString().ToUpperInvariant(), smallStyle);
+                Fill(new Rect(128, 392, 442, 192), new Color(.5f, .95f, .65f, .06f));
+                Fill(new Rect(128, 392, 442, 2), new Color(.6f, .9f, .6f, .5f));
+                GUI.Label(new Rect(26, 549, 600, 30), "ALLIED DEPLOYMENT ZONE", smallStyle);
             }
             foreach (var view in views.Values)
             {
                 if (view.Death >= 1) continue;
                 Vector2 point = ScreenToUi(gameCamera.WorldToScreenPoint(view.Position + Vector2.up * (view.Height + .16f)));
+                if (!running && point.y < 288f)
+                    point.y = Mathf.Max(288f, ScreenToUi(gameCamera.WorldToScreenPoint(view.Position)).y + 10f);
                 float health = view.Unit == null ? 1 : Mathf.Clamp01((float)view.Unit.Hp / view.Unit.Definition.MaxHp);
                 Fill(new Rect(point.x - 46, point.y, 92, 8), new Color(.03f, .04f, .03f, .85f));
-                Fill(new Rect(point.x - 44, point.y + 2, 88 * health, 4), view.Id == "beast" ? new Color(.95f, .4f, .3f) : new Color(.6f, .9f, .5f));
-                if (!running) GUI.Label(new Rect(point.x - 75, point.y - 25, 150, 26), view.Id == "beast" ? "MOSS BEAST" : view.Id.ToUpperInvariant(), smallStyle);
+                Fill(new Rect(point.x - 44, point.y + 2, 88 * health, 4), view.Id == "golem" ? new Color(.95f, .4f, .3f) : new Color(.6f, .9f, .5f));
+                if (view.Unit != null && view.Unit.Shield > 0f)
+                    Fill(new Rect(point.x - 44, point.y + 10, 88 * Mathf.Clamp01(view.Unit.Shield / view.Unit.Definition.MaxHp), 4), new Color(.3f, .9f, 1f));
+                if (!running)
+                {
+                    string name = view.Id == "golem" ? "GATE GOLEM (ART TEMP)" :
+                        view.Id == "mage" ? "FIRE MAGE (ART TEMP)" :
+                        view.Id == "priest" ? "LANTERN PRIEST" :
+                        preparation.Evolution == KnightEvolution.CounterKnight ? "COUNTER KNIGHT" :
+                        preparation.Evolution == KnightEvolution.GuardianKnight ? "GUARDIAN KNIGHT" : "SHIELD KNIGHT";
+                    GUI.Label(new Rect(point.x - 115, point.y - 27, 230, 28), name, smallStyle);
+                }
             }
             foreach (var number in numbers)
             {
@@ -397,15 +491,17 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(point.x - 41, point.y - 41, 80, 42), number.Damage.ToString(), numberStyle);
             }
             GUI.color = Color.white;
-            string status = !running ? "Place the knight ahead of the archer." : simulation.IsFinished ?
-                (simulation.Winner == Team.Ally ? "VICTORY - compare another formation." : "DEFEAT - adjust your formation.") : paused ? "PAUSED - tap RESUME to continue." : "Watch attacks, projectiles and impact timing.";
+            string status = !running ? "Knight: " + (preparation.Evolution == KnightEvolution.None ? "BASE" : preparation.Evolution.ToString().ToUpperInvariant()) +
+                "  /  inherited: " + preparation.InheritedTrait.ToString().ToUpperInvariant() : simulation.IsFinished ?
+                (simulation.Winner == Team.Ally ? "VICTORY - retry with a new formation." : "DEFEAT - adjust formation and retry.") : paused ?
+                "PAUSED - tap RESUME." : "Red lines lock the golem's slam direction for 0.8s.";
             GUI.Label(new Rect(28, 607, 710, 40), status, labelStyle);
-            GUI.Label(new Rect(28, 652, 710, 36), "Concept art + procedural motion / no progress saving", smallStyle);
+            GUI.Label(new Rect(28, 652, 730, 36), "COUNTER: cone + slow on shield break  /  GUARDIAN: ally shield every 5s", smallStyle);
             if (GUI.Button(new Rect(776, 611, 105, 76), speed == 1 ? "1x" : "2x", buttonStyle)) speed = speed == 1 ? 2 : 1;
             GUI.enabled = running && !simulation.IsFinished;
             if (GUI.Button(new Rect(895, 611, 154, 76), paused ? "RESUME" : "PAUSE", buttonStyle)) SetPaused(!paused);
             GUI.enabled = true;
-            if (GUI.Button(new Rect(1063, 611, 191, 76), running ? "RESET" : "FIGHT", buttonStyle))
+            if (GUI.Button(new Rect(1063, 611, 191, 76), running ? "RETRY" : "FIGHT", buttonStyle))
             { if (running) ResetBattle(); else StartBattle(); }
             GUI.matrix = Matrix4x4.identity;
         }

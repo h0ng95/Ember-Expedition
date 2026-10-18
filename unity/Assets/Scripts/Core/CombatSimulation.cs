@@ -6,7 +6,10 @@ namespace Expedition.Core
 {
     public enum Team { Ally, Enemy }
     public enum AttackKind { Melee, Ranged }
-    public enum CombatEventType { AttackStarted, ProjectileLaunched, Hit, Defeated, BattleEnded }
+    public enum UnitRole { Ordinary, ShieldKnight, LanternPriest, FireMage, GateGolem }
+    public enum NativeTrait { None, Resolve, LanternBlessing, Ember }
+    public enum KnightEvolution { None, CounterKnight, GuardianKnight }
+    public enum CombatEventType { AttackStarted, ProjectileLaunched, Hit, Defeated, BattleEnded, ShieldApplied, ShieldBroken, Counterattack, BossTelegraph, BossSlam, BurnApplied }
 
     [Serializable]
     public sealed class UnitDefinition
@@ -22,6 +25,10 @@ namespace Expedition.Core
         public float Windup;
         public float ProjectileSpeed;
         public float Radius;
+        public UnitRole Role;
+        public NativeTrait NativeTrait;
+        public NativeTrait InheritedTrait;
+        public KnightEvolution Evolution;
     }
 
     public sealed class CombatUnit
@@ -30,6 +37,7 @@ namespace Expedition.Core
         public float X { get; internal set; }
         public float Y { get; internal set; }
         public float Hp { get; internal set; }
+        public float Shield { get; internal set; }
         public bool IsAlive { get { return Hp > 0f; } }
         public string TargetId { get; internal set; }
 
@@ -39,6 +47,17 @@ namespace Expedition.Core
         internal bool IsWindingUp;
         internal float WindupElapsed;
         internal float CooldownRemaining;
+        internal float ShieldRemaining;
+        internal float AbilityRemaining;
+        internal float CounterRemaining;
+        internal float BurnRemaining;
+        internal float BurnTickRemaining;
+        internal float BurnDamage;
+        internal int BurnStacks;
+        internal float EmberTargetRemaining;
+        public float SlowRemaining { get; internal set; }
+        public float SlowFactor { get; internal set; }
+        internal bool ResolveUsed;
 
         public CombatUnit(UnitDefinition definition, float x, float y)
         {
@@ -99,12 +118,27 @@ namespace Expedition.Core
         private readonly ReadOnlyCollection<CombatUnit> units;
         private readonly Dictionary<string, CombatUnit> byId = new Dictionary<string, CombatUnit>(StringComparer.Ordinal);
         private readonly List<Projectile> projectiles = new List<Projectile>();
+        private float nextBossSlam = 4f;
+        private bool bossWinding;
+        private float bossReleaseAt;
+        private float bossDirectionX, bossDirectionY;
+        private string bossId;
 
         public IReadOnlyList<CombatUnit> Units { get { return units; } }
         public event Action<CombatEvent> Event;
         public bool IsFinished { get; private set; }
         public Team? Winner { get; private set; }
         public float Elapsed { get; private set; }
+
+        public void EndByTimeout()
+        {
+            if (IsFinished) return;
+            IsFinished = true;
+            Winner = Team.Enemy;
+            projectiles.Clear();
+            foreach (var unit in units) CancelWindup(unit);
+            Emit(CombatEventType.BattleEnded, null, null, 0f, 0f, 0f);
+        }
 
         public CombatSimulation(IEnumerable<CombatUnit> initialUnits)
         {
@@ -118,6 +152,15 @@ namespace Expedition.Core
                 byId.Add(unit.Definition.Id, unit);
                 copy.Add(unit);
                 ClampPosition(unit);
+                if (unit.Definition.Role == UnitRole.ShieldKnight)
+                {
+                    unit.Shield = unit.Definition.MaxHp * .25f;
+                    unit.ShieldRemaining = 6f;
+                    if (unit.Definition.Evolution == KnightEvolution.GuardianKnight) unit.AbilityRemaining = 5f;
+                }
+                else if (unit.Definition.Role == UnitRole.LanternPriest) unit.AbilityRemaining = 5f;
+                else if (unit.Definition.Role == UnitRole.FireMage) unit.AbilityRemaining = 4f;
+                else if (unit.Definition.Role == UnitRole.GateGolem) bossId = unit.Definition.Id;
             }
             units = copy.AsReadOnly();
         }
@@ -129,6 +172,9 @@ namespace Expedition.Core
             if (IsFinished || dt == 0f) return;
             if (FinishIfNecessary()) return;
             Elapsed += dt;
+            UpdateStatusesAndAbilities(dt);
+            UpdateBossAttack();
+            if (FinishIfNecessary()) return;
 
             foreach (var unit in units)
             {
@@ -137,10 +183,12 @@ namespace Expedition.Core
                 EnsureTarget(unit);
                 var target = GetLivingTarget(unit);
                 if (target == null) continue;
-                if (!InRange(unit, target))
+                if (unit.Definition.Role == UnitRole.LanternPriest)
+                    FollowFrontliner(unit, dt);
+                else if (!InRange(unit, target))
                 {
                     CancelWindup(unit);
-                    MoveTowards(unit, target, dt);
+                    if (!(bossWinding && unit.Definition.Id == bossId)) MoveTowards(unit, target, dt);
                 }
             }
 
@@ -184,6 +232,135 @@ namespace Expedition.Core
             FinishIfNecessary();
         }
 
+        private void UpdateStatusesAndAbilities(float dt)
+        {
+            foreach (var unit in units)
+            {
+                if (!unit.IsAlive) continue;
+                unit.CounterRemaining = Math.Max(0f, unit.CounterRemaining - dt);
+                unit.EmberTargetRemaining = Math.Max(0f, unit.EmberTargetRemaining - dt);
+                unit.SlowRemaining = Math.Max(0f, unit.SlowRemaining - dt);
+                if (unit.SlowRemaining <= 0f) unit.SlowFactor = 0f;
+                if (unit.ShieldRemaining > 0f)
+                {
+                    unit.ShieldRemaining -= dt;
+                    if (unit.ShieldRemaining <= 0f) unit.Shield = 0f;
+                }
+                if (unit.BurnRemaining > 0f)
+                {
+                    unit.BurnRemaining -= dt;
+                    unit.BurnTickRemaining -= dt;
+                    if (unit.BurnTickRemaining <= 0f)
+                    {
+                        unit.BurnTickRemaining += 1f;
+                        ApplyHit(null, unit, unit.BurnDamage, false);
+                    }
+                    if (unit.BurnRemaining <= 0f) { unit.BurnDamage = 0f; unit.BurnStacks = 0; }
+                }
+                if (!unit.IsAlive) continue;
+                if (unit.Definition.Role != UnitRole.LanternPriest && unit.Definition.Role != UnitRole.FireMage &&
+                    unit.Definition.Evolution != KnightEvolution.GuardianKnight) continue;
+                unit.AbilityRemaining -= dt;
+                if (unit.AbilityRemaining > 0f) continue;
+                if (unit.Definition.Role == UnitRole.LanternPriest)
+                {
+                    unit.AbilityRemaining += 5f;
+                    CombatUnit chosen = null;
+                    float lowest = float.PositiveInfinity;
+                    foreach (var ally in units)
+                    {
+                        if (!ally.IsAlive || ally.Definition.Team != unit.Definition.Team ||
+                            DistanceSquared(unit.X, unit.Y, ally.X, ally.Y) > 4f * 4f) continue;
+                        float ratio = ally.Hp / ally.Definition.MaxHp;
+                        if (ratio < lowest) { lowest = ratio; chosen = ally; }
+                    }
+                    if (chosen != null) ApplyShield(unit, chosen, unit.Definition.MaxHp * .15f, 4f);
+                }
+                else if (unit.Definition.Role == UnitRole.FireMage)
+                {
+                    unit.AbilityRemaining += 4f;
+                    EnsureTarget(unit);
+                    var target = GetLivingTarget(unit);
+                    if (target == null || !InRange(unit, target)) continue;
+                    foreach (var enemy in units)
+                    {
+                        if (!enemy.IsAlive || enemy.Definition.Team == unit.Definition.Team ||
+                            DistanceSquared(target.X, target.Y, enemy.X, enemy.Y) > 1.25f * 1.25f) continue;
+                        ApplyHit(unit.Definition.Id, enemy, unit.Definition.Damage * .8f, true);
+                        ApplyBurn(unit, enemy);
+                    }
+                }
+                else
+                {
+                    unit.AbilityRemaining += 5f;
+                    CombatUnit chosen = null;
+                    float closest = float.PositiveInfinity;
+                    foreach (var ally in units)
+                    {
+                        if (!ally.IsAlive || ally == unit || ally.Definition.Team != unit.Definition.Team) continue;
+                        float distance = DistanceSquared(unit.X, unit.Y, ally.X, ally.Y);
+                        if (distance < closest && distance <= 4f * 4f) { closest = distance; chosen = ally; }
+                    }
+                    if (chosen != null) ApplyShield(unit, chosen, unit.Definition.MaxHp * .15f, 4f);
+                }
+            }
+        }
+
+        private void UpdateBossAttack()
+        {
+            if (bossId == null) return;
+            CombatUnit boss;
+            if (!byId.TryGetValue(bossId, out boss) || !boss.IsAlive) return;
+            if (bossWinding && Elapsed + Epsilon >= bossReleaseAt)
+            {
+                bossWinding = false;
+                Emit(CombatEventType.BossSlam, bossId, null, boss.X, boss.Y, 0f);
+                foreach (var ally in units)
+                {
+                    if (!ally.IsAlive || ally.Definition.Team == boss.Definition.Team) continue;
+                    float dx = ally.X - boss.X, dy = ally.Y - boss.Y;
+                    float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+                    if (distance <= 3.2f && distance > Epsilon &&
+                        (dx * bossDirectionX + dy * bossDirectionY) / distance >= .819f)
+                        ApplyHit(bossId, ally, boss.Definition.Damage * 2f, true);
+                }
+            }
+            if (bossWinding || Elapsed + Epsilon < nextBossSlam) return;
+            CombatUnit closest = null;
+            float best = float.PositiveInfinity;
+            foreach (var ally in units)
+            {
+                if (!ally.IsAlive || ally.Definition.Team == boss.Definition.Team) continue;
+                float distance = DistanceSquared(boss.X, boss.Y, ally.X, ally.Y);
+                if (distance < best) { best = distance; closest = ally; }
+            }
+            if (closest == null) return;
+            float vx = closest.X - boss.X, vy = closest.Y - boss.Y;
+            float length = (float)Math.Sqrt(vx * vx + vy * vy);
+            bossDirectionX = length <= Epsilon ? -1f : vx / length;
+            bossDirectionY = length <= Epsilon ? 0f : vy / length;
+            bossWinding = true;
+            bossReleaseAt = Elapsed + .8f;
+            nextBossSlam += 7f;
+            Emit(CombatEventType.BossTelegraph, bossId, closest.Definition.Id, bossDirectionX, bossDirectionY, .8f);
+        }
+
+        private void FollowFrontliner(CombatUnit priest, float dt)
+        {
+            CombatUnit front = null;
+            foreach (var unit in units)
+                if (unit.IsAlive && unit != priest && unit.Definition.Team == priest.Definition.Team &&
+                    unit.Definition.Role == UnitRole.ShieldKnight) { front = unit; break; }
+            if (front == null) return;
+            float dx = front.X - priest.X, dy = front.Y - priest.Y;
+            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (distance <= 3.2f) return;
+            float travel = Math.Min(priest.Definition.MoveSpeed * (1f - priest.SlowFactor) * dt, distance - 3.2f);
+            priest.X += dx / distance * travel;
+            priest.Y += dy / distance * travel;
+            ClampPosition(priest);
+        }
+
         private void EnsureTarget(CombatUnit unit)
         {
             if (GetLivingTarget(unit) != null) return;
@@ -222,7 +399,8 @@ namespace Expedition.Core
             float distance = (float)Math.Sqrt(dx * dx + dy * dy);
             if (distance <= Epsilon) return;
             float stopDistance = unit.Definition.Range + unit.Definition.Radius + target.Definition.Radius;
-            float travel = Math.Min(unit.Definition.MoveSpeed * dt, Math.Max(0f, distance - stopDistance));
+            float travel = Math.Min(unit.Definition.MoveSpeed * (1f - unit.SlowFactor) * dt,
+                Math.Max(0f, distance - stopDistance));
             unit.X += dx / distance * travel;
             unit.Y += dy / distance * travel;
             ClampPosition(unit);
@@ -266,10 +444,13 @@ namespace Expedition.Core
         {
             CancelWindup(unit);
             // Cooldown begins at release, independently of render speed or hit FX.
-            unit.CooldownRemaining = unit.Definition.Cooldown;
+            bool blessed = HasTrait(unit, NativeTrait.LanternBlessing) && unit.Shield > 0f;
+            unit.CooldownRemaining = unit.Definition.Cooldown * (blessed ? .85f : 1f);
             if (unit.Definition.AttackKind == AttackKind.Melee)
             {
-                ApplyHit(unit.Definition.Id, target, unit.Definition.Damage);
+                ApplyHit(unit.Definition.Id, target, unit.Definition.Damage, true);
+                if (HasTrait(unit, NativeTrait.Ember) && unit.EmberTargetRemaining <= 0f)
+                { ApplyBurn(unit, target); unit.EmberTargetRemaining = 2f; }
                 return;
             }
 
@@ -304,7 +485,11 @@ namespace Expedition.Core
                 if (distance <= travel + target.Definition.Radius)
                 {
                     projectiles.RemoveAt(i);
-                    ApplyHit(projectile.SourceId, target, projectile.Damage);
+                    ApplyHit(projectile.SourceId, target, projectile.Damage, true);
+                    CombatUnit attacker;
+                    if (byId.TryGetValue(projectile.SourceId, out attacker) &&
+                        HasTrait(attacker, NativeTrait.Ember) && attacker.EmberTargetRemaining <= 0f)
+                    { ApplyBurn(attacker, target); attacker.EmberTargetRemaining = 2f; }
                     continue;
                 }
                 projectile.X += dx / distance * travel;
@@ -313,17 +498,88 @@ namespace Expedition.Core
             }
         }
 
-        private void ApplyHit(string sourceId, CombatUnit target, float damage)
+        private static bool HasTrait(CombatUnit unit, NativeTrait trait)
+        { return unit.Definition.NativeTrait == trait || unit.Definition.InheritedTrait == trait; }
+
+        private void ApplyShield(CombatUnit source, CombatUnit target, float value, float duration)
+        {
+            if (!target.IsAlive || value <= target.Shield) return;
+            target.Shield = value;
+            target.ShieldRemaining = duration;
+            Emit(CombatEventType.ShieldApplied, source.Definition.Id, target.Definition.Id, target.X, target.Y, value);
+        }
+
+        private void ApplyBurn(CombatUnit source, CombatUnit target)
         {
             if (!target.IsAlive) return;
+            if (target.BurnStacks == 0) target.BurnTickRemaining = 1f;
+            target.BurnStacks = Math.Min(3, target.BurnStacks + 1);
+            target.BurnDamage = source.Definition.Damage * .1f * target.BurnStacks;
+            target.BurnRemaining = 3f;
+            Emit(CombatEventType.BurnApplied, source.Definition.Id, target.Definition.Id, target.X, target.Y, target.BurnDamage);
+        }
+
+        private void ApplyHit(string sourceId, CombatUnit target, float damage, bool direct)
+        {
+            if (!target.IsAlive) return;
+            float absorbed = 0f;
+            bool shieldBroken = false;
+            if (target.Shield > 0f)
+            {
+                absorbed = Math.Min(target.Shield, damage);
+                target.Shield -= absorbed;
+                damage -= absorbed;
+                shieldBroken = direct && target.Shield <= Epsilon;
+                if (target.Shield <= Epsilon) { target.Shield = 0f; target.ShieldRemaining = 0f; }
+            }
             float actualDamage = Math.Min(target.Hp, damage);
             target.Hp -= actualDamage;
-            Emit(CombatEventType.Hit, sourceId, target.Definition.Id, target.X, target.Y, actualDamage);
+            Emit(CombatEventType.Hit, sourceId, target.Definition.Id, target.X, target.Y, actualDamage + absorbed);
             if (!target.IsAlive)
             {
                 CancelWindup(target);
                 target.TargetId = null;
                 Emit(CombatEventType.Defeated, sourceId, target.Definition.Id, target.X, target.Y, 0f);
+            }
+            else
+            {
+                if (shieldBroken)
+                {
+                    Emit(CombatEventType.ShieldBroken, sourceId, target.Definition.Id, target.X, target.Y, 0f);
+                    if (target.Definition.Evolution == KnightEvolution.CounterKnight && target.CounterRemaining <= 0f)
+                    {
+                        target.CounterRemaining = 3f;
+                        Emit(CombatEventType.Counterattack, target.Definition.Id, null, target.X, target.Y, 0f);
+                        CombatUnit attacker;
+                        float facingX = target.Definition.Team == Team.Ally ? 1f : -1f, facingY = 0f;
+                        if (sourceId != null && byId.TryGetValue(sourceId, out attacker))
+                        {
+                            float dx = attacker.X - target.X, dy = attacker.Y - target.Y;
+                            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+                            if (distance > Epsilon) { facingX = dx / distance; facingY = dy / distance; }
+                        }
+                        foreach (var enemy in units)
+                        {
+                            if (!enemy.IsAlive || enemy.Definition.Team == target.Definition.Team) continue;
+                            float dx = enemy.X - target.X, dy = enemy.Y - target.Y;
+                            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+                            if (distance > 2.4f || distance <= Epsilon ||
+                                (dx * facingX + dy * facingY) / distance < .5f) continue;
+                            ApplyHit(target.Definition.Id, enemy, target.Definition.Damage * 1.2f, true);
+                            if (enemy.IsAlive)
+                            {
+                                enemy.SlowFactor = enemy.Definition.Role == UnitRole.GateGolem ? .15f : .3f;
+                                enemy.SlowRemaining = 2f;
+                            }
+                        }
+                    }
+                }
+                if (HasTrait(target, NativeTrait.Resolve) && !target.ResolveUsed &&
+                    target.Hp <= target.Definition.MaxHp * .4f)
+                {
+                    target.ResolveUsed = true;
+                    ApplyShield(target, target, target.Definition.MaxHp * .2f, 4f);
+                }
             }
         }
 
@@ -391,6 +647,88 @@ namespace Expedition.Core
             public float Y;
             public float Speed;
             public float Damage;
+        }
+    }
+
+    // Small preparation loop for the first encounter. Every operation keeps a full
+    // snapshot so a material choice can be undone until combat begins.
+    public sealed class ExpeditionPreparation
+    {
+        private struct Snapshot
+        {
+            public int Progress;
+            public int RemainingMask;
+            public NativeTrait KnightTrait, PriestTrait, MageTrait;
+            public KnightEvolution Evolution;
+        }
+        private readonly Stack<Snapshot> history = new Stack<Snapshot>();
+        private int remainingMask = 7;
+        public int Progress { get; private set; }
+        public NativeTrait InheritedTrait { get; private set; }
+        public NativeTrait PriestInheritedTrait { get; private set; }
+        public NativeTrait MageInheritedTrait { get; private set; }
+        public KnightEvolution Evolution { get; private set; }
+        public bool CanUndo { get { return history.Count > 0; } }
+        public bool IsReserveAvailable(int index) { return index >= 0 && index < 3 && (remainingMask & (1 << index)) != 0; }
+        public NativeTrait ReserveTrait(int index)
+        {
+            if (index == 0) return NativeTrait.Resolve;
+            if (index == 1) return NativeTrait.LanternBlessing;
+            if (index == 2) return NativeTrait.Ember;
+            throw new ArgumentOutOfRangeException("index");
+        }
+        public bool Train(int index)
+        {
+            if (!IsReserveAvailable(index) || Progress >= 2 || Evolution != KnightEvolution.None) return false;
+            Save();
+            remainingMask &= ~(1 << index);
+            Progress++;
+            return true;
+        }
+        public NativeTrait InheritedTraitFor(int recipient)
+        {
+            if (recipient == 0) return InheritedTrait;
+            if (recipient == 1) return PriestInheritedTrait;
+            if (recipient == 2) return MageInheritedTrait;
+            throw new ArgumentOutOfRangeException("recipient");
+        }
+        public bool Inherit(int index, int recipient)
+        {
+            if (!IsReserveAvailable(index) || recipient < 0 || recipient > 2) return false;
+            NativeTrait trait = ReserveTrait(index);
+            if (trait == ReserveTrait(recipient) || trait == InheritedTraitFor(recipient)) return false;
+            Save();
+            remainingMask &= ~(1 << index);
+            if (recipient == 0) InheritedTrait = trait;
+            else if (recipient == 1) PriestInheritedTrait = trait;
+            else MageInheritedTrait = trait;
+            return true;
+        }
+        public bool Evolve(KnightEvolution branch)
+        {
+            if (Progress != 2 || Evolution != KnightEvolution.None || branch == KnightEvolution.None) return false;
+            Save();
+            Evolution = branch;
+            return true;
+        }
+        public bool Undo()
+        {
+            if (history.Count == 0) return false;
+            var old = history.Pop();
+            Progress = old.Progress;
+            remainingMask = old.RemainingMask;
+            InheritedTrait = old.KnightTrait;
+            PriestInheritedTrait = old.PriestTrait;
+            MageInheritedTrait = old.MageTrait;
+            Evolution = old.Evolution;
+            return true;
+        }
+        public void Commit() { history.Clear(); }
+        private void Save()
+        {
+            history.Push(new Snapshot { Progress = Progress, RemainingMask = remainingMask,
+                KnightTrait = InheritedTrait, PriestTrait = PriestInheritedTrait,
+                MageTrait = MageInheritedTrait, Evolution = Evolution });
         }
     }
 }

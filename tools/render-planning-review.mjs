@@ -43,6 +43,7 @@ nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-s
 main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
 h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
 pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
 .table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
 footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
 @media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
@@ -53,16 +54,16 @@ footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);
 </head>
 <body>
 <header class="hero">
-<div class="eyebrow">EMBER EXPEDITION · DESIGN REVIEW 0.4</div>
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
 <h1>${escape(title)}</h1>
-<p>조합이 완성되는 성장의 쾌감과 배치로 이기는 공략을 중심에 두고, 기존 기획과 참고작의 규칙을 비교합니다.</p>
-<div class="chips"><span>현재 조건</span><span>Slotbound 공개 구조</span><span>성장과 조합</span><span>배치와 보스</span><span>수정 제안</span></div>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
 </header>
 <div class="layout">
 <nav aria-label="문서 목차"><strong>CONTENTS</strong>${toc.join('\n')}<a class="source-link" href="${escape(basename(sourcePath))}">노션용 Markdown 원문</a></nav>
 <main>${content}</main>
 </div>
-<footer>기획 비교 단계 · 세부 규칙과 수치는 검토안입니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
 </body>
 </html>`;
 await writeFile(outputPath, html, 'utf8');

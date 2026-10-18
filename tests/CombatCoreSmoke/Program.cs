@@ -18,7 +18,15 @@ internal static class Program
             SpeedSchedulingPreservesBattle();
             BoundariesAndOverlapsStayFinite();
             FinishedBattleEmitsOnce();
-            Console.WriteLine("PASS: 6 combat scenarios; " + assertions + " assertions.");
+            PreparationChoicesCanBeUndone();
+            BrokenShieldTriggersOneCounter();
+            GuardianProtectsNearbyAlly();
+            GolemTelegraphLocksDirection();
+            PriestFollowsWithinShieldRange();
+            BurnUsesLatestApplierAttack();
+            FrequentBurnRefreshKeepsTickClock();
+            GolemHoldsPositionDuringTelegraph();
+            Console.WriteLine("PASS: 14 combat and preparation scenarios; " + assertions + " assertions.");
             return 0;
         }
         catch (Exception error)
@@ -201,6 +209,218 @@ internal static class Program
         for (int tick = 0; tick < 60; tick++) sim.Step(Tick);
         Assert(events == 1 && sim.Winner == Team.Ally, "A finished battle must emit BattleEnded only once.");
         Assert(sim.Elapsed == 0f, "Already-ended combat does not advance time.");
+    }
+
+    private static void PreparationChoicesCanBeUndone()
+    {
+        var prep = new ExpeditionPreparation();
+        Assert(prep.Train(0) && prep.Progress == 1, "First reserve raises training progress.");
+        Assert(prep.Inherit(2, 0) && prep.InheritedTrait == NativeTrait.Ember, "Mage passes only its native trait.");
+        Assert(!prep.Train(2), "Consumed donor cannot be used twice.");
+        Assert(prep.Train(1) && prep.Progress == 2, "Second donor enables evolution.");
+        Assert(prep.Evolve(KnightEvolution.CounterKnight), "Evolution branch is chosen in preparation.");
+        Assert(prep.Undo() && prep.Evolution == KnightEvolution.None, "Undo restores branch selection.");
+        Assert(prep.Undo() && prep.Progress == 1 && prep.IsReserveAvailable(1), "Undo restores training material.");
+        Assert(prep.Undo() && prep.InheritedTrait == NativeTrait.None && prep.IsReserveAvailable(2), "Undo restores passed trait and donor.");
+        Assert(prep.Undo() && prep.Progress == 0 && prep.IsReserveAvailable(0), "Undo restores first training material.");
+        Assert(prep.Inherit(0, 1) && prep.PriestInheritedTrait == NativeTrait.Resolve,
+            "Reserve knight can pass its native trait to priest.");
+        Assert(prep.Undo() && prep.PriestInheritedTrait == NativeTrait.None && prep.IsReserveAvailable(0),
+            "Undo restores recipient trait and knight donor.");
+        prep.Commit();
+        Assert(!prep.CanUndo, "Combat commits preparation choices.");
+    }
+
+    private static void BrokenShieldTriggersOneCounter()
+    {
+        var knight = Definition("counter", Team.Ally, AttackKind.Melee);
+        knight.Role = UnitRole.ShieldKnight;
+        knight.Evolution = KnightEvolution.CounterKnight;
+        knight.MaxHp = 200f;
+        knight.Damage = 20f;
+        knight.MoveSpeed = 0f;
+        var enemy = Definition("foe", Team.Enemy, AttackKind.Melee);
+        enemy.MaxHp = 500f;
+        enemy.Damage = 60f;
+        enemy.MoveSpeed = 0f;
+        var secondEnemy = Definition("nearby", Team.Enemy, AttackKind.Melee);
+        secondEnemy.MaxHp = 500f;
+        secondEnemy.Damage = 0f;
+        secondEnemy.MoveSpeed = 0f;
+        var shieldBearer = new CombatUnit(knight, -.8f, 0f);
+        var foe = new CombatUnit(enemy, 0f, 0f);
+        var nearby = new CombatUnit(secondEnemy, 0f, -.8f);
+        var sim = new CombatSimulation(new[] { shieldBearer, foe, nearby });
+        int breaks = 0, counters = 0;
+        sim.Event += delegate(CombatEvent ev)
+        {
+            if (ev.Type == CombatEventType.ShieldBroken) breaks++;
+            if (ev.Type == CombatEventType.Counterattack) counters++;
+        };
+        for (int i = 0; i < 90; i++) sim.Step(Tick);
+        Assert(breaks == 1 && counters == 1, "Direct shield break triggers one counter.");
+        Assert(shieldBearer.Hp < knight.MaxHp && foe.Hp < enemy.MaxHp, "Overflow reaches HP and counter damages attacker.");
+        Assert(nearby.Hp < secondEnemy.MaxHp && nearby.SlowRemaining > 0f,
+            "Frontal counter wave damages and slows a second enemy.");
+    }
+
+    private static void GuardianProtectsNearbyAlly()
+    {
+        var knight = Definition("guardian", Team.Ally, AttackKind.Melee);
+        knight.Role = UnitRole.ShieldKnight;
+        knight.Evolution = KnightEvolution.GuardianKnight;
+        knight.MoveSpeed = 0f;
+        var priest = Definition("priest", Team.Ally, AttackKind.Ranged);
+        priest.MoveSpeed = 0f;
+        var enemy = Definition("dummy", Team.Enemy, AttackKind.Melee);
+        enemy.MaxHp = 10000f;
+        enemy.Damage = 0f;
+        enemy.MoveSpeed = 0f;
+        var ally = new CombatUnit(priest, -2f, 0f);
+        var sim = new CombatSimulation(new[] { new CombatUnit(knight, -1f, 0f), ally,
+            new CombatUnit(enemy, 1f, 0f) });
+        for (int i = 0; i < 310; i++) sim.Step(Tick);
+        Assert(ally.Shield > 0f, "Guardian's timed protection reaches a nearby ally.");
+    }
+
+    private static void GolemTelegraphLocksDirection()
+    {
+        var boss = Definition("golem", Team.Enemy, AttackKind.Melee);
+        boss.Role = UnitRole.GateGolem;
+        boss.MaxHp = 10000f;
+        boss.Damage = 20f;
+        boss.MoveSpeed = 0f;
+        boss.Range = 0f;
+        var ally = Definition("bait", Team.Ally, AttackKind.Melee);
+        ally.Damage = 0f;
+        ally.MoveSpeed = 0f;
+        var second = Definition("second", Team.Ally, AttackKind.Melee);
+        second.Damage = 0f;
+        second.MoveSpeed = 0f;
+        var bait = new CombatUnit(ally, -2f, 0f);
+        var other = new CombatUnit(second, -2f, 2f);
+        var sim = new CombatSimulation(new[] { bait, other, new CombatUnit(boss, 0f, 0f) });
+        int telegraphs = 0, slams = 0;
+        sim.Event += delegate(CombatEvent ev)
+        {
+            if (ev.Type == CombatEventType.BossTelegraph)
+            {
+                telegraphs++;
+                Assert(ev.TargetId == "bait", "Boss targets nearest ally at windup start.");
+                bait.Y = -2.5f;
+                other.Y = 0f;
+            }
+            if (ev.Type == CombatEventType.BossSlam) slams++;
+        };
+        for (int i = 0; i < 295; i++) sim.Step(Tick);
+        Assert(telegraphs == 1 && slams == 1, "Boss warns for 0.8 seconds, then releases once.");
+        Assert(bait.Hp == ally.MaxHp && other.Hp < second.MaxHp, "Slam keeps locked direction despite target movement.");
+    }
+
+    private static void PriestFollowsWithinShieldRange()
+    {
+        var knight = Definition("knight", Team.Ally, AttackKind.Melee);
+        knight.Role = UnitRole.ShieldKnight;
+        knight.MoveSpeed = 0f;
+        knight.Damage = 0f;
+        var priest = Definition("priest", Team.Ally, AttackKind.Ranged);
+        priest.Role = UnitRole.LanternPriest;
+        priest.MaxHp = 200f;
+        priest.Damage = 0f;
+        var enemy = Definition("dummy", Team.Enemy, AttackKind.Melee);
+        enemy.MaxHp = 10000f;
+        enemy.Damage = 0f;
+        enemy.MoveSpeed = 0f;
+        var front = new CombatUnit(knight, -1f, 0f);
+        var support = new CombatUnit(priest, -5.5f, 0f);
+        var sim = new CombatSimulation(new[] { front, support, new CombatUnit(enemy, 2f, 0f) });
+        int shields = 0;
+        sim.Event += delegate(CombatEvent ev)
+        { if (ev.Type == CombatEventType.ShieldApplied && ev.SourceId == "priest" && ev.TargetId == "knight") shields++; };
+        for (int i = 0; i < 310; i++) sim.Step(Tick);
+        Assert(Math.Abs(support.X - front.X) <= 4f && shields > 0,
+            "Priest reaches the frontliner and applies its shield at first cooldown.");
+    }
+
+    private static void BurnUsesLatestApplierAttack()
+    {
+        var low = Definition("low", Team.Ally, AttackKind.Ranged);
+        low.Damage = 10f;
+        low.Windup = 0f;
+        low.Cooldown = 100f;
+        low.ProjectileSpeed = 100f;
+        low.NativeTrait = NativeTrait.Ember;
+        var high = Definition("high", Team.Ally, AttackKind.Ranged);
+        high.Damage = 100f;
+        high.Windup = 1f;
+        high.Cooldown = 100f;
+        high.ProjectileSpeed = 100f;
+        high.NativeTrait = NativeTrait.Ember;
+        var enemy = Definition("dummy", Team.Enemy, AttackKind.Melee);
+        enemy.MaxHp = 10000f;
+        enemy.Damage = 0f;
+        enemy.MoveSpeed = 0f;
+        var target = new CombatUnit(enemy, 1f, 0f);
+        var sim = new CombatSimulation(new[] { new CombatUnit(low, -2f, 0f),
+            new CombatUnit(high, -2f, -.7f), target });
+        for (int i = 0; i < 90; i++) sim.Step(Tick);
+        Assert(target.BurnStacks == 2 && Math.Abs(target.BurnDamage - 20f) < .01f,
+            "Latest applier's attack sets burn tick damage for all current stacks.");
+    }
+
+    private static void GolemHoldsPositionDuringTelegraph()
+    {
+        var boss = Definition("golem", Team.Enemy, AttackKind.Melee);
+        boss.Role = UnitRole.GateGolem;
+        boss.MaxHp = 10000f;
+        boss.Damage = 0f;
+        boss.MoveSpeed = .7f;
+        boss.Range = 0f;
+        var ally = Definition("bait", Team.Ally, AttackKind.Melee);
+        ally.Damage = 0f;
+        ally.MoveSpeed = 0f;
+        var sim = new CombatSimulation(new[] { new CombatUnit(ally, -4f, 0f),
+            new CombatUnit(boss, 3f, 0f) });
+        float warnedX = float.NaN;
+        int slams = 0;
+        sim.Event += delegate(CombatEvent ev)
+        {
+            if (ev.Type == CombatEventType.BossTelegraph) warnedX = sim.Units[1].X;
+            if (ev.Type == CombatEventType.BossSlam)
+            {
+                slams++;
+                Assert(Math.Abs(sim.Units[1].X - warnedX) < .001f,
+                    "Golem does not move away from the visible cone origin during windup.");
+            }
+        };
+        for (int i = 0; i < 295; i++) sim.Step(Tick);
+        Assert(slams == 1, "Moving golem releases one warned slam.");
+    }
+
+    private static void FrequentBurnRefreshKeepsTickClock()
+    {
+        var members = new List<CombatUnit>();
+        for (int i = 0; i < 4; i++)
+        {
+            var caster = Definition("ember" + i, Team.Ally, AttackKind.Ranged);
+            caster.NativeTrait = NativeTrait.Ember;
+            caster.Damage = 10f;
+            caster.Windup = i * .25f;
+            caster.Cooldown = 100f;
+            caster.ProjectileSpeed = 100f;
+            members.Add(new CombatUnit(caster, -2f, -.8f + i * .4f));
+        }
+        var dummy = Definition("dummy", Team.Enemy, AttackKind.Melee);
+        dummy.MaxHp = 10000f;
+        dummy.Damage = 0f;
+        dummy.MoveSpeed = 0f;
+        members.Add(new CombatUnit(dummy, 2f, 0f));
+        var sim = new CombatSimulation(members);
+        int burnTicks = 0;
+        sim.Event += delegate(CombatEvent ev)
+        { if (ev.Type == CombatEventType.Hit && ev.SourceId == null && ev.TargetId == "dummy") burnTicks++; };
+        for (int i = 0; i < 80; i++) sim.Step(Tick);
+        Assert(burnTicks > 0, "Frequent burn refreshes cannot postpone the one-second damage tick indefinitely.");
     }
 
     private static void Near(float actual, float expected, string message)

@@ -55,7 +55,7 @@ Unity 6000.3.24f1에서 **임포트·C# 컴파일·씬 생성, Android APK 빌�
 
 UI 문구를 수정한 증분 빌드는 빌드 성공으로 끝났지만, 실기기에서 `Could not produce class with ID 115`와 기본 GUI 스킨 오류가 발생했다. 빌드 로그에는 기존 player data를 재사용한 기록이 남았다. 테스트 APK 메뉴는 이제 `BuildOptions.CleanBuildCache`로 전체 빌드하고, 이 시제품에서 `PlayerSettings.stripEngineCode`를 꺼서 필요한 엔진 코드를 보존한다. 수정 APK를 다시 설치해 UI·전투 정상 동작을 확인했다. APK 생성 성공 뒤에도 반드시 실기기에서 확인한다. 출시용 용량 최적화는 별도 검증 대상이다. [Unity 클린 빌드 API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/BuildOptions.CleanBuildCache.html)
 
-현재 검증 APK: `Builds/Android/expedition-combat-prototype.apk`, 55,726,334바이트. SHA-256: `B2C68A7E7678F0303CB4FC0B30BD1CEB10628D45287FEDCEABA84C951324CB62`. 이 수정본을 Galaxy Buddy2에 설치해 준비·진화·전승·골렘 예고·반격·승리·재시도·새 원정 복원을 확인했다. `Logs/astra-device/final-runtime.log`에서 Unity 오류·예외·FATAL 패턴이 관찰되지 않았다. 이전 기사·궁수 APK의 해시는 `6D841981EB9826C6EE7FAFF942E7164D0A1AB2F9BAE36BEDB1AE80F38A997ECE`였다. APK와 실행 로그·화면 캡처는 Git에 포함하지 않는다.
+현재 APK: `Builds/Android/expedition-combat-prototype.apk`, 55,727,510바이트. SHA-256: `D2E0ADBE66EEBB7B78832CF193E1EE86C91AB8DC7A27BA286D055358204F0082`. Galaxy Buddy2에 설치해 골렘이 왼쪽을 바라보는 준비 화면을 `Logs/buddy2/golem-facing-left.png`로 확인했다. 이전 첫 조합 APK에서는 준비·진화·전승·골렘 예고·반격·승리·재시도·새 원정 복원을 확인했고, `Logs/astra-device/final-runtime.log`에서 Unity 오류·예외·FATAL 패턴이 관찰되지 않았다. APK와 실행 로그·화면 캡처는 Git에 포함하지 않는다.
 
 ## 구조와 다음 검증
 

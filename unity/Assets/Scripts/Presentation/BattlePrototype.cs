@@ -142,6 +142,8 @@ namespace Expedition.Presentation
             Sprite sprite = sheet != null ? MakeSprite(sheet, crop, new Vector2(.5f, 0), crop.height / height) : solid;
             var renderer = NewRenderer(id, sprite, 10);
             renderer.color = fallback;
+            // Enemies enter from the right and face the allied deployment zone.
+            renderer.flipX = id == "golem";
             if (sheet == null) renderer.transform.localScale = new Vector3(.6f, height, 1);
             renderer.transform.position = position;
             views.Add(id, new UnitView { Id = id, Position = position, StartPosition = position, Renderer = renderer, Height = height, Tint = fallback });

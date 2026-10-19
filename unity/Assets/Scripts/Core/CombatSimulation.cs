@@ -6,7 +6,7 @@ namespace Expedition.Core
 {
     public enum Team { Ally, Enemy }
     public enum AttackKind { Melee, Ranged }
-    public enum UnitRole { Ordinary, ShieldKnight, LanternPriest, FireMage, GateGolem }
+    public enum UnitRole { Ordinary, ShieldKnight, LanternPriest, FireMage, GateGolem, OutpostArcher }
     public enum NativeTrait { None, Resolve, LanternBlessing, Ember }
     public enum KnightEvolution { None, CounterKnight, GuardianKnight }
     public enum CombatEventType { AttackStarted, ProjectileLaunched, Hit, Defeated, BattleEnded, ShieldApplied, ShieldBroken, Counterattack, BossTelegraph, BossSlam, BurnApplied }
@@ -367,6 +367,20 @@ namespace Expedition.Core
             CancelWindup(unit);
             unit.TargetId = null;
             float closestDistance = float.PositiveInfinity;
+            foreach (var candidate in units)
+            {
+                if (!candidate.IsAlive || candidate.Definition.Team == unit.Definition.Team) continue;
+                // Outpost archers select a ranged ally before looking at the front line.
+                if (unit.Definition.Role == UnitRole.OutpostArcher &&
+                    candidate.Definition.AttackKind != AttackKind.Ranged) continue;
+                float distance = DistanceSquared(unit.X, unit.Y, candidate.X, candidate.Y);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    unit.TargetId = candidate.Definition.Id;
+                }
+            }
+            if (unit.TargetId != null || unit.Definition.Role != UnitRole.OutpostArcher) return;
             foreach (var candidate in units)
             {
                 if (!candidate.IsAlive || candidate.Definition.Team == unit.Definition.Team) continue;

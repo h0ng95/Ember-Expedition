@@ -29,7 +29,10 @@ internal static class Program
             StageTwoBattleFlowAndScore();
             StageLossAndDraftVariation();
             StageCatalogAndRecords();
-            Console.WriteLine("PASS: 17 combat, preparation, and stage scenarios; " + assertions + " assertions.");
+            ThreeWaveOutpostFlowAndObjective();
+            FiveOwnedAlliesKeepFourDeployed();
+            OutpostArcherTargetsBackline();
+            Console.WriteLine("PASS: 20 combat, preparation, and stage scenarios; " + assertions + " assertions.");
             return 0;
         }
         catch (Exception error)
@@ -471,8 +474,9 @@ internal static class Program
     {
         Assert(StageCatalog.All.Length == 3 && StageCatalog.ForestEntrance.Waves.Length == 2 &&
             StageCatalog.ForestEntrance.Waves[0].RecruitAfter && StageCatalog.ForestEntrance.Playable &&
-            !StageCatalog.RuinedOutpost.Playable && !StageCatalog.CastleGate.Playable,
-            "Stage data defines the playable two-wave slice and later placeholders.");
+            StageCatalog.RuinedOutpost.Playable && StageCatalog.RuinedOutpost.Waves.Length == 3 &&
+            !StageCatalog.CastleGate.Playable,
+            "Stage data defines playable two- and three-wave slices with a later placeholder.");
         var progress = new StageProgress();
         Assert(progress.IsUnlocked(StageCatalog.ForestEntrance) &&
             !progress.IsUnlocked(StageCatalog.RuinedOutpost) && !progress.IsUnlocked(StageCatalog.CastleGate),
@@ -486,8 +490,9 @@ internal static class Program
             "Best score and stars never regress on a lower clear.");
         var stage = new StageFlow(new Random(8));
         Assert(!stage.OpenBriefing(StageCatalog.RuinedOutpost) && stage.Phase == StagePhase.Map,
-            "Unimplemented stage data cannot launch as a battle.");
+            "Outpost cannot launch without a recorded forest clear.");
         var future = new StageDefinition("test", "THREE WAVES", null, StageObjective.RecruitSurvives, true,
+            new[] { 5, 5, 15 },
             new WaveDefinition("FIRST", 100, 10, 1, 1, false),
             new WaveDefinition("SECOND", 100, 10, 1, 1, true),
             new WaveDefinition("THIRD", 100, 10, 1, 1, false));
@@ -496,6 +501,82 @@ internal static class Program
             stage.CompleteBattle(true, 3, 3) && stage.Phase == StagePhase.Recruitment &&
             stage.ChooseRecruit(0) && stage.BattleNumber == 3,
             "A draft after wave two advances to wave three without returning to wave two.");
+    }
+
+    private static void ThreeWaveOutpostFlowAndObjective()
+    {
+        var progress = new StageProgress();
+        progress.RecordFor(StageCatalog.ForestEntrance).RecordClear(86, 2);
+        var stage = new StageFlow(new Random(22));
+        Assert(stage.OpenBriefing(StageCatalog.RuinedOutpost, progress) && stage.Begin() && stage.StartBattle() &&
+            stage.CompleteBattle(true, 3, 3) && stage.Phase == StagePhase.Recruitment,
+            "Unlocked outpost offers the first recruit after wave one.");
+        RecruitKind first = stage.Candidates[0];
+        Assert(stage.ChooseRecruit(0) && stage.Recruits.Count == 1 && stage.StartBattle() &&
+            stage.CompleteBattle(true, 4, 4) && stage.Phase == StagePhase.Recruitment,
+            "First recruited ally participates in wave two before a second draft.");
+        Assert(stage.Candidates.Count == 3 && stage.Candidates[0] != first &&
+            stage.Candidates[1] != first && stage.Candidates[2] != first,
+            "Second draft offers three archetypes other than the first recruit.");
+        Assert(stage.ChooseRecruit(1) && stage.Recruits.Count == 2 && stage.OwnedCount == 5 &&
+            stage.BattleNumber == 3 && stage.StartBattle() && !stage.CompleteBattle(true, 5, 5) &&
+            stage.CompleteBattle(true, 4, 4, false, 2, 2),
+            "Five owned allies may finish with four deployed and an intact ranged backline.");
+        Assert(stage.Cleared && stage.Score == 100 && stage.Stars == 3 &&
+            stage.ObjectiveMet && stage.BacklineSurvivors == 2 && stage.BacklineDeployed == 2,
+            "Three full-survival waves and the backline objective award 100 points.");
+        Assert(!StageFlow.MeetsObjective(StageCatalog.RuinedOutpost, false, 1, 2) &&
+            StageFlow.CalculateScore(StageCatalog.RuinedOutpost,
+                new[] { 3, 4, 4 }, new[] { 3, 4, 4 }, false) == 90,
+            "A backline casualty removes the objective bonus without invalidating a clear.");
+    }
+
+    private static void FiveOwnedAlliesKeepFourDeployed()
+    {
+        var deployment = new StageDeployment();
+        Assert(deployment.OwnedCount == 3 && deployment.DeployedCount == 3 && deployment.BenchedId == null,
+            "Starter roster deploys all three allies.");
+        deployment.AddRecruit("recruit1");
+        Assert(deployment.OwnedCount == 4 && deployment.DeployedCount == 4 &&
+            deployment.IsDeployed("recruit1") && !deployment.CycleBench(),
+            "First recruit auto-deploys into the fourth slot without a bench choice.");
+        deployment.AddRecruit("recruit2");
+        Assert(deployment.OwnedCount == 5 && deployment.DeployedCount == 4 &&
+            deployment.BenchedId == "recruit2" && !deployment.IsDeployed("recruit2"),
+            "Fifth ally is owned but begins on the bench.");
+        var seenBenches = new HashSet<string>();
+        for (int i = 0; i < 5; i++)
+        {
+            Assert(deployment.CycleBench(), "Bench selector cycles when five allies are owned.");
+            seenBenches.Add(deployment.BenchedId);
+            int active = 0;
+            foreach (string id in new[] { "knight", "priest", "mage", "recruit1", "recruit2" })
+                if (deployment.IsDeployed(id)) active++;
+            Assert(active == 4 && deployment.DeployedCount == 4,
+                "Exactly one of five allies is benched at every selector position.");
+        }
+        Assert(seenBenches.Count == 5 && deployment.BenchedId == "recruit2",
+            "Bench selector can rest every ally and wraps to the default.");
+        deployment.Reset();
+        Assert(deployment.OwnedCount == 3 && deployment.BenchedId == null &&
+            !deployment.IsDeployed("recruit1"), "Returning to a new run clears both recruits and the bench.");
+    }
+
+    private static void OutpostArcherTargetsBackline()
+    {
+        var archerDef = Definition("outpost", Team.Enemy, AttackKind.Ranged);
+        archerDef.Role = UnitRole.OutpostArcher;
+        var frontDef = Definition("front", Team.Ally, AttackKind.Melee);
+        var backDef = Definition("back", Team.Ally, AttackKind.Ranged);
+        var archer = new CombatUnit(archerDef, 3f, 0f);
+        var front = new CombatUnit(frontDef, 1f, 0f);
+        var back = new CombatUnit(backDef, -3f, 0f);
+        var sim = new CombatSimulation(new[] { archer, front, back });
+        sim.Step(Tick);
+        Assert(archer.TargetId == "back", "Outpost archer prefers a ranged ally behind the closer frontliner.");
+        back.Hp = 0f;
+        sim.Step(Tick);
+        Assert(archer.TargetId == "front", "Outpost archer falls back to the frontliner after backline loss.");
     }
 
     private static void Near(float actual, float expected, string message)

@@ -11,21 +11,42 @@ namespace Expedition.Core
     {
         private readonly Random random;
         private readonly List<RecruitKind> candidates = new List<RecruitKind>(3);
+        private readonly List<RecruitKind> recruits = new List<RecruitKind>(2);
+        private readonly List<int> waveSurvivors = new List<int>();
+        private readonly List<int> waveDeployed = new List<int>();
         public StageDefinition Definition { get; private set; }
         public StagePhase Phase { get; private set; }
         public int BattleNumber { get; private set; }
         public RecruitKind? Recruited { get; private set; }
+        public IReadOnlyList<RecruitKind> Recruits { get { return recruits.AsReadOnly(); } }
+        public int OwnedCount { get { return 3 + recruits.Count; } }
         public IReadOnlyList<RecruitKind> Candidates { get { return candidates.AsReadOnly(); } }
         public int Score { get; private set; }
         public int Stars { get; private set; }
         public int LastSurvivors { get; private set; }
         public int LastDeployed { get; private set; }
-        public int FirstSurvivors { get; private set; }
-        public int FirstDeployed { get; private set; }
-        public bool RecruitSurvived { get; private set; }
-        public int FirstSurvivalBonus { get { return SurvivalPoints(10, FirstSurvivors, FirstDeployed); } }
-        public int FinalSurvivalBonus { get { return SurvivalPoints(15, LastSurvivors, LastDeployed); } }
-        public int ObjectiveBonus { get { return RecruitSurvived ? 10 : 0; } }
+        public int BacklineSurvivors { get; private set; }
+        public int BacklineDeployed { get; private set; }
+        public int FirstSurvivors { get { return waveSurvivors.Count > 0 ? waveSurvivors[0] : 0; } }
+        public int FirstDeployed { get { return waveDeployed.Count > 0 ? waveDeployed[0] : 0; } }
+        public bool ObjectiveMet { get; private set; }
+        public int ObjectiveBonus { get { return ObjectiveMet ? 10 : 0; } }
+        public int TotalSurvivalBonus
+        {
+            get
+            {
+                int total = 0;
+                for (int i = 0; i < waveSurvivors.Count; i++) total += WaveSurvivalBonus(i);
+                return total;
+            }
+        }
+        public int WaveSurvivalBonus(int index)
+        {
+            if (index < 0 || index >= waveSurvivors.Count) return 0;
+            return SurvivalPoints(Definition.SurvivalWeights[index], waveSurvivors[index], waveDeployed[index]);
+        }
+        public int WaveSurvivorCount(int index) { return index < waveSurvivors.Count ? waveSurvivors[index] : 0; }
+        public int WaveDeployedCount(int index) { return index < waveDeployed.Count ? waveDeployed[index] : 0; }
         public bool Cleared { get; private set; }
 
         public StageFlow(Random random)
@@ -36,11 +57,12 @@ namespace Expedition.Core
             Phase = StagePhase.Map;
         }
 
-        public bool OpenBriefing(StageDefinition selected = null)
+        public bool OpenBriefing(StageDefinition selected = null, StageProgress progress = null)
         {
             if (Phase != StagePhase.Map) return false;
             selected = selected ?? StageCatalog.ForestEntrance;
             if (!selected.Playable) return false;
+            if (selected.PrerequisiteId != null && (progress == null || !progress.IsUnlocked(selected))) return false;
             Definition = selected;
             Phase = StagePhase.Briefing;
             return true;
@@ -52,8 +74,11 @@ namespace Expedition.Core
             BattleNumber = 1;
             Recruited = null;
             candidates.Clear();
-            Score = Stars = LastSurvivors = LastDeployed = FirstSurvivors = FirstDeployed = 0;
-            RecruitSurvived = false;
+            recruits.Clear();
+            waveSurvivors.Clear();
+            waveDeployed.Clear();
+            Score = Stars = LastSurvivors = LastDeployed = BacklineSurvivors = BacklineDeployed = 0;
+            ObjectiveMet = false;
             Cleared = false;
             Phase = StagePhase.Preparation;
             return true;
@@ -66,9 +91,11 @@ namespace Expedition.Core
             return true;
         }
 
-        public bool CompleteBattle(bool victory, int survivors, int deployed, bool recruitedAlive = false)
+        public bool CompleteBattle(bool victory, int survivors, int deployed, bool recruitedAlive = false,
+            int backlineSurvivors = 0, int backlineDeployed = 0)
         {
-            if (Phase != StagePhase.Battle || deployed < 1 || survivors < 0 || survivors > deployed)
+            if (Phase != StagePhase.Battle || deployed < 1 || deployed > Definition.MaxDeployed ||
+                survivors < 0 || survivors > deployed)
                 return false;
             if (!victory)
             {
@@ -79,11 +106,8 @@ namespace Expedition.Core
                 Phase = StagePhase.Result;
                 return true;
             }
-            if (BattleNumber == 1)
-            {
-                FirstSurvivors = survivors;
-                FirstDeployed = deployed;
-            }
+            waveSurvivors.Add(survivors);
+            waveDeployed.Add(deployed);
             if (Definition.Waves[BattleNumber - 1].RecruitAfter)
             {
                 DraftCandidates();
@@ -98,8 +122,10 @@ namespace Expedition.Core
             }
             LastSurvivors = survivors;
             LastDeployed = deployed;
-            RecruitSurvived = recruitedAlive;
-            Score = CalculateScore(FirstSurvivors, FirstDeployed, survivors, deployed, recruitedAlive);
+            BacklineSurvivors = backlineSurvivors;
+            BacklineDeployed = backlineDeployed;
+            ObjectiveMet = MeetsObjective(Definition, recruitedAlive, backlineSurvivors, backlineDeployed);
+            Score = CalculateScore(Definition, waveSurvivors, waveDeployed, ObjectiveMet);
             Stars = Score >= 98 ? 3 : Score >= 80 ? 2 : 1;
             Cleared = true;
             Phase = StagePhase.Result;
@@ -111,6 +137,7 @@ namespace Expedition.Core
             if (Phase != StagePhase.Recruitment || index < 0 || index >= candidates.Count ||
                 BattleNumber >= Definition.Waves.Length) return false;
             Recruited = candidates[index];
+            recruits.Add(Recruited.Value);
             BattleNumber++;
             Phase = StagePhase.Preparation;
             return true;
@@ -127,11 +154,33 @@ namespace Expedition.Core
         public static int CalculateScore(int firstSurvivors, int firstDeployed,
             int finalSurvivors, int finalDeployed, bool recruitedAlive)
         {
-            if (firstDeployed < 1 || firstSurvivors < 0 || firstSurvivors > firstDeployed ||
-                finalDeployed < 1 || finalSurvivors < 0 || finalSurvivors > finalDeployed)
-                throw new ArgumentOutOfRangeException("firstSurvivors");
-            return 65 + SurvivalPoints(10, firstSurvivors, firstDeployed) +
-                SurvivalPoints(15, finalSurvivors, finalDeployed) + (recruitedAlive ? 10 : 0);
+            return CalculateScore(StageCatalog.ForestEntrance,
+                new[] { firstSurvivors, finalSurvivors }, new[] { firstDeployed, finalDeployed }, recruitedAlive);
+        }
+
+        public static int CalculateScore(StageDefinition definition, IReadOnlyList<int> survivors,
+            IReadOnlyList<int> deployed, bool objectiveMet)
+        {
+            if (definition == null || survivors == null || deployed == null ||
+                survivors.Count != definition.Waves.Length || deployed.Count != definition.Waves.Length)
+                throw new ArgumentException("Score needs one result per wave.");
+            int score = 65 + (objectiveMet ? 10 : 0);
+            for (int i = 0; i < survivors.Count; i++)
+            {
+                if (deployed[i] < 1 || survivors[i] < 0 || survivors[i] > deployed[i])
+                    throw new ArgumentOutOfRangeException("survivors");
+                score += SurvivalPoints(definition.SurvivalWeights[i], survivors[i], deployed[i]);
+            }
+            return score;
+        }
+
+        public static bool MeetsObjective(StageDefinition definition, bool recruitedAlive,
+            int backlineSurvivors, int backlineDeployed)
+        {
+            if (definition.Objective == StageObjective.RecruitSurvives) return recruitedAlive;
+            if (definition.Objective == StageObjective.BacklineSurvives)
+                return backlineDeployed > 0 && backlineSurvivors == backlineDeployed;
+            return false;
         }
 
         private static int SurvivalPoints(int maximum, int survivors, int deployed)
@@ -141,6 +190,7 @@ namespace Expedition.Core
         {
             var pool = new List<RecruitKind> { RecruitKind.ShieldKnight, RecruitKind.LanternPriest,
                 RecruitKind.FireMage, RecruitKind.ScoutArcher };
+            foreach (RecruitKind recruited in recruits) pool.Remove(recruited);
             for (int i = pool.Count - 1; i > 0; i--)
             {
                 int other = random.Next(i + 1);
@@ -149,7 +199,7 @@ namespace Expedition.Core
                 pool[other] = value;
             }
             candidates.Clear();
-            for (int i = 0; i < 3; i++) candidates.Add(pool[i]);
+            for (int i = 0; i < Math.Min(3, pool.Count); i++) candidates.Add(pool[i]);
         }
     }
 }

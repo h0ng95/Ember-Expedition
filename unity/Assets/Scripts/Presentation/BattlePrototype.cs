@@ -20,6 +20,7 @@ namespace Expedition.Presentation
             public float Height, Hit, Punch, Death;
             public CombatUnit Unit;
             public Color Tint;
+            public RecruitKind? RecruitKind;
         }
         sealed class Effect
         {
@@ -52,10 +53,13 @@ namespace Expedition.Presentation
         ExpeditionPreparation preparation = new ExpeditionPreparation();
         readonly StageFlow stage = new StageFlow(new System.Random(Guid.NewGuid().GetHashCode()));
         readonly StageProgress stageProgress = new StageProgress();
+        readonly StageDeployment deployment = new StageDeployment();
         StageDefinition selectedMapStage;
         bool labMode;
         Texture2D characterSheet, routeMap, mapBadge;
-        Sprite golemSprite, forestEnemySprite;
+        SpriteRenderer battlefieldRenderer;
+        Sprite forestBackgroundSprite, outpostBackgroundSprite;
+        Sprite golemSprite, forestEnemySprite, archerFallbackSprite, outpostArcherSprite;
         int selectedRecipient;
         UnitView dragging;
         Vector2 dragOrigin, dragOffset;
@@ -121,11 +125,17 @@ namespace Expedition.Presentation
             var background = Resources.Load<Texture2D>("Art/forest-battlefield");
             if (background != null)
             {
-                var renderer = NewRenderer("Forest", MakeSprite(background,
-                    new Rect(0, 0, background.width, background.height), new Vector2(.5f, .5f), background.width / 16f), -100);
-                renderer.transform.localScale = new Vector3(1, 9f / renderer.sprite.bounds.size.y, 1);
-                renderer.color = new Color(.72f, .77f, .72f);
+                forestBackgroundSprite = MakeSprite(background,
+                    new Rect(0, 0, background.width, background.height), new Vector2(.5f, .5f), background.width / 16f);
+                battlefieldRenderer = NewRenderer("Battlefield", forestBackgroundSprite, -100);
+                battlefieldRenderer.transform.localScale = new Vector3(1, 9f / battlefieldRenderer.sprite.bounds.size.y, 1);
+                battlefieldRenderer.color = new Color(.72f, .77f, .72f);
             }
+            var outpostBackground = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
+            if (outpostBackground != null)
+                outpostBackgroundSprite = MakeSprite(outpostBackground,
+                    new Rect(0, 0, outpostBackground.width, outpostBackground.height),
+                    new Vector2(.5f, .5f), outpostBackground.width / 16f);
             characterSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
             routeMap = Resources.Load<Texture2D>("Art/forest-route-map-v1");
             AddUnit("knight", new Vector2(-2.9f, -.8f), characterSheet, new Rect(493, 641, 302, 423), 1.5f, Color.white);
@@ -135,8 +145,42 @@ namespace Expedition.Presentation
             AddUnit("golem", new Vector2(4.1f, -.7f), characterSheet, new Rect(63, 113, 333, 395), 1.8f, Color.white);
             golemSprite = views["golem"].Renderer.sprite;
             if (characterSheet != null)
+            {
                 forestEnemySprite = MakeSprite(characterSheet, new Rect(892, 124, 300, 353), new Vector2(.5f, 0), 353f / 1.7f);
+                archerFallbackSprite = MakeSprite(characterSheet, new Rect(896, 641, 284, 393), new Vector2(.5f, 0), 393f / 1.7f);
+            }
+            var raider = Resources.Load<Texture2D>("Art/outpost-raider-archer");
+            if (raider != null)
+                // Trim the source's transparent margins so the silhouette matches the sheet characters.
+                outpostArcherSprite = MakeSprite(raider, new Rect(260, 182, 722, 904),
+                    new Vector2(.5f, 0), 904f / 1.7f);
             FitViewport();
+        }
+
+        void SetBattlefield(bool outpost)
+        {
+            if (battlefieldRenderer == null) return;
+            battlefieldRenderer.sprite = outpost && outpostBackgroundSprite != null ?
+                outpostBackgroundSprite : forestBackgroundSprite;
+            battlefieldRenderer.transform.localScale = new Vector3(1, 9f / battlefieldRenderer.sprite.bounds.size.y, 1);
+            battlefieldRenderer.color = outpost ? new Color(.86f, .82f, .76f) : new Color(.72f, .77f, .72f);
+        }
+
+        void CycleBench()
+        {
+            deployment.CycleBench();
+        }
+
+        string BenchName()
+        {
+            UnitView view;
+            string benchId = deployment.BenchedId;
+            if (benchId == null || !views.TryGetValue(benchId, out view)) return "NONE";
+            return benchId == "knight" ? "KNIGHT" : benchId == "priest" ? "PRIEST" :
+                benchId == "mage" ? "MAGE" : "R" + benchId.Substring(7) + " " +
+                (view.RecruitKind == RecruitKind.ShieldKnight ? "KNIGHT" :
+                view.RecruitKind == RecruitKind.LanternPriest ? "PRIEST" :
+                view.RecruitKind == RecruitKind.FireMage ? "MAGE" : "ARCHER");
         }
 
         void LoadStageRecords()
@@ -196,6 +240,7 @@ namespace Expedition.Presentation
             var units = new List<CombatUnit>();
             foreach (var view in views.Values)
             {
+                if (view.Id != "golem" && !deployment.IsDeployed(view.Id)) continue;
                 view.StartPosition = view.Position;
                 view.Unit = new CombatUnit(DefinitionFor(view), view.Position.x, view.Position.y);
                 units.Add(view.Unit);
@@ -210,14 +255,17 @@ namespace Expedition.Presentation
         UnitDefinition DefinitionFor(UnitView view)
         {
             bool enemy = view.Id == "golem";
+            WaveDefinition wave = enemy && !labMode ? stage.Definition.Waves[stage.BattleNumber - 1] : null;
             UnitRole role = view.Id == "knight" ? UnitRole.ShieldKnight :
                 view.Id == "priest" ? UnitRole.LanternPriest :
                 view.Id == "mage" ? UnitRole.FireMage :
-                enemy ? (labMode ? UnitRole.GateGolem : UnitRole.Ordinary) : RecruitRole();
-            bool scout = view.Id == "recruit" && stage.Recruited == RecruitKind.ScoutArcher;
-            bool ranged = role == UnitRole.LanternPriest || role == UnitRole.FireMage || scout;
+                enemy ? labMode ? UnitRole.GateGolem :
+                    wave.EnemyKind == WaveEnemyKind.Archer || wave.EnemyKind == WaveEnemyKind.EliteArcher ?
+                    UnitRole.OutpostArcher : UnitRole.Ordinary : RecruitRole(view.RecruitKind);
+            bool scout = view.RecruitKind == RecruitKind.ScoutArcher;
+            bool ranged = role == UnitRole.LanternPriest || role == UnitRole.FireMage ||
+                role == UnitRole.OutpostArcher || scout;
             bool evolvedKnight = view.Id == "knight" && preparation.Evolution != KnightEvolution.None;
-            WaveDefinition wave = enemy && !labMode ? stage.Definition.Waves[stage.BattleNumber - 1] : null;
             float hp = enemy ? (labMode ? 1200f : wave.EnemyHp) :
                 role == UnitRole.ShieldKnight ? (evolvedKnight ? 350f : 320f) :
                 role == UnitRole.LanternPriest ? 165f : scout ? 125f : 150f;
@@ -229,7 +277,8 @@ namespace Expedition.Presentation
                 Id = view.Id, Team = enemy ? Team.Enemy : Team.Ally,
                 AttackKind = ranged ? AttackKind.Ranged : AttackKind.Melee,
                 MaxHp = hp, Damage = damage,
-                Range = ranged ? (role == UnitRole.LanternPriest ? 3.6f : 5.7f) : 1.15f,
+                Range = ranged ? (role == UnitRole.LanternPriest ? 3.6f :
+                    role == UnitRole.OutpostArcher ? 6.6f : 5.7f) : 1.15f,
                 MoveSpeed = enemy ? (labMode ? .68f : wave.EnemySpeed) : role == UnitRole.ShieldKnight ? 1.25f : 1.05f,
                 Cooldown = enemy ? (labMode ? 1.6f : wave.EnemyCooldown) : role == UnitRole.ShieldKnight ? .9f :
                     role == UnitRole.LanternPriest ? 1.7f : scout ? 1.1f : 1.25f,
@@ -245,11 +294,11 @@ namespace Expedition.Presentation
             };
         }
 
-        UnitRole RecruitRole()
+        static UnitRole RecruitRole(RecruitKind? kind)
         {
-            if (stage.Recruited == RecruitKind.ShieldKnight) return UnitRole.ShieldKnight;
-            if (stage.Recruited == RecruitKind.LanternPriest) return UnitRole.LanternPriest;
-            if (stage.Recruited == RecruitKind.FireMage) return UnitRole.FireMage;
+            if (kind == RecruitKind.ShieldKnight) return UnitRole.ShieldKnight;
+            if (kind == RecruitKind.LanternPriest) return UnitRole.LanternPriest;
+            if (kind == RecruitKind.FireMage) return UnitRole.FireMage;
             return UnitRole.Ordinary;
         }
 
@@ -274,55 +323,77 @@ namespace Expedition.Presentation
             selectedMapStage = null;
             labMode = false;
             ResetBattle();
-            RemoveRecruit();
+            RemoveRecruits();
+            deployment.Reset();
             preparation = new ExpeditionPreparation();
             selectedRecipient = 0;
+            SetBattlefield(stage.Definition.Id == "1-2");
             ConfigureStageEnemy();
         }
 
         void ConfigureStageEnemy()
         {
             var enemy = views["golem"];
-            enemy.Renderer.sprite = forestEnemySprite != null ? forestEnemySprite : golemSprite;
-            // The forest beast faces left in the sheet; the golem fallback faces right.
-            enemy.Renderer.flipX = forestEnemySprite == null;
-            enemy.Renderer.transform.localScale = stage.BattleNumber == 1 ? Vector3.one : new Vector3(1.12f, 1.12f, 1f);
-            enemy.Tint = stage.BattleNumber == 1 ? Color.white : new Color(1f, .77f, .7f);
-            enemy.Height = stage.BattleNumber == 1 ? 1.7f : 1.9f;
+            WaveDefinition wave = stage.Definition.Waves[stage.BattleNumber - 1];
+            bool archer = wave.EnemyKind == WaveEnemyKind.Archer || wave.EnemyKind == WaveEnemyKind.EliteArcher;
+            enemy.Renderer.sprite = archer ? outpostArcherSprite != null ? outpostArcherSprite :
+                archerFallbackSprite != null ? archerFallbackSprite : golemSprite :
+                forestEnemySprite != null ? forestEnemySprite : golemSprite;
+            // Dedicated raider and forest beast face left; the sheet archer and golem face right.
+            enemy.Renderer.flipX = archer ? outpostArcherSprite == null : forestEnemySprite == null;
+            float scale = wave.EnemyKind == WaveEnemyKind.EliteArcher ? 1.22f :
+                stage.BattleNumber == 1 ? 1f : 1.12f;
+            enemy.Renderer.transform.localScale = new Vector3(scale, scale, 1f);
+            enemy.Tint = archer ? wave.EnemyKind == WaveEnemyKind.EliteArcher ?
+                new Color(1f, .83f, .67f) : Color.white :
+                stage.BattleNumber == 1 ? Color.white : new Color(1f, .77f, .7f);
+            enemy.Height = 1.7f * scale;
             enemy.Position = enemy.StartPosition = new Vector2(4.1f, -.7f);
         }
 
         void AddRecruit(RecruitKind kind)
         {
-            RemoveRecruit();
+            int number = stage.Recruits.Count;
             Rect crop = kind == RecruitKind.ShieldKnight ? new Rect(493, 641, 302, 423) :
                 kind == RecruitKind.ScoutArcher ? new Rect(896, 641, 284, 393) : new Rect(64, 635, 340, 455);
             Color tint = kind == RecruitKind.FireMage ? new Color(1f, .68f, .42f) : Color.white;
-            AddUnit("recruit", new Vector2(-1.4f, -2.7f), characterSheet, crop, 1.5f, tint);
+            string id = "recruit" + number;
+            AddUnit(id, number == 1 ? new Vector2(-1.4f, -2.7f) : new Vector2(-3.2f, -2.7f),
+                characterSheet, crop, 1.5f, tint);
+            views[id].RecruitKind = kind;
+            deployment.AddRecruit(id);
         }
 
-        void RemoveRecruit()
+        void RemoveRecruits()
         {
-            UnitView view;
-            if (!views.TryGetValue("recruit", out view)) return;
-            Destroy(view.Renderer.gameObject);
-            views.Remove("recruit");
+            foreach (string id in new[] { "recruit1", "recruit2" })
+            {
+                UnitView view;
+                if (!views.TryGetValue(id, out view)) continue;
+                Destroy(view.Renderer.gameObject);
+                views.Remove(id);
+            }
         }
 
         void FinishStageBattle()
         {
             if (labMode || stage.Phase != StagePhase.Battle || simulation == null || !simulation.IsFinished) return;
-            int deployed = 0, survivors = 0;
+            int deployed = 0, survivors = 0, backlineDeployed = 0, backlineSurvivors = 0;
             bool recruitedAlive = false;
             foreach (var view in views.Values)
             {
-                if (view.Id == "golem") continue;
+                if (view.Id == "golem" || !deployment.IsDeployed(view.Id)) continue;
                 deployed++;
                 if (view.Unit != null && view.Unit.IsAlive) survivors++;
-                if (view.Id == "recruit" && view.Unit != null && view.Unit.IsAlive) recruitedAlive = true;
+                if (view.RecruitKind.HasValue && view.Unit != null && view.Unit.IsAlive) recruitedAlive = true;
+                if (view.Unit != null && view.Unit.Definition.AttackKind == AttackKind.Ranged)
+                {
+                    backlineDeployed++;
+                    if (view.Unit.IsAlive) backlineSurvivors++;
+                }
             }
             bool victory = simulation.Winner == Team.Ally;
-            stage.CompleteBattle(victory, survivors, deployed, recruitedAlive);
+            stage.CompleteBattle(victory, survivors, deployed, recruitedAlive, backlineSurvivors, backlineDeployed);
             ResetBattle();
             if (stage.Phase == StagePhase.Result && stage.Cleared)
             {
@@ -340,7 +411,8 @@ namespace Expedition.Presentation
             if (!labMode) stage.ReturnMap();
             labMode = false;
             selectedMapStage = null;
-            RemoveRecruit();
+            RemoveRecruits();
+            deployment.Reset();
             preparation = new ExpeditionPreparation();
             selectedRecipient = 0;
         }
@@ -350,9 +422,11 @@ namespace Expedition.Presentation
             labMode = true;
             selectedMapStage = null;
             ResetBattle();
-            RemoveRecruit();
+            RemoveRecruits();
+            deployment.Reset();
             preparation = new ExpeditionPreparation();
             selectedRecipient = 0;
+            SetBattlefield(false);
             var enemy = views["golem"];
             enemy.Renderer.sprite = golemSprite;
             // The golem sprite faces right in the sheet and must be mirrored toward the allies.
@@ -385,6 +459,7 @@ namespace Expedition.Presentation
             FinishStageBattle();
             foreach (var view in views.Values)
             {
+                view.Renderer.enabled = view.Id == "golem" || deployment.IsDeployed(view.Id);
                 if (view.Unit != null) view.Position = new Vector2(view.Unit.X, view.Unit.Y);
                 float direction = view.Id == "golem" ? -1 : 1;
                 float anticipation = view.Unit != null ? view.Unit.AttackProgress : 0;
@@ -414,7 +489,8 @@ namespace Expedition.Presentation
             if (down && viewport.Contains(screen) && ui.y > 272 && ui.y < 580)
             {
                 foreach (var view in views.Values)
-                    if (view.Id != "golem" && view.Renderer.bounds.Contains(new Vector3(world.x, world.y, 0)))
+                    if (view.Id != "golem" && deployment.IsDeployed(view.Id) &&
+                        view.Renderer.bounds.Contains(new Vector3(world.x, world.y, 0)))
                     { dragging = view; dragOrigin = view.Position; dragOffset = view.Position - world; break; }
             }
             if (dragging != null && held)
@@ -601,7 +677,9 @@ namespace Expedition.Presentation
             if (!running)
             {
                 Fill(new Rect(18, 96, 1244, 174), new Color(.025f, .07f, .065f, .93f));
-                GUI.Label(new Rect(28, 98, 1210, 28), "TRAIN KNIGHT +1: choose a reserve to consume. PASS: choose recipient, then donor. UNDO before battle.", smallStyle);
+                GUI.Label(new Rect(28, 98, 1210, 28), deployment.BenchedId == null ?
+                    "TRAIN KNIGHT +1: choose a reserve to consume. PASS: choose recipient, then donor. UNDO before battle." :
+                    "FOUR DEPLOY: tap BENCH to change who sits out. TRAIN / PASS / UNDO remain available.", smallStyle);
                 string[] donor = { "KNIGHT", "PRIEST", "FIRE MAGE" };
                 string[] recipient = { "KNIGHT", "PRIEST", "MAGE" };
                 if (GUI.Button(new Rect(28, 130, 235, 45), "PASS TO " + recipient[selectedRecipient], prepButtonStyle))
@@ -626,15 +704,17 @@ namespace Expedition.Presentation
                 GUI.enabled = true;
                 string available = "Available: ";
                 for (int i = 0; i < 3; i++) available += donor[i] + (preparation.IsReserveAvailable(i) ? " ready" : " used") + (i < 2 ? "  /  " : "");
-                GUI.Label(new Rect(28, 235, 1210, 30), available + "   |   " + recipient[selectedRecipient] +
+                GUI.Label(new Rect(28, 235, deployment.BenchedId == null ? 1210 : 966, 30), available + "   |   " + recipient[selectedRecipient] +
                     " inherited: " + preparation.InheritedTraitFor(selectedRecipient).ToString().ToUpperInvariant(), smallStyle);
+                if (deployment.BenchedId != null && GUI.Button(new Rect(995, 232, 252, 38), "BENCH: " + BenchName(), prepButtonStyle))
+                    CycleBench();
                 Fill(new Rect(128, 392, 442, 192), new Color(.5f, .95f, .65f, .06f));
                 Fill(new Rect(128, 392, 442, 2), new Color(.6f, .9f, .6f, .5f));
                 GUI.Label(new Rect(26, 549, 600, 30), "ALLIED DEPLOYMENT ZONE", smallStyle);
             }
             foreach (var view in views.Values)
             {
-                if (view.Death >= 1) continue;
+                if (view.Death >= 1 || (view.Id != "golem" && !deployment.IsDeployed(view.Id))) continue;
                 Vector2 point = ScreenToUi(gameCamera.WorldToScreenPoint(view.Position + Vector2.up * (view.Height + .16f)));
                 if (!running && point.y < 288f)
                     point.y = Mathf.Max(288f, ScreenToUi(gameCamera.WorldToScreenPoint(view.Position)).y + 10f);
@@ -646,7 +726,7 @@ namespace Expedition.Presentation
                 if (!running)
                 {
                     string name = DisplayName(view);
-                    GUI.Label(view.Id == "recruit" ? new Rect(point.x - 46, point.y - 27, 150, 28) :
+                    GUI.Label(view.RecruitKind.HasValue ? new Rect(point.x - 46, point.y - 27, 150, 28) :
                         new Rect(point.x - 115, point.y - 27, 230, 28), name, smallStyle);
                 }
             }
@@ -659,13 +739,18 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(point.x - 41, point.y - 41, 80, 42), number.Damage.ToString(), numberStyle);
             }
             GUI.color = Color.white;
-            string status = !running ? "Knight: " + (preparation.Evolution == KnightEvolution.None ? "BASE" : preparation.Evolution.ToString().ToUpperInvariant()) +
-                "  /  inherited: " + preparation.InheritedTrait.ToString().ToUpperInvariant() : simulation.IsFinished ?
+            string status = !running ? (deployment.BenchedId == null ? "Knight: " +
+                (preparation.Evolution == KnightEvolution.None ? "BASE" : preparation.Evolution.ToString().ToUpperInvariant()) +
+                "  /  inherited: " + preparation.InheritedTrait.ToString().ToUpperInvariant() :
+                "FOUR DEPLOY  /  BENCHED: " + BenchName()) : simulation.IsFinished ?
                 (simulation.Winner == Team.Ally ? "VICTORY - retry with a new formation." : "DEFEAT - adjust formation and retry.") : paused ?
                 "PAUSED - tap RESUME." : labMode ? "Red lines lock the golem's slam direction for 0.8s." :
+                stage.Definition.Id == "1-2" ? "Enemy archers target your ranged backline first." :
                 "Defeat the forest enemy. The recruited ally joins wave two.";
             GUI.Label(new Rect(28, 607, 710, 40), status, labelStyle);
-            GUI.Label(new Rect(28, 652, 730, 36), "COUNTER: cone + slow on shield break  /  GUARDIAN: ally shield every 5s", smallStyle);
+            GUI.Label(new Rect(28, 652, 730, 36), !labMode && stage.Definition.Id == "1-2" ?
+                "BACKLINE: deployed Priest, Mage and ranged recruits. Keep all alive in final wave." :
+                "COUNTER: cone + slow on shield break  /  GUARDIAN: ally shield every 5s", smallStyle);
             if (GUI.Button(new Rect(776, 611, 105, 76), speed == 1 ? "1x" : "2x", buttonStyle)) speed = speed == 1 ? 2 : 1;
             GUI.enabled = running && !simulation.IsFinished;
             if (GUI.Button(new Rect(895, 611, 154, 76), paused ? "RESUME" : "PAUSE", buttonStyle)) SetPaused(!paused);
@@ -681,9 +766,10 @@ namespace Expedition.Presentation
         {
             if (view.Id == "golem") return labMode ? "GATE GOLEM (ART TEMP)" :
                 stage.Definition.Waves[stage.BattleNumber - 1].Name;
-            if (view.Id == "recruit") return stage.Recruited == RecruitKind.ScoutArcher ? "NEW ARCHER" :
-                stage.Recruited == RecruitKind.ShieldKnight ? "NEW KNIGHT" :
-                stage.Recruited == RecruitKind.LanternPriest ? "NEW PRIEST" : "NEW MAGE";
+            if (view.RecruitKind.HasValue) return "R" + view.Id.Substring(7) + " " +
+                (view.RecruitKind == RecruitKind.ScoutArcher ? "ARCHER" :
+                view.RecruitKind == RecruitKind.ShieldKnight ? "KNIGHT" :
+                view.RecruitKind == RecruitKind.LanternPriest ? "PRIEST" : "MAGE");
             if (view.Id == "mage") return "FIRE MAGE (ART TEMP)";
             if (view.Id == "priest") return "LANTERN PRIEST";
             return preparation.Evolution == KnightEvolution.CounterKnight ? "COUNTER KNIGHT" :
@@ -757,17 +843,18 @@ namespace Expedition.Presentation
                 "READY  /  " + definition.Waves.Length + " BATTLES" : "ROUTE OPEN  /  COMING NEXT" :
                 "LOCKED  /  CLEAR " + definition.PrerequisiteId + " FIRST", labelStyle);
             GUI.Label(new Rect(303, 315, 650, 37), definition.Objective == StageObjective.RecruitSurvives ?
-                "GOAL  /  BRING THE RECRUIT HOME" : definition.Objective == StageObjective.HoldOut ?
-                "GOAL  /  HOLD THE OUTPOST" : "GOAL  /  DEFEAT THE GATE GOLEM", labelStyle);
+                "GOAL  /  BRING THE RECRUIT HOME" : definition.Objective == StageObjective.BacklineSurvives ?
+                "GOAL  /  ALL RANGED ALLIES SURVIVE FINAL" : "GOAL  /  DEFEAT THE GATE GOLEM", labelStyle);
             GUI.Label(new Rect(303, 373, 650, 37), "BEST  " + record.BestScore + "/100    " + new string('★', record.BestStars), labelStyle);
             GUI.Label(new Rect(303, 423, 650, 36), definition.Playable ?
+                definition.Id == "1-2" ? "Recruit twice, then choose four of five to deploy." :
                 "Survive both waves with your new ally for three stars." :
                 "This stage is planned for the next playable update.", smallStyle);
             if (GUI.Button(new Rect(301, 500, 232, 58), "CLOSE", buttonStyle)) selectedMapStage = null;
             GUI.enabled = unlocked && definition.Playable;
             if (GUI.Button(new Rect(746, 500, 232, 58), "START STAGE", buttonStyle))
             {
-                if (stage.OpenBriefing(definition)) StartStageRun();
+                if (stage.OpenBriefing(definition, stageProgress)) StartStageRun();
             }
             GUI.enabled = true;
         }
@@ -807,18 +894,28 @@ namespace Expedition.Presentation
                 StageRecord record = stageProgress.RecordFor(stage.Definition);
                 Fill(new Rect(72, 125, 1136, 448), new Color(.075f, .14f, .12f));
                 GUI.Label(new Rect(112, 155, 1050, 54), stage.Definition.Id + "  " + stage.Definition.Name, titleStyle);
-                GUI.Label(new Rect(112, 227, 1020, 38), stage.Definition.Waves.Length + " battles  /  forest beast, then a tougher elite", labelStyle);
-                GUI.Label(new Rect(112, 278, 1020, 38), "After battle one: choose 1 of 3 random recruits for your fourth slot.", labelStyle);
-                GUI.Label(new Rect(112, 329, 1020, 38), "Objective: bring the recruited ally home. Keep everyone alive for three stars.", labelStyle);
-                GUI.Label(new Rect(112, 380, 1020, 38), "Score: clear 65 + wave 1 survival 10 + wave 2 survival 15 + recruit survives 10", smallStyle);
+                GUI.Label(new Rect(112, 227, 1020, 38), stage.Definition.Id == "1-2" ?
+                    "Three archer battles  /  enemy arrows favor your ranged backline." :
+                    "Two battles  /  forest beast, then a tougher elite.", labelStyle);
+                GUI.Label(new Rect(112, 278, 1020, 38), stage.Definition.Id == "1-2" ?
+                    "Recruit after waves one and two. Choose four of five before the final wave." :
+                    "After battle one: choose 1 of 3 random recruits for your fourth slot.", labelStyle);
+                GUI.Label(new Rect(112, 329, 1020, 38), stage.Definition.Id == "1-2" ?
+                    "Goal: all deployed ranged allies survive the final battle." :
+                    "Goal: bring the recruited ally home. Keep everyone alive for three stars.", labelStyle);
+                GUI.Label(new Rect(112, 380, 1020, 38), stage.Definition.Id == "1-2" ?
+                    "Score: clear 65 + wave survival 5 / 5 / 15 + backline goal 10" :
+                    "Score: clear 65 + wave survival 10 / 15 + recruit survives 10", smallStyle);
                 GUI.Label(new Rect(112, 451, 1020, 38), "Best: " + record.BestScore + " / 100     Stars: " + new string('★', record.BestStars), labelStyle);
                 if (GUI.Button(new Rect(715, 594, 240, 75), "BACK TO MAP", buttonStyle)) ReturnToMap();
                 if (GUI.Button(new Rect(971, 594, 240, 75), "START STAGE", buttonStyle)) StartStageRun();
             }
             else if (stage.Phase == StagePhase.Recruitment)
             {
-                GUI.Label(new Rect(47, 116, 1120, 47), "WAVE 1 CLEAR  /  RECRUIT ONE ALLY", titleStyle);
-                GUI.Label(new Rect(48, 165, 1150, 40), "Three candidates are drawn for this run. Your choice joins the second battle as a deployable ally.", smallStyle);
+                GUI.Label(new Rect(47, 116, 1120, 47), "WAVE " + stage.BattleNumber + " CLEAR  /  RECRUIT ONE ALLY", titleStyle);
+                GUI.Label(new Rect(48, 165, 1150, 40), stage.Definition.Id == "1-2" && stage.BattleNumber == 2 ?
+                    "Your fifth ally joins the roster. Choose one ally to bench before wave three." :
+                    "Three candidates are drawn. Your choice joins the next battle as a deployable ally.", smallStyle);
                 for (int i = 0; i < stage.Candidates.Count; i++)
                 {
                     RecruitKind kind = stage.Candidates[i];
@@ -834,23 +931,33 @@ namespace Expedition.Presentation
                         PlaySound("ui_confirm");
                     }
                 }
-                GUI.Label(new Rect(56, 557, 1150, 42), "All allies recover before wave two. Drag the new ally in preparation.", labelStyle);
+                GUI.Label(new Rect(56, 557, 1150, 42), stage.Definition.Id == "1-2" && stage.BattleNumber == 3 ?
+                    "Five allies owned, four deploy. Tap BENCH in preparation to choose who sits out." :
+                    "All allies recover before the next wave. Drag the new ally in preparation.", labelStyle);
             }
             else if (stage.Phase == StagePhase.Result)
             {
                 StageRecord record = stageProgress.RecordFor(stage.Definition);
                 Fill(new Rect(82, 120, 1116, 480), new Color(.075f, .14f, .12f));
-                GUI.Label(new Rect(118, 154, 1020, 52), stage.Cleared ? "STAGE CLEAR  /  1-1 FOREST ENTRANCE" :
-                    "EXPEDITION FAILED  /  1-1 FOREST ENTRANCE", titleStyle);
+                GUI.Label(new Rect(118, 154, 1020, 52), (stage.Cleared ? "STAGE CLEAR  /  " :
+                    "EXPEDITION FAILED  /  ") + stage.Definition.Id + " " + stage.Definition.Name, titleStyle);
                 GUI.Label(new Rect(118, 224, 1030, 42), "This run: " + stage.Score + " / 100    " + new string('★', stage.Stars), labelStyle);
-                GUI.Label(new Rect(118, 285, 1030, 42), stage.Cleared ?
-                    "Clear 65 + wave 1 " + stage.FirstSurvivalBonus + " + wave 2 " + stage.FinalSurvivalBonus +
-                    " + recruit " + stage.ObjectiveBonus :
-                    "No score or stars on defeat. Choose 1-1 again from the map.", labelStyle);
-                GUI.Label(new Rect(118, 344, 1030, 42), "Survivors: wave 1 " + stage.FirstSurvivors + "/" + stage.FirstDeployed +
-                    "    final " + stage.LastSurvivors + "/" + stage.LastDeployed, labelStyle);
+                string points = "Clear 65";
+                string losses = "Survivors:";
+                for (int i = 0; i < stage.Definition.Waves.Length; i++)
+                {
+                    points += " + W" + (i + 1) + " " + stage.WaveSurvivalBonus(i);
+                    losses += "  W" + (i + 1) + " " + stage.WaveSurvivorCount(i) + "/" + stage.WaveDeployedCount(i);
+                }
+                points += " + goal " + stage.ObjectiveBonus;
+                GUI.Label(new Rect(118, 285, 1030, 42), stage.Cleared ? points :
+                    "No score or stars on defeat. Choose this stage again from the map.", labelStyle);
+                GUI.Label(new Rect(118, 344, 1030, 42), stage.Cleared ? losses :
+                    "Final survivors: " + stage.LastSurvivors + "/" + stage.LastDeployed, labelStyle);
                 GUI.Label(new Rect(118, 407, 1030, 42), "Best record: " + record.BestScore + " / 100    " + new string('★', record.BestStars), labelStyle);
-                GUI.Label(new Rect(118, 469, 1030, 42), stage.Cleared ? "1-2 path opened on the map." :
+                GUI.Label(new Rect(118, 469, 1030, 42), stage.Cleared ?
+                    (stage.Definition.Id == "1-1" ? "1-2 path opened on the map." :
+                    "1-3 path opened on the map. Gate stage is coming next.") :
                     "A new attempt draws a fresh recruit offer.", labelStyle);
                 if (GUI.Button(new Rect(940, 613, 276, 74), "BACK TO MAP", buttonStyle)) ReturnToMap();
             }

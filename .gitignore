@@ -24,6 +24,7 @@ tests/**/out/
 
 # Local reference captures belong to their respective games and are not project assets.
 docs/references/
+docs/**/device-evidence/*.log
 
 # Local credentials, caches, and machine-specific scratch files.
 .env

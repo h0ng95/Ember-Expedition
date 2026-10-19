@@ -92,6 +92,12 @@ namespace Expedition.Presentation
         CatalogBattle battle;
         Material clippedSpriteMaterial;
         Texture2D bossConceptSheet;
+        Texture2D expeditionBackground, raiderConcept;
+        Action standaloneClose, expeditionExit;
+        Action<bool> expeditionResult;
+        bool expeditionMode;
+        int expeditionWave, expeditionTotal;
+        string expeditionEncounter;
         string error, lastAction;
         string latestSkill;
         float latestSkillUntil;
@@ -104,6 +110,9 @@ namespace Expedition.Presentation
 
         public void Open(BattlePrototype owner, Camera camera)
         {
+            expeditionMode = false;
+            standaloneClose = expeditionExit = null;
+            expeditionResult = null;
             parent = owner;
             parentCamera = camera;
             if (clippedSpriteMaterial == null)
@@ -135,6 +144,35 @@ namespace Expedition.Presentation
             enabled = true;
         }
 
+        public void OpenStandalone(Action onClose)
+        {
+            Open(null, null);
+            standaloneClose = onClose;
+        }
+
+        // The real expedition owns progression and saving; the lab only plays this battle.
+        public void OpenExpeditionBattle(CatalogBattle runBattle, int wave, int total,
+            string encounter, Action<bool> onResult, Action onExit)
+        {
+            if (runBattle == null || onResult == null || onExit == null)
+                throw new ArgumentNullException("Expedition battle callbacks and battle are required.");
+            Open(null, null);
+            expeditionMode = true;
+            expeditionWave = wave;
+            expeditionTotal = total;
+            expeditionEncounter = encounter;
+            expeditionResult = onResult;
+            expeditionExit = onExit;
+            expeditionBackground = Resources.Load<Texture2D>(wave <= 2 ?
+                "Art/forest-battlefield" : "Art/ruined-outpost-battlefield");
+            battle = runBattle;
+            foreach (CatalogBattleUnit unit in battle.Units)
+                combatViews.Add(new View { Unit = unit, LastPosition = new Vector2(unit.X, unit.Y) });
+            battle.Event += OnBattleEvent;
+            speed = 1f;
+            screen = 1;
+        }
+
         void OnDisable()
         {
             ClearBattle(); ReleaseSheets();
@@ -149,9 +187,11 @@ namespace Expedition.Presentation
 
         void Close()
         {
+            Action callback = expeditionMode ? expeditionExit : standaloneClose;
             enabled = false;
             if (parentCamera != null) parentCamera.enabled = true;
             if (parent != null) parent.enabled = true;
+            if (callback != null) callback();
         }
 
         void ClearBattle()
@@ -200,7 +240,8 @@ namespace Expedition.Presentation
                 source.NewRelease = true;
                 if (e.Kind == CatalogEventKind.SkillUsed)
                 {
-                    latestSkill = source.Unit.FormId + "  /  " + e.AbilityId;
+                    latestSkill = expeditionMode ? UnitName(source.Unit) + " · 기술 발동" :
+                        source.Unit.FormId + "  /  " + e.AbilityId;
                     latestSkillUntil = clock + 2f;
                 }
             }
@@ -235,8 +276,17 @@ namespace Expedition.Presentation
             {
                 accumulator += gameDt;
                 int steps = 0;
-                while (accumulator >= Tick && steps++ < 12 && !battle.Ended)
+                while (accumulator >= Tick && steps++ < 12 && !battle.Ended && (!expeditionMode || clock < 75f))
                 { battle.Step(Tick); accumulator -= Tick; clock += Tick; }
+            }
+            if (expeditionMode && (battle.Ended || clock >= 75f))
+            {
+                bool victory = battle.Ended && battle.Winner == CatalogTeam.Ally;
+                Action<bool> callback = expeditionResult;
+                expeditionResult = null;
+                enabled = false;
+                if (callback != null) callback(victory);
+                return;
             }
             foreach (View view in combatViews)
             {
@@ -293,9 +343,15 @@ namespace Expedition.Presentation
             EnsureStyles();
             GUI.matrix = Matrix4x4.TRS(new Vector3(viewport.x, viewport.y), Quaternion.identity,
                 new Vector3(scale, scale, 1));
+            if (expeditionMode)
+            {
+                DrawExpeditionBattle();
+                GUI.matrix = Matrix4x4.identity;
+                return;
+            }
             Fill(new Rect(0, 0, Width, Height), Ink);
             Fill(new Rect(0, 0, Width, 66), new Color(.035f, .085f, .09f));
-            if (GUI.Button(new Rect(15, 11, 100, 43), "← MAP", button)) { Close(); GUI.matrix = Matrix4x4.identity; return; }
+            if (GUI.Button(new Rect(15, 11, 100, 43), standaloneClose != null ? "← HOME" : "← MAP", button)) { Close(); GUI.matrix = Matrix4x4.identity; return; }
             GUI.Label(new Rect(132, 12, 720, 44), "EMBER EXPEDITION  /  CATALOG COMBAT LAB", title);
             if (GUI.Button(new Rect(925, 10, 160, 45), screen == 2 ? "TEAM BUILDER" : "ANIMATION QA", button))
             { screen = screen == 2 ? 0 : 2; TrimSheets(); }
@@ -369,6 +425,114 @@ namespace Expedition.Presentation
                 { party.RemoveAt(i); TrimSheets(); }
                 GUI.enabled = true;
             }
+        }
+
+        void DrawExpeditionBattle()
+        {
+            Fill(new Rect(0, 0, Width, Height), Ink);
+            if (expeditionBackground != null)
+                GUI.DrawTexture(new Rect(0, 68, Width, 652), expeditionBackground, ScaleMode.ScaleAndCrop);
+            Fill(new Rect(0, 68, Width, 652), new Color(.025f, .07f, .07f, .28f));
+            Fill(new Rect(0, 0, Width, 76), new Color(.035f, .085f, .09f));
+            GUI.Label(new Rect(26, 17, 690, 40), expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal, title);
+            GUI.Label(new Rect(745, 24, 145, 30), clock.ToString("0.0") + " / 75초", label);
+            if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button)) speed = speed == 1f ? 2f : 1f;
+            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button)) paused = !paused;
+            if (battle == null) return;
+
+            Rect arena = new Rect(24, 92, 1232, 560);
+            // Draw higher feet first so the foreground characters overlap consistently.
+            var sorted = new List<View>(combatViews);
+            sorted.Sort((a, b) => b.Unit.Y.CompareTo(a.Unit.Y));
+            foreach (View view in sorted)
+            {
+                CatalogBattleUnit unit = view.Unit;
+                Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
+                Color previous = GUI.color;
+                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, Mathf.Max(.24f, 1f - view.StateTime));
+                if (unit.Team == CatalogTeam.Enemy) DrawExpeditionEnemy(view, point);
+                else DrawSheet(unit.FormId, view.State, BattleAnimationFrame(view),
+                    new Rect(point.x - 60, point.y - 144, 120, 144), ShouldFlip(view));
+                GUI.color = previous;
+                if (!unit.IsAlive) continue;
+                float width = unit.IsBoss ? 174f : 74f;
+                float barY = Mathf.Max(arena.y + 10, point.y - (unit.IsBoss ? 267f : 134f));
+                float barX = Mathf.Clamp(point.x - width * .5f, arena.x + 3, arena.xMax - width - 3);
+                Fill(new Rect(barX - 1, barY - 1, width + 2, 8), new Color(.02f, .035f, .035f, .9f));
+                Fill(new Rect(barX, barY, width * Mathf.Clamp01(unit.Hp / unit.MaxHp), 6),
+                    unit.Team == CatalogTeam.Ally ? new Color(.45f, .94f, .55f) : new Color(1f, .45f, .39f));
+                if (unit.Shield > 0) Fill(new Rect(barX, barY + 9,
+                    width * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), new Color(.5f, .84f, 1f));
+                if (unit.IsBoss) GUI.Label(new Rect(barX, barY - 28, 200, 26), "성문 골렘", heading);
+                else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
+            }
+            foreach (FloatText text in floating)
+            {
+                Vector2 point = ExpeditionPoint(text.Position, arena);
+                Color previous = GUI.color;
+                GUI.color = new Color(text.Color.r, text.Color.g, text.Color.b, 1f - text.Age / .75f);
+                float textY = Mathf.Clamp(point.y - 156f - text.Age * 42f, arena.y + 24, arena.yMax - 30);
+                GUI.Label(new Rect(point.x - 40, textY, 80, 28), text.Text, centered);
+                GUI.color = previous;
+            }
+            Fill(new Rect(0, 664, Width, 56), new Color(.035f, .085f, .09f, .92f));
+            GUI.Label(new Rect(28, 677, 870, 30), latestSkill != null && latestSkillUntil > clock ?
+                latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", label);
+            int alive = 0;
+            foreach (CatalogBattleUnit unit in battle.Units) if (unit.Team == CatalogTeam.Ally && unit.IsAlive) alive++;
+            GUI.Label(new Rect(1080, 677, 160, 30), "생존 " + alive + "명", heading);
+            if (paused)
+            {
+                Fill(new Rect(0, 76, Width, 588), new Color(.015f, .04f, .04f, .72f));
+                Fill(new Rect(402, 220, 476, 276), Panel);
+                GUI.Label(new Rect(440, 245, 400, 45), "잠시 쉬어가기", title);
+                GUI.Label(new Rect(440, 302, 400, 50), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
+                if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) paused = false;
+                if (GUI.Button(new Rect(642, 384, 198, 62), "거점으로", button)) Close();
+            }
+        }
+
+        string UnitName(CatalogBattleUnit unit)
+        {
+            if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
+            return unit.IsBoss ? "성문 골렘" : unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "숲의 야수";
+        }
+
+        static Vector2 ExpeditionPoint(Vector2 position, Rect arena)
+        {
+            return new Vector2(Mathf.Clamp(arena.center.x + position.x * 83f, arena.x + 75, arena.xMax - 75),
+                Mathf.Clamp(arena.y + 405f - position.y * 48f, arena.y + 285, arena.yMax - 35));
+        }
+
+        void DrawExpeditionEnemy(View view, Vector2 foot)
+        {
+            if (bossConceptSheet == null) bossConceptSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
+            bool isRaider = view.Unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0;
+            Texture2D texture = bossConceptSheet;
+            Rect crop;
+            float width, height;
+            bool flip = false;
+            if (view.Unit.IsBoss)
+            { crop = new Rect(63, 113, 333, 395); width = 214; height = 254; flip = true; }
+            else if (isRaider)
+            {
+                if (raiderConcept == null) raiderConcept = Resources.Load<Texture2D>("Art/outpost-raider-archer");
+                texture = raiderConcept;
+                crop = new Rect(260, 182, 722, 904); width = 103; height = 129;
+            }
+            else { crop = new Rect(892, 124, 300, 353); width = 108; height = 127; }
+            if (texture == null) return;
+            // Existing concept sprites already face left, except the golem. Motion is temporary.
+            float move = view.State == 1 ? Mathf.Sin(view.StateTime * 13f) * 3f : 0;
+            float lunge = view.ReleaseRemaining > 0 ? Mathf.Sin(view.ReleaseAge / .18f * Mathf.PI) * 9f : 0;
+            Rect destination = new Rect(foot.x - width / 2 - lunge, foot.y - height + move, width, height);
+            if (!view.Unit.IsAlive) { destination.y += height * .72f; destination.height *= .28f; }
+            // These legacy textures retain their original dimensions (max import size 2048).
+            float sourceWidth = texture.width;
+            float sourceHeight = texture.height;
+            Rect uv = new Rect(crop.x / sourceWidth, crop.y / sourceHeight, crop.width / sourceWidth, crop.height / sourceHeight);
+            if (flip) { uv.x += uv.width; uv.width = -uv.width; }
+            GUI.DrawTextureWithTexCoords(destination, texture, uv, true);
         }
 
         void DrawArena()

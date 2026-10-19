@@ -71,10 +71,10 @@ namespace Expedition.Presentation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Bootstrap()
         {
-            if (FindFirstObjectByType<BattlePrototype>() != null) return;
-            var root = new GameObject("Expedition Combat Prototype");
+            if (FindFirstObjectByType<ExpeditionScreen>() != null) return;
+            var root = new GameObject("Ember Expedition");
             DontDestroyOnLoad(root);
-            root.AddComponent<BattlePrototype>();
+            root.AddComponent<ExpeditionScreen>();
         }
 
         void Awake()

@@ -1,6 +1,16 @@
 # Ember Expedition · Unity 전투 시제품
 
-> 2026-10-18 첫 조합 전투 구간의 현재 조작과 구현 범위는 [FIRST-SLICE.md](FIRST-SLICE.md)를 참고한다. 아래 기기 점검 기록은 이전 기사·궁수 시제품의 기록이다.
+> **2026-10-19 v0.11:** 기본 실행은 새 원정·이어하기와 6전투 원정이다. [현재 조작·검증 기록](../docs/design-v0.11/HANDOFF.md)을 먼저 읽는다. 아래 2026-10-18 기록과 [FIRST-SLICE.md](FIRST-SLICE.md)는 이전 시제품의 기록이다.
+
+## v0.11 실행
+
+1. 앱 홈에서 **새 원정**을 누른다. 이전 원정이 있으면 교체 확인을 거친다.
+2. **동료 소환**으로 대기석에 동료를 얻고 전장으로 끌어 배치한다. 출전은 최대 5명이다.
+3. 동료를 눌러 전승·진화·결합을 선택하고 재료와 결과를 확인한다. 준비 중에는 **되돌리기**로 직전 행동을 취소할 수 있다.
+4. **전투 시작** 후 승패에 따라 다음 준비로 이어진다. 저장은 소환·성장·배치·전투 시작·결과 때 처리한다.
+5. **이어하기**는 준비·결과 상태를 복구하고, 중단된 전투는 동일한 시작 편성으로 다시 재생한다.
+
+`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 6전투 표본 원정을 검사한다. 일괄 빌드의 `-executeMethod Expedition.EditorTools.ExpeditionRunValidation.BuildAndroid`는 이 검사를 통과한 뒤 APK를 만든다.
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 

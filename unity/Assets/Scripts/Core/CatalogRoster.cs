@@ -19,6 +19,29 @@ namespace Expedition.Core
         }
     }
 
+    [Serializable]
+    public sealed class CatalogMemberSave
+    {
+        public string Id, FormId, BranchId, InheritedTraitId;
+        public int Growth;
+        public float X, Y;
+    }
+
+    [Serializable]
+    public sealed class CatalogRosterHistorySave
+    {
+        public CatalogMemberSave[] Members;
+    }
+
+    [Serializable]
+    public sealed class CatalogRosterSave
+    {
+        public int SupplyUsed;
+        public CatalogMemberSave[] Members;
+        // Most recent preparation action first.
+        public CatalogRosterHistorySave[] History;
+    }
+
     public sealed class CatalogRoster
     {
         readonly CatalogDatabase catalog;
@@ -42,7 +65,8 @@ namespace Expedition.Core
 
         public bool Recruit(string id, string baseFormId, float x, float y)
         {
-            if (supply >= 14 || string.IsNullOrEmpty(id) || Find(id) != null) return false;
+            if (supply >= 14 || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(baseFormId) || Find(id) != null ||
+                float.IsNaN(x) || float.IsInfinity(x) || float.IsNaN(y) || float.IsInfinity(y)) return false;
             CatalogForm form = catalog.Get(baseFormId);
             if (!baseFormId.StartsWith("B-", StringComparison.Ordinal)) return false;
             var recruited = new CatalogMember { Id = id, FormId = form.Id, X = x, Y = y };
@@ -121,6 +145,68 @@ namespace Expedition.Core
         }
 
         public void CommitPreparation() { history.Clear(); }
+
+        public CatalogRosterSave Capture()
+        {
+            var snapshots = new List<CatalogRosterHistorySave>();
+            foreach (List<CatalogMember> snapshot in history)
+                snapshots.Add(new CatalogRosterHistorySave { Members = CaptureMembers(snapshot) });
+            return new CatalogRosterSave { SupplyUsed = supply, Members = CaptureMembers(members), History = snapshots.ToArray() };
+        }
+
+        public static CatalogRoster Restore(CatalogDatabase catalog, CatalogRosterSave save)
+        {
+            if (catalog == null) throw new ArgumentNullException("catalog");
+            if (save == null || save.SupplyUsed < 0 || save.SupplyUsed > 14 || save.Members == null || save.History == null)
+                throw new ArgumentException("Invalid roster save.");
+            var roster = new CatalogRoster(catalog);
+            roster.supply = save.SupplyUsed;
+            roster.members.AddRange(RestoreMembers(catalog, save.Members, save.SupplyUsed));
+            for (int i = save.History.Length - 1; i >= 0; i--)
+                roster.history.Push(RestoreMembers(catalog, save.History[i] == null ? null : save.History[i].Members, save.SupplyUsed));
+            return roster;
+        }
+
+        static CatalogMemberSave[] CaptureMembers(List<CatalogMember> source)
+        {
+            var result = new CatalogMemberSave[source.Count];
+            for (int i = 0; i < source.Count; i++)
+            {
+                CatalogMember member = source[i];
+                result[i] = new CatalogMemberSave { Id = member.Id, FormId = member.FormId,
+                    BranchId = member.BranchId, InheritedTraitId = member.InheritedTraitId,
+                    Growth = member.Growth, X = member.X, Y = member.Y };
+            }
+            return result;
+        }
+
+        static List<CatalogMember> RestoreMembers(CatalogDatabase catalog, CatalogMemberSave[] source, int supply)
+        {
+            if (source == null || source.Length > supply) throw new ArgumentException("Invalid roster members.");
+            var result = new List<CatalogMember>(source.Length);
+            var ids = new HashSet<string>(StringComparer.Ordinal);
+            foreach (CatalogMemberSave item in source)
+            {
+                if (item == null || string.IsNullOrEmpty(item.Id) || !ids.Add(item.Id) ||
+                    item.Growth < 0 || item.Growth > 6 || float.IsNaN(item.X) || float.IsInfinity(item.X) ||
+                    float.IsNaN(item.Y) || float.IsInfinity(item.Y)) throw new ArgumentException("Invalid roster member.");
+                catalog.Get(item.FormId);
+                string branchId = string.IsNullOrEmpty(item.BranchId) ? null : item.BranchId;
+                string traitId = string.IsNullOrEmpty(item.InheritedTraitId) ? null : item.InheritedTraitId;
+                if (branchId != null) catalog.Get(branchId);
+                if (item.FormId.StartsWith("F-", StringComparison.Ordinal) &&
+                    (branchId == null || !branchId.StartsWith("E-" + FamilyCode(item.FormId) + "-", StringComparison.Ordinal)))
+                    throw new ArgumentException("Final form lacks a matching branch.");
+                if (item.FormId.StartsWith("E-", StringComparison.Ordinal) && branchId != item.FormId ||
+                    !item.FormId.StartsWith("E-", StringComparison.Ordinal) &&
+                    !item.FormId.StartsWith("F-", StringComparison.Ordinal) && branchId != null)
+                    throw new ArgumentException("Invalid branch for form.");
+                result.Add(new CatalogMember { Id = item.Id, FormId = item.FormId,
+                    BranchId = branchId, InheritedTraitId = traitId,
+                    Growth = item.Growth, X = item.X, Y = item.Y });
+            }
+            return result;
+        }
 
         public static bool FitsSupply(int finals, int branches, int hybrids, int basics,
             int available = 14, int maximumDeployed = 5)

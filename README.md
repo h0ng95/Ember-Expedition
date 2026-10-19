@@ -5,7 +5,7 @@
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
-- 현재 단계: 방패 기사·등불 사제·불꽃 마법사와 성문 골렘의 첫 조합 전투를 Galaxy Buddy2에서 실행했다. 훈련·특성 전승·기사 분기 진화·배치·보스 공격·승리를 확인했다.
+- 현재 단계: Galaxy Buddy2에서 지도 → 1-1의 2전투 → 무작위 동료 영입 → 점수·별 → 지도로 복귀하는 흐름을 시험한다. 훈련·특성 전승·기사 분기 진화와 성문 골렘은 `COMBAT LAB`에서 시험할 수 있다.
 
 ## 시작하기
 
@@ -27,9 +27,9 @@
 | `ui/` | 브라우저에서 검토하는 초기 화면 시안 |
 | `docs/` | 게임 기획서와 전투 연출 분석 |
 
-[첫 전투 조작과 검증 범위](unity/FIRST-SLICE.md) · [월드맵·스테이지 기획 v0.7](docs/stage-plan-v0.7/잔불원정대-월드맵-스테이지-기획.md) · [중세 판타지 기획서 v0.6](docs/ember-expedition-design-v0.6.md) · [읽기용 기획서](docs/ember-expedition-design-v0.6.html) · [Slotbound 비교](docs/slotbound-comparison-v0.4.md) · [이전 동양풍 검토안](docs/ember-expedition-design-v0.5.md) · [UI 시안](ui/README.md)
+[1-1 플레이 방법과 검증 범위](unity/FIRST-SLICE.md) · [월드맵·스테이지 기획 v0.7](docs/stage-plan-v0.7/잔불원정대-월드맵-스테이지-기획.md) · [중세 판타지 기획서 v0.6](docs/ember-expedition-design-v0.6.md) · [읽기용 기획서](docs/ember-expedition-design-v0.6.html) · [Slotbound 비교](docs/slotbound-comparison-v0.4.md) · [이전 동양풍 검토안](docs/ember-expedition-design-v0.5.md) · [UI 시안](ui/README.md)
 
-현재 기획의 중심은 **조합·연쇄 효과의 성장과 배치·보스 공략**이다. 테마는 중세 판타지로 정했고, 0.6에서는 방패 기사·등불 사제·불꽃 마법사로 시작하는 훈련·특성 전승·분기 진화를 설계했다. 0.7에서는 월드맵에서 고르는 짧은 스테이지와 점수·별을 제안한다. 기존 도트 시안의 장점을 살려 캐릭터를 다듬는다. 현재는 첫 조합의 한 전투만 구현됐고, 월드맵·무작위 영입·별 평가는 후속 단계다.
+현재 기획의 중심은 **조합·연쇄 효과의 성장과 배치·보스 공략**이다. 테마는 중세 판타지로 정했다. 현재 1-1에서는 지도 선택, 무작위 영입과 네 번째 동료 배치, 2전투 결과와 최고 기록 저장을 검증한다. 1-2·1-3은 지도에 표시되지만 전투는 아직 없다. 기존 도트 시안의 장점을 살려 캐릭터를 다듬는다.
 
 ## 아트와 출처
 
@@ -44,4 +44,4 @@
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
 - 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
-아직 영입·보상·연속 원정·저장·광고를 연결한 완성 게임은 아니다. 단계별 검증 후 확장한다.
+현재 영입·점수·별·기록 저장은 1-1 검증 범위다. 추가 스테이지·광고·출시 설정은 후속 단계다.

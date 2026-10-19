@@ -26,7 +26,10 @@ internal static class Program
             BurnUsesLatestApplierAttack();
             FrequentBurnRefreshKeepsTickClock();
             GolemHoldsPositionDuringTelegraph();
-            Console.WriteLine("PASS: 14 combat and preparation scenarios; " + assertions + " assertions.");
+            StageTwoBattleFlowAndScore();
+            StageLossAndDraftVariation();
+            StageCatalogAndRecords();
+            Console.WriteLine("PASS: 17 combat, preparation, and stage scenarios; " + assertions + " assertions.");
             return 0;
         }
         catch (Exception error)
@@ -421,6 +424,78 @@ internal static class Program
         { if (ev.Type == CombatEventType.Hit && ev.SourceId == null && ev.TargetId == "dummy") burnTicks++; };
         for (int i = 0; i < 80; i++) sim.Step(Tick);
         Assert(burnTicks > 0, "Frequent burn refreshes cannot postpone the one-second damage tick indefinitely.");
+    }
+
+    private static void StageTwoBattleFlowAndScore()
+    {
+        var stage = new StageFlow(new Random(14));
+        Assert(stage.Phase == StagePhase.Map && stage.OpenBriefing() && stage.Begin(),
+            "Map node opens briefing and starts wave one preparation.");
+        Assert(stage.BattleNumber == 1 && stage.StartBattle(), "First wave can start.");
+        Assert(stage.CompleteBattle(true, 3, 3) && stage.Phase == StagePhase.Recruitment,
+            "First victory offers recruitment before wave two.");
+        Assert(stage.Candidates.Count == 3 && stage.Candidates[0] != stage.Candidates[1] &&
+            stage.Candidates[0] != stage.Candidates[2] && stage.Candidates[1] != stage.Candidates[2],
+            "Draft contains three distinct archetypes.");
+        var recruited = stage.Candidates[1];
+        Assert(stage.ChooseRecruit(1) && stage.Recruited == recruited && stage.BattleNumber == 2,
+            "Selected candidate joins the second wave.");
+        Assert(stage.StartBattle() && stage.CompleteBattle(true, 3, 4, true), "Second victory finishes stage.");
+        Assert(stage.Phase == StagePhase.Result && stage.Cleared && stage.Score == 96 && stage.Stars == 2,
+            "One final casualty still clears with two stars and a surviving recruit.");
+        Assert(stage.ReturnMap() && stage.Phase == StagePhase.Map, "Result returns to map without auto-start.");
+        Assert(StageFlow.CalculateScore(3, 3, 4, 4, true) == 100 &&
+            StageFlow.CalculateScore(2, 3, 4, 4, true) == 97 &&
+            StageFlow.CalculateScore(3, 3, 3, 4, false) == 86,
+            "Both wave survival and recruited ally survival change score without timing pressure.");
+    }
+
+    private static void StageLossAndDraftVariation()
+    {
+        var stage = new StageFlow(new Random(30));
+        stage.OpenBriefing(); stage.Begin(); stage.StartBattle();
+        Assert(stage.CompleteBattle(false, 0, 3) && stage.Phase == StagePhase.Result &&
+            stage.Score == 0 && stage.Stars == 0, "A loss awards no score or stars.");
+        Assert(stage.ReturnMap(), "A failed run returns to map.");
+        var signatures = new HashSet<string>();
+        for (int seed = 0; seed < 20; seed++)
+        {
+            var attempt = new StageFlow(new Random(seed));
+            attempt.OpenBriefing(); attempt.Begin(); attempt.StartBattle(); attempt.CompleteBattle(true, 3, 3);
+            signatures.Add(attempt.Candidates[0] + "," + attempt.Candidates[1] + "," + attempt.Candidates[2]);
+        }
+        Assert(signatures.Count > 1, "Recruit candidates vary between random runs.");
+    }
+
+    private static void StageCatalogAndRecords()
+    {
+        Assert(StageCatalog.All.Length == 3 && StageCatalog.ForestEntrance.Waves.Length == 2 &&
+            StageCatalog.ForestEntrance.Waves[0].RecruitAfter && StageCatalog.ForestEntrance.Playable &&
+            !StageCatalog.RuinedOutpost.Playable && !StageCatalog.CastleGate.Playable,
+            "Stage data defines the playable two-wave slice and later placeholders.");
+        var progress = new StageProgress();
+        Assert(progress.IsUnlocked(StageCatalog.ForestEntrance) &&
+            !progress.IsUnlocked(StageCatalog.RuinedOutpost) && !progress.IsUnlocked(StageCatalog.CastleGate),
+            "Prerequisite clears gate the route.");
+        progress.RecordFor(StageCatalog.ForestEntrance).RecordClear(86, 2);
+        Assert(progress.IsUnlocked(StageCatalog.RuinedOutpost) && !progress.IsUnlocked(StageCatalog.CastleGate),
+            "First clear opens the next node only.");
+        progress.RecordFor(StageCatalog.ForestEntrance).RecordClear(79, 1);
+        Assert(progress.RecordFor(StageCatalog.ForestEntrance).BestScore == 86 &&
+            progress.RecordFor(StageCatalog.ForestEntrance).BestStars == 2,
+            "Best score and stars never regress on a lower clear.");
+        var stage = new StageFlow(new Random(8));
+        Assert(!stage.OpenBriefing(StageCatalog.RuinedOutpost) && stage.Phase == StagePhase.Map,
+            "Unimplemented stage data cannot launch as a battle.");
+        var future = new StageDefinition("test", "THREE WAVES", null, StageObjective.RecruitSurvives, true,
+            new WaveDefinition("FIRST", 100, 10, 1, 1, false),
+            new WaveDefinition("SECOND", 100, 10, 1, 1, true),
+            new WaveDefinition("THIRD", 100, 10, 1, 1, false));
+        Assert(stage.OpenBriefing(future) && stage.Begin() && stage.StartBattle() &&
+            stage.CompleteBattle(true, 3, 3) && stage.BattleNumber == 2 && stage.StartBattle() &&
+            stage.CompleteBattle(true, 3, 3) && stage.Phase == StagePhase.Recruitment &&
+            stage.ChooseRecruit(0) && stage.BattleNumber == 3,
+            "A draft after wave two advances to wave three without returning to wave two.");
     }
 
     private static void Near(float actual, float expected, string message)

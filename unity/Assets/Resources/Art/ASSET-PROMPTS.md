@@ -1,8 +1,8 @@
 # UI concept asset prompts
 
-Generated on 2026-10-18 using the built-in `image_gen.imagegen` tool. Newly generated images; no input image references. These are concept assets for the first UI review, not final production sprites.
+The initial battlefield and character sheets were generated on 2026-10-18 using the built-in `image_gen.imagegen` tool without input image references. The later world-map backdrop used the battlefield as a style reference. These are concept assets, not final production art.
 
-## Release review status · 2026-10-18
+## Release review status · updated 2026-10-19
 
 All images in this record, including all six characters in both sheets, are **concepts awaiting release review**. Generation records have been inspected; character-by-character comparison against existing IP and release rights review have not been completed. Newly generated does not certify originality, non-infringement, or exclusive copyright ownership. Historical prompts below are preserved verbatim and are not legal conclusions.
 
@@ -81,3 +81,16 @@ Bottom-middle: purple mushroom alchemist with short mushroom cap fitting inside 
 Bottom-right: short red-moss forest monster with 2 cream horns and rust leaf mane, tiny amber eyes.
 Characters face three-quarter right except monster three-quarter left. Full body from head to feet. All approximately equal height. Cute original fantasy adventure silhouettes.
 Background: REAL TRANSPARENT alpha, zero opacity. No painted checkerboard, no ground shadows, no backdrop, no cell lines, no text, no labels. Exactly six sprites with huge clear gaps, no touching sprites, no extra objects. Entire image has a wide empty transparent outer border. This is a clean technical sprite atlas, not a character illustration poster.
+
+## Forest route world map v1
+
+- Generated on 2026-10-19 as an original **concept backdrop** for the stage-select map; release review is pending under the same status above.
+- Workspace file: `forest-route-map-v1.png`
+- Dimensions: 1672 × 941 pixels; PNG, RGB; `transparent_background: false`.
+- Original generated file: `C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-e81375f2-be6e-4992-990c-4120e0112f90.png`
+- Tool: built-in `image_gen.imagegen`.
+- Input: `forest-battlefield.png` as a **style reference only** for pixel scale and palette. The path, landmarks, and composition were generated anew. Stage buttons, stars, and labels are Unity UI, not embedded in the image.
+
+### Exact prompt
+
+Use case: stylized-concept. Asset type: original landscape mobile game world-map BACKGROUND ONLY for a medieval fantasy pixel-art stage select screen. Input image: the attached forest battlefield is a STYLE REFERENCE ONLY for pixel scale, soft teal-green woods, sunlit gold paths, and weathered stone; make an entirely new bird's-eye map composition rather than altering or reproducing that battlefield. Create a wide 16:9 original hand-crafted pixel-art map of the 'Ashen Beacon Forest': a winding pale stone-and-dirt trail begins at a small campsite in the lower left, passes a ruined woodland watchpost near the middle, and approaches an ancient castle gate at the upper right. Include an unlit beacon tower or brazier at the distant gate; small streams, fir trees, mossy ruins, and warm patches of light give readable depth. Keep the three trail stops visually separated and leave generous clear space around them for large interactive buttons and stars that will be drawn by Unity. Cohesive with charming medieval pixel heroes, evocative but uncluttered, crisp intentional pixel clusters, readable on a low-end landscape phone. NO characters, creatures, numbered circles, text, icons, UI panels, logos, watermarks, birds, slingshots, or elements recognizable from any existing game. Original layout and silhouettes. Flat full-bleed map artwork, no decorative frame.

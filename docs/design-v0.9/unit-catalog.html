@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>잔불 원정대 직업·진화·결합체 상세 설계</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>잔불 원정대 직업·진화·결합체 상세 설계</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1 이번 문서에서 구체화하는 것</a>
+<a href="#section-2">2 능력치의 의미와 공통 전투 규칙</a>
+<a href="#section-3">3 전체 능력치표</a>
+<a href="#section-4">4 성장과 결합의 규칙</a>
+<a href="#section-5">5 기본 직업의 고유 스킬</a>
+<a href="#section-6">6 분기 진화의 고유 스킬</a>
+<a href="#section-7">7 최종 진화의 추가 스킬</a>
+<a href="#section-8">8 특수 결합체와 결합식</a>
+<a href="#section-9">9 본래 특성과 전승 효과</a>
+<a href="#section-10">10 조합을 완성하는 예시</a>
+<a href="#section-11">11 성장 공급과 제작 비용 검산</a>
+<a href="#section-12">12 외형과 애니메이션 설계</a>
+<a href="#section-13">13 화면과 도감에 보여 줄 정보</a>
+<a href="#section-14">14 밸런스 검증과 실제 제작 순서</a><a class="source-link" href="unit-catalog.md">노션용 Markdown 원문</a></nav>
+<main><p>2026년 10월 19일 · v0.9 콘텐츠 설계 초안 · v0.8의 전투·성장 상세 보완</p>
+<p><strong>기본 6종, 분기 진화 12종, 최종 진화 6종, 특수 결합체 6종으로 총 30형태를 설계한다.</strong> 각 형태의 능력치, 기술, 성장 조건, 전승 특성, 외형과 전투 역할을 함께 정의한다. 이 문서는 제작에 필요한 초안이며 밸런스 검증이나 아트 제작을 완료했다는 의미가 아니다.</p>
+<p>사용자가 선택한 버튼 무작위 소환과 중세풍 도트, 가로 화면, 자동 전투와 사전 배치를 따른다. 여기서 결합체는 <strong>서로 다른 계열의 분기 진화 동료 둘을 합쳐 얻는 별도 직업</strong>이라는 제안이다. 숫자와 결합식, 이름은 검증 후 변경할 수 있다.</p>
+<p><a href="../design-v0.8/ember-expedition-replan.html">게임 전체 기획 v0.8</a> · <a href="../design-v0.8/ui-concept.html">화면 구성 시안</a> · <a href="unit-stats-draft.json">능력치 데이터 원문</a></p>
+<p><strong>후속 제작:</strong> <a href="../design-v0.10/production-notes.html">v0.10 전투 구현과 30형태 애니메이션</a>에서 실제 구현·660프레임 제작·밸런스 실험 결과를 확인할 수 있다. 아래 수치와 미구현 안내는 v0.9 작성 시점의 설계 이력이며, 현재 시험 수치는 v0.10 런타임 데이터와 보고서를 따른다.</p>
+<h2 id="section-1">1 이번 문서에서 구체화하는 것</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>상세 범위</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>직업별 능력치</td>
+<td>HP·위력·방어·공격 간격·사거리·이동 속도</td>
+</tr>
+<tr>
+<td>고유 행동</td>
+<td>대상·범위·계수·발동 조건·재사용 시간</td>
+</tr>
+<tr>
+<td>분기 진화</td>
+<td>두 분기의 다른 역할, 진화 조건과 기술 교체</td>
+</tr>
+<tr>
+<td>최종 진화</td>
+<td>여섯 계열의 최종 형태와 분기 정체성 유지</td>
+</tr>
+<tr>
+<td>일반 전승</td>
+<td>성장 진행과 전달할 본래 특성, 중복·교체 규칙</td>
+</tr>
+<tr>
+<td>특수 결합</td>
+<td>여섯 결합식, 소모되는 동료와 결과의 능력</td>
+</tr>
+<tr>
+<td>시각적 제작</td>
+<td>무기·실루엣·공격 자세·명중 표현의 차이</td>
+</tr>
+<tr>
+<td>검증</td>
+<td>공급량, 성장 비용, 전투 기여, 무작위 영입의 편향</td>
+</tr>
+</tbody></table></div>
+<p>현재 게임에 구현된 데이터와는 구분한다. 방어력 계산, 아래의 30형태, 특수 결합은 이 문서에서 제안하는 설계다. JSON은 능력치 검토용이며 게임이 읽는 런타임 데이터가 아니다.</p>
+<h2 id="section-2">2 능력치의 의미와 공통 전투 규칙</h2>
+<h3>수치의 단위</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>수치</th>
+<th>뜻</th>
+<th>비교할 때 주의할 점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HP</td>
+<td>최대 체력</td>
+<td>전투가 끝나면 다음 준비에서 전원 회복하는 v0.8 제안 유지</td>
+</tr>
+<tr>
+<td>위력</td>
+<td>기본 공격과 기술 계수에 쓰는 공통 수치</td>
+<td>회복·보호막도 별도 계수로 계산</td>
+</tr>
+<tr>
+<td>방어</td>
+<td>모든 피해에 적용하는 완화 수치</td>
+<td>처음에는 물리·마법 방어를 분리하지 않음</td>
+</tr>
+<tr>
+<td>공격 간격</td>
+<td>기본 공격 한 번에 걸리는 게임 시간, 초</td>
+<td>짧을수록 자주 공격. 스킬 재사용 시간과 별개</td>
+</tr>
+<tr>
+<td>사거리</td>
+<td>공격할 수 있는 중심 간 거리</td>
+<td>1.0을 작은 배치 칸 한 개 폭으로 삼는 설계 단위</td>
+</tr>
+<tr>
+<td>이동 속도</td>
+<td>초당 이동하는 같은 거리 단위</td>
+<td>실제 Unity 좌표와 화면 크기는 구현 때 대응</td>
+</tr>
+<tr>
+<td>치명타·회피</td>
+<td>기본값 0</td>
+<td>초반에는 공격 결과를 읽기 쉽게 하고, 확률 효과는 후속 콘텐츠로 검토</td>
+</tr>
+</tbody></table></div>
+<p><strong>최종 피해 = 위력 × 기술 계수 × 피해 보정 × 100 ÷ (100 + 방어).</strong> 방어 25는 피해 20% 감소, 방어 50은 약 33.3% 감소다. 모든 피해는 먼저 보호막에 적용하고 남은 양을 HP에 적용한다. 계산은 소수로 유지하고 화면 숫자만 반올림한다. 피해가 양수인 경우 표시를 위해 실제 피해를 정수 1로 올려 주지는 않는다.</p>
+<p>기본 공격은 표에 적힌 위력의 100%를 한 대상에게 준다. 기사·기수는 근접, 궁수는 화살, 마법사·사제는 마법 투사체를 쓴다. 특수 결합의 공격 형태는 8장에서 따로 지정한다. 무기 타입은 초기 피해 공식에서 방어를 우회하지 않는다.</p>
+<p>위력 증가는 기본 위력에 합산하고, 같은 종류의 공격 간격 감소는 합산 후 최대 40%까지 적용한다. 피해 증가도 같은 종류끼리 합산하며, 초기 콘텐츠의 총 증가 상한은 100%로 둔다. 여러 피해 감소 효과는 감소율을 곱해 계산하고 방어 외 감소는 총 50%까지만 적용한다. 이 상한은 과도한 중첩을 막는 첫 시험값이다.</p>
+<h3>자동 전투와 시간</h3>
+<p>기본 공격 대상은 가장 가까운 살아 있는 적이다. 원거리 동료는 사거리 안에 표식이 있는 적을 우선한다. 표식이 여럿이면 가까운 적, 거리도 같으면 생성 순서로 결정한다. 공격 준비가 시작된 뒤에는 대상이 죽거나 유효하지 않게 된 경우에만 다시 찾는다.</p>
+<p>고유 스킬은 아래 표에 별도 조건이 없으면 <strong>전투 시작 2초 후부터 사용 가능</strong>하다. 유효 대상이 있고 재사용 시간이 끝나면 자동으로 사용한다. 공격 중에는 현재 타격을 마친 뒤 스킬을 사용하고, 스킬 사용 중 기본 공격은 진행하지 않는다. 기본 공격 재사용 시간은 스킬 때문에 초기화하지 않는다. 회복할 대상이 없으면 회복 스킬을 보류한다.</p>
+<p>주기형 스킬은 전투 시작 2초 이후 첫 유효 순간에 발동한다. 조건형 스킬은 해당 조건이 발생할 때만 발동한다. 모든 재사용 시간은 1배속 게임 시간이며 2배속은 이동·피해·지속 시간·재사용 시간을 함께 두 배 빠르게 진행한다. 일시정지에서는 모든 전투 시간이 멈춘다. 별도 규칙이 없는 공격의 타격 시점은 준비 동작 0.25초 후를 임시값으로 사용하고 최종 애니메이션에 맞춰 조정한다.</p>
+<h3>상태 효과와 겹침</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>상태</th>
+<th>공통 규칙</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>보호막</td>
+<td>여러 보호막 수치를 합산하지 않음. 남은 양보다 큰 보호막으로 교체하며, 교체할 때 새 지속 시간을 사용</td>
+</tr>
+<tr>
+<td>보호막 파괴</td>
+<td>피해로 보호막이 0이 됐을 때만 발생. 만료·교체·전투 초기화는 파괴로 취급하지 않음</td>
+</tr>
+<tr>
+<td>화상</td>
+<td>해당 시전자 위력의 15% 피해를 초당 한 번, 3초 동안. 같은 대상에는 가장 강한 화상 하나만 적용</td>
+</tr>
+<tr>
+<td>화상 갱신</td>
+<td>더 강하거나 같은 화상은 위력·지속 시간을 갱신. 약한 화상은 무시. 틱은 적용 뒤 1·2·3초에 발생</td>
+</tr>
+<tr>
+<td>둔화</td>
+<td>이동 속도만 감소. 가장 큰 둔화 하나 적용, 최대 40%. 보스는 최종 둔화율의 절반 적용</td>
+</tr>
+<tr>
+<td>표식</td>
+<td>기본 지속 4초. 별도 계수가 없으면 자체 추가 피해는 없고 표적 선택에 사용</td>
+</tr>
+<tr>
+<td>범위와 대상 수</td>
+<td>원형은 중심 반경, 전방은 시전 방향의 부채꼴. 표의 최대 대상 수 적용</td>
+</tr>
+<tr>
+<td>추가 피해</td>
+<td>기본 공격 명중으로 취급하지 않음. 추가 피해가 같은 추가 피해를 다시 발생시키지 않음</td>
+</tr>
+<tr>
+<td>회복</td>
+<td>쓰러지지 않은 아군의 HP만 최대 HP까지 복구. 초과 회복은 보호막으로 바뀌지 않음</td>
+</tr>
+<tr>
+<td>동률 선택</td>
+<td>거리, 이후 생성 순서로 결정. 매번 임의로 재추첨하지 않음</td>
+</tr>
+</tbody></table></div>
+<p>보호막·회복의 기본 대상 선택에서 자신도 아군으로 센다. ‘다른 아군’이라고 적힌 효과만 자신을 제외한다. HP 비율이 낮은 순으로 대상을 선택하고, 보호막은 남은 보호막이 대상 최대 HP의 20% 이상인 동료를 우선순위에서 뒤로 보낸다. 새로운 보호막이 더 약하면 기존 보호막을 유지한다.</p>
+<p>피해 사건은 피해 감소 → 보호막 소모 → HP 소모 → 사망 확정 → 생존자의 보호막 파괴·HP 조건 처리 순으로 계산한다. 쓰러진 동료는 반격이나 위기 보호막을 새로 발동하지 않는다. 피해를 받아 보호막이 깨지고 HP가 절반 이하가 된 동료는 반격과 위기 보호막 조건을 각각 확인한다. 새 보호막 지급이 이미 발생한 파괴 사건을 취소하지 않는다.</p>
+<h2 id="section-3">3 전체 능력치표</h2>
+<p>수치는 전투 검증을 시작할 기준이다. 평타만 강한 직업, 보호막을 제공하는 직업, 다수 적을 상대하는 직업을 표의 위력 하나로 비교하지 않는다. 별도 레벨 업과 개체별 랜덤 능력치 보정은 아직 적용하지 않는다.</p>
+<h3>기본 직업 6종</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>직업</th>
+<th>HP</th>
+<th>위력</th>
+<th>방어</th>
+<th>공격 간격 초</th>
+<th>사거리</th>
+<th>이동 속도</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B-KN</td>
+<td>방패 기사</td>
+<td>240</td>
+<td>20</td>
+<td>35</td>
+<td>1.35</td>
+<td>1.1</td>
+<td>1.40</td>
+</tr>
+<tr>
+<td>B-AR</td>
+<td>정찰 궁수</td>
+<td>130</td>
+<td>24</td>
+<td>8</td>
+<td>1.10</td>
+<td>4.8</td>
+<td>1.60</td>
+</tr>
+<tr>
+<td>B-FI</td>
+<td>불꽃 마법사</td>
+<td>115</td>
+<td>30</td>
+<td>5</td>
+<td>1.60</td>
+<td>4.2</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>B-PR</td>
+<td>등불 사제</td>
+<td>145</td>
+<td>14</td>
+<td>10</td>
+<td>1.50</td>
+<td>3.8</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>B-IC</td>
+<td>서리 마법사</td>
+<td>125</td>
+<td>23</td>
+<td>8</td>
+<td>1.40</td>
+<td>4.4</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>B-BA</td>
+<td>서약 기수</td>
+<td>195</td>
+<td>18</td>
+<td>22</td>
+<td>1.40</td>
+<td>1.5</td>
+<td>1.40</td>
+</tr>
+</tbody></table></div>
+<h3>분기 진화 12종</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>직업</th>
+<th>HP</th>
+<th>위력</th>
+<th>방어</th>
+<th>공격 간격 초</th>
+<th>사거리</th>
+<th>이동 속도</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E-KN-G</td>
+<td>수호 기사</td>
+<td>340</td>
+<td>24</td>
+<td>50</td>
+<td>1.40</td>
+<td>1.1</td>
+<td>1.25</td>
+</tr>
+<tr>
+<td>E-KN-C</td>
+<td>반격 기사</td>
+<td>285</td>
+<td>31</td>
+<td>35</td>
+<td>1.20</td>
+<td>1.1</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>E-AR-P</td>
+<td>관통 사수</td>
+<td>180</td>
+<td>35</td>
+<td>10</td>
+<td>1.25</td>
+<td>5.2</td>
+<td>1.55</td>
+</tr>
+<tr>
+<td>E-AR-T</td>
+<td>추적 사수</td>
+<td>170</td>
+<td>29</td>
+<td>10</td>
+<td>0.95</td>
+<td>4.8</td>
+<td>1.70</td>
+</tr>
+<tr>
+<td>E-FI-B</td>
+<td>폭발술사</td>
+<td>160</td>
+<td>44</td>
+<td>8</td>
+<td>1.70</td>
+<td>4.3</td>
+<td>1.25</td>
+</tr>
+<tr>
+<td>E-FI-E</td>
+<td>잔화술사</td>
+<td>175</td>
+<td>35</td>
+<td>10</td>
+<td>1.40</td>
+<td>4.5</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>E-PR-G</td>
+<td>보호 사제</td>
+<td>215</td>
+<td>19</td>
+<td>18</td>
+<td>1.50</td>
+<td>4.0</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>E-PR-H</td>
+<td>회복 사제</td>
+<td>200</td>
+<td>23</td>
+<td>12</td>
+<td>1.60</td>
+<td>4.2</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>E-IC-F</td>
+<td>결빙술사</td>
+<td>185</td>
+<td>30</td>
+<td>14</td>
+<td>1.50</td>
+<td>4.7</td>
+<td>1.25</td>
+</tr>
+<tr>
+<td>E-IC-S</td>
+<td>서리 척후</td>
+<td>175</td>
+<td>29</td>
+<td>12</td>
+<td>1.10</td>
+<td>3.8</td>
+<td>1.70</td>
+</tr>
+<tr>
+<td>E-BA-G</td>
+<td>수호 기수</td>
+<td>285</td>
+<td>25</td>
+<td>35</td>
+<td>1.50</td>
+<td>1.6</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>E-BA-A</td>
+<td>진격 기수</td>
+<td>250</td>
+<td>29</td>
+<td>25</td>
+<td>1.20</td>
+<td>1.7</td>
+<td>1.55</td>
+</tr>
+</tbody></table></div>
+<h3>최종 진화 6종</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>직업</th>
+<th>HP</th>
+<th>위력</th>
+<th>방어</th>
+<th>공격 간격 초</th>
+<th>사거리</th>
+<th>이동 속도</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>F-KN</td>
+<td>봉화 방패장</td>
+<td>520</td>
+<td>46</td>
+<td>60</td>
+<td>1.20</td>
+<td>1.3</td>
+<td>1.40</td>
+</tr>
+<tr>
+<td>F-AR</td>
+<td>황혼 명사수</td>
+<td>300</td>
+<td>52</td>
+<td>18</td>
+<td>1.00</td>
+<td>5.5</td>
+<td>1.70</td>
+</tr>
+<tr>
+<td>F-FI</td>
+<td>봉화 대마법사</td>
+<td>290</td>
+<td>64</td>
+<td>16</td>
+<td>1.50</td>
+<td>4.8</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>F-PR</td>
+<td>새벽의 인도자</td>
+<td>355</td>
+<td>40</td>
+<td>24</td>
+<td>1.40</td>
+<td>4.5</td>
+<td>1.40</td>
+</tr>
+<tr>
+<td>F-IC</td>
+<td>서리 감시자</td>
+<td>330</td>
+<td>48</td>
+<td>22</td>
+<td>1.15</td>
+<td>5.0</td>
+<td>1.55</td>
+</tr>
+<tr>
+<td>F-BA</td>
+<td>서약 군기장</td>
+<td>450</td>
+<td>42</td>
+<td>42</td>
+<td>1.20</td>
+<td>1.8</td>
+<td>1.50</td>
+</tr>
+</tbody></table></div>
+<h3>특수 결합체 6종</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>직업</th>
+<th>HP</th>
+<th>위력</th>
+<th>방어</th>
+<th>공격 간격 초</th>
+<th>사거리</th>
+<th>이동 속도</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H-01</td>
+<td>잿불 검위</td>
+<td>390</td>
+<td>50</td>
+<td>38</td>
+<td>1.25</td>
+<td>1.5</td>
+<td>1.50</td>
+</tr>
+<tr>
+<td>H-02</td>
+<td>등불 성기사</td>
+<td>460</td>
+<td>32</td>
+<td>48</td>
+<td>1.35</td>
+<td>1.2</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>H-03</td>
+<td>빙결 추적자</td>
+<td>280</td>
+<td>42</td>
+<td>20</td>
+<td>1.00</td>
+<td>5.1</td>
+<td>1.65</td>
+</tr>
+<tr>
+<td>H-04</td>
+<td>융해술사</td>
+<td>270</td>
+<td>58</td>
+<td>16</td>
+<td>1.50</td>
+<td>4.6</td>
+<td>1.35</td>
+</tr>
+<tr>
+<td>H-05</td>
+<td>성가 기수</td>
+<td>390</td>
+<td>32</td>
+<td>32</td>
+<td>1.40</td>
+<td>2.0</td>
+<td>1.40</td>
+</tr>
+<tr>
+<td>H-06</td>
+<td>원정 유격대장</td>
+<td>330</td>
+<td>44</td>
+<td>28</td>
+<td>1.10</td>
+<td>4.6</td>
+<td>1.65</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-4">4 성장과 결합의 규칙</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>경로</th>
+<th>필요한 것</th>
+<th>남는 결과</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기본 → 분기 진화</td>
+<td>받는 기본 동료 1명에 재료 동료 2명 전승</td>
+<td>해당 계열 두 분기 중 선택한 1명</td>
+</tr>
+<tr>
+<td>분기 → 최종 진화</td>
+<td>분기 진화 후 추가 재료 동료 4명 전승</td>
+<td>해당 계열 최종 형태 1명</td>
+</tr>
+<tr>
+<td>특수 결합</td>
+<td>결합식에 맞는 서로 다른 계열의 분기 진화 동료 2명</td>
+<td>새 결합 직업 1명</td>
+</tr>
+<tr>
+<td>일반 특성 전승</td>
+<td>주는 동료 1명 소모</td>
+<td>받는 동료의 성장 진행 +1과 특성 유지 또는 교체</td>
+</tr>
+</tbody></table></div>
+<p>재료 계열에 따라 일반 성장 진행량은 바뀌지 않는다. 최종 진화에는 이번 상세안에서 추가 아이템이나 처치 조건을 붙이지 않는다. v0.8에서 남겨 둔 유닛별 조건은 후속 검토 사항으로 돌린다.</p>
+<p><strong>기본 진화는 고유 스킬을 분기 스킬로 교체한다. 최종 진화는 선택했던 분기 스킬을 유지하고 최종 스킬을 추가한다.</strong> 본래 특성과 전승 특성은 계속 유지한다. 각 계열 최종 외형은 하나지만 분기의 공격 행동과 효과는 남는다. 최종 형태의 두 스킬이 동시에 준비되면 최종 스킬을 먼저 쓰고 분기 스킬은 이후 사용한다.</p>
+<p>특수 결합은 전승 상세창의 별도 행동으로 제안한다. 두 동료를 고르면 일반 전승 결과와 결합 결과를 비교할 수 있다. 결합할 때 둘은 모두 원정 명단에서 사라지고 결과 1명이 생긴다. 플레이어가 지정한 <strong>기준 동료의 배치 위치와 전승 특성 하나</strong>만 유지하고, 본래 특성과 고유 스킬은 새 직업의 것으로 교체한다. 다른 동료의 전승 특성, 기존 진화 진행, 두 원본의 고유 스킬은 가져오지 않는다.</p>
+<p>결합 재료는 분기 진화 상태만 허용하며 해당 계열의 어느 분기도 쓸 수 있다. 추가 성장 진행이 있는 분기를 재료로 쓰면 그 진행은 소멸하므로 미리 표시한다. 최종형·결합형은 결합 재료로 사용할 수 없고 결합형의 추가 진화도 없다. 최종형·결합형도 전승 특성 교체는 가능하지만 성장 진행은 더 받지 않는다.</p>
+<p>일반 전승에서는 최종형·결합형도 재료로 사용할 수 있고 진행량은 1로 같다. 이때 보내는 동료의 실제 형태와 포기할 성장량을 명확히 보여준다. 성장할 여지가 없고 특성도 바뀌지 않는 전승은 확정할 수 없다. 현재 준비에서의 전승·진화·결합은 역순으로 되돌릴 수 있으며 소환 결과와 소환 횟수는 되돌리지 않는다.</p>
+<h3>진화 계보</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>기본 계열</th>
+<th>분기 A</th>
+<th>분기 B</th>
+<th>최종 외형</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>방패 기사</td>
+<td>수호 기사</td>
+<td>반격 기사</td>
+<td>봉화 방패장</td>
+</tr>
+<tr>
+<td>정찰 궁수</td>
+<td>관통 사수</td>
+<td>추적 사수</td>
+<td>황혼 명사수</td>
+</tr>
+<tr>
+<td>불꽃 마법사</td>
+<td>폭발술사</td>
+<td>잔화술사</td>
+<td>봉화 대마법사</td>
+</tr>
+<tr>
+<td>등불 사제</td>
+<td>보호 사제</td>
+<td>회복 사제</td>
+<td>새벽의 인도자</td>
+</tr>
+<tr>
+<td>서리 마법사</td>
+<td>결빙술사</td>
+<td>서리 척후</td>
+<td>서리 감시자</td>
+</tr>
+<tr>
+<td>서약 기수</td>
+<td>수호 기수</td>
+<td>진격 기수</td>
+<td>서약 군기장</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-5">5 기본 직업의 고유 스킬</h2>
+<p>범위가 따로 없는 단일 공격 스킬은 능력치표의 사거리 안에서 대상을 찾는다. 원형 범위는 공격 대상의 위치를 중심으로 계산한다. 지원 스킬의 탐색 거리는 표에 따로 적는다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>직업</th>
+<th>고유 스킬</th>
+<th>발동과 수치</th>
+<th>역할과 약점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>방패 기사</td>
+<td>방패 밀치기</td>
+<td>6초마다 현재 적에게 위력 180% 피해, 이동 20% 둔화 2초</td>
+<td>초반 전열. 후열까지 혼자 지키지는 못함</td>
+</tr>
+<tr>
+<td>정찰 궁수</td>
+<td>추적 화살</td>
+<td>6초마다 사거리 안 HP 비율이 가장 낮은 적에게 120% 피해와 표식 5초</td>
+<td>마무리와 표적 집중. 밀집 적 처리 능력은 낮음</td>
+</tr>
+<tr>
+<td>불꽃 마법사</td>
+<td>불씨 폭발</td>
+<td>6초마다 현재 적 중심 반경 1.0, 최대 3명에게 160% 피해와 화상</td>
+<td>다수 적. 공격 간격이 길고 접근에 약함</td>
+</tr>
+<tr>
+<td>등불 사제</td>
+<td>등불의 보호</td>
+<td>5초마다 거리 4.5 안 HP 비율이 가장 낮은 아군에게 위력 180% 보호막, 4초</td>
+<td>전열 유지. 초반에는 HP 회복 불가</td>
+</tr>
+<tr>
+<td>서리 마법사</td>
+<td>서리 파문</td>
+<td>6초마다 현재 적 중심 반경 1.2, 최대 3명에게 130% 피해와 이동 25% 둔화 3초</td>
+<td>진입 지연. 보스에게는 제어 효과 감소</td>
+</tr>
+<tr>
+<td>서약 기수</td>
+<td>작은 진군</td>
+<td>8초마다 자신에게, 그리고 거리 2.5 안 가까운 다른 아군 2명에게 위력 +20%, 4초</td>
+<td>근처 조합 강화. 단독 전투 기여가 낮음</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-6">6 분기 진화의 고유 스킬</h2>
+<p>분기 스킬은 기본 고유 스킬을 대체한다. 본래 특성은 바꾸지 않는다. 각 분기의 강점과 약점이 다음 배치와 전승 선택을 바꾸도록 한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID와 직업</th>
+<th>분기 스킬과 수치</th>
+<th>달라지는 판단</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E-KN-G 수호 기사</td>
+<td><strong>전열 방벽:</strong> 6초마다 자신과 거리 2.0 안 가장 가까운 다른 아군 1명에게 위력 250% 보호막, 4초</td>
+<td>두 동료를 가까이 세워 보호. 자체 공격 능력은 낮음</td>
+</tr>
+<tr>
+<td>E-KN-C 반격 기사</td>
+<td><strong>방패 파쇄:</strong> 자신의 보호막이 피해로 깨질 때 전방 120도·거리 1.8의 최대 3명에게 220% 피해와 둔화 20% 2초. 재발동 2.5초. 시작 즉시 조건 대기</td>
+<td>보호막을 공급하는 동료와 전열 위치가 중요</td>
+</tr>
+<tr>
+<td>E-AR-P 관통 사수</td>
+<td><strong>꿰뚫는 화살:</strong> 5초마다 현재 적 방향 사거리 끝까지 폭 0.5의 선상 최대 3명에게 각각 210% 피해</td>
+<td>적이 같은 선에 놓이도록 배치</td>
+</tr>
+<tr>
+<td>E-AR-T 추적 사수</td>
+<td><strong>연속 추적:</strong> 5초마다 사거리 안 HP 비율이 가장 낮은 적에게 표식 5초와 90% 화살 3발, 0.15초 간격. 도중 대상 사망 시 남은 화살은 가장 가까운 유효 적으로 이동</td>
+<td>한 강적에 집중하거나 체력 낮은 적 연속 처치</td>
+</tr>
+<tr>
+<td>E-FI-B 폭발술사</td>
+<td><strong>응축 폭발:</strong> 7초마다 현재 적 중심 반경 1.4, 최대 4명에게 280% 피해와 화상</td>
+<td>밀집 적의 순간 제거. 재사용 대기 중 빈틈</td>
+</tr>
+<tr>
+<td>E-FI-E 잔화술사</td>
+<td><strong>잔화 지대:</strong> 7초마다 현재 적 위치 반경 1.6에 4초간 불길. 생성 후 1·2·3·4초마다 안의 최대 4명에게 65% 피해와 화상 갱신</td>
+<td>둔화와 조합해 적을 불길 안에 머무르게 함</td>
+</tr>
+<tr>
+<td>E-PR-G 보호 사제</td>
+<td><strong>겹등불:</strong> 5초마다 거리 4.8 안 HP 비율이 낮은 아군 2명에게 각각 230% 보호막, 4초</td>
+<td>분산된 전열 지원. 여러 보호막 수치는 합산되지 않음</td>
+</tr>
+<tr>
+<td>E-PR-H 회복 사제</td>
+<td><strong>귀환의 빛:</strong> 5초마다 거리 4.8 안 HP 비율이 가장 낮은 아군 1명의 HP를 위력 260% 회복</td>
+<td>긴 전투의 누적 손실 회복. 한 번의 큰 피해에는 취약</td>
+</tr>
+<tr>
+<td>E-IC-F 결빙술사</td>
+<td><strong>결빙장:</strong> 7초마다 현재 적 위치 반경 1.6, 최대 4명에게 170% 피해와 이동 40% 둔화 4초</td>
+<td>적의 진입을 크게 지연. 보스는 20% 둔화</td>
+</tr>
+<tr>
+<td>E-IC-S 서리 척후</td>
+<td><strong>서리 쐐기:</strong> 4초마다 현재 적에게 190% 피해와 이동 30% 둔화 2초</td>
+<td>빠른 단일 견제. 사거리가 짧아 전열 지원 필요</td>
+</tr>
+<tr>
+<td>E-BA-G 수호 기수</td>
+<td><strong>수호의 깃:</strong> 7초마다 자신에게, 그리고 거리 2.8 안 가까운 다른 아군 2명에게 받는 피해 20% 감소, 4초</td>
+<td>모여서 버티기. 보스 광역 공격과 상충</td>
+</tr>
+<tr>
+<td>E-BA-A 진격 기수</td>
+<td><strong>진격의 깃:</strong> 7초마다 자신에게, 그리고 거리 2.8 안 가까운 다른 아군 2명에게 공격 간격 20% 감소, 4초</td>
+<td>공격수 밀집 지원. 자신의 방어력이 수호 분기보다 낮음</td>
+</tr>
+</tbody></table></div>
+<p>잔화 지대는 시전자별로 하나만 유지하며 시전자가 쓰러지면 사라진다. 주기 피해는 발동 시점에 범위 안의 적을 다시 확인한다. 연속 추적의 표식은 첫 대상에게만 적용하며 남은 화살의 새 대상에게 자동 전이되지 않는다. 표식 전이는 10장의 유물과 구분한다.</p>
+<h2 id="section-7">7 최종 진화의 추가 스킬</h2>
+<p>최종 형태는 위 능력치로 바뀌며 선택했던 분기 스킬을 그대로 유지한다. 추가 스킬의 표적과 재사용 시간은 독립적이다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>직업</th>
+<th>추가 스킬과 수치</th>
+<th>분기를 유지하는 방법</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>봉화 방패장</td>
+<td><strong>봉화 방진:</strong> 12초마다 자신에게, 그리고 거리 2.5 안 다른 아군 중 HP 비율이 낮은 2명에게 자신의 최대 HP 18% 보호막, 5초</td>
+<td>수호는 방벽 공급 확대, 반격은 파쇄를 안정적으로 발동</td>
+</tr>
+<tr>
+<td>황혼 명사수</td>
+<td><strong>황혼의 일격:</strong> 10초마다 사거리 안 가장 먼 적에게 420% 피해와 표식 5초</td>
+<td>관통의 다수 적 처리 또는 추적의 연속 마무리 유지</td>
+</tr>
+<tr>
+<td>봉화 대마법사</td>
+<td><strong>봉화 낙하:</strong> 12초마다 사거리 안 적을 중심으로 반경 1.8에 가장 많은 적이 들어오는 지점을 골라 최대 5명에게 330% 피해와 화상</td>
+<td>폭발의 순간 피해 또는 잔화의 지속 피해 유지</td>
+</tr>
+<tr>
+<td>새벽의 인도자</td>
+<td><strong>새벽의 행렬:</strong> 12초마다 자신을 포함한 살아 있는 모든 아군에게 160% 회복과 160% 보호막, 5초</td>
+<td>보호 특화 또는 단일 회복 특화를 유지</td>
+</tr>
+<tr>
+<td>서리 감시자</td>
+<td><strong>정지의 들판:</strong> 11초마다 현재 적 위치 반경 2.0, 최대 5명에게 260% 피해와 둔화 40% 4초</td>
+<td>결빙의 넓은 제어 또는 척후의 빠른 단일 제어 유지</td>
+</tr>
+<tr>
+<td>서약 군기장</td>
+<td><strong>원정의 맹세:</strong> 12초마다 살아 있는 모든 아군에게 위력 +20%와 받는 피해 15% 감소, 5초</td>
+<td>수호의 생존 강화 또는 진격의 공격 간격 감소 유지</td>
+</tr>
+</tbody></table></div>
+<p>이름이 ‘정지’인 기술도 초기 규칙에서는 이동 둔화다. 완전 기절이나 빙결 정지는 추가하지 않는다. 피해 감소와 강화의 중첩은 공통 상한을 따른다. 최종 형태가 전투 중 수동 필살기를 요구하지는 않는다.</p>
+<h2 id="section-8">8 특수 결합체와 결합식</h2>
+<p>여섯 계열의 서로 다른 두 계열을 고르는 조합은 총 15개다. 이번에는 그중 <strong>전투 역할을 분명하게 바꿀 수 있는 6개 결합식</strong>을 제안한다. 나머지 9개 계열 조합은 일반 전승만 제공한다. 모든 특성 조합마다 새 외형을 만들지는 않는다.</p>
+<p>결합식의 두 계열은 순서에 관계없다. 양쪽 모두 분기 진화 상태여야 하며, 어느 분기를 골랐는지는 결합 가능 여부에 영향을 주지 않는다. 기준 동료 선택은 물려받을 전승 특성과 배치 위치만 결정한다. 결합체는 양쪽의 스킬을 모두 복사하지 않고 아래의 전용 스킬과 본래 특성을 갖는다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>결합체</th>
+<th>재료 계열 각각 분기 진화 필요</th>
+<th>새 역할과 기본 공격</th>
+<th>전용 스킬</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H-01 잿불 검위</td>
+<td>기사 + 불꽃</td>
+<td>근접 범위 공격. 검으로 100% 단일 기본 공격</td>
+<td><strong>잿불 가르기:</strong> 6초마다 전방 120도·거리 2.0 안 최대 3명에게 240% 피해와 화상</td>
+</tr>
+<tr>
+<td>H-02 등불 성기사</td>
+<td>기사 + 사제</td>
+<td>전열 유지와 가까운 동료 회복. 망치로 100% 단일 기본 공격</td>
+<td><strong>등불의 맹세:</strong> 7초마다 현재 적에게 160% 피해를 주고 자신을 포함한 거리 2.5 안 HP 비율이 낮은 아군 2명에게 180% 회복. 적이 사거리 안에 있을 때 발동</td>
+</tr>
+<tr>
+<td>H-03 빙결 추적자</td>
+<td>궁수 + 서리</td>
+<td>원거리 관통과 표식 추적. 화살로 100% 단일 기본 공격</td>
+<td><strong>서리 관통:</strong> 5초마다 현재 적 방향 사거리 끝까지 폭 0.5의 선상 최대 3명에게 200% 피해와 이동 30% 둔화 3초</td>
+</tr>
+<tr>
+<td>H-04 융해술사</td>
+<td>불꽃 + 서리</td>
+<td>범위 피해와 이동 제어. 균열 투사체로 100% 단일 기본 공격</td>
+<td><strong>열균열:</strong> 6초마다 현재 적 중심 반경 1.5의 최대 4명에게 먼저 화상과 이동 30% 둔화 3초를 적용하고, 이어서 200% 피해</td>
+</tr>
+<tr>
+<td>H-05 성가 기수</td>
+<td>사제 + 기수</td>
+<td>가까운 부대의 회복과 공격 지원. 짧은 음파로 100% 단일 기본 공격</td>
+<td><strong>진군 성가:</strong> 8초마다 자신에게, 그리고 거리 3.2 안 가까운 다른 아군 2명에게 180% 회복과 위력 +15%, 4초. 회복할 대상이 없어도 강화 대상이 있으면 발동</td>
+</tr>
+<tr>
+<td>H-06 원정 유격대장</td>
+<td>궁수 + 기수</td>
+<td>집중 공격 지휘와 처치 후 유지력. 쇠뇌로 100% 단일 기본 공격</td>
+<td><strong>일제사격 명령:</strong> 6초마다 현재 적에게 표식 5초. 자신에게, 그리고 거리 3.0 안 가까운 다른 아군 2명에게 다음 기본 공격 위력 60% 추가를 부여. 각자 한 번 소비하며 5초 뒤 만료</td>
+</tr>
+</tbody></table></div>
+<p>일제사격 강화는 별도 공격을 생성하지 않는다. 한 번의 기본 공격이 100%에서 160%가 되는 방식으로 계산하며 기본 공격 명중 특성은 한 번만 발동한다. 표식이 지정된 적을 반드시 공격해야 강화가 소비되는 것은 아니다. 해당 동료가 다음 유효 기본 공격을 할 때 소비한다.</p>
+<h3>결합체의 강점과 포기하는 것</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>결합체</th>
+<th>기대할 장점</th>
+<th>재료 둘을 함께 출전시킬 때와의 차이</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>잿불 검위</td>
+<td>전열에서 피해와 화상을 한 자리로 제공</td>
+<td>원거리 화염 공격수 한 자리가 사라지고 적에게 접근해야 함</td>
+</tr>
+<tr>
+<td>등불 성기사</td>
+<td>튼튼한 회복 담당</td>
+<td>원래 보호 사제의 넓은 보호막 또는 회복 사제의 긴 사거리 상실</td>
+</tr>
+<tr>
+<td>빙결 추적자</td>
+<td>한 줄의 적을 늦추고 다음 공격 표적 형성</td>
+<td>두 원거리 유닛의 동시 공격과 서리 분기의 넓은 범위 중 하나를 포기</td>
+</tr>
+<tr>
+<td>융해술사</td>
+<td>범위 피해와 제어를 스스로 연결</td>
+<td>시전자 둘보다 공격 주기가 적고 한 명이 쓰러지면 두 역할을 함께 잃음</td>
+</tr>
+<tr>
+<td>성가 기수</td>
+<td>회복과 공격 강화를 한 자리로 압축</td>
+<td>보호막 또는 피해 감소에 특화된 원본 분기의 기능 상실</td>
+</tr>
+<tr>
+<td>원정 유격대장</td>
+<td>집중 공격과 처치 후 회복</td>
+<td>관통·연속 사격과 원본 기수의 지속 강화가 전용 명령으로 대체</td>
+</tr>
+</tbody></table></div>
+<p>기본 직업이 소환됐을 때 도감에는 이미 발견한 결합 경로를 보여준다. 새 결합은 양쪽 계열의 분기 진화를 처음 보유한 시점에 조합 힌트를 공개하고, 결합을 실제로 만들면 도감 기록을 완성한다. 미발견 결합을 외부 공략 검색만으로 알아내야 하는 구조는 피한다.</p>
+<h2 id="section-9">9 본래 특성과 전승 효과</h2>
+<p>모든 형태는 <strong>본래 특성 하나와 전승 특성 최대 하나</strong>를 가진다. 기본·분기·최종의 본래 특성은 계열 안에서 같다. 특수 결합체는 별도 본래 특성을 가진다. 본래 특성과 전승 특성의 같은 ID는 중복 적용하지 않는다.</p>
+<p>전승 후 계수는 재료 동료의 능력치가 아니라 <strong>받는 동료의 현재 능력치</strong>를 사용한다. 능력치 변화가 없는 한 원본과 전승 후의 특성 효과는 같다. 전승받았던 특성은 다시 다른 동료에게 전달할 수 없다.</p>
+<h3>여섯 기본 계열의 본래 특성</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>계열과 특성</th>
+<th>발동 규칙</th>
+<th>전승 후 활용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T-KN</td>
+<td>기사 · 버팀</td>
+<td>전투에서 처음 피해를 받을 때 3초간 방어 외 받는 피해 20% 감소. 첫 피해부터 적용. 전투당 1회</td>
+<td>후열이 첫 돌진을 견디게 함</td>
+</tr>
+<tr>
+<td>T-AR</td>
+<td>궁수 · 집중</td>
+<td>자신이 표식이 있는 적에게 주는 기본 공격 피해 +15%</td>
+<td>표식을 제공하는 동료와 공격수 연결</td>
+</tr>
+<tr>
+<td>T-FI</td>
+<td>불꽃 · 잔불</td>
+<td>기본 공격 명중 시 공통 화상 적용</td>
+<td>빠른 공격수에게 화상 공급 능력 추가</td>
+</tr>
+<tr>
+<td>T-PR</td>
+<td>사제 · 첫 빛</td>
+<td>전투 시작 시 자신의 최대 HP 10% 보호막, 4초. 전투당 1회</td>
+<td>반격 기사의 첫 발동 또는 약한 후열 보호</td>
+</tr>
+<tr>
+<td>T-IC</td>
+<td>서리 · 한기</td>
+<td>기본 공격 명중 시 이동 20% 둔화 2초</td>
+<td>근접 동료가 접근한 적을 묶거나 원거리 동료가 진입 지연</td>
+</tr>
+<tr>
+<td>T-BA</td>
+<td>기수 · 서약</td>
+<td>피해 처리 후 HP가 처음으로 50% 이하가 됐고 생존했으면 최대 HP 12% 보호막, 3초. 전투당 1회</td>
+<td>반격 또는 위기 생존. 치명적인 일격을 부활로 바꾸지는 않음</td>
+</tr>
+</tbody></table></div>
+<h3>여섯 결합체의 본래 특성</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>결합체와 특성</th>
+<th>발동 규칙</th>
+<th>조건부 활용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T-H01</td>
+<td>잿불 검위 · 재가르기</td>
+<td>화상 상태인 적에게 자신이 주는 기본 공격 피해 +20%</td>
+<td>화상을 공급하는 동료 또는 자신의 기술 필요</td>
+</tr>
+<tr>
+<td>T-H02</td>
+<td>등불 성기사 · 온기</td>
+<td>자신이 받는 HP 회복량 +15%. 보호막에는 적용하지 않음</td>
+<td>회복 사제와 긴 전투에 유효</td>
+</tr>
+<tr>
+<td>T-H03</td>
+<td>빙결 추적자 · 서리 추적</td>
+<td>이미 둔화된 적에게 기본 공격 명중 시 표식 3초 적용</td>
+<td>둔화가 먼저 필요. 보스에게도 적용 가능</td>
+</tr>
+<tr>
+<td>T-H04</td>
+<td>융해술사 · 열균열 숙련</td>
+<td>화상과 둔화가 동시에 있는 적에게 자신이 주는 직접 스킬 피해 +15%. 화상 틱·추가 피해에는 적용하지 않음</td>
+<td>두 상태를 동시에 공급하는 팀에서 유효</td>
+</tr>
+<tr>
+<td>T-H05</td>
+<td>성가 기수 · 한마음</td>
+<td>자신의 스킬로 다른 아군에게 회복·보호막·강화가 실제 적용되면 자신에게 위력 80% 보호막, 2초. 재발동 6초</td>
+<td>다른 아군을 지원할 스킬이 없으면 발동 불가</td>
+</tr>
+<tr>
+<td>T-H06</td>
+<td>원정 유격대장 · 전리품 보급</td>
+<td>자신이 적 처치 시 거리 3.0 안 HP 비율이 가장 낮은 생존 아군 1명에게 100% 회복. 재발동 4초</td>
+<td>소환체와 일반 적이 있는 전투에 유효. 처치 없는 보스 구간에서는 대기</td>
+</tr>
+</tbody></table></div>
+<p>추가 피해와 화상의 처치 기여는 실제 피해 시전자에게 귀속한다. 시전자가 이미 쓰러졌다면 그 시전자의 처치 특성은 발동하지 않는다. 회복·보호막·강화가 대상의 기존 상태를 전혀 바꾸지 않으면 ‘실제 적용’으로 세지 않는다.</p>
+<h3>전승 조합을 읽는 법</h3>
+<p>아래 표는 기본 계열 기준의 첫 설계 의도다. 효율을 실측한 등급표가 아니다. ‘조건’은 해당 효과를 발동할 다른 동료·기술이 필요한 경우다. 진화와 유물에 따라 판단이 바뀐다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>받는 계열</th>
+<th>버팀</th>
+<th>집중</th>
+<th>잔불</th>
+<th>첫 빛</th>
+<th>한기</th>
+<th>서약</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기사</td>
+<td>본래 보유</td>
+<td>표식 동료 필요</td>
+<td>평타 화상</td>
+<td>시작 보호막·반격</td>
+<td>근접 둔화</td>
+<td>위기 보호막·반격</td>
+</tr>
+<tr>
+<td>궁수</td>
+<td>첫 돌진 방어</td>
+<td>본래 보유</td>
+<td>빠른 화상 공급</td>
+<td>후열 보호</td>
+<td>원거리 둔화</td>
+<td>위기 보호</td>
+</tr>
+<tr>
+<td>불꽃</td>
+<td>첫 돌진 방어</td>
+<td>표식 동료 필요</td>
+<td>본래 보유</td>
+<td>시전 중 보호</td>
+<td>평타 둔화·범위 화상 연결</td>
+<td>위기 보호</td>
+</tr>
+<tr>
+<td>사제</td>
+<td>생존 보완</td>
+<td>표식 동료 필요·낮은 평타 위력</td>
+<td>보조 화상 공급</td>
+<td>본래 보유</td>
+<td>보조 둔화</td>
+<td>위기 보호</td>
+</tr>
+<tr>
+<td>서리</td>
+<td>생존 보완</td>
+<td>표식 동료 필요</td>
+<td>둔화·화상 연결</td>
+<td>시전 중 보호</td>
+<td>본래 보유</td>
+<td>위기 보호</td>
+</tr>
+<tr>
+<td>기수</td>
+<td>전열 유지</td>
+<td>표식 동료 필요</td>
+<td>근접 화상</td>
+<td>시작 보호</td>
+<td>근접 제어</td>
+<td>본래 보유</td>
+</tr>
+</tbody></table></div>
+<p>발동 불가능한 전승은 화면에 이유를 표시한다. 예를 들어 기본 궁수가 ‘한마음’을 받으면 아군 지원 스킬이 없어 발동하지 않는다. 향후 유격대장 결합을 목표로 보관하는 선택은 허용하되 현재 효과를 즉시 받는 것처럼 표시하지 않는다.</p>
+<h2 id="section-10">10 조합을 완성하는 예시</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>조합</th>
+<th>성장·전승·유물 예시</th>
+<th>전투에서 보여야 하는 연결</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>보호막 반격</td>
+<td>반격 기사 + 보호 사제. 기사에게 첫 빛 전승</td>
+<td>시작 보호막 → 적의 공격 → 파쇄 → 사제의 보호막으로 다음 반격 준비</td>
+</tr>
+<tr>
+<td>표식 집중</td>
+<td>추적 사수 + 다른 원거리 공격수에게 집중 전승</td>
+<td>낮은 HP 적 표식 → 화살과 다른 투사체 집중 → 처치</td>
+</tr>
+<tr>
+<td>서리와 화염</td>
+<td>결빙술사 + 잔화술사 또는 잔불을 전승받은 서리 동료</td>
+<td>적이 느려져 불길 안에 오래 머묾 → 화상 누적</td>
+</tr>
+<tr>
+<td>전열 회복</td>
+<td>등불 성기사 + 수호 기수</td>
+<td>전열에서 적을 붙잡고 회복 → 기수의 감소 효과로 지속 피해를 견딤</td>
+</tr>
+<tr>
+<td>소수 정예 사격</td>
+<td>원정 유격대장 + 관통 사수</td>
+<td>표식 공개 → 강화된 기본 공격 → 처치 후 가까운 아군 회복</td>
+</tr>
+<tr>
+<td>한 자리 복합 마법</td>
+<td>융해술사 + 보호 사제</td>
+<td>상태 효과와 폭발을 한 동료가 담당하고 사제가 시전 시간을 확보</td>
+</tr>
+</tbody></table></div>
+<p>v0.8의 ‘금 간 방패테’는 반격 기사와 함께 쓰면 두 충격파가 발생할 수 있다. 첫 시험에서는 유물 충격파를 위력 60%, 거리 1.5의 최대 3명, 동료별 재발동 3초로 두고 직업 파쇄와 합쳐 과도한 광역 피해가 되는지 확인한다. 유물 충격파는 또 다른 파쇄를 유발하지 않는다.</p>
+<p>‘추적자의 매듭’은 표식 적 처치 시 거리 3.0 안 가장 가까운 다른 적에게 남은 표식 시간을 옮기는 방안이다. 최소 1초는 유지하고 다음 대상이 없으면 끝낸다. 전이 자체는 피해를 주지 않는다. ‘재를 담은 병’은 둔화된 적에게 화상을 새로 적용할 때 위력 50%의 추가 피해를 주고 대상별 3초의 재발동 간격을 둔다. 이 추가 피해는 다시 화상을 적용하지 않는다.</p>
+<p>유물 세부 수치도 첫 시험값이며 직업표와 함께 조정한다. 특정 유물이 있어야 직업의 기본 기술이 작동하게 만들지는 않는다.</p>
+<h2 id="section-11">11 성장 공급과 제작 비용 검산</h2>
+<p>v0.8의 12전투 원정은 시작 동료 3명과 준비 2~12의 소환 11회를 모두 사용했을 때 기본 공급 14명이다. 다음 표의 ‘원본 동료’는 최종 명단에 남은 동료와 성장 재료를 합친 수다. 보너스 소환은 계산에 넣지 않는다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>결과</th>
+<th>원본 동료 필요량</th>
+<th>계산</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>분기 진화 1명</td>
+<td>3명</td>
+<td>본체 1 + 재료 2</td>
+</tr>
+<tr>
+<td>최종 진화 1명</td>
+<td>7명</td>
+<td>본체 1 + 첫 진화 재료 2 + 추가 재료 4</td>
+</tr>
+<tr>
+<td>결합체 1명</td>
+<td>6명</td>
+<td>각 본체와 재료를 포함한 분기 3명분 + 분기 3명분</td>
+</tr>
+<tr>
+<td>최종 1 + 분기 1 + 기본 3, 출전 5명</td>
+<td>13명</td>
+<td>7 + 3 + 3</td>
+</tr>
+<tr>
+<td>결합 1 + 분기 1 + 기본 3, 출전 5명</td>
+<td>12명</td>
+<td>6 + 3 + 3</td>
+</tr>
+<tr>
+<td>분기 4 + 기본 1, 출전 5명</td>
+<td>13명</td>
+<td>3 × 4 + 1</td>
+</tr>
+<tr>
+<td>결합 2 + 기본 3, 출전 5명</td>
+<td>15명</td>
+<td>기본 공급 14명으로 불가</td>
+</tr>
+<tr>
+<td>결합 2 + 기본 2, 출전 4명</td>
+<td>14명</td>
+<td>가능하지만 출전 한 자리를 비움</td>
+</tr>
+<tr>
+<td>최종 1 + 결합 1 + 기본 3, 출전 5명</td>
+<td>16명</td>
+<td>기본 공급으로 불가. 출전 3명이라면 7 + 6 + 1 = 14</td>
+</tr>
+</tbody></table></div>
+<p>결합은 원본 여섯 명의 가치가 한 자리에 모이고, 일반 최종 진화는 일곱 명의 가치가 모인다. 결합체가 원본 두 분기의 스킬까지 모두 갖도록 하면 출전 자리를 절약하면서 기능을 거의 잃지 않아 지배적인 선택이 되기 쉽다. 전용 스킬로 바꾸고 단일 집중·다수 편성·특수 결합이 서로 다른 강점을 갖는지 비교한다.</p>
+<p><strong>수량상 가능하다는 것과 무작위 소환으로 쉽게 만들 수 있다는 것은 다르다.</strong> 일반 진화는 다른 계열도 재료로 쓸 수 있지만 결합에는 특정 두 계열의 본체가 필요하다. 원하는 본체가 나오지 않았을 때 일반 최종 진화로 전환해도 승리할 수 있어야 한다.</p>
+<p>이동·기본 공격만 있을 때, 방어를 무시한 평타 초당 피해는 위력을 공격 간격으로 나눈 값이다. 기사 기본형은 약 14.81, 궁수는 약 21.82다. 보호막·화상·스킬·이동 손실을 제외한 비교일 뿐 실제 전투 기여도 순위로 쓰지 않는다. 방어만 고려한 기사 기본형의 유효 HP는 240 × 1.35 = 324이며 본래 특성의 감소 효과는 이 계산에 넣지 않았다.</p>
+<h2 id="section-12">12 외형과 애니메이션 설계</h2>
+<p>기존 중세풍 도트의 비율·색감은 유지한다. 각 형태를 이름과 색상만으로 구분하지 않고 무기·방패·자세·공격 궤적으로 구별한다. 아래는 제작 지시의 출발점이며 완성된 이미지나 스프라이트가 아니다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>계열</th>
+<th>기본 외형</th>
+<th>분기 A</th>
+<th>분기 B</th>
+<th>최종 외형과 분기 표현</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기사</td>
+<td>짧은 검과 둥근 방패</td>
+<td>큰 방패를 세우고 두 발을 고정</td>
+<td>낮은 방패로 들이받는 전진 자세</td>
+<td>등에 작은 봉화 장치. 수호는 방진, 반격은 방패 충격 동작 유지</td>
+</tr>
+<tr>
+<td>궁수</td>
+<td>짧은 활과 가벼운 망토</td>
+<td>길고 단단한 활, 깊게 당기는 자세</td>
+<td>짧은 활과 빠른 화살 교체</td>
+<td>이중 곡선 활과 길잡이 표식. 분기별 장전 속도와 궤적 구별</td>
+</tr>
+<tr>
+<td>불꽃</td>
+<td>금속 고리가 달린 불씨 지팡이</td>
+<td>큰 고리에 불꽃을 모아 던짐</td>
+<td>낮은 화로를 열어 바닥으로 불씨 방출</td>
+<td>이동식 봉화 고리와 긴 외투. 큰 폭발과 바닥 불길 동작 유지</td>
+</tr>
+<tr>
+<td>사제</td>
+<td>손에 든 등불과 짧은 의복</td>
+<td>방패 모양 덮개의 등불</td>
+<td>열리는 등불과 몸을 낮춘 회복 자세</td>
+<td>몸 뒤에 펼쳐지는 세 등불. 방벽과 회복의 손동작 구별</td>
+</tr>
+<tr>
+<td>서리</td>
+<td>얼음 쐐기와 짧은 지도 두루마리</td>
+<td>긴 얼음 봉으로 바닥을 짚음</td>
+<td>짧은 쐐기를 빠르게 던짐</td>
+<td>얼음 나침반과 어깨 보호구. 넓은 장판과 단일 쐐기 동작 유지</td>
+</tr>
+<tr>
+<td>기수</td>
+<td>짧은 창과 접힌 원정 깃발</td>
+<td>넓은 깃을 땅에 박고 보호</td>
+<td>좁고 긴 깃발을 앞으로 휘두름</td>
+<td>봉화 문양의 큰 군기. 방어 자세와 진군 신호를 분기로 구별</td>
+</tr>
+</tbody></table></div>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>결합체</th>
+<th>외형의 핵심</th>
+<th>전용 공격 동작</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>잿불 검위</td>
+<td>검등에 불씨 홈이 있고 작은 내열 방패 사용</td>
+<td>검을 낮게 끌었다가 부채꼴로 베며 바닥에 짧은 불길</td>
+</tr>
+<tr>
+<td>등불 성기사</td>
+<td>망치 머리 안의 등불과 둥근 어깨 장갑</td>
+<td>망치 명중 뒤 발밑에서 가까운 아군으로 따뜻한 빛 이동</td>
+</tr>
+<tr>
+<td>빙결 추적자</td>
+<td>활 양 끝의 얼음 갈래와 얇은 이동 망토</td>
+<td>화살이 지나간 선에 짧은 서리 궤적</td>
+</tr>
+<tr>
+<td>융해술사</td>
+<td>한쪽은 불씨 고리, 한쪽은 서리 고정구인 지팡이</td>
+<td>두 힘을 모아 잠깐 균열을 만든 뒤 짧게 터뜨림</td>
+</tr>
+<tr>
+<td>성가 기수</td>
+<td>작은 종과 등불이 달린 군기</td>
+<td>군기를 세우며 가까운 아군 방향으로 원형 음파</td>
+</tr>
+<tr>
+<td>원정 유격대장</td>
+<td>짧은 쇠뇌와 어깨 뒤 지휘 깃발</td>
+<td>손으로 표적을 짚고 쇠뇌 발사, 강화 아군에게 작은 준비 표시</td>
+</tr>
+</tbody></table></div>
+<p>기본 동작은 대기·걷기·공격·피격·쓰러짐이며 역할에 따라 방어·시전·기수 신호가 추가된다. 30형태 × 기본 22프레임이면 <strong>약 660프레임</strong>의 동료 작업량이다. 별도 스킬·분기별 최종 동작·적·보스는 이 수에 포함하지 않는다. 동일 몸체의 재사용 가능성은 한 계열을 실제 제작한 뒤 판단한다.</p>
+<p>형태가 커져도 아군은 서로를 가리지 않는 범위에 두고, 보스는 일반 동료 약 1.8~2.3배의 크기부터 확인한다. 적 기본 방향은 왼쪽이다. 아군이 뒤쪽 공격을 하는 상황은 방향 전환과 공격 판정이 맞는지 따로 검증한다. 캐릭터 이름과 외형은 독자 디자인으로 발전시키고 제작 기록을 남긴다.</p>
+<h2 id="section-13">13 화면과 도감에 보여 줄 정보</h2>
+<p>기본 준비 화면에는 직업 이름·역할·핵심 기술 한 문장만 우선 보여 준다. HP와 위력 등 전체 수치는 동료 상세에서 연다. 공격 속도는 모호한 점수 대신 ‘1.2초마다 공격’처럼 실제 의미가 보이는 표현으로 쓴다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>화면</th>
+<th>필요한 정보</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>소환 결과</td>
+<td>새 동료와 역할, 본래 특성. 자동 합류 후 작게 표시</td>
+</tr>
+<tr>
+<td>동료 상세</td>
+<td>능력치, 스킬, 본래·전승 특성, 성장 진행, 가능한 진화</td>
+</tr>
+<tr>
+<td>전승 미리보기</td>
+<td>떠날 동료, 성장 증가, 특성 유지·교체, 현재 발동 가능 여부</td>
+</tr>
+<tr>
+<td>진화 선택</td>
+<td>두 분기의 역할·능력치 변화·바뀌는 공격 예시</td>
+</tr>
+<tr>
+<td>특수 결합</td>
+<td>소모되는 두 동료, 새 직업, 유지할 전승 특성, 사라지는 진행·기술·출전 자리</td>
+</tr>
+<tr>
+<td>도감</td>
+<td>발견한 30형태, 계보, 결합식, 역할, 발견 조건과 조합 예시</td>
+</tr>
+<tr>
+<td>전투 결과</td>
+<td>동료별 피해·회복·보호 기여와 주요 발동 횟수. 실제 막은 보호막 피해만 기여로 집계</td>
+</tr>
+</tbody></table></div>
+<p>진화·결합을 확인할 때 공격 영상의 짧은 반복 미리보기를 장기 목표로 둔다. 첫 버전은 정적인 전후 그림과 한 줄 설명으로 시작한다. 보유 동료가 결합 조건을 만족하면 작은 배지로 알리고 상시 큰 안내창을 띄우지 않는다.</p>
+<h2 id="section-14">14 밸런스 검증과 실제 제작 순서</h2>
+<p>이 표의 수치는 공식을 연결하고 차이를 시험하기 위한 값이다. 실제 전투가 목표 시간에 끝나는지는 적 능력치·배치·접근 거리와 함께 결정된다. 다음 적·보스 상세표 없이 아군 수치만 최종 확정하지 않는다.</p>
+<h3>첫 검증 묶음</h3>
+<p>방패 기사·정찰 궁수·등불 사제와 기사 2분기를 먼저 만든다. 보호막이 깨질 때 반격이 한 번만 발생하는지, 덮어쓰기와 만료가 잘못 반격을 발생시키지 않는지, 두 기사가 같은 보호막을 중복 계산하지 않는지 확인한다. 이어 불꽃 계열을 추가하고 <strong>잿불 검위</strong> 하나로 결합 소모·특성 유지·되돌리기·저장 흐름을 확인한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>비교</th>
+<th>같은 조건에서 볼 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>수호 기사와 반격 기사</td>
+<td>일반 적 무리, 단일 보스, 후열 공격에서 각 분기가 유리한 상황</td>
+</tr>
+<tr>
+<td>두 분기 동시 출전과 결합 1명</td>
+<td>원본 동료 6명분이라는 같은 비용에서 생존·처치 시간·빈 출전 자리의 가치</td>
+</tr>
+<tr>
+<td>최종 집중과 여러 분기</td>
+<td>13명 공급의 두 편성으로 최종 보스를 공략할 수 있는지</td>
+</tr>
+<tr>
+<td>기본 특성 전승 6종</td>
+<td>매번 같은 특성이 정답인지, 특정 조합이 실제로 발동하지 않는지</td>
+</tr>
+<tr>
+<td>화상과 둔화</td>
+<td>갱신·강도 우선·보스 감소가 설명대로 적용되는지</td>
+</tr>
+<tr>
+<td>여러 난수의 소환</td>
+<td>특정 직업을 못 얻어도 진화 경로를 바꾸어 진행 가능한지</td>
+</tr>
+<tr>
+<td>저장과 되돌리기</td>
+<td>원본·전승 특성·분기·결합 결과가 복구되고 동료나 보상이 복제되지 않는지</td>
+</tr>
+</tbody></table></div>
+<p>서로 다른 소환 난수 100개를 첫 탐색 단위로 잡고 전투별 출전 수, 분기·최종·결합 도달 시점, 소환권 미사용, 파티의 역할 공백을 기록한다. 이 정도 표본을 최종 밸런스의 통계적 보증으로 보지는 않는다. 특정 본체가 필요한 결합의 성공률과 일반 진화의 성공률은 따로 집계한다.</p>
+<p>진화·결합형을 만들었는데 실제 역할이 달라지지 않으면 스킬과 공격 동작을 먼저 고친다. 숫자 조정은 그 역할이 보인 뒤 진행한다. 첫 완성 원정에서는 이 가운데 검증한 형태부터 쓰고, 나머지 직업을 미완성 상태로 모두 게임에 노출하지 않는다.</p>
+<h3>v0.8과 달라진 범위</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>v0.8</th>
+<th>이번 상세안</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>아군 형태</td>
+<td>기본 6 + 분기 12 + 최종 6 = 24형태</td>
+<td>특수 결합 6 추가, 총 30형태</td>
+</tr>
+<tr>
+<td>최종 진화 조건</td>
+<td>추가 재료 4와 개별 조건 검토</td>
+<td>추가 재료 4만 사용. 개별 조건은 보류</td>
+</tr>
+<tr>
+<td>최종 분기</td>
+<td>외형 하나와 분기 기술 유지 방향</td>
+<td>분기 스킬 유지 + 최종 스킬 추가로 명시</td>
+</tr>
+<tr>
+<td>결합</td>
+<td>일반 전승 중심, 별도 식 미정</td>
+<td>분기 동료 둘을 쓰는 6개 결합식 제안</td>
+</tr>
+<tr>
+<td>능력치</td>
+<td>역할과 큰 방향</td>
+<td>30형태의 첫 시험 수치와 공통 공식</td>
+</tr>
+</tbody></table></div>
+<p>게임 전체 진행과 UI의 기준은 v0.8을 유지하고, 직업 수치·진화·결합의 상세 제안은 이 문서를 우선한다. 문서 작성 단계에서 게임 코드와 실제 전투 데이터는 변경하지 않았다. 새 캐릭터 이미지와 애니메이션의 제작도 완료한 상태가 아니다.</p>
+<p>노션에는 이 문서의 Markdown을 가져오면 된다. 이번 상세안은 표와 텍스트로 구성되어 별도 이미지 업로드가 필요 없다. JSON은 능력치 검토 자료로 보관하고, HTML은 목차가 있는 읽기용으로 사용한다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

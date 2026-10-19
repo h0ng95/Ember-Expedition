@@ -880,8 +880,15 @@ namespace Expedition.Presentation
                 Fill(new Rect(0, 629, UiWidth, 91), new Color(.018f, .055f, .05f, .88f));
                 GUI.enabled = selectedMapStage == null;
                 if (GUI.Button(new Rect(36, 642, 252, 65), "COMBAT LAB", buttonStyle)) EnterCombatLab();
+                if (GUI.Button(new Rect(304, 642, 285, 65), "CATALOG LAB / 30", buttonStyle))
+                {
+                    var catalog = GetComponent<CatalogCombatLab>();
+                    if (catalog == null) catalog = gameObject.AddComponent<CatalogCombatLab>();
+                    catalog.Open(this, gameCamera);
+                    enabled = false;
+                }
                 GUI.enabled = true;
-                GUI.Label(new Rect(311, 654, 930, 40), "Gate Golem challenge  /  training and evolution sandbox", smallStyle);
+                GUI.Label(new Rect(607, 654, 640, 40), "30 forms · real skills · animation QA", smallStyle);
                 if (selectedMapStage != null) DrawMapDialog();
             }
             else

@@ -1,0 +1,3632 @@
+[
+  {
+    "id": "B-AR",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5743,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      276,
+      531,
+      788,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20229
+      },
+      {
+        "index": 1,
+        "pixels": 20111
+      },
+      {
+        "index": 2,
+        "pixels": 20306
+      },
+      {
+        "index": 3,
+        "pixels": 20478
+      },
+      {
+        "index": 4,
+        "pixels": 23102
+      },
+      {
+        "index": 5,
+        "pixels": 20213
+      },
+      {
+        "index": 6,
+        "pixels": 20730
+      },
+      {
+        "index": 7,
+        "pixels": 20749
+      },
+      {
+        "index": 8,
+        "pixels": 20968
+      },
+      {
+        "index": 9,
+        "pixels": 21667
+      },
+      {
+        "index": 10,
+        "pixels": 20507
+      },
+      {
+        "index": 11,
+        "pixels": 20430
+      },
+      {
+        "index": 12,
+        "pixels": 21332
+      },
+      {
+        "index": 13,
+        "pixels": 22184
+      },
+      {
+        "index": 14,
+        "pixels": 23871
+      },
+      {
+        "index": 15,
+        "pixels": 22428
+      },
+      {
+        "index": 16,
+        "pixels": 24981
+      },
+      {
+        "index": 17,
+        "pixels": 20143
+      },
+      {
+        "index": 18,
+        "pixels": 19602
+      },
+      {
+        "index": 19,
+        "pixels": 19811
+      },
+      {
+        "index": 20,
+        "pixels": 15825
+      },
+      {
+        "index": 21,
+        "pixels": 12133
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "B-BA",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.7264,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      271,
+      508,
+      774,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 11521
+      },
+      {
+        "index": 1,
+        "pixels": 11898
+      },
+      {
+        "index": 2,
+        "pixels": 11920
+      },
+      {
+        "index": 3,
+        "pixels": 11907
+      },
+      {
+        "index": 4,
+        "pixels": 11783
+      },
+      {
+        "index": 5,
+        "pixels": 12015
+      },
+      {
+        "index": 6,
+        "pixels": 13356
+      },
+      {
+        "index": 7,
+        "pixels": 13560
+      },
+      {
+        "index": 8,
+        "pixels": 13196
+      },
+      {
+        "index": 9,
+        "pixels": 13468
+      },
+      {
+        "index": 10,
+        "pixels": 13641
+      },
+      {
+        "index": 11,
+        "pixels": 13304
+      },
+      {
+        "index": 12,
+        "pixels": 13266
+      },
+      {
+        "index": 13,
+        "pixels": 15762
+      },
+      {
+        "index": 14,
+        "pixels": 21969
+      },
+      {
+        "index": 15,
+        "pixels": 22239
+      },
+      {
+        "index": 16,
+        "pixels": 17602
+      },
+      {
+        "index": 17,
+        "pixels": 13123
+      },
+      {
+        "index": 18,
+        "pixels": 14002
+      },
+      {
+        "index": 19,
+        "pixels": 12613
+      },
+      {
+        "index": 20,
+        "pixels": 13107
+      },
+      {
+        "index": 21,
+        "pixels": 10132
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "B-FI",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5578,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      286,
+      532,
+      770,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20489
+      },
+      {
+        "index": 1,
+        "pixels": 20435
+      },
+      {
+        "index": 2,
+        "pixels": 20556
+      },
+      {
+        "index": 3,
+        "pixels": 20504
+      },
+      {
+        "index": 4,
+        "pixels": 20827
+      },
+      {
+        "index": 5,
+        "pixels": 20518
+      },
+      {
+        "index": 6,
+        "pixels": 21433
+      },
+      {
+        "index": 7,
+        "pixels": 21646
+      },
+      {
+        "index": 8,
+        "pixels": 21658
+      },
+      {
+        "index": 9,
+        "pixels": 21225
+      },
+      {
+        "index": 10,
+        "pixels": 20860
+      },
+      {
+        "index": 11,
+        "pixels": 21415
+      },
+      {
+        "index": 12,
+        "pixels": 20490
+      },
+      {
+        "index": 13,
+        "pixels": 21706
+      },
+      {
+        "index": 14,
+        "pixels": 21306
+      },
+      {
+        "index": 15,
+        "pixels": 23027
+      },
+      {
+        "index": 16,
+        "pixels": 21457
+      },
+      {
+        "index": 17,
+        "pixels": 20789
+      },
+      {
+        "index": 18,
+        "pixels": 21308
+      },
+      {
+        "index": 19,
+        "pixels": 19234
+      },
+      {
+        "index": 20,
+        "pixels": 15890
+      },
+      {
+        "index": 21,
+        "pixels": 14420
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "B-IC",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.7138,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      274,
+      511,
+      766,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 14378
+      },
+      {
+        "index": 1,
+        "pixels": 14390
+      },
+      {
+        "index": 2,
+        "pixels": 14338
+      },
+      {
+        "index": 3,
+        "pixels": 14472
+      },
+      {
+        "index": 4,
+        "pixels": 14976
+      },
+      {
+        "index": 5,
+        "pixels": 14322
+      },
+      {
+        "index": 6,
+        "pixels": 15169
+      },
+      {
+        "index": 7,
+        "pixels": 15150
+      },
+      {
+        "index": 8,
+        "pixels": 15850
+      },
+      {
+        "index": 9,
+        "pixels": 15648
+      },
+      {
+        "index": 10,
+        "pixels": 15503
+      },
+      {
+        "index": 11,
+        "pixels": 15386
+      },
+      {
+        "index": 12,
+        "pixels": 15556
+      },
+      {
+        "index": 13,
+        "pixels": 16875
+      },
+      {
+        "index": 14,
+        "pixels": 17038
+      },
+      {
+        "index": 15,
+        "pixels": 17352
+      },
+      {
+        "index": 16,
+        "pixels": 16105
+      },
+      {
+        "index": 17,
+        "pixels": 15445
+      },
+      {
+        "index": 18,
+        "pixels": 14416
+      },
+      {
+        "index": 19,
+        "pixels": 14788
+      },
+      {
+        "index": 20,
+        "pixels": 12277
+      },
+      {
+        "index": 21,
+        "pixels": 12479
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "B-KN",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.686,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      278,
+      526,
+      774,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 16500
+      },
+      {
+        "index": 1,
+        "pixels": 16481
+      },
+      {
+        "index": 2,
+        "pixels": 16717
+      },
+      {
+        "index": 3,
+        "pixels": 16796
+      },
+      {
+        "index": 4,
+        "pixels": 16884
+      },
+      {
+        "index": 5,
+        "pixels": 16911
+      },
+      {
+        "index": 6,
+        "pixels": 17657
+      },
+      {
+        "index": 7,
+        "pixels": 17311
+      },
+      {
+        "index": 8,
+        "pixels": 17100
+      },
+      {
+        "index": 9,
+        "pixels": 17280
+      },
+      {
+        "index": 10,
+        "pixels": 17691
+      },
+      {
+        "index": 11,
+        "pixels": 17691
+      },
+      {
+        "index": 12,
+        "pixels": 18444
+      },
+      {
+        "index": 13,
+        "pixels": 19087
+      },
+      {
+        "index": 14,
+        "pixels": 16575
+      },
+      {
+        "index": 15,
+        "pixels": 21346
+      },
+      {
+        "index": 16,
+        "pixels": 17151
+      },
+      {
+        "index": 17,
+        "pixels": 17472
+      },
+      {
+        "index": 18,
+        "pixels": 17096
+      },
+      {
+        "index": 19,
+        "pixels": 15360
+      },
+      {
+        "index": 20,
+        "pixels": 13478
+      },
+      {
+        "index": 21,
+        "pixels": 11646
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "B-PR",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5909,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      300,
+      540,
+      794,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 21608
+      },
+      {
+        "index": 1,
+        "pixels": 21419
+      },
+      {
+        "index": 2,
+        "pixels": 21713
+      },
+      {
+        "index": 3,
+        "pixels": 21775
+      },
+      {
+        "index": 4,
+        "pixels": 23454
+      },
+      {
+        "index": 5,
+        "pixels": 21972
+      },
+      {
+        "index": 6,
+        "pixels": 22591
+      },
+      {
+        "index": 7,
+        "pixels": 22358
+      },
+      {
+        "index": 8,
+        "pixels": 22463
+      },
+      {
+        "index": 9,
+        "pixels": 22558
+      },
+      {
+        "index": 10,
+        "pixels": 22058
+      },
+      {
+        "index": 11,
+        "pixels": 22667
+      },
+      {
+        "index": 12,
+        "pixels": 23877
+      },
+      {
+        "index": 13,
+        "pixels": 22517
+      },
+      {
+        "index": 14,
+        "pixels": 23524
+      },
+      {
+        "index": 15,
+        "pixels": 31027
+      },
+      {
+        "index": 16,
+        "pixels": 22472
+      },
+      {
+        "index": 17,
+        "pixels": 21250
+      },
+      {
+        "index": 18,
+        "pixels": 21284
+      },
+      {
+        "index": 19,
+        "pixels": 18286
+      },
+      {
+        "index": 20,
+        "pixels": 18822
+      },
+      {
+        "index": 21,
+        "pixels": 15185
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-AR-P",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5302,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      287,
+      532,
+      782,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 27147
+      },
+      {
+        "index": 1,
+        "pixels": 27128
+      },
+      {
+        "index": 2,
+        "pixels": 27681
+      },
+      {
+        "index": 3,
+        "pixels": 27198
+      },
+      {
+        "index": 4,
+        "pixels": 27721
+      },
+      {
+        "index": 5,
+        "pixels": 26479
+      },
+      {
+        "index": 6,
+        "pixels": 27443
+      },
+      {
+        "index": 7,
+        "pixels": 26821
+      },
+      {
+        "index": 8,
+        "pixels": 27339
+      },
+      {
+        "index": 9,
+        "pixels": 27410
+      },
+      {
+        "index": 10,
+        "pixels": 27542
+      },
+      {
+        "index": 11,
+        "pixels": 26488
+      },
+      {
+        "index": 12,
+        "pixels": 26045
+      },
+      {
+        "index": 13,
+        "pixels": 27291
+      },
+      {
+        "index": 14,
+        "pixels": 27694
+      },
+      {
+        "index": 15,
+        "pixels": 27152
+      },
+      {
+        "index": 16,
+        "pixels": 28367
+      },
+      {
+        "index": 17,
+        "pixels": 25943
+      },
+      {
+        "index": 18,
+        "pixels": 21852
+      },
+      {
+        "index": 19,
+        "pixels": 20543
+      },
+      {
+        "index": 20,
+        "pixels": 19021
+      },
+      {
+        "index": 21,
+        "pixels": 17257
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-AR-T",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6516,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      288,
+      539,
+      776,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 19156
+      },
+      {
+        "index": 1,
+        "pixels": 19942
+      },
+      {
+        "index": 2,
+        "pixels": 19840
+      },
+      {
+        "index": 3,
+        "pixels": 20577
+      },
+      {
+        "index": 4,
+        "pixels": 20984
+      },
+      {
+        "index": 5,
+        "pixels": 19860
+      },
+      {
+        "index": 6,
+        "pixels": 21691
+      },
+      {
+        "index": 7,
+        "pixels": 21617
+      },
+      {
+        "index": 8,
+        "pixels": 22125
+      },
+      {
+        "index": 9,
+        "pixels": 22035
+      },
+      {
+        "index": 10,
+        "pixels": 21352
+      },
+      {
+        "index": 11,
+        "pixels": 21812
+      },
+      {
+        "index": 12,
+        "pixels": 20846
+      },
+      {
+        "index": 13,
+        "pixels": 20179
+      },
+      {
+        "index": 14,
+        "pixels": 21545
+      },
+      {
+        "index": 15,
+        "pixels": 20157
+      },
+      {
+        "index": 16,
+        "pixels": 21178
+      },
+      {
+        "index": 17,
+        "pixels": 20489
+      },
+      {
+        "index": 18,
+        "pixels": 19705
+      },
+      {
+        "index": 19,
+        "pixels": 17497
+      },
+      {
+        "index": 20,
+        "pixels": 15434
+      },
+      {
+        "index": 21,
+        "pixels": 12646
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-BA-A",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.732,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      276,
+      527,
+      766,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 12976
+      },
+      {
+        "index": 1,
+        "pixels": 12713
+      },
+      {
+        "index": 2,
+        "pixels": 13125
+      },
+      {
+        "index": 3,
+        "pixels": 12604
+      },
+      {
+        "index": 4,
+        "pixels": 12949
+      },
+      {
+        "index": 5,
+        "pixels": 12662
+      },
+      {
+        "index": 6,
+        "pixels": 14216
+      },
+      {
+        "index": 7,
+        "pixels": 14058
+      },
+      {
+        "index": 8,
+        "pixels": 13823
+      },
+      {
+        "index": 9,
+        "pixels": 14555
+      },
+      {
+        "index": 10,
+        "pixels": 14326
+      },
+      {
+        "index": 11,
+        "pixels": 14335
+      },
+      {
+        "index": 12,
+        "pixels": 13226
+      },
+      {
+        "index": 13,
+        "pixels": 14679
+      },
+      {
+        "index": 14,
+        "pixels": 13369
+      },
+      {
+        "index": 15,
+        "pixels": 16707
+      },
+      {
+        "index": 16,
+        "pixels": 14036
+      },
+      {
+        "index": 17,
+        "pixels": 13789
+      },
+      {
+        "index": 18,
+        "pixels": 13810
+      },
+      {
+        "index": 19,
+        "pixels": 12083
+      },
+      {
+        "index": 20,
+        "pixels": 10468
+      },
+      {
+        "index": 21,
+        "pixels": 9017
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-BA-G",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.7377,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      266,
+      502,
+      772,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 12457
+      },
+      {
+        "index": 1,
+        "pixels": 12559
+      },
+      {
+        "index": 2,
+        "pixels": 12569
+      },
+      {
+        "index": 3,
+        "pixels": 12661
+      },
+      {
+        "index": 4,
+        "pixels": 13494
+      },
+      {
+        "index": 5,
+        "pixels": 12384
+      },
+      {
+        "index": 6,
+        "pixels": 13858
+      },
+      {
+        "index": 7,
+        "pixels": 13793
+      },
+      {
+        "index": 8,
+        "pixels": 13705
+      },
+      {
+        "index": 9,
+        "pixels": 13614
+      },
+      {
+        "index": 10,
+        "pixels": 13853
+      },
+      {
+        "index": 11,
+        "pixels": 13636
+      },
+      {
+        "index": 12,
+        "pixels": 13586
+      },
+      {
+        "index": 13,
+        "pixels": 15508
+      },
+      {
+        "index": 14,
+        "pixels": 15508
+      },
+      {
+        "index": 15,
+        "pixels": 15820
+      },
+      {
+        "index": 16,
+        "pixels": 16920
+      },
+      {
+        "index": 17,
+        "pixels": 13725
+      },
+      {
+        "index": 18,
+        "pixels": 11647
+      },
+      {
+        "index": 19,
+        "pixels": 12031
+      },
+      {
+        "index": 20,
+        "pixels": 11540
+      },
+      {
+        "index": 21,
+        "pixels": 10107
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-FI-B",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6129,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      304,
+      555,
+      803,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20339
+      },
+      {
+        "index": 1,
+        "pixels": 19845
+      },
+      {
+        "index": 2,
+        "pixels": 20554
+      },
+      {
+        "index": 3,
+        "pixels": 20169
+      },
+      {
+        "index": 4,
+        "pixels": 21108
+      },
+      {
+        "index": 5,
+        "pixels": 20045
+      },
+      {
+        "index": 6,
+        "pixels": 21338
+      },
+      {
+        "index": 7,
+        "pixels": 20799
+      },
+      {
+        "index": 8,
+        "pixels": 21660
+      },
+      {
+        "index": 9,
+        "pixels": 21033
+      },
+      {
+        "index": 10,
+        "pixels": 21134
+      },
+      {
+        "index": 11,
+        "pixels": 20926
+      },
+      {
+        "index": 12,
+        "pixels": 18923
+      },
+      {
+        "index": 13,
+        "pixels": 19715
+      },
+      {
+        "index": 14,
+        "pixels": 20663
+      },
+      {
+        "index": 15,
+        "pixels": 27919
+      },
+      {
+        "index": 16,
+        "pixels": 20682
+      },
+      {
+        "index": 17,
+        "pixels": 20511
+      },
+      {
+        "index": 18,
+        "pixels": 18069
+      },
+      {
+        "index": 19,
+        "pixels": 17048
+      },
+      {
+        "index": 20,
+        "pixels": 16739
+      },
+      {
+        "index": 21,
+        "pixels": 13253
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-FI-E",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5587,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      276,
+      522,
+      774,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 21676
+      },
+      {
+        "index": 1,
+        "pixels": 22358
+      },
+      {
+        "index": 2,
+        "pixels": 22515
+      },
+      {
+        "index": 3,
+        "pixels": 22388
+      },
+      {
+        "index": 4,
+        "pixels": 24332
+      },
+      {
+        "index": 5,
+        "pixels": 22408
+      },
+      {
+        "index": 6,
+        "pixels": 23493
+      },
+      {
+        "index": 7,
+        "pixels": 23238
+      },
+      {
+        "index": 8,
+        "pixels": 23222
+      },
+      {
+        "index": 9,
+        "pixels": 24392
+      },
+      {
+        "index": 10,
+        "pixels": 24014
+      },
+      {
+        "index": 11,
+        "pixels": 22949
+      },
+      {
+        "index": 12,
+        "pixels": 24153
+      },
+      {
+        "index": 13,
+        "pixels": 26111
+      },
+      {
+        "index": 14,
+        "pixels": 24384
+      },
+      {
+        "index": 15,
+        "pixels": 26118
+      },
+      {
+        "index": 16,
+        "pixels": 24224
+      },
+      {
+        "index": 17,
+        "pixels": 23590
+      },
+      {
+        "index": 18,
+        "pixels": 23819
+      },
+      {
+        "index": 19,
+        "pixels": 21260
+      },
+      {
+        "index": 20,
+        "pixels": 20738
+      },
+      {
+        "index": 21,
+        "pixels": 16868
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-IC-F",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6413,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      286,
+      524,
+      781,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 19198
+      },
+      {
+        "index": 1,
+        "pixels": 19204
+      },
+      {
+        "index": 2,
+        "pixels": 19517
+      },
+      {
+        "index": 3,
+        "pixels": 19537
+      },
+      {
+        "index": 4,
+        "pixels": 17681
+      },
+      {
+        "index": 5,
+        "pixels": 19447
+      },
+      {
+        "index": 6,
+        "pixels": 19240
+      },
+      {
+        "index": 7,
+        "pixels": 19394
+      },
+      {
+        "index": 8,
+        "pixels": 19120
+      },
+      {
+        "index": 9,
+        "pixels": 18762
+      },
+      {
+        "index": 10,
+        "pixels": 19685
+      },
+      {
+        "index": 11,
+        "pixels": 19342
+      },
+      {
+        "index": 12,
+        "pixels": 21372
+      },
+      {
+        "index": 13,
+        "pixels": 21772
+      },
+      {
+        "index": 14,
+        "pixels": 18654
+      },
+      {
+        "index": 15,
+        "pixels": 20595
+      },
+      {
+        "index": 16,
+        "pixels": 20224
+      },
+      {
+        "index": 17,
+        "pixels": 20786
+      },
+      {
+        "index": 18,
+        "pixels": 20619
+      },
+      {
+        "index": 19,
+        "pixels": 17455
+      },
+      {
+        "index": 20,
+        "pixels": 14089
+      },
+      {
+        "index": 21,
+        "pixels": 13791
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-IC-S",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6496,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      289,
+      529,
+      769,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 15363
+      },
+      {
+        "index": 1,
+        "pixels": 15372
+      },
+      {
+        "index": 2,
+        "pixels": 15732
+      },
+      {
+        "index": 3,
+        "pixels": 15222
+      },
+      {
+        "index": 4,
+        "pixels": 17061
+      },
+      {
+        "index": 5,
+        "pixels": 14925
+      },
+      {
+        "index": 6,
+        "pixels": 15549
+      },
+      {
+        "index": 7,
+        "pixels": 14774
+      },
+      {
+        "index": 8,
+        "pixels": 14730
+      },
+      {
+        "index": 9,
+        "pixels": 14730
+      },
+      {
+        "index": 10,
+        "pixels": 15077
+      },
+      {
+        "index": 11,
+        "pixels": 15129
+      },
+      {
+        "index": 12,
+        "pixels": 15130
+      },
+      {
+        "index": 13,
+        "pixels": 17130
+      },
+      {
+        "index": 14,
+        "pixels": 16011
+      },
+      {
+        "index": 15,
+        "pixels": 18344
+      },
+      {
+        "index": 16,
+        "pixels": 16188
+      },
+      {
+        "index": 17,
+        "pixels": 15016
+      },
+      {
+        "index": 18,
+        "pixels": 15928
+      },
+      {
+        "index": 19,
+        "pixels": 14705
+      },
+      {
+        "index": 20,
+        "pixels": 11523
+      },
+      {
+        "index": 21,
+        "pixels": 10421
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-KN-C",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.7047,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      278,
+      509,
+      758,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 14844
+      },
+      {
+        "index": 1,
+        "pixels": 14468
+      },
+      {
+        "index": 2,
+        "pixels": 14697
+      },
+      {
+        "index": 3,
+        "pixels": 14461
+      },
+      {
+        "index": 4,
+        "pixels": 15056
+      },
+      {
+        "index": 5,
+        "pixels": 14793
+      },
+      {
+        "index": 6,
+        "pixels": 16433
+      },
+      {
+        "index": 7,
+        "pixels": 15585
+      },
+      {
+        "index": 8,
+        "pixels": 16440
+      },
+      {
+        "index": 9,
+        "pixels": 16428
+      },
+      {
+        "index": 10,
+        "pixels": 16010
+      },
+      {
+        "index": 11,
+        "pixels": 16147
+      },
+      {
+        "index": 12,
+        "pixels": 16435
+      },
+      {
+        "index": 13,
+        "pixels": 18396
+      },
+      {
+        "index": 14,
+        "pixels": 20271
+      },
+      {
+        "index": 15,
+        "pixels": 22074
+      },
+      {
+        "index": 16,
+        "pixels": 18316
+      },
+      {
+        "index": 17,
+        "pixels": 16518
+      },
+      {
+        "index": 18,
+        "pixels": 16254
+      },
+      {
+        "index": 19,
+        "pixels": 14958
+      },
+      {
+        "index": 20,
+        "pixels": 11318
+      },
+      {
+        "index": 21,
+        "pixels": 10437
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-KN-G",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.7261,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      268,
+      514,
+      770,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 14056
+      },
+      {
+        "index": 1,
+        "pixels": 14125
+      },
+      {
+        "index": 2,
+        "pixels": 14129
+      },
+      {
+        "index": 3,
+        "pixels": 14161
+      },
+      {
+        "index": 4,
+        "pixels": 14328
+      },
+      {
+        "index": 5,
+        "pixels": 14072
+      },
+      {
+        "index": 6,
+        "pixels": 16471
+      },
+      {
+        "index": 7,
+        "pixels": 16729
+      },
+      {
+        "index": 8,
+        "pixels": 16852
+      },
+      {
+        "index": 9,
+        "pixels": 16789
+      },
+      {
+        "index": 10,
+        "pixels": 16970
+      },
+      {
+        "index": 11,
+        "pixels": 16653
+      },
+      {
+        "index": 12,
+        "pixels": 16745
+      },
+      {
+        "index": 13,
+        "pixels": 17705
+      },
+      {
+        "index": 14,
+        "pixels": 18082
+      },
+      {
+        "index": 15,
+        "pixels": 20846
+      },
+      {
+        "index": 16,
+        "pixels": 17128
+      },
+      {
+        "index": 17,
+        "pixels": 16817
+      },
+      {
+        "index": 18,
+        "pixels": 16258
+      },
+      {
+        "index": 19,
+        "pixels": 13577
+      },
+      {
+        "index": 20,
+        "pixels": 11176
+      },
+      {
+        "index": 21,
+        "pixels": 9542
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-PR-G",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5479,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      277,
+      523,
+      784,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 22290
+      },
+      {
+        "index": 1,
+        "pixels": 22157
+      },
+      {
+        "index": 2,
+        "pixels": 22576
+      },
+      {
+        "index": 3,
+        "pixels": 22453
+      },
+      {
+        "index": 4,
+        "pixels": 22516
+      },
+      {
+        "index": 5,
+        "pixels": 21612
+      },
+      {
+        "index": 6,
+        "pixels": 23140
+      },
+      {
+        "index": 7,
+        "pixels": 22698
+      },
+      {
+        "index": 8,
+        "pixels": 23363
+      },
+      {
+        "index": 9,
+        "pixels": 22767
+      },
+      {
+        "index": 10,
+        "pixels": 22282
+      },
+      {
+        "index": 11,
+        "pixels": 22746
+      },
+      {
+        "index": 12,
+        "pixels": 22913
+      },
+      {
+        "index": 13,
+        "pixels": 24022
+      },
+      {
+        "index": 14,
+        "pixels": 25115
+      },
+      {
+        "index": 15,
+        "pixels": 32380
+      },
+      {
+        "index": 16,
+        "pixels": 23728
+      },
+      {
+        "index": 17,
+        "pixels": 22688
+      },
+      {
+        "index": 18,
+        "pixels": 22006
+      },
+      {
+        "index": 19,
+        "pixels": 19941
+      },
+      {
+        "index": 20,
+        "pixels": 16461
+      },
+      {
+        "index": 21,
+        "pixels": 14611
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "E-PR-H",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5774,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      294,
+      539,
+      796,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 22370
+      },
+      {
+        "index": 1,
+        "pixels": 22610
+      },
+      {
+        "index": 2,
+        "pixels": 22920
+      },
+      {
+        "index": 3,
+        "pixels": 22515
+      },
+      {
+        "index": 4,
+        "pixels": 24173
+      },
+      {
+        "index": 5,
+        "pixels": 22439
+      },
+      {
+        "index": 6,
+        "pixels": 21903
+      },
+      {
+        "index": 7,
+        "pixels": 22165
+      },
+      {
+        "index": 8,
+        "pixels": 22315
+      },
+      {
+        "index": 9,
+        "pixels": 20702
+      },
+      {
+        "index": 10,
+        "pixels": 22710
+      },
+      {
+        "index": 11,
+        "pixels": 21953
+      },
+      {
+        "index": 12,
+        "pixels": 21310
+      },
+      {
+        "index": 13,
+        "pixels": 24337
+      },
+      {
+        "index": 14,
+        "pixels": 26128
+      },
+      {
+        "index": 15,
+        "pixels": 29369
+      },
+      {
+        "index": 16,
+        "pixels": 21904
+      },
+      {
+        "index": 17,
+        "pixels": 21990
+      },
+      {
+        "index": 18,
+        "pixels": 20548
+      },
+      {
+        "index": 19,
+        "pixels": 19552
+      },
+      {
+        "index": 20,
+        "pixels": 16134
+      },
+      {
+        "index": 21,
+        "pixels": 14692
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-AR",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6453,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      284,
+      528,
+      770,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 18123
+      },
+      {
+        "index": 1,
+        "pixels": 18310
+      },
+      {
+        "index": 2,
+        "pixels": 18172
+      },
+      {
+        "index": 3,
+        "pixels": 17991
+      },
+      {
+        "index": 4,
+        "pixels": 17260
+      },
+      {
+        "index": 5,
+        "pixels": 17799
+      },
+      {
+        "index": 6,
+        "pixels": 18680
+      },
+      {
+        "index": 7,
+        "pixels": 18447
+      },
+      {
+        "index": 8,
+        "pixels": 18425
+      },
+      {
+        "index": 9,
+        "pixels": 18616
+      },
+      {
+        "index": 10,
+        "pixels": 18483
+      },
+      {
+        "index": 11,
+        "pixels": 18292
+      },
+      {
+        "index": 12,
+        "pixels": 19522
+      },
+      {
+        "index": 13,
+        "pixels": 20234
+      },
+      {
+        "index": 14,
+        "pixels": 21304
+      },
+      {
+        "index": 15,
+        "pixels": 23552
+      },
+      {
+        "index": 16,
+        "pixels": 19669
+      },
+      {
+        "index": 17,
+        "pixels": 17854
+      },
+      {
+        "index": 18,
+        "pixels": 19066
+      },
+      {
+        "index": 19,
+        "pixels": 14834
+      },
+      {
+        "index": 20,
+        "pixels": 13472
+      },
+      {
+        "index": 21,
+        "pixels": 12176
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-BA",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6044,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      274,
+      518,
+      762,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 19645
+      },
+      {
+        "index": 1,
+        "pixels": 20125
+      },
+      {
+        "index": 2,
+        "pixels": 19827
+      },
+      {
+        "index": 3,
+        "pixels": 20141
+      },
+      {
+        "index": 4,
+        "pixels": 18975
+      },
+      {
+        "index": 5,
+        "pixels": 20149
+      },
+      {
+        "index": 6,
+        "pixels": 20024
+      },
+      {
+        "index": 7,
+        "pixels": 20061
+      },
+      {
+        "index": 8,
+        "pixels": 19724
+      },
+      {
+        "index": 9,
+        "pixels": 20533
+      },
+      {
+        "index": 10,
+        "pixels": 19820
+      },
+      {
+        "index": 11,
+        "pixels": 19690
+      },
+      {
+        "index": 12,
+        "pixels": 17569
+      },
+      {
+        "index": 13,
+        "pixels": 19659
+      },
+      {
+        "index": 14,
+        "pixels": 23018
+      },
+      {
+        "index": 15,
+        "pixels": 25343
+      },
+      {
+        "index": 16,
+        "pixels": 15913
+      },
+      {
+        "index": 17,
+        "pixels": 18581
+      },
+      {
+        "index": 18,
+        "pixels": 20741
+      },
+      {
+        "index": 19,
+        "pixels": 19363
+      },
+      {
+        "index": 20,
+        "pixels": 17224
+      },
+      {
+        "index": 21,
+        "pixels": 12734
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-FI",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5758,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      282,
+      514,
+      776,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 18313
+      },
+      {
+        "index": 1,
+        "pixels": 18837
+      },
+      {
+        "index": 2,
+        "pixels": 18655
+      },
+      {
+        "index": 3,
+        "pixels": 18843
+      },
+      {
+        "index": 4,
+        "pixels": 18673
+      },
+      {
+        "index": 5,
+        "pixels": 18907
+      },
+      {
+        "index": 6,
+        "pixels": 18367
+      },
+      {
+        "index": 7,
+        "pixels": 18566
+      },
+      {
+        "index": 8,
+        "pixels": 18157
+      },
+      {
+        "index": 9,
+        "pixels": 18123
+      },
+      {
+        "index": 10,
+        "pixels": 18602
+      },
+      {
+        "index": 11,
+        "pixels": 17452
+      },
+      {
+        "index": 12,
+        "pixels": 17691
+      },
+      {
+        "index": 13,
+        "pixels": 20379
+      },
+      {
+        "index": 14,
+        "pixels": 19663
+      },
+      {
+        "index": 15,
+        "pixels": 24211
+      },
+      {
+        "index": 16,
+        "pixels": 20412
+      },
+      {
+        "index": 17,
+        "pixels": 18144
+      },
+      {
+        "index": 18,
+        "pixels": 17784
+      },
+      {
+        "index": 19,
+        "pixels": 15005
+      },
+      {
+        "index": 20,
+        "pixels": 15452
+      },
+      {
+        "index": 21,
+        "pixels": 14368
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-IC",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5991,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      283,
+      516,
+      770,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20694
+      },
+      {
+        "index": 1,
+        "pixels": 20720
+      },
+      {
+        "index": 2,
+        "pixels": 20668
+      },
+      {
+        "index": 3,
+        "pixels": 20877
+      },
+      {
+        "index": 4,
+        "pixels": 21356
+      },
+      {
+        "index": 5,
+        "pixels": 20132
+      },
+      {
+        "index": 6,
+        "pixels": 20992
+      },
+      {
+        "index": 7,
+        "pixels": 21050
+      },
+      {
+        "index": 8,
+        "pixels": 20854
+      },
+      {
+        "index": 9,
+        "pixels": 20650
+      },
+      {
+        "index": 10,
+        "pixels": 21478
+      },
+      {
+        "index": 11,
+        "pixels": 20318
+      },
+      {
+        "index": 12,
+        "pixels": 21734
+      },
+      {
+        "index": 13,
+        "pixels": 22241
+      },
+      {
+        "index": 14,
+        "pixels": 17578
+      },
+      {
+        "index": 15,
+        "pixels": 24156
+      },
+      {
+        "index": 16,
+        "pixels": 20844
+      },
+      {
+        "index": 17,
+        "pixels": 20384
+      },
+      {
+        "index": 18,
+        "pixels": 18827
+      },
+      {
+        "index": 19,
+        "pixels": 16856
+      },
+      {
+        "index": 20,
+        "pixels": 13162
+      },
+      {
+        "index": 21,
+        "pixels": 11820
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-KN",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6096,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      277,
+      518,
+      766,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20576
+      },
+      {
+        "index": 1,
+        "pixels": 20176
+      },
+      {
+        "index": 2,
+        "pixels": 20275
+      },
+      {
+        "index": 3,
+        "pixels": 20171
+      },
+      {
+        "index": 4,
+        "pixels": 19329
+      },
+      {
+        "index": 5,
+        "pixels": 20011
+      },
+      {
+        "index": 6,
+        "pixels": 20108
+      },
+      {
+        "index": 7,
+        "pixels": 20152
+      },
+      {
+        "index": 8,
+        "pixels": 20275
+      },
+      {
+        "index": 9,
+        "pixels": 20041
+      },
+      {
+        "index": 10,
+        "pixels": 20001
+      },
+      {
+        "index": 11,
+        "pixels": 20680
+      },
+      {
+        "index": 12,
+        "pixels": 20990
+      },
+      {
+        "index": 13,
+        "pixels": 25024
+      },
+      {
+        "index": 14,
+        "pixels": 22848
+      },
+      {
+        "index": 15,
+        "pixels": 26678
+      },
+      {
+        "index": 16,
+        "pixels": 20015
+      },
+      {
+        "index": 17,
+        "pixels": 20555
+      },
+      {
+        "index": 18,
+        "pixels": 19071
+      },
+      {
+        "index": 19,
+        "pixels": 18492
+      },
+      {
+        "index": 20,
+        "pixels": 15332
+      },
+      {
+        "index": 21,
+        "pixels": 13680
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "F-PR",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5368,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      281,
+      515,
+      778,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 19803
+      },
+      {
+        "index": 1,
+        "pixels": 19606
+      },
+      {
+        "index": 2,
+        "pixels": 19756
+      },
+      {
+        "index": 3,
+        "pixels": 19303
+      },
+      {
+        "index": 4,
+        "pixels": 21061
+      },
+      {
+        "index": 5,
+        "pixels": 19402
+      },
+      {
+        "index": 6,
+        "pixels": 20630
+      },
+      {
+        "index": 7,
+        "pixels": 20045
+      },
+      {
+        "index": 8,
+        "pixels": 20623
+      },
+      {
+        "index": 9,
+        "pixels": 21102
+      },
+      {
+        "index": 10,
+        "pixels": 20079
+      },
+      {
+        "index": 11,
+        "pixels": 20584
+      },
+      {
+        "index": 12,
+        "pixels": 20070
+      },
+      {
+        "index": 13,
+        "pixels": 21074
+      },
+      {
+        "index": 14,
+        "pixels": 22224
+      },
+      {
+        "index": 15,
+        "pixels": 26663
+      },
+      {
+        "index": 16,
+        "pixels": 19233
+      },
+      {
+        "index": 17,
+        "pixels": 19858
+      },
+      {
+        "index": 18,
+        "pixels": 18040
+      },
+      {
+        "index": 19,
+        "pixels": 17624
+      },
+      {
+        "index": 20,
+        "pixels": 17614
+      },
+      {
+        "index": 21,
+        "pixels": 14900
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-01",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6216,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      280,
+      516,
+      771,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 20491
+      },
+      {
+        "index": 1,
+        "pixels": 20505
+      },
+      {
+        "index": 2,
+        "pixels": 20282
+      },
+      {
+        "index": 3,
+        "pixels": 20728
+      },
+      {
+        "index": 4,
+        "pixels": 20727
+      },
+      {
+        "index": 5,
+        "pixels": 19074
+      },
+      {
+        "index": 6,
+        "pixels": 21242
+      },
+      {
+        "index": 7,
+        "pixels": 21253
+      },
+      {
+        "index": 8,
+        "pixels": 21174
+      },
+      {
+        "index": 9,
+        "pixels": 21142
+      },
+      {
+        "index": 10,
+        "pixels": 21327
+      },
+      {
+        "index": 11,
+        "pixels": 21414
+      },
+      {
+        "index": 12,
+        "pixels": 21558
+      },
+      {
+        "index": 13,
+        "pixels": 23912
+      },
+      {
+        "index": 14,
+        "pixels": 19294
+      },
+      {
+        "index": 15,
+        "pixels": 24784
+      },
+      {
+        "index": 16,
+        "pixels": 20615
+      },
+      {
+        "index": 17,
+        "pixels": 20044
+      },
+      {
+        "index": 18,
+        "pixels": 19208
+      },
+      {
+        "index": 19,
+        "pixels": 18381
+      },
+      {
+        "index": 20,
+        "pixels": 16674
+      },
+      {
+        "index": 21,
+        "pixels": 13296
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-02",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6078,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      279,
+      508,
+      767,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 21267
+      },
+      {
+        "index": 1,
+        "pixels": 21391
+      },
+      {
+        "index": 2,
+        "pixels": 21549
+      },
+      {
+        "index": 3,
+        "pixels": 21453
+      },
+      {
+        "index": 4,
+        "pixels": 22806
+      },
+      {
+        "index": 5,
+        "pixels": 21363
+      },
+      {
+        "index": 6,
+        "pixels": 23163
+      },
+      {
+        "index": 7,
+        "pixels": 21996
+      },
+      {
+        "index": 8,
+        "pixels": 23300
+      },
+      {
+        "index": 9,
+        "pixels": 21524
+      },
+      {
+        "index": 10,
+        "pixels": 22875
+      },
+      {
+        "index": 11,
+        "pixels": 21739
+      },
+      {
+        "index": 12,
+        "pixels": 21428
+      },
+      {
+        "index": 13,
+        "pixels": 23762
+      },
+      {
+        "index": 14,
+        "pixels": 22188
+      },
+      {
+        "index": 15,
+        "pixels": 27029
+      },
+      {
+        "index": 16,
+        "pixels": 21197
+      },
+      {
+        "index": 17,
+        "pixels": 21984
+      },
+      {
+        "index": 18,
+        "pixels": 22442
+      },
+      {
+        "index": 19,
+        "pixels": 19508
+      },
+      {
+        "index": 20,
+        "pixels": 17444
+      },
+      {
+        "index": 21,
+        "pixels": 15461
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-03",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6394,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      287,
+      526,
+      784,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 17800
+      },
+      {
+        "index": 1,
+        "pixels": 18355
+      },
+      {
+        "index": 2,
+        "pixels": 18124
+      },
+      {
+        "index": 3,
+        "pixels": 18440
+      },
+      {
+        "index": 4,
+        "pixels": 17569
+      },
+      {
+        "index": 5,
+        "pixels": 18231
+      },
+      {
+        "index": 6,
+        "pixels": 17937
+      },
+      {
+        "index": 7,
+        "pixels": 17890
+      },
+      {
+        "index": 8,
+        "pixels": 18642
+      },
+      {
+        "index": 9,
+        "pixels": 18052
+      },
+      {
+        "index": 10,
+        "pixels": 18629
+      },
+      {
+        "index": 11,
+        "pixels": 17929
+      },
+      {
+        "index": 12,
+        "pixels": 18592
+      },
+      {
+        "index": 13,
+        "pixels": 20127
+      },
+      {
+        "index": 14,
+        "pixels": 21282
+      },
+      {
+        "index": 15,
+        "pixels": 22726
+      },
+      {
+        "index": 16,
+        "pixels": 19760
+      },
+      {
+        "index": 17,
+        "pixels": 18610
+      },
+      {
+        "index": 18,
+        "pixels": 15090
+      },
+      {
+        "index": 19,
+        "pixels": 14907
+      },
+      {
+        "index": 20,
+        "pixels": 13776
+      },
+      {
+        "index": 21,
+        "pixels": 11918
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-04",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6812,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      288,
+      530,
+      766,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 17220
+      },
+      {
+        "index": 1,
+        "pixels": 17507
+      },
+      {
+        "index": 2,
+        "pixels": 17107
+      },
+      {
+        "index": 3,
+        "pixels": 17094
+      },
+      {
+        "index": 4,
+        "pixels": 17157
+      },
+      {
+        "index": 5,
+        "pixels": 17394
+      },
+      {
+        "index": 6,
+        "pixels": 15950
+      },
+      {
+        "index": 7,
+        "pixels": 16594
+      },
+      {
+        "index": 8,
+        "pixels": 15782
+      },
+      {
+        "index": 9,
+        "pixels": 15828
+      },
+      {
+        "index": 10,
+        "pixels": 17348
+      },
+      {
+        "index": 11,
+        "pixels": 16421
+      },
+      {
+        "index": 12,
+        "pixels": 16087
+      },
+      {
+        "index": 13,
+        "pixels": 18438
+      },
+      {
+        "index": 14,
+        "pixels": 19828
+      },
+      {
+        "index": 15,
+        "pixels": 21558
+      },
+      {
+        "index": 16,
+        "pixels": 16679
+      },
+      {
+        "index": 17,
+        "pixels": 16705
+      },
+      {
+        "index": 18,
+        "pixels": 16679
+      },
+      {
+        "index": 19,
+        "pixels": 15236
+      },
+      {
+        "index": 20,
+        "pixels": 13027
+      },
+      {
+        "index": 21,
+        "pixels": 10763
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-05",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6607,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      278,
+      517,
+      774,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 18346
+      },
+      {
+        "index": 1,
+        "pixels": 18235
+      },
+      {
+        "index": 2,
+        "pixels": 18166
+      },
+      {
+        "index": 3,
+        "pixels": 18226
+      },
+      {
+        "index": 4,
+        "pixels": 19769
+      },
+      {
+        "index": 5,
+        "pixels": 18299
+      },
+      {
+        "index": 6,
+        "pixels": 19136
+      },
+      {
+        "index": 7,
+        "pixels": 19133
+      },
+      {
+        "index": 8,
+        "pixels": 18428
+      },
+      {
+        "index": 9,
+        "pixels": 19078
+      },
+      {
+        "index": 10,
+        "pixels": 19837
+      },
+      {
+        "index": 11,
+        "pixels": 19645
+      },
+      {
+        "index": 12,
+        "pixels": 19290
+      },
+      {
+        "index": 13,
+        "pixels": 19605
+      },
+      {
+        "index": 14,
+        "pixels": 21830
+      },
+      {
+        "index": 15,
+        "pixels": 27639
+      },
+      {
+        "index": 16,
+        "pixels": 22207
+      },
+      {
+        "index": 17,
+        "pixels": 19335
+      },
+      {
+        "index": 18,
+        "pixels": 17313
+      },
+      {
+        "index": 19,
+        "pixels": 15776
+      },
+      {
+        "index": 20,
+        "pixels": 11420
+      },
+      {
+        "index": 21,
+        "pixels": 11433
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  },
+  {
+    "id": "H-06",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6371,
+    "alphaRange": [
+      0,
+      254
+    ],
+    "frameCount": 22,
+    "uniqueExactCrops": 22,
+    "rowCuts": [
+      0,
+      278,
+      520,
+      766,
+      1024
+    ],
+    "cells": [
+      {
+        "index": 0,
+        "pixels": 19550
+      },
+      {
+        "index": 1,
+        "pixels": 19367
+      },
+      {
+        "index": 2,
+        "pixels": 19803
+      },
+      {
+        "index": 3,
+        "pixels": 19699
+      },
+      {
+        "index": 4,
+        "pixels": 19982
+      },
+      {
+        "index": 5,
+        "pixels": 19505
+      },
+      {
+        "index": 6,
+        "pixels": 19980
+      },
+      {
+        "index": 7,
+        "pixels": 20219
+      },
+      {
+        "index": 8,
+        "pixels": 20148
+      },
+      {
+        "index": 9,
+        "pixels": 19772
+      },
+      {
+        "index": 10,
+        "pixels": 20601
+      },
+      {
+        "index": 11,
+        "pixels": 20391
+      },
+      {
+        "index": 12,
+        "pixels": 19733
+      },
+      {
+        "index": 13,
+        "pixels": 21214
+      },
+      {
+        "index": 14,
+        "pixels": 20522
+      },
+      {
+        "index": 15,
+        "pixels": 22234
+      },
+      {
+        "index": 16,
+        "pixels": 21038
+      },
+      {
+        "index": 17,
+        "pixels": 19752
+      },
+      {
+        "index": 18,
+        "pixels": 20670
+      },
+      {
+        "index": 19,
+        "pixels": 17095
+      },
+      {
+        "index": 20,
+        "pixels": 16776
+      },
+      {
+        "index": 21,
+        "pixels": 13769
+      },
+      {
+        "index": 22,
+        "pixels": 0
+      },
+      {
+        "index": 23,
+        "pixels": 0
+      }
+    ],
+    "occupiedSeams": [],
+    "issues": []
+  }
+]

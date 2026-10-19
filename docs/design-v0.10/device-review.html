@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.10 독립 검증 기록</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.10 독립 검증 기록</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">전투와 성장 규칙</a>
+<a href="#section-2">밸런스 결과 재현</a>
+<a href="#section-3">아트 데이터</a>
+<a href="#section-4">실기기</a><a class="source-link" href="device-review.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-19 · Astra 검증 · 최종 4차 APK 실기기 회귀 완료</p>
+<h2 id="section-1">전투와 성장 규칙</h2>
+<p>SOL 구현과 별도로 작성한 <a href="../../tests/CatalogCombat/Review/README.md">재현용 검증</a>을 최신 <code>Catalog*.cs</code>와 런타임 JSON으로 다시 컴파일해 실행했다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>검증</th>
+<th>결과</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RosterReview</td>
+<td>64/64 통과</td>
+</tr>
+<tr>
+<td>BattleReview</td>
+<td>10/10 통과</td>
+</tr>
+<tr>
+<td>EdgeReview</td>
+<td>16/16 통과</td>
+</tr>
+<tr>
+<td>TimingReview</td>
+<td>19/19 통과</td>
+</tr>
+<tr>
+<td>독립 검증 합계</td>
+<td><strong>109/109 통과</strong></td>
+</tr>
+<tr>
+<td>CatalogCombat 기본 회귀</td>
+<td>110개 통과</td>
+</tr>
+<tr>
+<td>이전 CombatCoreSmoke</td>
+<td>20 시나리오, 326개 통과</td>
+</tr>
+</tbody></table></div>
+<p>확인한 주요 조건은 6결합의 모든 분기 쌍, 최종형 12개 분기의 보존과 실제 스킬 발동, 단계별 성장 제한, 소환 이후 Undo, 첫 타격 방어와 곱 피해 감소, 피해 증가 합산, 대상 동률 순서, 보호막 흡수 기여, 화상 틱과 처치 귀속, 연발 중 평타 중지, 조건 특성별 독립 재사용 시간, 자신과 다른 아군의 지원 범위다.</p>
+<p>검증 중 발견한 결함은 개발 담당이 수정한 뒤 같은 프로브로 재실행했다. 특성의 실제 발동과 경계 조건을 검증하는 일부 프로브는 reflection과 내부 상태 설정을 사용한다. 실제 화면 입력과 프레임 속도 검증을 대신하지 않는다.</p>
+<h2 id="section-2">밸런스 결과 재현</h2>
+<p>최종 후보 데이터로 <code>BalanceProbe.cs</code>를 별도 컴파일하고 임시 출력 경로에서 <strong>14,400회</strong>를 재실행했다. 저장된 보고서와 독립 재실행 결과가 바이트 단위 해시까지 일치했다.</p>
+<ul>
+<li>주요 편성 비교: 24행 × 100시드</li>
+<li>30형태와 최종형 양쪽 분기: 72행 × 100시드</li>
+<li>6결합과 원본 두 분기 비교: 48행 × 100시드</li>
+<li>결과 SHA-256: <code>F1149DB66364BF0AFC405F96934F3BA191FFD0BFA438EFA9E6A3CBB1F08730A6</code></li>
+</ul>
+<p>이 결과는 정해진 적·배치·편성 조건의 재현성을 확인한다. 전체 원정, 소환 운, 유물, 모든 전승 조합, 역할별 최적 배치를 시험한 결과는 아니다. 개별 형태 비교는 티어별 총 소환 비용도 서로 다르므로 출시 밸런스 확정으로 해석하지 않는다.</p>
+<h2 id="section-3">아트 데이터</h2>
+<ul>
+<li>30개 고유 ID, 660개 프레임 사각형, 연결된 PNG 존재를 독립 확인했다.</li>
+<li>모든 사각형이 원본 이미지 범위 안에 있고 피벗이 0–1 범위에 있다.</li>
+<li>문서와 Unity Resources의 manifest가 동일하다.</li>
+<li>manifest SHA-256: <code>5F9B67DC017BC6F90B05DD59CD8A49A15FFE8B687324BD94650014CDA5F0E121</code></li>
+</ul>
+<p>원본 시트의 포즈를 표본 검토했다. 파일 수·좌표·정확한 중복 검사는 연속 동작의 부드러움이나 손·무기 일관성을 보장하지 않는다. 모바일 표시 확인은 아래 기록에 별도로 남긴다.</p>
+<h2 id="section-4">실기기</h2>
+<p>대상은 USB 디버깅이 승인된 Buddy2(Samsung SM-M236L), 가로 2408×1080이다. 각 새 APK의 SHA-256을 확인하고 <code>adb install -r</code>로 설치했다. 아래에서 전체 검증을 한 3차와 표시 회귀를 한 최종 4차를 구분한다.</p>
+<h3>최종 4차 APK</h3>
+<ul>
+<li>APK: <code>unity/Builds/Android/expedition-combat-prototype.apk</code>, 105,215,776 bytes.</li>
+<li>SHA-256: <code>CB1BAF629293E0DBD713EA4436151ADCFD6B36565367911962B41D2482861D2C</code></li>
+<li>새 APK 설치·실행, 맵에서 CATALOG LAB 진입 성공.</li>
+<li><code>BRANCH</code> 버튼과 긴 이름을 포함한 5명 팀 카드의 한국어 이름·ID가 잘림 없이 표시됨.</li>
+<li>B-KN 미리보기, H-06 공격 갤러리의 좌우 그림, 5명 대 5명 실제 전투의 그림·HP·피해 표시가 정상 출력됨. 빈 스프라이트 결함은 재현되지 않음.</li>
+<li>H-06, F-KN, F-AR, F-PR, H-04를 추가하고 드래그 배치 후 BASIC 5 전투를 시작, 1.9초에서 일시정지함.</li>
+<li>해당 앱 프로세스(PID 5448) 로그에서 Unity 오류·관리 코드 예외·AndroidRuntime fatal·shader error가 검색되지 않음.</li>
+</ul>
+<p>대표 최종 화면: <a href="device-evidence/build4-gameplay.png">5 대 5 전투</a>.
+추가 증거: <a href="device-evidence/build4-lab.png">준비 화면</a>, <a href="device-evidence/build4-team.png">5명 팀 카드</a>, <a href="device-evidence/build4-gallery.png">공격 갤러리</a>, <a href="device-evidence/build4-runtime.log">앱 로그</a>.</p>
+<h3>3차 전체 기기 검증</h3>
+<ul>
+<li>APK: 105,212,720 bytes, SHA-256 <code>CC2635CA2501863FD323E04EB051369A57BC714C04E9A5C9EEBF21F6617B3D6D</code>.</li>
+<li>갤러리 30개를 모두 직접 선택하고 30장 캡처를 확인했다. 선택한 ID에 해당하는 그림이 표시되고, ALLY/RIGHT와 ENEMY/LEFT가 서로 반전되며, 배경에 시트 사각형이나 큰 흐린 테두리가 보이지 않았다. 증거 파일은 <code>device-evidence/final-gallery-00.png</code>부터 <code>final-gallery-29.png</code>까지다. 파일명의 <code>final</code>과 무관하게 이 30장은 <strong>3차 APK 증거</strong>다.</li>
+<li>H-06의 IDLE/WALK/ATTACK/HIT/DEATH를 각각 선택하여 서로 다른 자세와 쓰러진 자세가 표시됨을 확인했다. 660프레임 전부의 연속 동작을 육안 검수한 것은 아니다.</li>
+<li>H-06/H-02/H-03/H-04 팀 생성, H-03 드래그 위치 변경, 전투 시작, 2.3초에서 일시정지 후 별도 캡처에도 시간·HP·전투 자세 유지, 재개 후 승리, 2× 버튼 변경, RETRY SAME TEAM 후 0.4초로 재시작, RESET BATTLE 후 편집 상태 복귀를 확인했다.</li>
+<li>BOSS (BASIC) 프리셋의 커다란 골렘이 왼쪽을 보고 표시되고, HP 감소와 전투가 진행됨을 확인했다. 이는 기존 골렘 원화를 확대한 임시 그림이며 보스 전용 애니메이션 검증으로 해석하지 않는다.</li>
+<li>공격 준비 프레임 0–2와 <code>BasicHit</code>/<code>SkillUsed</code>에서 시작하는 3–5 회복 프레임의 연결은 소스에서 확인했다. 기기 화면에서 공격·피격 자세와 피해 표시를 확인했으나, 프레임별 녹화 계측으로 명중 시점 오차나 정확한 1회 재생을 측정하지는 않았다.</li>
+<li>앱 프로세스(PID 3868) 로그에 Unity 관리 코드 예외나 fatal은 없었다. Android의 <code>InteractionJankMonitor</code> 초기화 진단 예외가 있었으나 앱은 계속 실행되었고 게임 코드 스택은 없었다.</li>
+</ul>
+<p>증거: <a href="device-evidence/final-gallery-29.png">30번째 형태</a>, <a href="device-evidence/build3-state-walk.png">걷기</a>, <a href="device-evidence/build3-state-attack.png">공격</a>, <a href="device-evidence/build3-state-hit.png">피격</a>, <a href="device-evidence/build3-state-death.png">죽음</a>, <a href="device-evidence/build3-drag.png">드래그</a>, <a href="device-evidence/build3-paused-a.png">일시정지 A</a>, <a href="device-evidence/build3-paused-b.png">일시정지 B</a>, <a href="device-evidence/build3-speed.png">승리·2×</a>, <a href="device-evidence/build3-retry.png">재시작</a>, <a href="device-evidence/build3-boss.png">보스</a>, <a href="device-evidence/build3-runtime.log">앱 로그</a>.</p>
+<h3>메모리와 남은 표시 한계</h3>
+<p>3차 APK의 <code>dumpsys meminfo</code> 순간 측정값이다. 장시간 누수 시험이나 FPS 계측은 수행하지 않았다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>시점</th>
+<th align="right">TOTAL PSS (KB)</th>
+<th align="right">Graphics (KB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lab 진입</td>
+<td align="right">312,636</td>
+<td align="right">88,568</td>
+</tr>
+<tr>
+<td>30형태 갤러리 순회 후</td>
+<td align="right">325,068</td>
+<td align="right">91,392</td>
+</tr>
+<tr>
+<td>여러 유닛 전투·보스 확인 후</td>
+<td align="right">345,817</td>
+<td align="right">107,632</td>
+</tr>
+</tbody></table></div>
+<p>증거: <a href="device-evidence/final-memory-start.txt">시작</a>, <a href="device-evidence/final-memory-after30.txt">30형태 후</a>, <a href="device-evidence/build3-memory-end.txt">전투 후</a>.</p>
+<p>현재 화면은 개발용 전투 실험실이다. 유닛을 위쪽에 배치하면 HP바가 전장 상단 밖으로 나올 수 있고, 가까운 배치에서는 그림·이름·피해 숫자가 겹친다. <a href="device-evidence/build3-paused-a.png">상단 HP바 예시</a>. 이 표시는 플레이를 막지는 않았지만 최종 전투 화면의 가독성 개선 대상으로 남는다. 실측 FPS, 장시간 안정성, 모든 기기 해상도, 660프레임의 완성도를 이 결과로 보장하지 않는다.</p>
+<h3>두 번째 빌드의 사전 화면 검증</h3>
+<ul>
+<li>APK: 105,210,492 bytes, SHA-256 <code>869A6ED47CCEB48EDCD7BA1C180078C0A1201E8058885A9CB7AC6E1D48DAED64</code></li>
+<li>설치 및 실행 성공. 기존 맵에서 CATALOG LAB 진입, 30형태 선택 화면의 한글·영문 표시 확인.</li>
+<li>H-01에 Shield 전승을 선택해 FUSE + ADD 실행 후 <code>inherited T-KN</code> 표시 확인.</li>
+<li><strong>발견 후 수정한 결함:</strong> 파일은 <code>SOURCE ART + CROP DATA</code>로 로드되지만 캐릭터 미리보기와 갤러리가 비어 있었음. 개발 담당이 렌더링 경로를 수정했고 3·4차에서 실제 그림 표시를 재확인함.</li>
+<li>BRANCH 12 카테고리와 긴 영문 팀 카드 이름이 잘리는 작은 UI 결함도 전달함.</li>
+</ul>
+<p>증거: <a href="device-evidence/build2-launch.png">시작 맵</a>, <a href="device-evidence/build2-lab.png">미리보기 누락</a>, <a href="device-evidence/build2-gallery.png">갤러리 누락</a>, <a href="device-evidence/build2-fusion-added.png">결합·전승</a>.</p>
+<p>이 절은 수정 전 발견 이력이며 최종 수정본 결과는 위 4차 절에 기록했다.</p>
+<p>HTML 갤러리는 이 검증 환경에서 사용할 수 있는 브라우저 표면이 없어 직접 조작하지 못했다. 파일과 manifest 연결 검토만 수행했다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

@@ -55,7 +55,15 @@ Unity 6000.3.24f1에서 **임포트·C# 컴파일·씬 생성, Android APK 빌�
 
 UI 문구를 수정한 증분 빌드는 빌드 성공으로 끝났지만, 실기기에서 `Could not produce class with ID 115`와 기본 GUI 스킨 오류가 발생했다. 빌드 로그에는 기존 player data를 재사용한 기록이 남았다. 테스트 APK 메뉴는 이제 `BuildOptions.CleanBuildCache`로 전체 빌드하고, 이 시제품에서 `PlayerSettings.stripEngineCode`를 꺼서 필요한 엔진 코드를 보존한다. 수정 APK를 다시 설치해 UI·전투 정상 동작을 확인했다. APK 생성 성공 뒤에도 반드시 실기기에서 확인한다. 출시용 용량 최적화는 별도 검증 대상이다. [Unity 클린 빌드 API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/BuildOptions.CleanBuildCache.html)
 
-현재 APK: `Builds/Android/expedition-combat-prototype.apk`, 55,727,510바이트. SHA-256: `D2E0ADBE66EEBB7B78832CF193E1EE86C91AB8DC7A27BA286D055358204F0082`. Galaxy Buddy2에 설치해 골렘이 왼쪽을 바라보는 준비 화면을 `Logs/buddy2/golem-facing-left.png`로 확인했다. 이전 첫 조합 APK에서는 준비·진화·전승·골렘 예고·반격·승리·재시도·새 원정 복원을 확인했고, `Logs/astra-device/final-runtime.log`에서 Unity 오류·예외·FATAL 패턴이 관찰되지 않았다. APK와 실행 로그·화면 캡처는 Git에 포함하지 않는다.
+이전 COMBAT LAB APK 기록(v0.10 이전): 55,727,510바이트. SHA-256: `D2E0ADBE66EEBB7B78832CF193E1EE86C91AB8DC7A27BA286D055358204F0082`. Galaxy Buddy2에 설치해 골렘이 왼쪽을 바라보는 준비 화면을 `Logs/buddy2/golem-facing-left.png`로 확인했다. 이전 첫 조합 APK에서는 준비·진화·전승·골렘 예고·반격·승리·재시도·새 원정 복원을 확인했고, `Logs/astra-device/final-runtime.log`에서 Unity 오류·예외·FATAL 패턴이 관찰되지 않았다. APK와 이 이전 실행 로그·화면 캡처는 Git에 포함하지 않는다.
+
+## v0.10 · 30형태 전투와 애니메이션
+
+지도 아래 **CATALOG LAB / 30**에서 새 전투 시험실을 연다. 최대 다섯 명을 자유롭게 편성하고 전승 특성, 최종형의 분기, 적 편성을 선택한다. 전투 전 드래그 배치, 전투·배속·일시정지·재도전을 지원한다. **ANIMATION QA**에서는 30형태의 대기·걷기·공격·피격·쓰러짐을 확인한다.
+
+게임과 자동 대전은 `Assets/Scripts/Core/Catalog*.cs`와 `Assets/Resources/Content/unit-catalog-v010.json`을 공유한다. 새 시트는 `Assets/Resources/Art/Units/v010/`의 30개 PNG이며 총 660프레임이다. 로드할 때 원본의 낮은 알파 잔광을 별도 렌더 텍스처에서 제거하고, 원본 픽셀은 보존한다.
+
+최신 APK 경로는 `Builds/Android/expedition-combat-prototype.apk`다. 최종 빌드 해시와 실기기 확인 범위는 [독립 검증 기록](../docs/design-v0.10/device-review.md)에 남긴다. [제작 기록](../docs/design-v0.10/production-notes.md)과 [밸런스 실험](../docs/design-v0.10/balance-report.md)도 함께 본다. 새 시트와 전투 규칙은 CATALOG LAB에 연결했고, 기존 1-1·1-2를 새 원정 진행으로 교체하지는 않았다.
 
 ## 구조와 다음 검증
 
@@ -71,4 +79,4 @@ UI 문구를 수정한 증분 빌드는 빌드 성공으로 끝났지만, 실기
 | `../tools/check-unity-project.ps1` | 설치된 에디터로 일괄 임포트·컴파일·설정 검증 |
 | `../tests/CombatCoreSmoke/run-smoke.ps1` | Windows 기본 C# 컴파일러로 전투 규칙 검증 |
 
-다음 검증은 효과음 청취와 장시간 플레이 중 프레임·발열·배터리 측정이다. 캐릭터는 정지 이미지를 움직이는 단계이며 걷기·공격의 프레임 애니메이션은 아직 없다. 영입·보상·연속 원정·저장·광고도 후속 작업이다. 홈 화면에서 돌아오는 동안 상태는 유지됐지만, 앱 프로세스가 종료되면 현재 전투는 보존되지 않는다.
+다음 검증은 효과음 청취와 장시간 플레이 중 프레임·발열·배터리 측정이다. 새 CATALOG LAB은 프레임 애니메이션을 사용하고 기존 스테이지는 이전 정지 아트 방식을 유지한다. 새 원정의 영입·보상·진행·저장·광고 연결은 후속 작업이다. 홈 화면에서 돌아오는 동안 상태는 유지됐지만, 앱 프로세스가 종료되면 현재 전투는 보존되지 않는다.

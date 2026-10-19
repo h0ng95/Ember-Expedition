@@ -1,0 +1,294 @@
+--------- beginning of main
+I/type.combatdemo( 5448): Late-enabling -Xcheck:jni
+I/type.combatdemo( 5448): Using generational CollectorTypeCC GC.
+D/nativeloader( 5448): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+D/ActivityThread( 5448): setConscryptValidator
+D/ActivityThread( 5448): setConscryptValidator - put
+D/CompatibilityChangeReporter( 5448): Compat change id reported: 171979766; UID 10261; state: ENABLED
+D/CompatibilityChangeReporter( 5448): Compat change id reported: 242716250; UID 10261; state: ENABLED
+D/nativeloader( 5448): Configuring clns-4 for other apk /data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/lib/arm64:/data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.expeditionprototype.combatdemo
+D/nativeloader( 5448): Load libframework-connectivity-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity.jar: ok
+V/GraphicsEnvironment( 5448): Currently set values for:
+V/GraphicsEnvironment( 5448):   angle_gl_driver_selection_pkgs=[]
+V/GraphicsEnvironment( 5448):   angle_gl_driver_selection_values=[]
+V/GraphicsEnvironment( 5448): ANGLE GameManagerService for com.expeditionprototype.combatdemo: false
+V/GraphicsEnvironment( 5448): com.expeditionprototype.combatdemo is not listed in per-application setting
+V/GraphicsEnvironment( 5448): Updatable production driver is not supported on the device.
+I/Unity   ( 5448): applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+I/DecorView( 5448): setWindowBackground: isPopOver=false color=ff000000 d=android.graphics.drawable.ColorDrawable@7f99d3f
+D/nativeloader( 5448): Load /data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/lib/arm64/libmain.so using class loader ns clns-4 (caller=/data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk): ok
+I/IL2CPP  ( 5448): JNI_OnLoad
+V/Unity   ( 5448): Context Type: ActivityOrService
+D/Unity   ( 5448): CommandLine:  
+I/Unity   ( 5448): onResume
+D/CompatibilityChangeReporter( 5448): Compat change id reported: 237531167; UID 10261; state: DISABLED
+I/InsetsController( 5448): setRequestedVisibleTypes: visible=false, mask=statusBars navigationBars, host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.InsetsController.controlAnimationUnchecked:1445 android.view.InsetsController.applyAnimation:2005 android.view.InsetsController.applyAnimation:1968 android.view.InsetsController.hide:1403 android.view.InsetsController.hide:1342 android.view.PendingInsetsController$HideRequest.replay:259 android.view.PendingInsetsController.replayAndAttach:176 android.view.ViewRootImpl.setView:1700 android.view.WindowManagerGlobal.addView:580 android.view.WindowManagerImpl.addView:150 
+I/InsetsController( 5448): onStateChanged: host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.ViewRootImpl.setView:1753, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 2408, 1080), mDisplayCutout=DisplayCutout{insets=Rect(70, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 468 - 70, 612), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2408 physicalDisplayWidth=1080 physicalDisplayHeight=2408 density={2.8125} cutoutSpec={M 0,0 H -25.6 V 24.8888888888889 H 25.6 V 0 H 0 Z @dp} rotation={1} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=0, center=Point(0, 0)}, RoundedCorner{position=TopRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomLeft, radius=0, center=Point(0, 0)}]}  mRoundedCornerFrame=Rect(0, 0 - 1080, 2408), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(2284, 0 - 2408, 68) rotation=1}, mDisplayShape=DisplayShape{ spec=-311912193 displayWidth=1080 displayHeight=2408 physicalPixelDisplaySizeRatio=1.0 rotation=1 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9e810001 mType=navigationBars mFrame=[0,1038][2408,1080] mVisible=true mFlags=[SUPPRESS_SCRIM]}, InsetsSource: {9e810004 mType=systemGestures mFrame=[0,0][154,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810005 mType=mandatorySystemGestures mFrame=[0,990][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810006 mType=tappableElement mFrame=[0,0][0,0] mVisible=true mFlags=[]}, InsetsSource: {9e810024 mType=systemGestures mFrame=[2324,0][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {b14e0000 mType=statusBars mFrame=[0,0][2408,68] mVisible=false mFlags=[]}, InsetsSource: {b14e0005 mType=mandatorySystemGestures mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {b14e0006 mType=tappableElement mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {7 mType=displayCutout mFrame=[0,0][70,1080] mVisible=true mFlags=[]} }
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): synced displayState. AttachInfo displayState=2
+D/InputTransport( 5448): setImprovementEvent.. GameApp 1 1  403.411  402.389 10064381.000 4487.187 3172.441
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): setView = com.android.internal.policy.DecorView@4a7f537 TM=true
+I/IDS_TAG ( 5448): Clearing training data of android.app.Application@7c45aa4
+I/IDS_TAG ( 5448): Starting IDS observe window
+I/IDS_TAG ( 5448): Getting Shared Preference for android.app.Application@7c45aa4 uid = 10261
+I/IDS_TAG ( 5448): App android.app.Application@7c45aa4 has not finished training
+I/IDS_TAG ( 5448): Closing IDS observe window
+I/IDS_TAG ( 5448): Getting Shared Preference for android.app.Application@7c45aa4 uid = 10261
+I/IDS_TAG ( 5448): IDS count updated to 1 for android.app.Application@7c45aa4
+I/SurfaceView@9116c47( 5448): onWindowVisibilityChanged(0) true com.unity3d.player.a.g{9116c47 VFE...... .F....I. 0,0-0,0 #7f020000 app:id/unitySurfaceView} of ViewRootImpl@1fdc6f8[UnityPlayerActivity]
+D/SurfaceView@9116c47( 5448): 152136775 updateSurface: has no frame
+I/BufferQueueProducer( 5448): [](id:154800000000,api:0,p:0,c:5448) setDequeueTimeout:2077252342
+I/BLASTBufferQueue_Java( 5448): new BLASTBufferQueue, mName= ViewRootImpl@1fdc6f8[UnityPlayerActivity] mNativeObject= 0xb4000074057d5000 sc.mNativeObject= 0xb400007428a92380 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3028 android.view.ViewRootImpl.relayoutWindow:10131 android.view.ViewRootImpl.performTraversals:4110 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 android.view.Choreographer$CallbackRecord.run:1698 android.view.Choreographer.doCallbacks:1153 android.view.Choreographer.doFrame:1079 android.view.Choreographer$FrameDisplayEventReceiver.run:1646 
+I/BLASTBufferQueue_Java( 5448): update, w= 2408 h= 1080 mName = ViewRootImpl@1fdc6f8[UnityPlayerActivity] mNativeObject= 0xb4000074057d5000 sc.mNativeObject= 0xb400007428a92380 format= -3 caller= android.graphics.BLASTBufferQueue.<init>:89 android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3028 android.view.ViewRootImpl.relayoutWindow:10131 android.view.ViewRootImpl.performTraversals:4110 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Relayout returned: old=(0,0,2408,1080) new=(0,0,2408,1080) relayoutAsync=false req=(2408,1080)0 dur=15 res=0x403 s={true 0xb400007405788800} ch=true seqId=0
+D/SurfaceView@9116c47( 5448): 152136775 updateSurface: has no frame
+I/SurfaceView@9116c47( 5448): windowStopped(false) true com.unity3d.player.a.g{9116c47 VFE...... .F....ID 0,0-2408,1080 #7f020000 app:id/unitySurfaceView} of ViewRootImpl@1fdc6f8[UnityPlayerActivity]
+D/SurfaceView@9116c47( 5448): 152136775 updateSurface: has no frame
+D/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): reportNextDraw android.view.ViewRootImpl.performTraversals:4718 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 android.view.Choreographer$CallbackRecord.run:1698 
+I/SurfaceView( 5448): 152136775 Changes: creating=true format=true size=true visible=true alpha=false hint=true visible=true left=true top=true z=false attached=true lifecycleStrategy=false
+I/BufferQueueProducer( 5448): [](id:154800000001,api:0,p:0,c:5448) setDequeueTimeout:2077252342
+I/BLASTBufferQueue_Java( 5448): update, w= 2408 h= 1080 mName = null mNativeObject= 0xb4000074057d5300 sc.mNativeObject= 0xb400007428a92e00 format= 4 caller= android.view.SurfaceView.createBlastSurfaceControls:1517 android.view.SurfaceView.updateSurface:1193 android.view.SurfaceView.lambda$new$0:258 android.view.SurfaceView.$r8$lambda$cm3nmzErr-srXoT_KjIYQgdhFN0:0 android.view.SurfaceView$$ExternalSyntheticLambda2.onPreDraw:2 android.view.ViewTreeObserver.dispatchOnPreDraw:1204 
+I/SurfaceView@9116c47( 5448): 152136775 Cur surface: Surface(name=null)/@0xeda542f
+I/SurfaceView@9116c47( 5448): pST: sr = Rect(0, 0 - 2408, 1080) sw = 2408 sh = 1080
+I/SurfaceView@9116c47( 5448): onSSPAndSRT: pl = 0 pt = 0 sx = 1.0 sy = 1.0
+D/SurfaceView@9116c47( 5448): 152136775 performSurfaceTransaction UI Thread position = [0, 0, 2408, 1080] surfaceSize = 2408x1080
+I/SurfaceView@9116c47( 5448): updateSurface: mVisible = true mSurface.isValid() = true
+I/SurfaceView@9116c47( 5448): updateSurface: mSurfaceCreated = false surfaceChanged = true visibleChanged = true
+I/SurfaceView( 5448): 152136775 visibleChanged -- surfaceCreated
+I/SurfaceView@9116c47( 5448): surfaceCreated 1 #8 com.unity3d.player.a.g{9116c47 VFE...... .F....ID 0,0-2408,1080 #7f020000 app:id/unitySurfaceView}
+I/SurfaceView( 5448): 152136775 surfaceChanged -- format=4 w=2408 h=1080
+I/SurfaceView@9116c47( 5448): surfaceChanged (2408,1080) 1 #8 com.unity3d.player.a.g{9116c47 VFE...... .F....ID 0,0-2408,1080 #7f020000 app:id/unitySurfaceView}
+I/SurfaceView( 5448): 152136775 surfaceRedrawNeeded
+I/SurfaceView( 5448): 152136775 finishedDrawing
+V/SurfaceView@9116c47( 5448): Layout: x=0 y=0 w=2408 h=1080, frame=Rect(0, 0 - 2408, 1080)
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Setup new sync=wmsSync-ViewRootImpl@1fdc6f8[UnityPlayerActivity]#1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Creating new active sync group ViewRootImpl@1fdc6f8[UnityPlayerActivity]#2
+I/BLASTBufferQueue( 5448): [ViewRootImpl@1fdc6f8[UnityPlayerActivity]#0](f:0,a:0,s:0) onFrameAvailable the first frame is available
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): reportDrawFinished seqId=0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): handleWindowFocusChanged: 1 0 call from android.view.ViewRootImpl.-$$Nest$mhandleWindowFocusChanged:0
+I/Unity   ( 5448): windowFocusChanged: true
+I/Unity   ( 5448): applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+I/Unity   ( 5448): resumeUnity
+D/InputMethodManagerUtils( 5448): startInputInner - Id : 0
+I/InputMethodManager( 5448): startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+D/InputMethodManagerUtils( 5448): startInputInner - Id : 0
+I/Unity   ( 5448): MemoryManager: Using 'Dynamic Heap' Allocator.
+D/Unity   ( 5448): [UnityMemory] Configuration Parameters - Can be set up in boot.config
+D/Unity   ( 5448):     "memorysetup-allocator-temp-initial-block-size-main=262144"
+D/Unity   ( 5448):     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-background-worker=32768"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-job-worker=262144"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-preload-manager=262144"
+D/Unity   ( 5448):     "memorysetup-remapper-allocator-initial-capacity=32768"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-audio-worker=65536"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-cloud-worker=32768"
+D/Unity   ( 5448):     "memorysetup-bucket-allocator-granularity=16"
+D/Unity   ( 5448):     "memorysetup-bucket-allocator-bucket-count=8"
+D/Unity   ( 5448):     "memorysetup-bucket-allocator-block-size=4194304"
+D/Unity   ( 5448):     "memorysetup-bucket-allocator-block-count=1"
+D/Unity   ( 5448):     "memorysetup-main-allocator-block-size=16777216"
+D/Unity   ( 5448):     "memorysetup-thread-allocator-block-size=16777216"
+D/Unity   ( 5448):     "memorysetup-gfx-main-allocator-block-size=16777216"
+D/Unity   ( 5448):     "memorysetup-gfx-thread-allocator-block-size=16777216"
+D/Unity   ( 5448):     "memorysetup-cache-allocator-block-size=4194304"
+D/Unity   ( 5448):     "memorysetup-typetree-allocator-block-size=2097152"
+D/Unity   ( 5448):     "memorysetup-profiler-bucket-allocator-granularity=16"
+D/Unity   ( 5448):     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+D/Unity   ( 5448):     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+D/Unity   ( 5448):     "memorysetup-profiler-bucket-allocator-block-count=1"
+D/Unity   ( 5448):     "memorysetup-profiler-allocator-block-size=16777216"
+D/Unity   ( 5448):     "memorysetup-profiler-editor-allocator-block-size=1048576"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-main=4194304"
+D/Unity   ( 5448):     "memorysetup-job-temp-allocator-block-size=2097152"
+D/Unity   ( 5448):     "memorysetup-job-temp-allocator-block-size-background=1048576"
+D/Unity   ( 5448):     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+D/Unity   ( 5448):     "memorysetup-temp-allocator-size-gfx=262144"
+I/InsetsSourceConsumer( 5448): applyRequestedVisibilityToControl: visible=false, type=ime, host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity
+D/Unity   ( 5448): Enabling Unity systrace
+D/Unity   ( 5448): Starting Unity systrace
+I/Unity   ( 5448): SetGameState: isLoading: true, mode: UNKNOWN, label: -2, quality: -1
+D/Unity   ( 5448): [VFS] Mount /data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk
+I/BLASTBufferQueue_Java( 5448): update, w= 2408 h= 1080 mName = ViewRootImpl@1fdc6f8[UnityPlayerActivity] mNativeObject= 0xb4000074057d5000 sc.mNativeObject= 0xb400007428a931c0 format= -3 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3017 android.view.ViewRootImpl.relayoutWindow:10131 android.view.ViewRootImpl.performTraversals:4110 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Relayout returned: old=(0,0,2408,1080) new=(0,0,2408,1080) relayoutAsync=false req=(2408,1080)0 dur=6 res=0x400 s={true 0xb400007405788800} ch=false seqId=0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): updateBoundsLayer: t=android.view.SurfaceControl$Transaction@a900abe sc=Surface(name=Bounds for - com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity@0)/@0xf8ea71f frame=4
+I/Unity   ( 5448): applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+I/Unity   ( 5448): SystemInfo CPU = ARM64, Cores = 8, Memory = 3438mb
+I/Unity   ( 5448): SystemInfo ARM big.LITTLE configuration: 2 big (mask: 0xc0), 6 little (mask: 0x3f)
+I/Unity   ( 5448): ApplicationInfo 'com.expeditionprototype.combatdemo', Version '0.0.1', Min API Level '26', Target API Level '36'
+I/Unity   ( 5448): Built from '6000.3/staging' branch, Version '6000.3.24f1 (4e7b9b5b6244)', Build type 'Development', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Disabled'
+I/Unity   ( 5448): Device Model 'samsung SM-M236L', OS 'Android OS 14 (API 34)'
+D/Unity   ( 5448): Determine if il2cpp resources need to extracted:
+D/Unity   ( 5448):     Guid in '/storage/emulated/0/Android/data/com.expeditionprototype.combatdemo/files/il2cpp/unity.ver' is invalid, expected '5143460d-d4a9-4ded-9d0d-007709ddeeb6' was '0a9f95ef-c427-4c4e-9321-c253b8a5ca62'
+D/Unity   ( 5448):     Extracting il2cpp resources
+D/Unity   ( 5448): Unable to find library path for 'il2cpp.usym'.
+I/InsetsController( 5448): onStateChanged: host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:7209, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 2408, 1080), mDisplayCutout=DisplayCutout{insets=Rect(70, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 468 - 70, 612), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2408 physicalDisplayWidth=1080 physicalDisplayHeight=2408 density={2.8125} cutoutSpec={M 0,0 H -25.6 V 24.8888888888889 H 25.6 V 0 H 0 Z @dp} rotation={1} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=0, center=Point(0, 0)}, RoundedCorner{position=TopRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomLeft, radius=0, center=Point(0, 0)}]}  mRoundedCornerFrame=Rect(0, 0 - 2408, 1080), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(2284, 0 - 2408, 68) rotation=1}, mDisplayShape=DisplayShape{ spec=-311912193 displayWidth=1080 displayHeight=2408 physicalPixelDisplaySizeRatio=1.0 rotation=1 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9e810001 mType=navigationBars mFrame=[0,1038][2408,1080] mVisible=true mFlags=[SUPPRESS_SCRIM]}, InsetsSource: {9e810004 mType=systemGestures mFrame=[0,0][154,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810005 mType=mandatorySystemGestures mFrame=[0,990][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810006 mType=tappableElement mFrame=[0,0][0,0] mVisible=true mFlags=[]}, InsetsSource: {9e810024 mType=systemGestures mFrame=[2324,0][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {b14e0000 mType=statusBars mFrame=[0,0][2408,68] mVisible=false mFlags=[]}, InsetsSource: {b14e0005 mType=mandatorySystemGestures mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {b14e0006 mType=tappableElement mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {3 mType=ime mFrame=[0,0][0,0] mVisible=false mFlags=[]}, InsetsSource: {7 mType=displayCutout mFrame=[0,0][70,1080] mVisible=true mFlags=[]} }
+I/InsetsSourceConsumer( 5448): applyRequestedVisibilityToControl: visible=false, type=statusBars, host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Resizing android.view.ViewRootImpl@3be14ca: frame = [0,0][2408,1080] reportDraw = true forceLayout = true syncSeqId = 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Resizing android.view.ViewRootImpl@3be14ca: frame = [0,0][2408,1080] reportDraw = false forceLayout = false syncSeqId = -1
+I/InsetsController( 5448): controlAnimationUncheckedInner: Added types=navigationBars, animType=1, host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.InsetsController.controlAnimationUnchecked:1449 android.view.InsetsController.applyAnimation:2005 android.view.InsetsController.applyAnimation:1968 
+I/InsetsController( 5448): onStateChanged: host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:7196, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 2408, 1080), mDisplayCutout=DisplayCutout{insets=Rect(70, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 468 - 70, 612), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2408 physicalDisplayWidth=1080 physicalDisplayHeight=2408 density={2.8125} cutoutSpec={M 0,0 H -25.6 V 24.8888888888889 H 25.6 V 0 H 0 Z @dp} rotation={1} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=0, center=Point(0, 0)}, RoundedCorner{position=TopRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomLeft, radius=0, center=Point(0, 0)}]}  mRoundedCornerFrame=Rect(0, 0 - 2408, 1080), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(2284, 0 - 2408, 68) rotation=1}, mDisplayShape=DisplayShape{ spec=-311912193 displayWidth=1080 displayHeight=2408 physicalPixelDisplaySizeRatio=1.0 rotation=1 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9e810001 mType=navigationBars mFrame=[0,1038][2408,1080] mVisible=false mFlags=[SUPPRESS_SCRIM]}, InsetsSource: {9e810004 mType=systemGestures mFrame=[0,0][154,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810005 mType=mandatorySystemGestures mFrame=[0,990][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {9e810006 mType=tappableElement mFrame=[0,0][0,0] mVisible=true mFlags=[]}, InsetsSource: {9e810024 mType=systemGestures mFrame=[2324,0][2408,1080] mVisible=true mFlags=[]}, InsetsSource: {b14e0000 mType=statusBars mFrame=[0,0][2408,68] mVisible=false mFlags=[]}, InsetsSource: {b14e0005 mType=mandatorySystemGestures mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {b14e0006 mType=tappableElement mFrame=[0,0][2408,68] mVisible=true mFlags=[]}, InsetsSource: {3 mType=ime mFrame=[0,0][0,0] mVisible=false mFlags=[]}, InsetsSource: {7 mType=displayCutout mFrame=[0,0][70,1080] mVisible=true mFlags=[]} }
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): handleResized, msg = 5 frames=ClientWindowFrames{frame=[0,0][2408,1080] display=[0,0][2408,1080] parentFrame=[0,0][0,0]} forceNextWindowRelayout=true displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): handleResized mSyncSeqId = 1
+D/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): reportNextDraw android.view.ViewRootImpl.handleResized:2530 android.view.ViewRootImpl.-$$Nest$mhandleResized:0 android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:7197 android.view.ViewRootImpl$ViewRootHandler.handleMessage:7166 android.os.Handler.dispatchMessage:106 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): handleResized, msg = 4 frames=ClientWindowFrames{frame=[0,0][2408,1080] display=[0,0][2408,1080] parentFrame=[0,0][0,0]} forceNextWindowRelayout=false displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false
+I/BLASTBufferQueue_Java( 5448): update, w= 2408 h= 1080 mName = ViewRootImpl@1fdc6f8[UnityPlayerActivity] mNativeObject= 0xb4000074057d5000 sc.mNativeObject= 0xb4000074162ef180 format= -3 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3017 android.view.ViewRootImpl.relayoutWindow:10131 android.view.ViewRootImpl.performTraversals:4110 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Relayout returned: old=(0,0,2408,1080) new=(0,0,2408,1080) relayoutAsync=false req=(2408,1080)0 dur=15 res=0x400 s={true 0xb400007405788800} ch=false seqId=1
+D/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Relayout called with blastSync
+D/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): reportNextDraw android.view.ViewRootImpl.performTraversals:4120 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 android.view.Choreographer$CallbackRecord.run:1698 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Setup new sync=wmsSync-ViewRootImpl@1fdc6f8[UnityPlayerActivity]#3
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Creating new active sync group ViewRootImpl@1fdc6f8[UnityPlayerActivity]#4
+D/Unity   ( 5448): [EGL] Attaching window :0xb400007405882010
+D/Unity   ( 5448): InitializeScriptEngine OK (0x74c1d64fc0)
+D/Unity   ( 5448): Found 1 interfaces on host :
+D/Unity   ( 5448):  0) 192.168.219.100
+D/Unity   ( 5448): 
+D/Unity   ( 5448): Player connection [498976513072]  Target information:
+D/Unity   ( 5448): 
+D/Unity   ( 5448): Player connection [498976513072]  * "[IP] 192.168.219.100 [Port] 55000 [Flags] 2 [Guid] 1011743733 [EditorId] 3375059982 [Version] 1048832 [Id] AndroidPlayer(11,samsung_SM-M236L@192.168.219.100) [Debug] 0 [PackageName] AndroidPlayer [ProjectName] Ember Expedition Prototype" 
+D/Unity   ( 5448): 
+D/Unity   ( 5448): Player connection [498976513072] Started UDP target info broadcast (1) on [225.0.0.222:54997].
+D/Unity   ( 5448): 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): reportDrawFinished seqId=1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): onDisplayChanged oldDisplayState=2 newDisplayState=2
+D/Unity   ( 5448): Input System module state changed to: Initialized.
+D/Unity   ( 5448): [Physics::Module] Initialized fallback backend.
+D/Unity   ( 5448): [Physics::Module] Id: 0xdecafbad
+D/Unity   ( 5448): PlayerInitEngineNoGraphics OK
+I/Unity   ( 5448): Company Name: ExpeditionPrototype
+I/Unity   ( 5448): Product Name: Ember Expedition Prototype
+D/Unity   ( 5448): AndroidGraphics::Startup window =  0xb400007405882010
+D/Unity   ( 5448): [EGL] Attaching window :0xb400007405882010
+D/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): cancelDraw returned false
+D/Unity   ( 5448): [Subsystems] Discovering subsystems at path /data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk/assets/bin/Data/UnitySubsystems
+I/AdrenoGLES-0( 5448): QUALCOMM build                   : 47c5f1d498, I45cbc356ca
+I/AdrenoGLES-0( 5448): Build Date                       : 05/11/25
+I/AdrenoGLES-0( 5448): OpenGL ES Shader Compiler Version: EV031.32.02.17
+I/AdrenoGLES-0( 5448): Local Branch                     : 
+I/AdrenoGLES-0( 5448): Remote Branch                    : refs/tags/AU_LINUX_ANDROID_LA.UM.9.12.11.00.00.582.697
+I/AdrenoGLES-0( 5448): Remote Branch                    : NONE
+I/AdrenoGLES-0( 5448): Reconstruct Branch               : NOTHING
+I/AdrenoGLES-0( 5448): Build Config                     : S P 10.0.7 AArch64
+I/AdrenoGLES-0( 5448): Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
+I/Unity   ( 5448): applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+I/AdrenoGLES-0( 5448): PFP: 0x016ee197, ME: 0x00000000
+D/Unity   ( 5448): [EGL] Request: ES 3.2 RGB 000 0/0
+D/Unity   ( 5448): [EGL] Checking ES 3.2 support...
+D/Unity   ( 5448): [EGL] ES 3.2 support detected
+D/Unity   ( 5448): [EGL] Found: ID[1] ES 3.2 RGB 565 0/0
+D/Unity   ( 5448): GfxDevice: creating device client; kGfxThreadingModeThreaded
+D/Unity   ( 5448): [EGL] Request: ES 3.2 RGB 000 0/0
+D/Unity   ( 5448): [EGL] Found: ID[1] ES 3.2 RGB 565 0/0
+D/Unity   ( 5448): [EGL] Request: ES 3.0 RGBA 8888 0/0
+D/Unity   ( 5448): [EGL] Found: ID[9] ES 3.0 RGBA 8888 0/0
+I/Unity   ( 5448): applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+D/Unity   ( 5448): ANativeWindow: (2408/1080) RequestedResolution: (0/0) RenderingResolution: (0/0) EGLSurface: (2408/1080)
+D/Unity   ( 5448): Renderer: Adreno (TM) 619
+D/Unity   ( 5448): Vendor:   Qualcomm
+D/Unity   ( 5448): Version:  OpenGL ES 3.2 V@0502.39.1 (GIT@47c5f1d498, I45cbc356ca, 1746971642) (Date:05/11/25)
+D/Unity   ( 5448): GLES:     3
+D/Unity   ( 5448):  GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_sync GL_OES_vertex_half_float GL_OES_framebuffer_object GL_OES_rgb8_rgba8 GL_OES_compressed_ETC1_RGB8_texture GL_AMD_compressed_ATC_texture GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_hdr GL_OES_texture_compression_astc GL_OES_texture_npot GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_read_format_bgra GL_OES_texture_3D GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_QCOM_alpha_test GL_OES_depth24 GL_OES_packed_depth_stencil GL_OES_depth_texture GL_OES_depth_texture_cube_map GL_EXT_sRGB GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_EXT_texture_type_2_10_10_10_REV GL_EXT_texture_sRGB_decode GL_EXT_texture_format_sRGB_override GL_OES_element_index_uint GL_EXT_copy_image GL_EXT_geometry_shader GL_EXT_tessellation_shader GL_OES_texture_stencil8 GL_EXT_shader_io_blocks GL_OES_shader_image_atomic GL_OES_sample_variables GL_EXT_texture_b
+D/Unity   ( 5448): order_clamp GL_EXT_EGL_image_external_wrap_modes GL_EXT_multisampled_render_to_texture GL_EXT_multisampled_render_to_texture2 GL_OES_shader_multisample_interpolation GL_EXT_texture_cube_map_array GL_EXT_draw_buffers_indexed GL_EXT_gpu_shader5 GL_EXT_robustness GL_EXT_texture_buffer GL_EXT_shader_framebuffer_fetch GL_ARM_shader_framebuffer_fetch_depth_stencil GL_OES_texture_storage_multisample_2d_array GL_OES_sample_shading GL_OES_get_program_binary GL_EXT_debug_label GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_QCOM_tiled_rendering GL_ANDROID_extension_pack_es31a GL_EXT_primitive_bounding_box GL_OES_standard_derivatives GL_OES_vertex_array_object GL_EXT_disjoint_timer_query GL_KHR_debug GL_EXT_YUV_target GL_EXT_sRGB_write_control GL_EXT_texture_norm16 GL_EXT_discard_framebuffer GL_OES_surfaceless_context GL_OVR_multiview GL_OVR_multiview2 GL_EXT_texture_sRGB_R8 GL_KHR_no_error GL_EXT_debug_marker GL_OES_EGL_image_external_essl3 GL_OVR_multiview_multisampled_render_to_texture GL_E
+D/Unity   ( 5448): XT_buffer_storage GL_EXT_external_buffer GL_EXT_blit_framebuffer_params GL_EXT_clip_cull_distance GL_EXT_protected_textures GL_EXT_shader_non_constant_global_initializers GL_QCOM_texture_foveated GL_QCOM_texture_foveated_subsampled_layout GL_QCOM_shader_framebuffer_fetch_noncoherent GL_QCOM_shader_framebuffer_fetch_rate GL_EXT_memory_object GL_EXT_memory_object_fd GL_EXT_EGL_image_array GL_NV_shader_noperspective_interpolation GL_KHR_robust_buffer_access_behavior GL_EXT_EGL_image_storage GL_EXT_blend_func_extended GL_EXT_clip_control GL_OES_texture_view GL_EXT_fragment_invocation_density GL_QCOM_validate_shader_binary GL_QCOM_YUV_texture_gather
+D/Unity   ( 5448): OPENGL LOG: Creating OpenGL ES 3.2 graphics device ; Context level  <OpenGL ES 3.2> ; Context handle -1482736640
+D/Unity   ( 5448): [EGL] Attaching window :0xb400007405882010
+D/Unity   ( 5448): Requested framebuffer: resolution[2408x1080], rgba[8/8/8/8], depth+stencil[on], samples[1]
+D/Unity   ( 5448): Created framebuffer: resolution[2408x1080], rgba[8/8/8/8], depth+stencil[24/8], samples[0] 
+D/nativeloader( 5448): Load liblibswappywrapper.so using class loader ns clns-4 (caller=/data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk): dlopen failed: library "liblibswappywrapper.so" not found
+D/nativeloader( 5448): Load /data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/lib/arm64/libswappywrapper.so using class loader ns clns-4 (caller=/data/app/~~g06veEkotKcVzz4bz1HPHw==/com.expeditionprototype.combatdemo-wp6YFtI1b8FKmFR9PuVsFQ==/base.apk): ok
+I/SwappyWrapper( 5448): SwappyWrapperInit() succeeded. Build: Mon Oct 19 19:00:49 2026
+D/Unity   ( 5448): SwappyWrapper: InitSwappyWrapper() succeeded.
+D/AChoreographer( 5448): Attaching thread to JVM for AChoreographer
+I/SwappyDisplayManager( 5448): Starting looper thread
+D/Unity   ( 5448): [EGL] Attaching window :0xb400007405882010
+D/Unity   ( 5448): Initialize engine version: 6000.3.24f1 (4e7b9b5b6244)
+I/AAudio  ( 5448): AAudioStreamBuilder_openStream() called ----------------------------------------
+I/AudioStreamBuilder( 5448): rate   =  24000, channels  = 2, channelMask = 0x80000003, format   = 5, sharing = SH, dir = OUTPUT
+I/AudioStreamBuilder( 5448): device =      0, sessionId = 0, perfMode = 12, callback: ON with frames = 512
+I/AudioStreamBuilder( 5448): usage  =      0, contentType = 0, inputPreset = 0, allowedCapturePolicy = 0
+I/AudioStreamBuilder( 5448): privacy sensitive = false, opPackageName = (null), attributionTag = (null)
+D/AudioStreamBuilder( 5448): build() MMAP not used because sessionId specified.
+D/type.combatdemo( 5448): PlayerBase::PlayerBase()
+D/AudioStreamTrack( 5448): open(), request notificationFrames = 0, frameCount = 8192
+D/AudioTrack( 5448): setVolume(1.000000, 1.000000) pid : 5448
+D/AudioStreamTrack( 5448): open() flags changed from 0x00000004 to 0x00000000
+D/AudioStreamTrack( 5448): open() perfMode changed from 12 to 10
+D/AAudioStream( 5448): setState(s#1) from 0 to 2
+I/AAudio  ( 5448): AAudioStreamBuilder_openStream() returns 0 = AAUDIO_OK for s#1 ----------------
+D/AAudio  ( 5448): AAudioStream_requestStart(s#1) called --------------
+D/AAudioStream( 5448): setState(s#1) from 2 to 3
+D/AAudio  ( 5448): AAudioStream_requestStart(s#1) returned 0 ---------
+D/AudioStreamLegacy( 5448): onAudioDeviceUpdate(deviceId = 3)
+D/AAudioStream( 5448): setState(s#1) from 3 to 4
+D/Unity   ( 5448): [Physics::Module] Selected backend.
+D/Unity   ( 5448): [Physics::Module] Name: PhysX
+D/Unity   ( 5448): [Physics::Module] Id: 0xf2b8ea05
+D/Unity   ( 5448): [Physics::Module] SDK Version: 4.1.2
+D/Unity   ( 5448): [Physics::Module] Integration Version: 1.0.0
+D/Unity   ( 5448): [Physics::Module] Threading Mode: Multi-Threaded
+D/Unity   ( 5448): PlayerInitEngineGraphics OK
+D/Unity   ( 5448): Found 31 native sensors
+I/InsetsController( 5448): cancelAnimation: types=navigationBars, animType=1, host=com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity, from=android.view.InsetsController.notifyFinished:1748 android.view.InsetsAnimationThreadControlRunner$1.lambda$notifyFinished$0:85 android.view.InsetsAnimationThreadControlRunner$1.$r8$lambda$RAf1SfIREsj9-wH5FOigMy6eLkM:0 
+D/Unity   ( 5448): Sensor :        Accelerometer ( 1) ; 0.002393 / 0.00s ; lsm6dsm Accelerometer Non-wakeup / STMicro 
+D/Unity   ( 5448): Sensor :        Accelerometer ( 1) ; 0.002393 / 0.00s ; lsm6dsm Accelerometer Non-wakeup / STMicro 
+D/Unity   ( 5448): enabled Accelerometer sensor
+I/Unity   ( 5448): SetGameState: isLoading: false, mode: UNKNOWN, label: -1, quality: 2
+D/Unity   ( 5448): ANativeWindow: (2408/1080) RequestedResolution: (0/0) RenderingResolution: (0/0) EGLSurface: (2408/1080)
+V/MediaRouter( 5448): Selecting route: RouteInfo{ name=휴대전화, description=null, status=null, category=RouteCategory{ name=시스템 types=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO  groupable=false }, supportedTypes=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO , presentationDisplay=null }
+I/MediaRouter( 5448): Skip setBluetoothA2dpOn(): types=8388615, isPlaybackActive()=true, BT route=null
+I/Unity   ( 5448): SetGameState: isLoading: true, mode: UNKNOWN, label: 0, quality: 2
+I/BLASTBufferQueue( 5448): [SurfaceView[com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity]@0#1](f:0,a:0,s:0) onFrameAvailable the first frame is available
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): onDisplayChanged oldDisplayState=2 newDisplayState=2
+I/type.combatdemo( 5448): Compiler allocated 6865KB to compile void android.view.ViewRootImpl.performTraversals()
+D/Unity   ( 5448): UnloadTime: 2.165886 ms
+I/IL2CPP  ( 5448): Locale ko-KR
+I/Unity   ( 5448): SetGameState: isLoading: false, mode: UNKNOWN, label: 0, quality: 2
+D/Unity   ( 5448): Sensor :        Accelerometer ( 1) ; 0.002393 / 0.00s ; lsm6dsm Accelerometer Non-wakeup / STMicro 
+D/Unity   ( 5448): Using Java Choreographer.
+I/BLASTBufferQueue_Java( 5448): update, w= 2408 h= 1080 mName = ViewRootImpl@1fdc6f8[UnityPlayerActivity] mNativeObject= 0xb4000074057d5000 sc.mNativeObject= 0xb400007428a93a00 format= -3 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3017 android.view.ViewRootImpl.relayoutWindow:10131 android.view.ViewRootImpl.performTraversals:4110 android.view.ViewRootImpl.doTraversal:3288 android.view.ViewRootImpl$TraversalRunnable.run:11344 android.view.Choreographer$CallbackRecord.run:1689 
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): Relayout returned: old=(0,0,2408,1080) new=(0,0,2408,1080) relayoutAsync=false req=(2408,1080)0 dur=8 res=0x400 s={true 0xb400007405788800} ch=false seqId=1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): updateBoundsLayer: t=android.view.SurfaceControl$Transaction@a900abe sc=Surface(name=Bounds for - com.expeditionprototype.combatdemo/com.unity3d.player.UnityPlayerActivity@0)/@0xf8ea71f frame=12
+D/Unity   ( 5448): Stopping Unity systrace
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 0
+I/ViewRootImpl@1fdc6f8[UnityPlayerActivity]( 5448): ViewPostIme pointer 1

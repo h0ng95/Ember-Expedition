@@ -1,5 +1,9 @@
 # UI concept asset prompts
 
+## 30-form animation pass · 2026-10-19
+
+`Units/v010/` contains 30 generated RGBA sheets, each with 22 usable animation frames (660 total). The exact initial prompts, revisions and selected generator source paths are recorded in `docs/design-v0.10/art-prompts.json` and `docs/design-v0.10/art-provenance.json` at repository root. Only this project's earlier generated sprite concept and repaired knight layout were used as references. Original PNG pixels are preserved; `art-manifest.json` records inspected crop rectangles and pivots. These first animation assets remain subject to visual refinement and the release review below.
+
 The initial battlefield and character sheets were generated on 2026-10-18 using the built-in `image_gen.imagegen` tool without input image references. The later world-map backdrop used the battlefield as a style reference. These are concept assets, not final production art.
 
 ## Release review status · updated 2026-10-19

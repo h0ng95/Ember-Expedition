@@ -58,6 +58,7 @@ namespace Expedition.EditorTools
 
             // Ensure Shader.Find works in a player even if no scene material references the shader yet.
             var shader = Shader.Find("Expedition/HitFlash");
+            var catalogShader = Shader.Find("Expedition/CatalogSpriteClip");
             var graphicsAssets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/GraphicsSettings.asset");
             if (shader != null && graphicsAssets.Length > 0)
             {
@@ -65,16 +66,20 @@ namespace Expedition.EditorTools
                 var shaders = settings.FindProperty("m_AlwaysIncludedShaders");
                 if (shaders == null || !shaders.isArray)
                     throw new InvalidOperationException("Cannot configure Always Included Shaders. Check Graphics Settings before building.");
-                bool found = false;
-                for (int i = 0; i < shaders.arraySize; i++)
-                    found |= shaders.GetArrayElementAtIndex(i).objectReferenceValue == shader;
-                if (!found)
+                foreach (Shader includedShader in new[] { shader, catalogShader })
                 {
-                    int index = shaders.arraySize;
-                    shaders.InsertArrayElementAtIndex(index);
-                    shaders.GetArrayElementAtIndex(index).objectReferenceValue = shader;
-                    settings.ApplyModifiedProperties();
+                    if (includedShader == null) continue;
+                    bool found = false;
+                    for (int i = 0; i < shaders.arraySize; i++)
+                        found |= shaders.GetArrayElementAtIndex(i).objectReferenceValue == includedShader;
+                    if (!found)
+                    {
+                        int index = shaders.arraySize;
+                        shaders.InsertArrayElementAtIndex(index);
+                        shaders.GetArrayElementAtIndex(index).objectReferenceValue = includedShader;
+                    }
                 }
+                settings.ApplyModifiedProperties();
             }
             else
                 Debug.LogWarning("HitFlash shader or Graphics Settings not ready. Run Prepare Combat Prototype again after import.");
@@ -126,7 +131,8 @@ namespace Expedition.EditorTools
             importer.mipmapEnabled = false;
             importer.isReadable = false;
             importer.alphaIsTransparency = true;
-            importer.maxTextureSize = 2048;
+            // Catalog sprite sheets are loaded on demand on mobile; keep each sheet bounded.
+            importer.maxTextureSize = assetPath.StartsWith("Assets/Resources/Art/Units/v010/", StringComparison.Ordinal) ? 1024 : 2048;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
         }
 

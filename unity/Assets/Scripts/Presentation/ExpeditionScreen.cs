@@ -44,10 +44,11 @@ namespace Expedition.Presentation
         Font font;
         Rect viewport;
         readonly List<CatalogMember> bench = new List<CatalogMember>();
+        readonly List<CatalogMember> fieldMembers = new List<CatalogMember>(5);
         bool home = true, savePresent, badSave, inheritTrait, pointerDragging;
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId;
         float toastUntil, pointerStartTime;
-        Vector2 pointerStart, pointerCurrent;
+        Vector2 pointerStart, pointerCurrent, pointerGrabOffset;
         int benchPage, choosePage;
         Modal modal;
         GrowthAction pendingAction;
@@ -231,14 +232,20 @@ namespace Expedition.Presentation
             Fill(new Rect(48, 350, 615, 1), new Color(.57f, .62f, .41f, .32f));
             GUI.Label(new Rect(46, 100, 630, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
-            GUI.Label(new Rect(735, 152, 490, 92), "동료를 끌어 출전 위치를 바꿉니다.\n대기석의 동료를 전장에 끌어놓을 수도 있습니다.", body);
+            GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
+            GUI.Label(new Rect(735, 193, 490, 70), "동료를 끌어 출전 위치를 바꿉니다.\n대기 동료를 전장에 놓으면 출전합니다.", body);
             GUI.Label(new Rect(735, 273, 480, 33), "전투 전 확인", hint);
             GUI.Label(new Rect(735, 313, 480, 150),
                 "전투가 시작되면 남은 소환 기회는 사라집니다.\n동료를 누르면 전승, 진화, 결합을 준비할 수 있습니다.\n성장에는 다른 동료가 재료로 쓰일 수 있습니다.", body);
+            fieldMembers.Clear();
             foreach (string id in run.DeployedIds)
             {
                 CatalogMember member = run.Roster.Find(id);
-                if (member == null) continue;
+                if (member != null) fieldMembers.Add(member);
+            }
+            fieldMembers.Sort((a, b) => b.Y.CompareTo(a.Y));
+            foreach (CatalogMember member in fieldMembers)
+            {
                 Vector2 foot = ArenaPoint(member);
                 DrawUnit(member, new Rect(foot.x - 48, foot.y - 113, 96, 110),
                     new Rect(foot.x - 64, foot.y, 128, 31));
@@ -616,18 +623,21 @@ namespace Expedition.Presentation
             }
             Vector2 point = new Vector2((screen.x - viewport.x) * Width / viewport.width,
                 (Screen.height - screen.y - viewport.y) * Height / viewport.height);
-            pointerCurrent = point;
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Canceled)
             { pointerId = null; pointerDragging = false; return; }
             if (down)
             {
                 pointerId = MemberAt(point);
                 pointerStart = point;
+                CatalogMember grabbed = pointerId == null ? null : run.Roster.Find(pointerId);
+                pointerGrabOffset = grabbed != null && IsDeployed(pointerId) ?
+                    ArenaPoint(grabbed) - point : Vector2.zero;
                 pointerDragging = false;
                 pointerStartTime = Time.unscaledTime;
             }
             if (held && pointerId != null && (point - pointerStart).sqrMagnitude > 144f)
                 pointerDragging = true;
+            pointerCurrent = point + pointerGrabOffset;
             if (!up || pointerId == null) return;
             string id = pointerId;
             bool wasDragging = pointerDragging;
@@ -648,8 +658,8 @@ namespace Expedition.Presentation
                     else if (!run.SetDeployed(id, true))
                     { Notice("출전은 다섯 명까지 가능합니다."); return; }
                 }
-                if (run.Move(id, Mathf.Clamp((point.x - 560f) / 75f, -6.2f, -.2f),
-                    Mathf.Clamp((GroundY - point.y) / GroundYScale, -2.5f, 2.2f))) Save();
+                if (run.Move(id, Mathf.Clamp((pointerCurrent.x - 560f) / 75f, -6.2f, -.2f),
+                    Mathf.Clamp((GroundY - pointerCurrent.y) / GroundYScale, -2.5f, 2.2f))) Save();
                 else Save();
             }
             else if (point.y >= 550 && IsDeployed(id))
@@ -658,13 +668,8 @@ namespace Expedition.Presentation
 
         string MemberAt(Vector2 point)
         {
-            foreach (string id in run.DeployedIds)
-            {
-                CatalogMember member = run.Roster.Find(id);
-                if (member == null) continue;
-                Vector2 foot = ArenaPoint(member);
-                if (new Rect(foot.x - 54, foot.y - 113, 108, 143).Contains(point)) return id;
-            }
+            string active = ActiveAt(point, null);
+            if (active != null) return active;
             for (int i = 0; i < 5; i++)
             {
                 int index = benchPage * 5 + i;
@@ -675,15 +680,18 @@ namespace Expedition.Presentation
 
         string ActiveAt(Vector2 point, string except)
         {
+            string selected = null;
+            float foreground = float.NegativeInfinity;
             foreach (string id in run.DeployedIds)
             {
                 if (id == except) continue;
                 CatalogMember member = run.Roster.Find(id);
                 if (member == null) continue;
                 Vector2 foot = ArenaPoint(member);
-                if (new Rect(foot.x - 54, foot.y - 113, 108, 143).Contains(point)) return id;
+                if (new Rect(foot.x - 54, foot.y - 113, 108, 143).Contains(point) && foot.y >= foreground)
+                { selected = id; foreground = foot.y; }
             }
-            return null;
+            return selected;
         }
 
         static void Fill(Rect rect, Color color)

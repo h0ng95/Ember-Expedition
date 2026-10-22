@@ -4,6 +4,7 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
+- 최신 전투 개선: **v0.12 적 무리 2~5명·골렘 호위, 야수 돌진, 원거리 약탈자, 공격 효과와 효과음**. [변경 내용](docs/design-v0.12/HANDOFF.md)
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
 - 현재 구현: **v0.11 새 원정·이어하기 → 준비·버튼 무작위 소환·배치·전승·진화·결합 → 6전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다. [진행 기록과 조작](docs/design-v0.11/HANDOFF.md)
 - 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이며, 12전투·유물·영구 해금은 후속 범위다.

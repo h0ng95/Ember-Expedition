@@ -90,6 +90,7 @@ namespace Expedition.Presentation
         Camera parentCamera;
         CatalogDatabase database;
         CatalogBattle battle;
+        CatalogBattleEffects battleEffects;
         Material clippedSpriteMaterial;
         Texture2D bossConceptSheet;
         Texture2D expeditionBackground, raiderConcept;
@@ -166,6 +167,7 @@ namespace Expedition.Presentation
             expeditionBackground = Resources.Load<Texture2D>(wave <= 2 ?
                 "Art/forest-battlefield" : "Art/ruined-outpost-battlefield");
             battle = runBattle;
+            battleEffects = new CatalogBattleEffects(gameObject);
             foreach (CatalogBattleUnit unit in battle.Units)
                 combatViews.Add(new View { Unit = unit, LastPosition = new Vector2(unit.X, unit.Y) });
             battle.Event += OnBattleEvent;
@@ -182,7 +184,13 @@ namespace Expedition.Presentation
 
         void OnApplicationPause(bool applicationPaused)
         {
-            if (applicationPaused) paused = true;
+            if (applicationPaused) SetPaused(true);
+        }
+
+        void SetPaused(bool value)
+        {
+            paused = value;
+            if (battleEffects != null) battleEffects.SetPaused(value);
         }
 
         void Close()
@@ -196,6 +204,7 @@ namespace Expedition.Presentation
 
         void ClearBattle()
         {
+            if (battleEffects != null) { battleEffects.Dispose(); battleEffects = null; }
             if (battle != null) battle.Event -= OnBattleEvent;
             battle = null;
             combatViews.Clear();
@@ -231,9 +240,11 @@ namespace Expedition.Presentation
 
         void OnBattleEvent(CatalogBattleEvent e)
         {
+            if (battleEffects != null) battleEffects.Observe(e, battle);
             View source = combatViews.Find(v => v.Unit.Id == e.SourceId);
             View target = combatViews.Find(v => v.Unit.Id == e.TargetId);
-            if ((e.Kind == CatalogEventKind.SkillUsed || e.Kind == CatalogEventKind.BasicHit) && source != null)
+            if ((e.Kind == CatalogEventKind.SkillUsed || e.Kind == CatalogEventKind.BasicHit ||
+                e.Kind == CatalogEventKind.ChargeHit) && source != null)
             {
                 source.ReleaseRemaining = .18f;
                 source.ReleaseAge = 0;
@@ -244,6 +255,11 @@ namespace Expedition.Presentation
                         source.Unit.FormId + "  /  " + e.AbilityId;
                     latestSkillUntil = clock + 2f;
                 }
+            }
+            if (e.Kind == CatalogEventKind.ChargeTelegraph && source != null)
+            {
+                latestSkill = "야수가 몸을 낮춥니다 · 돌진 예고";
+                latestSkillUntil = clock + .7f;
             }
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
@@ -272,12 +288,22 @@ namespace Expedition.Presentation
             }
             if (screen != 1 || battle == null || paused) return;
             float gameDt = dt * speed;
+            if (battleEffects != null)
+            {
+                bool impactHold = battleEffects.HitStopRemaining > 0;
+                battleEffects.Tick(dt, impactHold ? 0 : gameDt, battle);
+                if (impactHold) return;
+            }
             if (!battle.Ended)
             {
                 accumulator += gameDt;
                 int steps = 0;
                 while (accumulator >= Tick && steps++ < 12 && !battle.Ended && (!expeditionMode || clock < 75f))
-                { battle.Step(Tick); accumulator -= Tick; clock += Tick; }
+                {
+                    battle.Step(Tick); accumulator -= Tick; clock += Tick;
+                    if (battleEffects != null && battleEffects.HitStopRemaining > 0)
+                    { accumulator = 0; break; }
+                }
             }
             if (expeditionMode && (battle.Ended || clock >= 75f))
             {
@@ -437,10 +463,11 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(26, 17, 690, 40), expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal, title);
             GUI.Label(new Rect(745, 24, 145, 30), clock.ToString("0.0") + " / 75초", label);
             if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button)) speed = speed == 1f ? 2f : 1f;
-            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button)) paused = !paused;
+            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button)) SetPaused(!paused);
             if (battle == null) return;
 
             Rect arena = new Rect(24, 92, 1232, 560);
+            if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
             // Draw higher feet first so the foreground characters overlap consistently.
             var sorted = new List<View>(combatViews);
             sorted.Sort((a, b) => b.Unit.Y.CompareTo(a.Unit.Y));
@@ -450,6 +477,10 @@ namespace Expedition.Presentation
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, Mathf.Max(.24f, 1f - view.StateTime));
+                else if (view.HitTime > .13f) GUI.color = new Color(1f, .62f, .48f, 1f);
+                if (unit.IsAlive && view.HitTime > 0)
+                    point.x += (unit.Team == CatalogTeam.Ally ? -1 : 1) *
+                        Mathf.Sin(view.HitTime / .24f * Mathf.PI) * 6;
                 if (unit.Team == CatalogTeam.Enemy) DrawExpeditionEnemy(view, point);
                 else DrawSheet(unit.FormId, view.State, BattleAnimationFrame(view),
                     new Rect(point.x - 60, point.y - 144, 120, 144), ShouldFlip(view));
@@ -466,6 +497,7 @@ namespace Expedition.Presentation
                 if (unit.IsBoss) GUI.Label(new Rect(barX, barY - 28, 200, 26), "성문 골렘", heading);
                 else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
             }
+            if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
             foreach (FloatText text in floating)
             {
                 Vector2 point = ExpeditionPoint(text.Position, arena);
@@ -478,16 +510,17 @@ namespace Expedition.Presentation
             Fill(new Rect(0, 664, Width, 56), new Color(.035f, .085f, .09f, .92f));
             GUI.Label(new Rect(28, 677, 870, 30), latestSkill != null && latestSkillUntil > clock ?
                 latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", label);
-            int alive = 0;
-            foreach (CatalogBattleUnit unit in battle.Units) if (unit.Team == CatalogTeam.Ally && unit.IsAlive) alive++;
-            GUI.Label(new Rect(1080, 677, 160, 30), "생존 " + alive + "명", heading);
+            int alive = 0, enemies = 0;
+            foreach (CatalogBattleUnit unit in battle.Units)
+                if (unit.IsAlive) { if (unit.Team == CatalogTeam.Ally) alive++; else enemies++; }
+            GUI.Label(new Rect(1010, 677, 250, 30), "아군 " + alive + "  ·  적 " + enemies, heading);
             if (paused)
             {
                 Fill(new Rect(0, 76, Width, 588), new Color(.015f, .04f, .04f, .72f));
                 Fill(new Rect(402, 220, 476, 276), Panel);
                 GUI.Label(new Rect(440, 245, 400, 45), "잠시 쉬어가기", title);
                 GUI.Label(new Rect(440, 302, 400, 50), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
-                if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) paused = false;
+                if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) SetPaused(false);
                 if (GUI.Button(new Rect(642, 384, 198, 62), "거점으로", button)) Close();
             }
         }
@@ -495,7 +528,8 @@ namespace Expedition.Presentation
         string UnitName(CatalogBattleUnit unit)
         {
             if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
-            return unit.IsBoss ? "성문 골렘" : unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "숲의 야수";
+            return unit.IsBoss ? "성문 골렘" : unit.EnemyRole == CatalogEnemyRole.Raider ||
+                unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "숲의 야수";
         }
 
         static Vector2 ExpeditionPoint(Vector2 position, Rect arena)
@@ -507,7 +541,8 @@ namespace Expedition.Presentation
         void DrawExpeditionEnemy(View view, Vector2 foot)
         {
             if (bossConceptSheet == null) bossConceptSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
-            bool isRaider = view.Unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0;
+            bool isRaider = view.Unit.EnemyRole == CatalogEnemyRole.Raider ||
+                view.Unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0;
             Texture2D texture = bossConceptSheet;
             Rect crop;
             float width, height;

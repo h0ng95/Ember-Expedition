@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace Expedition.Core
 {
     public enum CatalogTeam { Ally, Enemy }
+    public enum CatalogEnemyRole { None, Beast, Raider, Golem }
     public enum CatalogAttackPhase { Ready, WindingBasic, WindingSkill }
     public enum CatalogEventKind { SkillUsed, BasicHit, Damage, Shield, ShieldBlocked, Heal, Burn, Slow, Mark,
-        Buff, TraitTriggered, Defeated, Ended }
+        Buff, TraitTriggered, Defeated, Ended, ChargeTelegraph, ChargeHit }
 
     public sealed class CatalogBattleEvent
     {
@@ -43,8 +44,16 @@ namespace Expedition.Core
         public float Range { get; internal set; }
         public float MoveSpeed { get; internal set; }
         public bool IsBoss { get; internal set; }
+        public CatalogEnemyRole EnemyRole { get; internal set; }
         public bool IsAlive { get { return Hp > 0f; } }
         public CatalogAttackPhase AttackPhase { get; internal set; }
+        public string AttackTargetId { get { return PendingTargetId; } }
+        public float AttackWindupRemaining { get { return AttackPhase == CatalogAttackPhase.Ready ? 0f : Math.Max(0f, ReleaseAt - Clock.Time); } }
+        public float ChargeWarningRemaining { get { return PendingSkillId == "BEAST_CHARGE" &&
+            AttackPhase == CatalogAttackPhase.WindingSkill && !ChargeMoving ? AttackWindupRemaining : 0f; } }
+        public bool IsCharging { get { return IsAlive && ChargeMoving; } }
+        public float ChargeTargetX { get { return ChargeAimX; } }
+        public float ChargeTargetY { get { return ChargeAimY; } }
         public float BurnRemaining { get { return BurnTicksLeft > 0 ? Math.Max(0f, BurnUntil - Clock.Time) : 0f; } }
         public float SlowPercent { get { return SlowUntil > Clock.Time ? Slow : 0f; } }
         public float MarkRemaining { get { return Math.Max(0f, MarkUntil - Clock.Time); } }
@@ -55,6 +64,9 @@ namespace Expedition.Core
         internal int BurnTicksLeft, VolleyShotsLeft;
         internal float NextBasicAt, ReleaseAt, NextPrimaryAt = 2f, NextFinalAt = 2f, NextCounterAt,
             NextHarmonyAt, NextSpoilsAt, NextVolleyAt, ExtraBasicUntil, ExtraBasicMultiplier;
+        internal float NextChargeAt, ChargeAimX, ChargeAimY, ChargeStartX, ChargeStartY,
+            ChargeEndX, ChargeEndY, ChargeStartAt;
+        internal bool ChargeMoving;
         internal bool FirstHitUsed, CrisisUsed;
         internal readonly List<CatalogBuff> Buffs = new List<CatalogBuff>();
         internal float ZoneX, ZoneY, ZoneNextAt;
@@ -100,10 +112,24 @@ namespace Expedition.Core
         public CatalogBattleUnit AddEnemy(string id, float hp, float power, float defense,
             float attackInterval, float range, float moveSpeed, bool boss, float x, float y)
         {
+            return AddEnemy(id, hp, power, defense, attackInterval, range, moveSpeed, boss, x, y,
+                boss ? CatalogEnemyRole.Golem : CatalogEnemyRole.None);
+        }
+
+        public CatalogBattleUnit AddEnemy(string id, float hp, float power, float defense,
+            float attackInterval, float range, float moveSpeed, bool boss, float x, float y,
+            CatalogEnemyRole role)
+        {
             if (hp <= 0 || power <= 0 || defense < 0 || attackInterval <= .25f || range <= 0 || moveSpeed <= 0)
                 throw new ArgumentException("Invalid enemy stats.");
-            return Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
+            if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) || role == CatalogEnemyRole.Golem && !boss ||
+                boss && role != CatalogEnemyRole.Golem)
+                throw new ArgumentException("Invalid enemy role.");
+            CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
                 hp, power, defense, attackInterval, range, moveSpeed, null, boss);
+            enemy.EnemyRole = role;
+            enemy.NextChargeAt = role == CatalogEnemyRole.Beast ? 1.35f : float.PositiveInfinity;
+            return enemy;
         }
 
         CatalogBattleUnit Add(string id, CatalogTeam team, string formId, string branchId, string inheritedTraitId,
@@ -167,16 +193,33 @@ namespace Expedition.Core
                 if (!unit.IsAlive) continue;
                 TickZone(unit);
                 TickVolley(unit);
+                if (unit.ChargeMoving)
+                {
+                    AdvanceCharge(unit);
+                    if (Time >= unit.ReleaseAt) FinishCharge(unit);
+                    continue;
+                }
                 if (unit.AttackPhase != CatalogAttackPhase.Ready && Time >= unit.ReleaseAt)
                 {
                     if (unit.AttackPhase == CatalogAttackPhase.WindingBasic) ReleaseBasic(unit);
+                    else if (unit.PendingSkillId == "BEAST_CHARGE")
+                    {
+                        StartChargeMovement(unit);
+                        continue;
+                    }
                     else ReleaseSkill(unit);
                     unit.AttackPhase = CatalogAttackPhase.Ready;
                 }
                 if (unit.VolleyShotsLeft > 0) continue; // One tracking cast finishes before basic/final actions resume.
                 if (!unit.IsAlive || unit.AttackPhase != CatalogAttackPhase.Ready) continue;
+                if (TryStartCharge(unit)) continue;
                 if (TryStartSkill(unit)) continue;
                 CatalogBattleUnit target = ChooseEnemy(unit, false, false);
+                if (unit.EnemyRole == CatalogEnemyRole.Raider)
+                {
+                    CatalogBattleUnit vulnerable = ChooseEnemy(unit, true, false);
+                    if (vulnerable != null) target = vulnerable;
+                }
                 if (target == null) continue;
                 if (Distance(unit, target) > unit.Range)
                 {
@@ -191,6 +234,64 @@ namespace Expedition.Core
                 }
             }
             CheckEnded();
+        }
+
+        bool TryStartCharge(CatalogBattleUnit actor)
+        {
+            if (actor.EnemyRole != CatalogEnemyRole.Beast || Time < actor.NextChargeAt) return false;
+            CatalogBattleUnit target = ChooseEnemy(actor, false, false);
+            if (target == null || Distance(actor, target) > 4.6f) return false;
+            actor.PendingTargetId = target.Id;
+            actor.PendingSkillId = "BEAST_CHARGE";
+            actor.ChargeAimX = target.X;
+            actor.ChargeAimY = target.Y;
+            actor.AttackPhase = CatalogAttackPhase.WindingSkill;
+            actor.ReleaseAt = Time + .6f;
+            Emit(CatalogEventKind.ChargeTelegraph, actor, target, "BEAST_CHARGE", .6f);
+            return true;
+        }
+
+        void StartChargeMovement(CatalogBattleUnit actor)
+        {
+            float dx = actor.ChargeAimX - actor.X, dy = actor.ChargeAimY - actor.Y;
+            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+            float travel = Math.Min(Math.Max(0f, distance - .4f), 2.65f * (1f - actor.SlowPercent));
+            actor.ChargeStartX = actor.X;
+            actor.ChargeStartY = actor.Y;
+            actor.ChargeEndX = actor.X;
+            actor.ChargeEndY = actor.Y;
+            if (distance > .0001f)
+            {
+                actor.ChargeEndX += dx / distance * travel;
+                actor.ChargeEndY += dy / distance * travel;
+            }
+            actor.ChargeMoving = true;
+            actor.ChargeStartAt = Time;
+            actor.ReleaseAt = Time + .2f;
+        }
+
+        void AdvanceCharge(CatalogBattleUnit actor)
+        {
+            float fraction = Math.Min(1f, (Time - actor.ChargeStartAt) / .2f);
+            actor.X = actor.ChargeStartX + (actor.ChargeEndX - actor.ChargeStartX) * fraction;
+            actor.Y = actor.ChargeStartY + (actor.ChargeEndY - actor.ChargeStartY) * fraction;
+            SeparateEnemy(actor);
+        }
+
+        void FinishCharge(CatalogBattleUnit actor)
+        {
+            CatalogBattleUnit target = Get(actor.PendingTargetId);
+            actor.ChargeMoving = false;
+            actor.AttackPhase = CatalogAttackPhase.Ready;
+            SeparateEnemy(actor);
+            actor.NextChargeAt = Time + 6f;
+            actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .55f);
+            actor.PendingSkillId = null;
+            if (target != null && target.IsAlive && Distance(actor, target) <= .95f)
+            {
+                Emit(CatalogEventKind.ChargeHit, actor, target, "BEAST_CHARGE", 1f);
+                Damage(actor, target, EffectivePower(actor) * 1.35f, "BEAST_CHARGE", false, false);
+            }
         }
 
         void ReleaseBasic(CatalogBattleUnit actor)
@@ -227,6 +328,30 @@ namespace Expedition.Core
             float travel = Math.Min(distance - actor.Range, actor.MoveSpeed * (1f - actor.SlowPercent) * Tick);
             actor.X += (target.X - actor.X) / distance * travel;
             actor.Y += (target.Y - actor.Y) / distance * travel;
+            if (actor.Team == CatalogTeam.Enemy && actor.EnemyRole != CatalogEnemyRole.None)
+                SeparateEnemy(actor);
+        }
+
+        void SeparateEnemy(CatalogBattleUnit actor)
+        {
+            foreach (CatalogBattleUnit other in units)
+            {
+                if (other == actor || !other.IsAlive || other.Team != CatalogTeam.Enemy ||
+                    other.EnemyRole == CatalogEnemyRole.None) continue;
+                float dx = actor.X - other.X, dy = actor.Y - other.Y;
+                float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+                if (distance >= .56f) continue;
+                if (distance < .0001f)
+                {
+                    actor.Y += string.CompareOrdinal(actor.Id, other.Id) < 0 ? -.56f : .56f;
+                }
+                else
+                {
+                    float push = .56f - distance;
+                    actor.X += dx / distance * push;
+                    actor.Y += dy / distance * push;
+                }
+            }
         }
 
         CatalogBattleUnit ChooseEnemy(CatalogBattleUnit actor, bool lowestHp, bool farthest)
@@ -298,6 +423,9 @@ namespace Expedition.Core
             if (!target.IsAlive)
             {
                 target.Hp = 0;
+                target.ChargeMoving = false;
+                if (target.PendingSkillId == "BEAST_CHARGE") target.PendingSkillId = null;
+                target.AttackPhase = CatalogAttackPhase.Ready;
                 target.ZoneTicksLeft = 0;
                 Emit(CatalogEventKind.Defeated, source, target, ability, 0);
                 if (source != null && source.IsAlive && HasTrait(source, "T-H06") && Time >= source.NextSpoilsAt)

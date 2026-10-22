@@ -18,6 +18,9 @@ internal static class Program
             PreparationUndo();
             GrowthAndCombination();
             BattleResumeAndProgression();
+            EnemyWavesAndRoles();
+            BeastChargeAndRangedAttack();
+            OpeningWavesPlayable();
             DefeatRules();
             RejectBadSaves();
             Console.WriteLine("PASS: expedition run, " + assertions + " assertions.");
@@ -169,6 +172,97 @@ internal static class Program
         Check(resumedRun.ResolveBattle(true) && !resumedRun.ResolveBattle(true) && resumedRun.Continue() &&
             resumedRun.Wave == 2 && resumedRun.SummonsRemaining == 2,
             "Result is idempotent and next preparation receives allowance.");
+    }
+
+    static void EnemyWavesAndRoles()
+    {
+        var run = ExpeditionRun.New(catalog, 31);
+        int[] expected = { 2, 3, 3, 4, 5, 3 };
+        for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
+        {
+            Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
+            CatalogBattle battle = run.BeginBattle();
+            var enemies = battle.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
+            Check(enemies.Length == expected[wave - 1], "Wave has its requested number of enemies.");
+            Check(enemies.All(u => u.EnemyRole != CatalogEnemyRole.None), "Run enemies expose their roles.");
+            Check(enemies.Select(u => u.X.ToString("0.00") + "," + u.Y.ToString("0.00")).Distinct().Count() == enemies.Length,
+                "Enemies start at distinct positions.");
+            CatalogBattle replay = ExpeditionRun.Restore(catalog, run.Capture()).ResumeBattle();
+            var replayEnemies = replay.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
+            Check(enemies.Zip(replayEnemies, (a, b) => a.Id == b.Id && a.EnemyRole == b.EnemyRole &&
+                a.X == b.X && a.Y == b.Y && a.Hp == b.Hp).All(x => x),
+                "Saved battle replays the same enemy composition and positions.");
+            run.ResolveBattle(true);
+            run.Continue();
+        }
+    }
+
+    static void BeastChargeAndRangedAttack()
+    {
+        var battle = new CatalogBattle(catalog);
+        battle.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, -1.3f, 0f);
+        CatalogBattleUnit beast = battle.AddEnemy("beast", 1000f, 5f, 0f, 2f, 1f, .6f,
+            false, 2.1f, 0f, CatalogEnemyRole.Beast);
+        int telegraphs = 0, hits = 0;
+        battle.Event += e => { if (e.Kind == CatalogEventKind.ChargeTelegraph) telegraphs++;
+            if (e.Kind == CatalogEventKind.ChargeHit) hits++; };
+        battle.Step(1.7f);
+        Check(telegraphs == 1 && beast.ChargeWarningRemaining > 0f &&
+            beast.AttackTargetId == "knight" && beast.AttackWindupRemaining > 0f,
+            "Beast exposes a targeted charge warning before release: " + telegraphs + ", " +
+            beast.ChargeWarningRemaining + ", " + beast.AttackTargetId + ", " + beast.AttackWindupRemaining);
+        float fixedAimX = beast.ChargeTargetX, fixedAimY = beast.ChargeTargetY;
+        for (int i = 0; i < 50 && !beast.IsCharging; i++) battle.Step(.02f);
+        Check(beast.IsCharging && beast.ChargeWarningRemaining == 0f && hits == 0 &&
+            beast.ChargeTargetX == fixedAimX && beast.ChargeTargetY == fixedAimY,
+            "Charge movement starts only after warning at the fixed announced point.");
+        float windupEndX = beast.X;
+        battle.Step(.08f);
+        Check(beast.IsCharging && beast.X < windupEndX && hits == 0,
+            "Charge visibly moves over ticks without early impact.");
+        battle.Step(.2f);
+        Check(hits == 1 && beast.ChargeWarningRemaining == 0f && beast.X < 2.1f,
+            "Charge hits only after its moving phase finishes.");
+        battle.Step(3f);
+        Check(telegraphs == 1, "Charge respects its cooldown.");
+
+        var slowedBattle = new CatalogBattle(catalog);
+        slowedBattle.AddUnit("ice", CatalogTeam.Ally, "B-IC", null, null, -1.3f, 0f);
+        CatalogBattleUnit slowed = slowedBattle.AddEnemy("beast", 1000f, 5f, 0f, 2f, 1f, .6f,
+            false, 2.1f, 0f, CatalogEnemyRole.Beast);
+        slowedBattle.Step(1.7f);
+        Check(slowed.SlowPercent > 0f && slowed.ChargeWarningRemaining > 0f,
+            "Ice slow applies during beast charge warning.");
+        for (int i = 0; i < 50 && !slowed.IsCharging; i++) slowedBattle.Step(.02f);
+        Check(slowed.IsCharging, "Slowed beast still enters charge movement.");
+        float before = slowed.X;
+        float slow = slowed.SlowPercent;
+        slowedBattle.Step(.25f);
+        Check(before - slowed.X <= 2.65f * (1f - slow) + .1f,
+            "Slow limits charge travel.");
+
+        var ranged = new CatalogBattle(catalog);
+        ranged.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        CatalogBattleUnit raider = ranged.AddEnemy("raider", 500f, 7f, 0f, 1.2f, 3.6f, .5f,
+            false, 1.8f, 0f, CatalogEnemyRole.Raider);
+        int rangedHits = 0;
+        ranged.Event += e => { if (e.Kind == CatalogEventKind.BasicHit && e.SourceId == "raider") rangedHits++; };
+        ranged.Step(1f);
+        Check(rangedHits > 0 && raider.X == 1.8f, "Raider attacks from range instead of closing for melee.");
+    }
+
+    static void OpeningWavesPlayable()
+    {
+        var run = ExpeditionRun.New(catalog, 1);
+        for (int wave = 1; wave <= 2; wave++)
+        {
+            CatalogBattle battle = run.BeginBattle();
+            for (int second = 0; second < 75 && !battle.Ended; second++) battle.Step(1f);
+            Check(battle.Ended && battle.Winner == CatalogTeam.Ally,
+                "Starter trio can clear opening wave " + wave + " within the time limit.");
+            run.ResolveBattle(true);
+            run.Continue();
+        }
     }
 
     static void DefeatRules()

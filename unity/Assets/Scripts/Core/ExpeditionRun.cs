@@ -39,6 +39,12 @@ namespace Expedition.Core
             "숲의 짐승", "숲길 약탈자", "전초기지 수비대", "매복한 약탈자",
             "성문 수비대", "성문 골렘"
         };
+        static readonly string[] EncounterDescriptions =
+        {
+            "야수 2 · 돌진 주의", "야수 2 · 약탈자 궁수 1", "야수 1 · 약탈자 궁수 2",
+            "야수 2 · 약탈자 궁수 2", "야수 3 · 약탈자 궁수 2",
+            "성문 골렘 1 · 호위 야수 1 · 약탈자 궁수 1"
+        };
 
         readonly CatalogDatabase catalog;
         readonly List<string> deployedIds = new List<string>(5);
@@ -57,6 +63,7 @@ namespace Expedition.Core
         public bool LastVictory { get; private set; }
         public ExpeditionPhase Phase { get; private set; }
         public string EncounterName { get { return Encounters[Wave - 1]; } }
+        public string EncounterDescription { get { return EncounterDescriptions[Wave - 1]; } }
 
         ExpeditionRun(CatalogDatabase catalog)
         {
@@ -255,16 +262,25 @@ namespace Expedition.Core
                 result.AddUnit(member.Id, CatalogTeam.Ally, member.FormId, member.BranchId,
                     member.InheritedTraitId, member.X, member.Y);
             }
+            int beasts = Wave == 3 || Wave == 6 ? 1 : Wave == 5 ? 3 : 2;
+            int raiders = Wave == 1 ? 0 : Wave == 2 || Wave == 6 ? 1 : 2;
             if (Wave == 6)
-                result.AddEnemy("golem-boss", 850f, 25f, 15f, 1.45f, 1.1f, .48f, true, 2.5f, 0f);
-            else
+                result.AddEnemy("golem-boss", 700f, 21f, 15f, 1.55f, 1.1f, .48f,
+                    true, 3.7f, 0f, CatalogEnemyRole.Golem);
+            for (int i = 0; i < beasts; i++)
             {
-                float hp = 130f + 45f * (Wave - 1);
-                float power = 11f + 2f * (Wave - 1);
-                result.AddEnemy("beast-1", hp, power, 7f, 1.65f, 1f, .65f, false, 2.25f, -.35f);
-                if (Wave >= 2)
-                    result.AddEnemy("raider-2", 85f + 30f * (Wave - 2), power - 1f, 4f,
-                        1.8f, 3.4f, .57f, false, 2.6f, .8f);
+                float y = beasts == 1 ? -.85f : (i - (beasts - 1) * .5f) * 1.15f;
+                float x = 2.1f + (i % 2) * .55f;
+                result.AddEnemy("beast-" + (i + 1), 74f + 10f * (Wave - 1),
+                    8f + .8f * (Wave - 1), 6f, 1.8f, 1.0f, .65f,
+                    false, x, y, CatalogEnemyRole.Beast);
+            }
+            for (int i = 0; i < raiders; i++)
+            {
+                float y = raiders == 1 ? 1.05f : (i == 0 ? -1.2f : 1.2f);
+                result.AddEnemy("raider-" + (i + 1), 65f + 7f * (Wave - 1),
+                    7f + .65f * (Wave - 1), 3f, 2f, 3.6f, .55f,
+                    false, 3.35f + i * .5f, y, CatalogEnemyRole.Raider);
             }
             return result;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Expedition.Core;
@@ -22,6 +23,9 @@ internal static class Program
             BattleResumeAndProgression();
             EnemyWavesAndRoles();
             BeastChargeAndRangedAttack();
+            BossBeastPattern();
+            GolemPattern();
+            BossStepPartition();
             OpeningWavesPlayable();
             DefeatRules();
             RejectBadSaves();
@@ -360,6 +364,240 @@ internal static class Program
                 "Starter trio can clear opening wave " + wave + " within the time limit.");
             run.ResolveBattle(true);
             run.Continue();
+        }
+    }
+
+    static void StepUntil(CatalogBattle battle, Func<bool> condition, int maximumTicks, string reason)
+    {
+        for (int i = 0; i < maximumTicks && !condition() && !battle.Ended; i++) battle.Step(1f / 60f);
+        Check(condition(), reason);
+    }
+
+    static void BossBeastPattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit first = battle.AddUnit("first", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        CatalogBattleUnit second = battle.AddUnit("second", CatalogTeam.Ally, "B-PR", null, null, -1.15f, .35f);
+        CatalogBattleUnit outside = battle.AddUnit("outside", CatalogTeam.Ally, "B-AR", null, null, -1.2f, 1.8f);
+        first.MoveSpeed = second.MoveSpeed = outside.MoveSpeed = 0f;
+        CatalogBattleUnit boss = battle.AddEnemy("beast-boss", 2000f, 10f, 8f, 2f, 1f, .6f,
+            true, 2.5f, 0f, CatalogEnemyRole.Beast, true);
+        var events = new List<CatalogBattleEvent>();
+        battle.Event += e => events.Add(e);
+        StepUntil(battle, () => boss.ChargeWarningRemaining > 0f, 600,
+            "Boss beast enters a charge warning.");
+        Check(boss.BossPatternsEnabled && boss.ChargeWarningRemaining > .7f &&
+            boss.ChargeWarningRemaining <= .901f && boss.ChargeWidth == .7f,
+            "Boss charge has a .9-second warning and .7 half-width: " +
+            boss.BossPatternsEnabled + "," + boss.ChargeWarningRemaining + "," + boss.ChargeWidth);
+        Check(battle.Time >= 7f, "Boss beast waits seven seconds before its first charge.");
+        float originX = boss.ChargeOriginX, aimX = boss.ChargeTargetX;
+        float previewX = boss.ChargeImpactX, previewY = boss.ChargeImpactY;
+        float paused = battle.Time;
+        battle.Step(0f);
+        Check(battle.Time == paused && boss.ChargeOriginX == originX,
+            "Paused battle does not consume boss warning.");
+        StepUntil(battle, () => boss.IsCharging, 120, "Boss begins visible charge movement.");
+        Check(boss.ChargeWarningRemaining == 0f && boss.ChargeTargetX == aimX &&
+            Math.Abs(boss.ChargeImpactX - previewX) < .001f &&
+            Math.Abs(boss.ChargeImpactY - previewY) < .001f,
+            "Charge keeps its fixed aim and predicted impact during movement.");
+        StepUntil(battle, () => events.Exists(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "BOSS_CHARGE"), 40, "Boss charge resolves after movement.");
+        Check(events.Count(e => e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "BOSS_CHARGE") == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "BOSS_CHARGE" &&
+                e.TargetId == first.Id) == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "BOSS_CHARGE" &&
+                e.TargetId == second.Id) == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "BOSS_CHARGE" &&
+                e.TargetId == outside.Id) == 0,
+            "Boss charge damages each unit inside corridor once and spares units outside: " +
+            string.Join(",", events.Where(e => e.Kind == CatalogEventKind.Damage &&
+                e.AbilityId == "BOSS_CHARGE").Select(e => e.TargetId).ToArray()) +
+            " origin=" + originX + " impact=" + boss.ChargeEndX + "," + boss.ChargeEndY);
+
+        var slowBattle = new CatalogBattle(catalog);
+        slowBattle.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f).MoveSpeed = 0f;
+        CatalogBattleUnit slowBoss = slowBattle.AddEnemy("boss", 2000f, 8f, 8f, 2f, 1f, .01f,
+            true, 3.5f, 0f, CatalogEnemyRole.Beast, true);
+        StepUntil(slowBattle, () => slowBoss.ChargeWarningRemaining > 0f, 600,
+            "Slow test reaches long-distance charge warning.");
+        float originalImpact = slowBoss.ChargeImpactX, fixedAim = slowBoss.ChargeTargetX;
+        slowBoss.Slow = .4f; slowBoss.SlowUntil = slowBattle.Time + 2f;
+        Check(slowBoss.ChargeImpactX > originalImpact && slowBoss.ChargeTargetX == fixedAim,
+            "Slow shortens the exposed charge corridor without retargeting.");
+        float slowedImpact = slowBoss.ChargeImpactX;
+        StepUntil(slowBattle, () => slowBoss.IsCharging, 120, "Slowed boss enters charge movement.");
+        slowBoss.Slow = 0f;
+        Check(Math.Abs(slowBoss.ChargeImpactX - slowedImpact) < .001f,
+            "Charge impact remains locked after movement starts even if slow changes.");
+        StepUntil(slowBattle, () => !slowBoss.IsCharging, 40, "Slowed boss finishes charge.");
+        Check(Math.Abs(slowBoss.ChargeImpactX - slowedImpact) < .001f,
+            "Completed charge retains its actual impact point for effects.");
+
+        var dodge = new CatalogBattle(catalog);
+        CatalogBattleUnit movingTarget = dodge.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        movingTarget.MoveSpeed = 0f;
+        dodge.AddUnit("reserve", CatalogTeam.Ally, "B-AR", null, null, -4f, 3f).MoveSpeed = 0f;
+        CatalogBattleUnit chargingBoss = dodge.AddEnemy("boss", 2000f, 8f, 8f, 2f, 1f, .6f,
+            true, 2.5f, 0f, CatalogEnemyRole.Beast, true);
+        int impacts = 0, chargeDamage = 0;
+        dodge.Event += e => { if (e.Kind == CatalogEventKind.BossImpact) impacts++;
+            if (e.Kind == CatalogEventKind.Damage && e.AbilityId == "BOSS_CHARGE") chargeDamage++; };
+        StepUntil(dodge, () => chargingBoss.ChargeWarningRemaining > 0f, 600, "Dodge test reaches charge warning.");
+        float fixedTargetX = chargingBoss.ChargeTargetX;
+        movingTarget.X = -4f; movingTarget.Y = 3f;
+        StepUntil(dodge, () => impacts > 0, 120, "Charge still finishes when target moves.");
+        Check(chargingBoss.ChargeTargetX == fixedTargetX && chargeDamage == 0,
+            "Moving out of fixed corridor avoids damage.");
+
+        var lostTarget = new CatalogBattle(catalog);
+        CatalogBattleUnit doomed = lostTarget.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        doomed.MoveSpeed = 0f;
+        lostTarget.AddUnit("reserve", CatalogTeam.Ally, "B-AR", null, null, -4f, 3f).MoveSpeed = 0f;
+        CatalogBattleUnit fixedBoss = lostTarget.AddEnemy("boss", 2000f, 8f, 8f, 2f, 1f, .6f,
+            true, 2.5f, 0f, CatalogEnemyRole.Beast, true);
+        int fixedImpacts = 0, fixedDamage = 0;
+        lostTarget.Event += e => { if (e.Kind == CatalogEventKind.BossImpact) fixedImpacts++;
+            if (e.Kind == CatalogEventKind.Damage && e.AbilityId == "BOSS_CHARGE") fixedDamage++; };
+        StepUntil(lostTarget, () => fixedBoss.ChargeWarningRemaining > 0f, 600,
+            "Lost-target test reaches charge warning.");
+        float lockedAim = fixedBoss.ChargeTargetX;
+        doomed.Hp = 0f;
+        StepUntil(lostTarget, () => fixedImpacts > 0, 120,
+            "Charge completes on its fixed line after its target dies.");
+        Check(fixedBoss.ChargeTargetX == lockedAim && fixedDamage == 0,
+            "Dead original target does not redirect or receive charge damage.");
+
+        var cancelled = new CatalogBattle(catalog);
+        cancelled.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f).MoveSpeed = 0f;
+        CatalogBattleUnit deadBoss = cancelled.AddEnemy("boss", 2000f, 8f, 8f, 2f, 1f, .6f,
+            true, 2.5f, 0f, CatalogEnemyRole.Beast, true);
+        int cancelledImpacts = 0;
+        cancelled.Event += e => { if (e.Kind == CatalogEventKind.BossImpact) cancelledImpacts++; };
+        StepUntil(cancelled, () => deadBoss.ChargeWarningRemaining > 0f, 600, "Cancellation test reaches warning.");
+        deadBoss.Hp = 0f;
+        cancelled.Step(2f);
+        Check(cancelledImpacts == 0 && !deadBoss.IsCharging,
+            "A defeated boss cannot finish its pending charge.");
+
+        var counterBattle = new CatalogBattle(catalog);
+        CatalogBattleUnit counterKnight = counterBattle.AddUnit("counter", CatalogTeam.Ally,
+            "E-KN-C", null, null, -1f, 0f);
+        counterKnight.MoveSpeed = 0f;
+        CatalogBattleUnit counterBoss = counterBattle.AddEnemy("boss", 2000f, 8f, 8f,
+            2f, 1f, .6f, true, 2.5f, 0f, CatalogEnemyRole.Beast, true);
+        int counterImpacts = 0, counterSkills = 0;
+        counterBattle.Event += e => { if (e.Kind == CatalogEventKind.BossImpact) counterImpacts++;
+            if (e.Kind == CatalogEventKind.SkillUsed && e.AbilityId == "E-KN-C") counterSkills++; };
+        StepUntil(counterBattle, () => counterBoss.IsCharging, 700,
+            "Counter test reaches boss charge movement.");
+        counterBoss.Hp = 1f;
+        counterKnight.Shield = 1f;
+        counterKnight.ShieldUntil = counterBattle.Time + 2f;
+        counterKnight.ShieldSourceId = counterKnight.Id;
+        StepUntil(counterBattle, () => counterImpacts > 0, 40,
+            "Counter test charge reaches impact.");
+        Check(counterSkills == 1 && !counterBoss.IsAlive &&
+            counterBoss.AttackPhase == CatalogAttackPhase.Ready &&
+            counterBoss.PendingSkillId == null && !counterBoss.IsCharging,
+            "A counterattack killing the boss leaves no active boss pattern state.");
+    }
+
+    static void GolemPattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit target = battle.AddUnit("target", CatalogTeam.Ally, "B-IC", null, null, -1f, 0f);
+        CatalogBattleUnit near = battle.AddUnit("near", CatalogTeam.Ally, "B-KN", null, null, -1.2f, .45f);
+        CatalogBattleUnit far = battle.AddUnit("far", CatalogTeam.Ally, "B-AR", null, null, -1.4f, 2.2f);
+        target.MoveSpeed = near.MoveSpeed = far.MoveSpeed = 0f;
+        CatalogBattleUnit boss = battle.AddEnemy("golem", 1000f, 8f, 15f, 2f, 1f, .5f,
+            true, 2.5f, 0f, CatalogEnemyRole.Golem, true);
+        boss.Hp = 390f;
+        var events = new List<CatalogBattleEvent>();
+        battle.Event += e => events.Add(e);
+        StepUntil(battle, () => boss.BossEnraged, 150, "Golem enters rage below forty percent.");
+        Check(events.Count(e => e.Kind == CatalogEventKind.BossEnraged) == 1,
+            "Golem rage is announced exactly once.");
+        StepUntil(battle, () => boss.SlamWarningRemaining > 0f, 400,
+            "Golem warns of its first slam.");
+        Check(boss.SlamWarningRemaining > .9f && boss.SlamWarningRemaining <= 1.1f &&
+            boss.SlamRadius == 1.35f && !boss.SlamIsAftershock,
+            "First slam exposes a fixed center, radius, and 1.1-second warning.");
+        float fixedX = boss.SlamTargetX, fixedY = boss.SlamTargetY;
+        target.X = -4f; target.Y = 3f;
+        float paused = battle.Time;
+        battle.Step(0f);
+        Check(battle.Time == paused && boss.SlamTargetX == fixedX,
+            "Pause preserves the fixed slam warning.");
+        StepUntil(battle, () => events.Exists(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GOLEM_SLAM"), 150, "Golem slam resolves.");
+        Check(events.Count(e => e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "GOLEM_SLAM") == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "GOLEM_SLAM" &&
+                e.TargetId == target.Id) == 0 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "GOLEM_SLAM" &&
+                e.TargetId == near.Id) == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "GOLEM_SLAM" &&
+                e.TargetId == far.Id) == 0,
+            "Slam hits only units inside its fixed circle, once each.");
+        Check(boss.SlamIsAftershock && boss.SlamWarningRemaining > 0f &&
+            boss.SlamRadius == .75f && boss.SlamTargetX == fixedX && boss.SlamTargetY == fixedY,
+            "Raging golem follows with a narrower .6-second warning at the same center.");
+        StepUntil(battle, () => events.Exists(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GOLEM_AFTERSHOCK"), 100, "Aftershock resolves.");
+        Check(events.Count(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GOLEM_AFTERSHOCK") == 1 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage &&
+            e.AbilityId == "GOLEM_AFTERSHOCK" && e.TargetId == near.Id) <= 1,
+            "Aftershock emits one impact and does not duplicate per-target damage.");
+
+        var legacy = new CatalogBattle(catalog);
+        legacy.AddUnit("ally", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        CatalogBattleUnit labBoss = legacy.AddEnemy("lab-boss", 1000f, 5f, 15f, 2f, 1f, .5f,
+            true, 2.5f, 0f, CatalogEnemyRole.Golem);
+        int legacyPatternEvents = 0;
+        legacy.Event += e => { if (e.Kind == CatalogEventKind.BossTelegraph) legacyPatternEvents++; };
+        legacy.Step(6f);
+        Check(!labBoss.BossPatternsEnabled && legacyPatternEvents == 0,
+            "Existing lab boss call stays on its old behavior by default.");
+    }
+
+    static CatalogBattle PartitionBattle(List<CatalogBattleEvent> events)
+    {
+        var battle = new CatalogBattle(catalog);
+        battle.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f).MoveSpeed = 0f;
+        battle.AddUnit("near", CatalogTeam.Ally, "B-PR", null, null, -1.2f, .3f).MoveSpeed = 0f;
+        battle.AddEnemy("golem", 3000f, 8f, 15f, 2f, 1f, .5f,
+            true, 2.5f, 0f, CatalogEnemyRole.Golem, true);
+        battle.Event += e => events.Add(e);
+        return battle;
+    }
+
+    static void BossStepPartition()
+    {
+        var wholeEvents = new List<CatalogBattleEvent>();
+        var partsEvents = new List<CatalogBattleEvent>();
+        CatalogBattle whole = PartitionBattle(wholeEvents), parts = PartitionBattle(partsEvents);
+        whole.Step(4f);
+        parts.Step(1f);
+        parts.Step(1f);
+        parts.Step(2f);
+        Check(Math.Abs(whole.Time - parts.Time) < .001f && wholeEvents.Count == partsEvents.Count,
+            "Boss pattern timing is invariant to Step partitioning.");
+        for (int i = 0; i < wholeEvents.Count; i++)
+            Check(wholeEvents[i].Kind == partsEvents[i].Kind &&
+                wholeEvents[i].AbilityId == partsEvents[i].AbilityId &&
+                wholeEvents[i].SourceId == partsEvents[i].SourceId &&
+                wholeEvents[i].TargetId == partsEvents[i].TargetId &&
+                Math.Abs(wholeEvents[i].Time - partsEvents[i].Time) < .001f,
+                "Boss pattern event order remains identical across Step partitioning.");
+        foreach (CatalogBattleUnit unit in whole.Units)
+        {
+            CatalogBattleUnit counterpart = parts.Get(unit.Id);
+            Check(Math.Abs(unit.Hp - counterpart.Hp) < .001f &&
+                Math.Abs(unit.X - counterpart.X) < .001f &&
+                Math.Abs(unit.Y - counterpart.Y) < .001f,
+                "Boss pattern combat state remains identical across Step partitioning.");
         }
     }
 

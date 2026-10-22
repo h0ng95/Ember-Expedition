@@ -8,7 +8,7 @@ namespace Expedition.Presentation
     // Bounded, code-drawn effects: no particle objects or additional sprite sheets per hit.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support }
+        enum EffectKind { Impact, Slash, Support, GroundImpact }
         sealed class Effect
         {
             public Vector2 Point;
@@ -73,6 +73,17 @@ namespace Expedition.Presentation
             CatalogBattleUnit source = battle.Get(e.SourceId), target = battle.Get(e.TargetId);
             Color color = AttackColor(source);
             int direction = source != null && source.Team == CatalogTeam.Enemy ? -1 : 1;
+            if (e.Kind == CatalogEventKind.BossImpact && source != null)
+            {
+                if (effects.Count == 24) effects.RemoveAt(0);
+                bool charge = e.AbilityId == "BOSS_CHARGE";
+                effects.Add(new Effect { Kind = EffectKind.GroundImpact,
+                    Point = charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
+                        new Vector2(source.SlamTargetX, source.SlamTargetY),
+                    Color = source.BossEnraged ? new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
+                    Size = charge ? source.ChargeWidth : source.SlamRadius, Duration = .45f });
+                Play(hit, 1f);
+            }
             if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
                 source != null && target != null && !IsProjectile(source))
                 Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction);
@@ -133,10 +144,34 @@ namespace Expedition.Presentation
         {
             foreach (CatalogBattleUnit unit in battle.Units)
             {
-                if (!unit.IsAlive || unit.ChargeWarningRemaining <= 0) continue;
+                if (!unit.IsAlive) continue;
+                if (unit.SlamWarningRemaining > 0)
+                {
+                    Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
+                    Color warning = unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
+                        new Color(1f, .65f, .2f, .8f);
+                    Ring(center, unit.SlamRadius * 83, unit.SlamRadius * 48, warning, 4);
+                    Ring(center, unit.SlamRadius * 83 * .92f, unit.SlamRadius * 48 * .92f, warning, 1);
+                    Line(center - new Vector2(10, 0), center + new Vector2(10, 0), 3, warning);
+                    Line(center - new Vector2(0, 6), center + new Vector2(0, 6), 3, warning);
+                }
+                if (unit.ChargeWarningRemaining <= 0 && !unit.IsCharging) continue;
                 Vector2 from = project(new Vector2(unit.X, unit.Y));
                 Vector2 to = project(new Vector2(unit.ChargeTargetX, unit.ChargeTargetY));
                 Color color = new Color(1f, .43f, .18f, .65f + .25f * Mathf.Sin(battle.Time * 18));
+                if (unit.BossPatternsEnabled)
+                {
+                    Vector2 start = new Vector2(unit.ChargeOriginX, unit.ChargeOriginY);
+                    Vector2 end = new Vector2(unit.ChargeImpactX, unit.ChargeImpactY);
+                    Vector2 delta = (end - start).normalized;
+                    Vector2 side = new Vector2(-delta.y, delta.x) * unit.ChargeWidth;
+                    Vector2 a = project(start + side), b = project(end + side);
+                    Vector2 c = project(end - side), d = project(start - side);
+                    Line(a, b, 3, color); Line(b, c, 3, color); Line(c, d, 3, color); Line(d, a, 3, color);
+                    from = project(start); to = project(end);
+                    Ring(from, unit.ChargeWidth * 83, unit.ChargeWidth * 48, color, 2);
+                    Ring(to, unit.ChargeWidth * 83, unit.ChargeWidth * 48, color, 2);
+                }
                 for (int i = 0; i < 8; i++)
                     Line(Vector2.Lerp(from, to, i / 8f), Vector2.Lerp(from, to, (i + .55f) / 8f), 3, color);
                 Ring(to, 21, 9, color, 2);
@@ -173,6 +208,14 @@ namespace Expedition.Presentation
             foreach (Effect effect in effects)
             {
                 float t = Mathf.Clamp01(effect.Age / effect.Duration);
+                if (effect.Kind == EffectKind.GroundImpact)
+                {
+                    Color impactColor = effect.Color;
+                    impactColor.a = 1 - t;
+                    Ring(project(effect.Point), effect.Size * 83 * (.6f + .4f * t),
+                        effect.Size * 48 * (.6f + .4f * t), impactColor, 6 * (1 - t) + 1);
+                    continue;
+                }
                 Vector2 point = project(effect.Point) + new Vector2(0, -57);
                 Color color = effect.Color;
                 color.a = 1 - t;

@@ -242,7 +242,8 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
             GUI.Label(new Rect(735, 193, 490, 65), run.IsBossWave ?
-                "보스와 호위를 함께 상대합니다.\n전열과 후열의 배치를 점검하세요." :
+                (run.Wave == 5 ? "직선 돌진 · 체력 절반부터 간격 단축\n전열과 후열을 같은 선에 겹치지 마세요." :
+                "범위 내려찍기 · 체력 40%부터 후속파\n탱커 주변에 동료를 밀집시키지 마세요.") :
                 "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.", body);
             if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
                 showHelp = !showHelp;

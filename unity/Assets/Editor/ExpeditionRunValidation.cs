@@ -43,6 +43,7 @@ namespace Expedition.EditorTools
                 "Saved undo lost a confirmed summon or refunded its gold");
 
             int completions = 0;
+            var recordedWaves = new HashSet<int>();
             for (uint seed = 1; seed <= 8; seed++)
             {
                 run = ExpeditionRun.New(database, seed);
@@ -66,11 +67,24 @@ namespace Expedition.EditorTools
                             if (recipient.FormId == "B-AR" && recipient.Growth == 2) run.Evolve(recipientId, "E-AR-P");
                         }
                     }
+                    // Keep backline out of the tank's slam radius; same formation as the balance probe.
+                    int backline = 0, frontline = 0;
+                    foreach (string activeId in run.DeployedIds)
+                    {
+                        CatalogMember member = run.Roster.Find(activeId);
+                        if (CatalogRoster.FamilyCode(member.FormId) == "KN")
+                            run.Move(activeId, -1.3f, frontline++ == 0 ? 0f : -1.7f);
+                        else
+                        {
+                            float[] lanes = { 1.8f, -1.8f, .6f, -.6f, 0f };
+                            run.Move(activeId, -3.7f, lanes[backline++]);
+                        }
+                    }
                     run = RoundTrip(database, run);
-                    if (seed == 1 && (run.Wave == 5 || run.Wave == 10))
+                    if ((run.Wave == 5 || run.Wave == 10) && recordedWaves.Add(run.Wave))
                     {
                         Directory.CreateDirectory("Logs");
-                        File.WriteAllText("Logs/v013-device-wave" + run.Wave + ".json", JsonUtility.ToJson(run.Capture()));
+                        File.WriteAllText("Logs/v014-device-wave" + run.Wave + ".json", JsonUtility.ToJson(run.Capture()));
                     }
                     CatalogBattle battle = run.BeginBattle();
                     Check(battle != null, "Preparation could not start battle");
@@ -88,7 +102,7 @@ namespace Expedition.EditorTools
                 }
                 run = RoundTrip(database, run);
                 if (run.Phase == ExpeditionPhase.Completed) completions++;
-                Debug.Log("V013 sample seed=" + seed + " phase=" + run.Phase + " wave=" + run.Wave +
+                Debug.Log("V014 sample seed=" + seed + " phase=" + run.Phase + " wave=" + run.Wave +
                     " victories=" + run.Victories + " supply=" + run.Roster.SupplyUsed + " gold=" + run.Gold);
             }
             Check(completions > 0, "No sample party could complete the introductory expedition");

@@ -101,7 +101,7 @@ namespace Expedition.Presentation
         string expeditionEncounter;
         string error, lastAction;
         string latestSkill;
-        float latestSkillUntil;
+        float latestSkillUntil, bossNoticeUntil;
         int selected, category, trait, branch, fusionPair, preset, galleryState, screen, dragged = -1;
         float clock, accumulator, speed = 1f, galleryTime;
         bool paused, galleryAuto;
@@ -212,6 +212,7 @@ namespace Expedition.Presentation
             accumulator = clock = 0;
             paused = false;
             latestSkill = null;
+            bossNoticeUntil = 0;
         }
 
         void StartBattle()
@@ -244,22 +245,38 @@ namespace Expedition.Presentation
             View source = combatViews.Find(v => v.Unit.Id == e.SourceId);
             View target = combatViews.Find(v => v.Unit.Id == e.TargetId);
             if ((e.Kind == CatalogEventKind.SkillUsed || e.Kind == CatalogEventKind.BasicHit ||
-                e.Kind == CatalogEventKind.ChargeHit) && source != null)
+                e.Kind == CatalogEventKind.ChargeHit || e.Kind == CatalogEventKind.BossImpact) && source != null)
             {
                 source.ReleaseRemaining = .18f;
                 source.ReleaseAge = 0;
                 source.NewRelease = true;
-                if (e.Kind == CatalogEventKind.SkillUsed)
+                if (e.Kind == CatalogEventKind.SkillUsed && clock >= bossNoticeUntil)
                 {
                     latestSkill = expeditionMode ? UnitName(source.Unit) + " · 기술 발동" :
                         source.Unit.FormId + "  /  " + e.AbilityId;
                     latestSkillUntil = clock + 2f;
                 }
             }
-            if (e.Kind == CatalogEventKind.ChargeTelegraph && source != null)
+            if (e.Kind == CatalogEventKind.ChargeTelegraph && source != null &&
+                (source.Unit.IsBoss || clock >= bossNoticeUntil))
             {
-                latestSkill = "야수가 몸을 낮춥니다 · 돌진 예고";
-                latestSkillUntil = clock + .7f;
+                latestSkill = source.Unit.IsBoss ? "우두머리 돌진 · 표시된 경로를 공격합니다" : "야수가 몸을 낮춥니다 · 돌진 예고";
+                latestSkillUntil = clock + 1.1f;
+                if (source.Unit.IsBoss) bossNoticeUntil = latestSkillUntil;
+            }
+            if (e.Kind == CatalogEventKind.BossTelegraph && source != null)
+            {
+                latestSkill = e.AbilityId == "GOLEM_AFTERSHOCK" ? "후속 충격파 · 작은 원 안을 다시 공격합니다" :
+                    "골렘 내려찍기 · 표시된 범위를 공격합니다";
+                latestSkillUntil = clock + 1.4f;
+                bossNoticeUntil = latestSkillUntil;
+            }
+            if (e.Kind == CatalogEventKind.BossEnraged && source != null)
+            {
+                latestSkill = UnitName(source.Unit) + " 분노 · " +
+                    (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? "돌진 간격 단축" : "내려찍기 뒤 충격파 추가");
+                latestSkillUntil = clock + 3f;
+                bossNoticeUntil = latestSkillUntil;
             }
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
@@ -498,6 +515,8 @@ namespace Expedition.Presentation
                     width * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), new Color(.5f, .84f, 1f));
                 if (unit.IsBoss) GUI.Label(new Rect(barX - 30, barY - 33, 260, 31), UnitName(unit), heading);
                 else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
+                if (unit.IsBoss && unit.BossEnraged)
+                    GUI.Label(new Rect(barX, barY + 13, width, 26), "분노", centered);
             }
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
             foreach (FloatText text in floating)
@@ -576,10 +595,15 @@ namespace Expedition.Presentation
             Color before = GUI.color;
             if (spine) GUI.color *= new Color(.7f, .88f, 1f);
             else if (elite) GUI.color *= new Color(1f, .8f, .62f);
+            if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
             // Existing concept sprites already face left, except the golem. Motion is temporary.
             float move = view.State == 1 ? Mathf.Sin(view.StateTime * 13f) * 3f : 0;
             float lunge = view.ReleaseRemaining > 0 ? Mathf.Sin(view.ReleaseAge / .18f * Mathf.PI) * 9f : 0;
             Rect destination = new Rect(foot.x - width / 2 - lunge, foot.y - height + move, width, height);
+            if (view.Unit.SlamWarningRemaining > 0)
+                destination.y -= 8 + Mathf.Sin(view.Unit.SlamWarningRemaining * 13) * 3;
+            else if (view.Unit.IsBoss && view.Unit.ChargeWarningRemaining > 0)
+            { destination.y += 10; destination.height -= 10; }
             if (!view.Unit.IsAlive) { destination.y += height * .72f; destination.height *= .28f; }
             // These legacy textures retain their original dimensions (max import size 2048).
             float sourceWidth = texture.width;

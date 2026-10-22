@@ -297,35 +297,35 @@ namespace Expedition.Core
                     AddMelee(result, "beast", 2, 84f, 9f, 6f);
                     AddRanged(result, "spine-raider", 1, 65f, 7f); break;
                 case 3:
-                    AddMelee(result, "beast", 2, 90f, 9.5f, 7f);
-                    AddRanged(result, "spine-raider", 2, 70f, 7.5f); break;
+                    AddMelee(result, "beast", 2, 150f, 14f, 7f);
+                    AddRanged(result, "spine-raider", 2, 110f, 11f); break;
                 case 4:
-                    result.AddEnemy("elite-beast", 170f, 13f, 12f, 1.8f, 1f, .7f,
+                    result.AddEnemy("elite-beast", 340f, 25f, 12f, 1.8f, 1f, .7f,
                         false, 3.25f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "beast", 2, 90f, 9f, 7f);
-                    AddRanged(result, "spine-raider", 1, 75f, 8f); break;
+                    AddMelee(result, "beast", 2, 145f, 13f, 7f);
+                    AddRanged(result, "spine-raider", 1, 100f, 11f); break;
                 case 5:
-                    result.AddEnemy("beast-boss", 600f, 17f, 15f, 1.65f, 1.1f, .65f,
-                        true, 3.7f, 0f, CatalogEnemyRole.Beast);
+                    result.AddEnemy("beast-boss", 3200f, 53f, 20f, 1.65f, 1.1f, .65f,
+                        true, 3.7f, 0f, CatalogEnemyRole.Beast, true);
                     AddMelee(result, "beast", 2, 90f, 9f, 7f); break;
                 case 6:
-                    AddMelee(result, "stone-infantry", 2, 105f, 10f, 12f);
-                    AddRanged(result, "crossbow-raider", 1, 75f, 8f); break;
+                    AddMelee(result, "stone-infantry", 2, 240f, 20f, 14f);
+                    AddRanged(result, "crossbow-raider", 1, 150f, 16f); break;
                 case 7:
-                    AddMelee(result, "stone-infantry", 2, 115f, 11f, 13f);
-                    AddRanged(result, "crossbow-raider", 2, 80f, 8.5f); break;
+                    AddMelee(result, "stone-infantry", 2, 260f, 21f, 14f);
+                    AddRanged(result, "crossbow-raider", 2, 160f, 17f); break;
                 case 8:
-                    AddMelee(result, "stone-infantry", 3, 115f, 11f, 13f);
-                    AddRanged(result, "crossbow-raider", 2, 85f, 9f); break;
+                    AddMelee(result, "stone-infantry", 3, 260f, 22f, 15f);
+                    AddRanged(result, "crossbow-raider", 2, 180f, 18f); break;
                 case 9:
-                    result.AddEnemy("stone-elite", 210f, 15f, 22f, 1.8f, 1f, .55f,
+                    result.AddEnemy("stone-elite", 650f, 35f, 22f, 1.8f, 1f, .55f,
                         false, 3.45f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "stone-infantry", 3, 120f, 11f, 14f);
-                    AddRanged(result, "crossbow-raider", 2, 90f, 9f); break;
+                    AddMelee(result, "stone-infantry", 3, 270f, 23f, 16f);
+                    AddRanged(result, "crossbow-raider", 2, 190f, 20f); break;
                 case 10:
-                    result.AddEnemy("golem-boss", 800f, 21f, 16f, 1.55f, 1.1f, .48f,
-                        true, 4.1f, 0f, CatalogEnemyRole.Golem);
-                    AddRanged(result, "crossbow-raider", 2, 95f, 10f); break;
+                    result.AddEnemy("golem-boss", 5000f, 80f, 25f, 1.8f, 1.1f, .48f,
+                        true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
+                    AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
             }
             return result;
         }
@@ -340,13 +340,13 @@ namespace Expedition.Core
             }
         }
 
-        static void AddRanged(CatalogBattle battle, string prefix, int count, float hp, float power)
+        static void AddRanged(CatalogBattle battle, string prefix, int count, float hp, float power, bool bossEscort = false)
         {
             for (int i = 0; i < count; i++)
             {
-                float y = count == 1 ? 1.2f : (i == 0 ? -1.35f : 1.35f);
+                float y = count == 1 ? 1.2f : (i == 0 ? -1 : 1) * (bossEscort ? 2.15f : 1.35f);
                 battle.AddEnemy(prefix + "-" + (i + 1), hp, power, 4f, 2f, 3.6f, .55f,
-                    false, 3.2f + i * .5f, y, CatalogEnemyRole.Raider);
+                    false, bossEscort ? 2.8f : 3.2f + i * .5f, y, CatalogEnemyRole.Raider);
             }
         }
 

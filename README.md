@@ -4,8 +4,8 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.13 10전투·5/10 보스·승리 골드로 소환·패배 후 같은 전투 재도전**. [구현 범위와 검증](docs/design-v0.13/HANDOFF.md)
-- 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 보스 전용 패턴·신규 졸개 미술·정식 난도 조정·원정 연구는 후속 범위이며 100전투는 장기 목표다.
+- 최신 구현: **v0.14 보스 돌진·내려찍기·분노·성장 편성별 난도 조정**. [구현과 비교 결과](docs/design-v0.14/HANDOFF.md). 10전투·골드 소환·패배 재도전은 [v0.13](docs/design-v0.13/HANDOFF.md)에서 연결했다.
+- 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 범위이며 100전투는 장기 목표다.
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
 - 현재 흐름: **새 원정·이어하기 → 준비·골드 소환·배치·전승·진화·결합 → 10전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
 - 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이며, 12전투·유물·영구 해금은 후속 범위다.
@@ -24,6 +24,7 @@
 ./tests/CatalogCombat/Review/run-review.ps1
 ./tests/CatalogCombat/run-balance.ps1
 ./tests/ExpeditionRun/run.ps1
+./tests/ExpeditionRun/run-balance.ps1
 ```
 
 ## 프로젝트 구성
@@ -53,4 +54,4 @@
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
 - 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
-현재 기본 진입은 10전투 원정이며, 동료의 30형태 공통 애니메이션을 본편에서도 사용한다. 적은 기존 야수·약탈자·골렘의 임시 그림을 크기·색으로 구분해 사용한다. 적 전용 애니메이션·보스 기믹·스킬별 전용 연출·원정 전체의 난이도 조정·원정 연구·광고·출시 설정은 후속 단계다.
+현재 기본 진입은 10전투 원정이며, 동료의 30형태 공통 애니메이션을 본편에서도 사용한다. 적은 기존 야수·약탈자·골렘의 임시 그림을 크기·색으로 구분해 사용한다. 보스 패턴과 예고는 v0.14에 연결했다. 적 전용 애니메이션·실제 플레이를 통한 난도 조정·원정 연구·광고·출시 설정은 후속 단계다.

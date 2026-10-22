@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.14 · 보스 패턴과 첫 원정 난도 조정</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.14 · 보스 패턴과 첫 원정 난도 조정</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 이번 변경</a>
+<a href="#section-2">2. 난도 변화</a>
+<a href="#section-3">3. 자동 비교 방법</a>
+<a href="#section-4">4. 별도 100개 시드 결과</a>
+<a href="#section-5">5. 저장과 검증</a>
+<a href="#section-6">6. 다음 단계</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-23 작업 기록. v0.13의 10전투·골드 소환 위에 보스 공격과 성장 필요성을 추가한다. 출시 밸런스 확정판은 아니다.</p>
+<h2 id="section-1">1. 이번 변경</h2>
+<ul>
+<li><strong>5전투 잿갈기 우두머리:</strong> 첫 돌진은 전투 시작 7초 이후. 0.9초 예고 후 0.2초 이동하며, 표시된 경로에 있는 동료들을 각 한 번 공격한다. 경로 반폭 0.7, 이동 상한 3.6이다. 감속은 이동 거리를 줄인다. 돌진 종료 후 7초 대기하며, 체력 50% 이하 분노 이후 완료한 돌진부터 다음 대기가 5.5초로 줄어든다. 이미 예약된 대기는 그대로 유지한다.</li>
+<li><strong>10전투 성문 골렘:</strong> 1.1초 동안 고정 위치의 원을 예고하고 반경 1.35 안을 내려찍는다. 공격력 계수 1.65, 내려찍기 종료 후 재사용 대기 8초다. 체력 40% 이하에서는 같은 중심의 좁은 반경 0.75 안에 0.6초 추가 예고 후 충격파가 발생한다. 충격파 계수는 1.1이다.</li>
+<li><strong>예고와 판정:</strong> 예고 중 목표가 움직여도 찍을 위치는 따라가지 않는다. 목표가 죽어도 살아 있는 보스의 이미 예고된 범위 공격은 진행된다. 보스가 죽으면 취소된다. 일반 공격과 특수 패턴을 동시에 실행하지 않는다.</li>
+<li><strong>분노 표시:</strong> 보스 체력바 아래에 ‘분노’, 몸 색 변화, 하단 안내를 추가했다. 바닥에는 돌진 경로와 내려찍기·후속파 범위, 명중 시에는 충격파가 표시된다.</li>
+<li><strong>준비 안내:</strong> 우두머리 전에는 전열·후열을 한 줄에 겹치지 않게, 골렘 전에는 탱커 주변을 밀집시키지 않게 안내한다. 자동 전투 중 수동 회피를 요구하는 구조가 아니다.</li>
+<li><strong>호위 위치:</strong> 골렘 호위를 양옆으로 벌려 시작 시 거대한 보스 그림에 가려지는 문제를 줄였다. 전투 중 근접하면 그림이 겹칠 수 있다.</li>
+</ul>
+<p>기존 시험실과 예전 전투 검증에서 쓰는 보스는 새 패턴 옵션을 켜지 않으면 기존 행동을 유지한다. 본편 5/10전투 보스에는 옵션을 켰다.</p>
+<h2 id="section-2">2. 난도 변화</h2>
+<p>시작 40G·소환 20G·보상표·등불·10전투 구성은 유지한다. 1<del>2전투는 기본 3명으로 소환과 배치를 익히도록 유지하고, 3</del>4전투와 성채의 적 체력·공격력을 올렸다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>대상</th>
+<th>v0.13</th>
+<th>v0.14</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5보스</td>
+<td>HP 600 / 공격 17 / 방어 15</td>
+<td>HP 3200 / 공격 53 / 방어 20 + 광역 돌진·분노</td>
+</tr>
+<tr>
+<td>10보스</td>
+<td>HP 800 / 공격 21 / 방어 16</td>
+<td>HP 5000 / 공격 80 / 방어 25 + 내려찍기·후속파</td>
+</tr>
+</tbody></table></div>
+<p>기존 3인 무성장 편성이 보스까지 쉽게 통과하던 상태에서, 성장과 배치가 필요한 상태로 바꾼 첫 수치다. 보스의 능력만 추가한 변경이 아니며 수치도 함께 올렸다.</p>
+<h2 id="section-3">3. 자동 비교 방법</h2>
+<p><code>tests/ExpeditionRun/run-balance.ps1</code>에서 실제 소환·전승·진화·결합 API를 사용한다. 다섯 정책에 같은 소환 시드 범위를 사용하며 출전 5명·합법 골드 예산을 지킨다.</p>
+<ul>
+<li>기본 3명: 시작 동료만 유지.</li>
+<li>기본 5명: 처음 두 명을 소환해 출전시키고 성장하지 않음.</li>
+<li>분기 분산: 5인을 채운 뒤 각 기본 동료를 순서대로 분기 진화.</li>
+<li>최종 집중: 기사에게 먼저 재료를 모아 최종 진화, 이후 다른 동료 성장.</li>
+<li>결합 중심: 기사·사제를 먼저 분기 진화하고, 6전투 이후 빈자리를 새 소환으로 채울 수 있을 때 H-02로 결합. 5전투 전에 인원이 줄어들도록 결합하지 않음.</li>
+</ul>
+<p>탱커는 전방, 후열은 서로 다른 줄에 놓는 고정 배치를 사용한다. 전투별 적 대응이나 실패 후 편성 재설계는 하지 않는다. 조정용 시드 1<del>100과 별도 검증용 1001</del>1100을 나눴다. 검증용 결과를 보고 다시 수치를 맞추지는 않았다.</p>
+<p><strong>개별 전투 승리 수는 앞선 모든 보상을 받았다고 가정한 비교다.</strong> 패배했어도 다음 전투의 합법 성장량을 비교하기 위해 가상으로 진행한다. 실제 연속 진행 가능성은 별도의 ‘무패 10전투 완료’ 열로 표시한다. 재도전으로 전략을 바꾸는 사람의 승률이나 통계적 신뢰구간으로 해석하지 않는다. 시작 3명 정책은 소환하지 않으므로 100개의 서로 다른 부대가 아니라 같은 전투의 반복이다.</p>
+<h2 id="section-4">4. 별도 100개 시드 결과</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>자동 성장 정책</th>
+<th align="right">5전투 승리</th>
+<th align="right">10전투 단독 승리</th>
+<th align="right">무패 10전투 완료</th>
+<th align="right">10전투 평균 시간</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기본 3명</td>
+<td align="right">0/100</td>
+<td align="right">0/100</td>
+<td align="right">0/100</td>
+<td align="right">21.38초</td>
+</tr>
+<tr>
+<td>기본 5명</td>
+<td align="right">0/100</td>
+<td align="right">0/100</td>
+<td align="right">0/100</td>
+<td align="right">27.90초</td>
+</tr>
+<tr>
+<td>분기 분산</td>
+<td align="right">99/100</td>
+<td align="right">65/100</td>
+<td align="right">64/100</td>
+<td align="right">55.15초</td>
+</tr>
+<tr>
+<td>최종 집중</td>
+<td align="right">64/100</td>
+<td align="right">100/100</td>
+<td align="right">64/100</td>
+<td align="right">47.16초</td>
+</tr>
+<tr>
+<td>결합 중심 H-02</td>
+<td align="right">100/100</td>
+<td align="right">27/100</td>
+<td align="right">27/100</td>
+<td align="right">47.94초</td>
+</tr>
+</tbody></table></div>
+<p>분기 정책의 10전투 5건은 75초 시간 초과였다. 평균 시간에는 패배한 전투도 포함한다. 빨리 패배한 기본 편성을 빠르게 클리어한 것으로 읽으면 안 된다.</p>
+<ul>
+<li>성장의 유무가 결과를 바꾸며, 최종 집중은 첫 보스 이전이 더 취약하다.</li>
+<li>H-02 결합 정책은 마지막 보스에서 약하다. 한 종류의 결합 자동 운용 결과이므로 모든 결합의 성능으로 일반화하지 않는다. 결합·회복·탱커 대체의 후속 조정이 필요하다.</li>
+<li>분기·최종의 무패 완주 64/100은 이번 고정 정책의 관찰값이다. 최종의 단독 10전투 승률 100%만 보고 전체 원정이 쉽다고 판단하지 않는다.</li>
+<li>일반 전투는 성장한 정책 기준 대체로 약 7<del>16초다. 기존 문서의 20</del>35초 목표보다 짧으며 우선 빠른 진행을 유지했다. 5보스는 정책에 따라 약 39<del>47초, 10보스는 약 47</del>55초다.</li>
+</ul>
+<p><a href="balance-training.json">조정용 전체 결과</a> · <a href="balance-holdout.json">별도 검증 전체 결과</a></p>
+<h2 id="section-5">5. 저장과 검증</h2>
+<p>저장 키·버전은 v0.13과 같다. 이어하기를 누르면 현재 준비 편성 또는 중단된 전투 시작 상태에 새 적 수치와 패턴이 적용된다. 골드나 동료를 초기화하지 않는다.</p>
+<ul>
+<li>원정·패턴 검사 1,649 assertions 통과: 고정 예고점, 범위 밖 이동, 목표 사망, 보스 사망 취소, 반격 사망, 감속 거리, 후속 충격파, 일시정지 및 Step 분할 일치 포함.</li>
+<li>기존 카탈로그 111 assertions 및 기존 전투 20 scenarios / 326 assertions 통과.</li>
+<li>Unity 실제 JSON 저장 왕복 검사 1,190 assertions, 작은 표본 시드 1~8은 8/8 완주했다. 이 표본은 연결 검사용이고 위 100개 검증 시드의 밸런스 결과를 대체하지 않는다.</li>
+<li>별도 코드 리뷰에서 예고·피해 좌표, 반격 사망 취소, 화면 좌표 변환, 합법 성장 예산과 무패 완주 집계를 확인했다.</li>
+<li>Buddy2 첫 빌드에서 돌진 경로와 골렘 원형 예고·호위 배치를 확인했다. 보스 경고가 아군의 기술 안내에 덮이는 문제를 찾아 경고 유지 시간 동안 보스 안내를 우선하도록 수정했다.</li>
+<li>최종 APK를 Buddy2에 업데이트했고, 수정된 돌진 경고 문구·골렘 예고 표시와 보스전 승리 결과를 확인했다. 최종 기기 Unity/AndroidRuntime 로그의 예외·오류 검색 결과는 0건이다. 분노 임계값·후속파 피해는 코어 테스트에서 검증했고 기기 캡처는 예고 화면 중심이다.</li>
+<li>기기 검사는 Unity에서 생성한 5/10전투 체크포인트를 사용했다. 휴대폰에서 처음부터 10전투를 수동 완주한 검사는 아니다. 검사 후 기기의 원래 PlayerPrefs 파일이 백업과 정확히 같은지 확인해 복구하고 홈으로 열었다.</li>
+<li>최종 APK SHA-256: <code>EC310728C55478FE90AE4CC2B5067A679D7257265BECA429B5CDDD722127371A</code>. 빌드 파일은 <code>unity/Builds/Android/expedition-combat-prototype.apk</code>다.</li>
+</ul>
+<p><img src="device-evidence/beast-charge-warning.png" alt="야수 우두머리의 돌진 경로"></p>
+<p><img src="device-evidence/golem-slam-warning.png" alt="골렘의 내려찍기 예고"></p>
+<h2 id="section-6">6. 다음 단계</h2>
+<p>결합 정책의 마지막 보스 대응과 실제 초보 플레이 난도 확인, 두 지역의 졸개 전용 그림·애니메이션, 이후 원정 연구의 재화·노드 연결. 원정 연구와 광고는 아직 미구현이다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

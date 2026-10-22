@@ -123,7 +123,7 @@ namespace Expedition.Core
             if (hp <= 0 || power <= 0 || defense < 0 || attackInterval <= .25f || range <= 0 || moveSpeed <= 0)
                 throw new ArgumentException("Invalid enemy stats.");
             if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) || role == CatalogEnemyRole.Golem && !boss ||
-                boss && role != CatalogEnemyRole.Golem)
+                boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast)
                 throw new ArgumentException("Invalid enemy role.");
             CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
                 hp, power, defense, attackInterval, range, moveSpeed, null, boss);

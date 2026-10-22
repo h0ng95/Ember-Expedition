@@ -1,0 +1,120 @@
+{
+  "version": "0.13-draft",
+  "status": "proposal-not-runtime",
+  "startGold": 40,
+  "summonCost": 20,
+  "startMembers": 3,
+  "totalWaves": 10,
+  "bossWaves": [
+    5,
+    10
+  ],
+  "roster": {
+    "maxDeployed": 5,
+    "maxBench": 7,
+    "lifetimeRecruitCap": null
+  },
+  "defeat": {
+    "lanternCost": 1,
+    "retrySameWave": true,
+    "gold": 0
+  },
+  "growthCosts": {
+    "base": 1,
+    "branch": 3,
+    "final": 7,
+    "hybrid": 6
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "goldBefore": 40,
+      "pulls": 2,
+      "goldAfter": 0,
+      "totalSupplied": 5,
+      "reward": 20,
+      "isBoss": false
+    },
+    {
+      "stage": 2,
+      "goldBefore": 20,
+      "pulls": 1,
+      "goldAfter": 0,
+      "totalSupplied": 6,
+      "reward": 20,
+      "isBoss": false
+    },
+    {
+      "stage": 3,
+      "goldBefore": 20,
+      "pulls": 1,
+      "goldAfter": 0,
+      "totalSupplied": 7,
+      "reward": 20,
+      "isBoss": false
+    },
+    {
+      "stage": 4,
+      "goldBefore": 20,
+      "pulls": 1,
+      "goldAfter": 0,
+      "totalSupplied": 8,
+      "reward": 30,
+      "isBoss": false
+    },
+    {
+      "stage": 5,
+      "goldBefore": 30,
+      "pulls": 1,
+      "goldAfter": 10,
+      "totalSupplied": 9,
+      "reward": 50,
+      "isBoss": true
+    },
+    {
+      "stage": 6,
+      "goldBefore": 60,
+      "pulls": 3,
+      "goldAfter": 0,
+      "totalSupplied": 12,
+      "reward": 25,
+      "isBoss": false
+    },
+    {
+      "stage": 7,
+      "goldBefore": 25,
+      "pulls": 1,
+      "goldAfter": 5,
+      "totalSupplied": 13,
+      "reward": 25,
+      "isBoss": false
+    },
+    {
+      "stage": 8,
+      "goldBefore": 30,
+      "pulls": 1,
+      "goldAfter": 10,
+      "totalSupplied": 14,
+      "reward": 25,
+      "isBoss": false
+    },
+    {
+      "stage": 9,
+      "goldBefore": 35,
+      "pulls": 1,
+      "goldAfter": 15,
+      "totalSupplied": 15,
+      "reward": 35,
+      "isBoss": false
+    },
+    {
+      "stage": 10,
+      "goldBefore": 50,
+      "pulls": 2,
+      "goldAfter": 10,
+      "totalSupplied": 17,
+      "reward": 0,
+      "isBoss": true
+    }
+  ]
+}

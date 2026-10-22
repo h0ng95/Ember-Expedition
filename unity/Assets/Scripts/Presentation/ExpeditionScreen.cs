@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace Expedition.Presentation
 {
-    // Main v0.11 route: home, preparation and the six encounter results.
+    // Main expedition route: gold-funded recruitment and ten encounters.
     public sealed class ExpeditionScreen : MonoBehaviour
     {
-        const string SaveKey = "ember.expedition.run.v011";
+        const string SaveKey = "ember.expedition.run.v013";
+        const string LegacySaveKey = "ember.expedition.run.v011";
         const float Width = 1280f, Height = 720f;
         const float GroundY = 380f, GroundYScale = 50f;
         static readonly Color Background = new Color(.045f, .09f, .075f);
@@ -32,20 +33,20 @@ namespace Expedition.Presentation
         static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
             "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
 
-        enum Modal { None, Detail, ChooseDonor, ChoosePartner, Confirm, NewRun, BattleWarning }
+        enum Modal { None, Detail, ChooseDonor, ChoosePartner, Confirm, NewRun }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
         ExpeditionRun run;
         CatalogArtView art;
-        Texture2D battlefield;
+        Texture2D battlefield, outpost;
         Camera backgroundCamera;
         GUIStyle title, heading, body, small, centered, button, primary, hint;
         Font font;
         Rect viewport;
         readonly List<CatalogMember> bench = new List<CatalogMember>();
         readonly List<CatalogMember> fieldMembers = new List<CatalogMember>(5);
-        bool home = true, savePresent, badSave, inheritTrait, pointerDragging;
+        bool home = true, savePresent, badSave, inheritTrait, pointerDragging, legacySave, showHelp;
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId;
         float toastUntil, pointerStartTime;
         Vector2 pointerStart, pointerCurrent, pointerGrabOffset;
@@ -64,6 +65,7 @@ namespace Expedition.Presentation
                 if (content == null) throw new InvalidOperationException("동료 자료를 찾을 수 없습니다.");
                 database = CatalogDatabase.FromJson(content.text);
                 battlefield = Resources.Load<Texture2D>("Art/forest-battlefield");
+                outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
                 LoadSave();
             }
             catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
@@ -83,6 +85,7 @@ namespace Expedition.Presentation
         void LoadSave()
         {
             savePresent = PlayerPrefs.HasKey(SaveKey);
+            legacySave = !savePresent && PlayerPrefs.HasKey(LegacySaveKey);
             if (!savePresent) return;
             try
             {
@@ -119,6 +122,7 @@ namespace Expedition.Presentation
             {
                 run = ExpeditionRun.New(database, unchecked((uint)DateTime.UtcNow.Ticks));
                 badSave = false;
+                legacySave = false;
                 error = null;
                 home = false;
                 modal = Modal.None;
@@ -195,16 +199,18 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(42, 17, 920, 60), "잔불 원정대", title);
             Fill(new Rect(155, 150, 970, 425), Panel);
             GUI.Label(new Rect(220, 192, 840, 70), "꺼진 길에 다시 불을 밝히다", heading);
-            GUI.Label(new Rect(220, 265, 840, 70), "동료를 소환하고 배치해 여섯 번의 전투를 돌파하세요.", body);
+            GUI.Label(new Rect(220, 265, 840, 70), "승리로 얻은 골드로 동료를 소환하고 성장시키세요.\n열 번의 전투, 두 명의 보스가 기다립니다.", body);
             if (GUI.Button(new Rect(230, 385, 385, 76), "새 원정", primary))
             {
-                if (savePresent) modal = Modal.NewRun; else NewRun();
+                if (savePresent || legacySave) modal = Modal.NewRun; else NewRun();
             }
             GUI.enabled = modal == Modal.None && run != null;
             if (GUI.Button(new Rect(665, 385, 385, 76), "이어하기", button))
             { home = false; modal = Modal.None; }
             GUI.enabled = modal == Modal.None;
             if (error != null) GUI.Label(new Rect(220, 475, 840, 75), error, hint);
+            else if (legacySave) GUI.Label(new Rect(220, 475, 840, 75),
+                "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
             if (GUI.Button(new Rect(1020, 650, 225, 48), "개발용 전투 시험실", button)) OpenLab();
         }
 
@@ -212,18 +218,20 @@ namespace Expedition.Presentation
         {
             Fill(new Rect(0, 0, Width, 80), Panel);
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save(); }
-            GUI.Label(new Rect(130, 10, 545, 58), "잔불 원정대", title);
-            GUI.Label(new Rect(705, 18, 320, 43), "전투 " + run.Wave + " / " + ExpeditionRun.TotalWaves +
+            GUI.Label(new Rect(130, 10, 350, 58), "잔불 원정대", title);
+            GUI.Label(new Rect(530, 18, 320, 43), "전투 " + run.Wave + " / " + ExpeditionRun.TotalWaves +
                 "     등불 " + run.Lantern, body);
+            GUI.Label(new Rect(880, 18, 170, 43), run.Gold + " G", heading);
             Fill(new Rect(1070, 17, 188, 43), PanelLight);
             GUI.Label(new Rect(1080, 21, 168, 33), phase, centered);
         }
 
         void DrawPreparation()
         {
-            DrawHeader("전투 준비");
+            DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
             Rect field = new Rect(17, 93, 1246, 449);
-            if (battlefield != null) GUI.DrawTexture(field, battlefield, ScaleMode.ScaleAndCrop);
+            Texture2D region = run.Wave <= 5 ? battlefield : outpost;
+            if (region != null) GUI.DrawTexture(field, region, ScaleMode.ScaleAndCrop);
             else Fill(field, new Color(.075f, .15f, .12f));
             Fill(field, new Color(.015f, .045f, .03f, .23f));
             Fill(new Rect(32, 143, 687, 363), new Color(.04f, .12f, .075f, .26f));
@@ -233,10 +241,14 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(46, 100, 630, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
-            GUI.Label(new Rect(735, 193, 490, 70), "동료를 끌어 출전 위치를 바꿉니다.\n대기 동료를 전장에 놓으면 출전합니다.", body);
-            GUI.Label(new Rect(735, 273, 480, 33), "전투 전 확인", hint);
-            GUI.Label(new Rect(735, 313, 480, 150),
-                "전투가 시작되면 남은 소환 기회는 사라집니다.\n동료를 누르면 전승, 진화, 결합을 준비할 수 있습니다.\n성장에는 다른 동료가 재료로 쓰일 수 있습니다.", body);
+            GUI.Label(new Rect(735, 193, 490, 65), run.IsBossWave ?
+                "보스와 호위를 함께 상대합니다.\n전열과 후열의 배치를 점검하세요." :
+                "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.", body);
+            if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
+                showHelp = !showHelp;
+            GUI.Label(new Rect(735, 328, 480, 145), showHelp ?
+                "끌어서 배치 · 눌러서 전승 / 진화 / 결합\n출전 최대 5명 · 대기 최대 7명\n전투 시작 시 체력 회복\n패배 시 등불 1개를 쓰고 같은 전투 재도전" :
+                "남은 골드는 다음 전투에도 유지됩니다.\n5·10전투에서 보스를 만납니다.", body);
             fieldMembers.Clear();
             foreach (string id in run.DeployedIds)
             {
@@ -267,10 +279,10 @@ namespace Expedition.Presentation
         void DrawDock()
         {
             Fill(new Rect(0, 550, Width, 170), Panel);
-            GUI.Label(new Rect(23, 557, 145, 31), "대기석", heading);
             bench.Clear();
             foreach (CatalogMember member in run.Roster.Members)
                 if (!IsDeployed(member.Id)) bench.Add(member);
+            GUI.Label(new Rect(23, 557, 145, 31), "대기 " + bench.Count + "/7", heading);
             int pages = Mathf.Max(1, (bench.Count + 4) / 5);
             benchPage = Mathf.Clamp(benchPage, 0, pages - 1);
             if (GUI.Button(new Rect(23, 598, 55, 58), "‹", button)) benchPage = (benchPage + pages - 1) % pages;
@@ -288,20 +300,20 @@ namespace Expedition.Presentation
                         new Rect(card.x + 4, card.y + 100, card.width - 8, 27));
                 }
             }
-            GUI.enabled = modal == Modal.None && run.SummonsRemaining > 0;
-            if (GUI.Button(new Rect(944, 574, 310, 58), "동료 소환  ·  남음 " + run.SummonsRemaining, button)) Summon();
+            GUI.enabled = modal == Modal.None && run.CanSummon;
+            string summonLabel = bench.Count >= 7 ? "대기석 가득 참 · 7/7" : run.Gold < ExpeditionRun.SummonCost ?
+                "소환 · " + (ExpeditionRun.SummonCost - run.Gold) + "G 부족" : "동료 소환  ·  " + ExpeditionRun.SummonCost + "G";
+            if (GUI.Button(new Rect(944, 574, 310, 58), summonLabel, button)) Summon();
             GUI.enabled = modal == Modal.None && run.DeployedIds.Count > 0;
             if (GUI.Button(new Rect(944, 641, 310, 58), "전투 시작  ›", primary))
-            {
-                if (run.SummonsRemaining > 0) modal = Modal.BattleWarning;
-                else StartBattle(false);
-            }
-            GUI.enabled = modal == Modal.None;
+                StartBattle(false);
+            GUI.enabled = modal == Modal.None && run.CanUndo;
             if (GUI.Button(new Rect(1075, 483, 164, 44), "되돌리기", button))
             {
                 if (run.Undo()) { selectedId = null; Save(); Notice("직전 준비 행동을 되돌렸습니다."); }
-                else Notice("되돌릴 준비 행동이 없습니다.");
+                else Notice("대기석 공간이 부족하거나 되돌릴 행동이 없습니다.");
             }
+            GUI.enabled = modal == Modal.None;
         }
 
         static Rect BenchRect(int index) { return new Rect(150 + index * 155, 573, 145, 127); }
@@ -334,15 +346,23 @@ namespace Expedition.Presentation
                 run.Phase == ExpeditionPhase.Defeated ? "원정 종료" : victory ? "승리" : "패배", title);
             string outcome = run.Phase == ExpeditionPhase.Completed ? "모든 길을 돌파했습니다." :
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
-                run.Phase == ExpeditionPhase.Result && (run.Lantern <= 0 ||
-                    run.Wave == ExpeditionRun.TotalWaves && !run.LastVictory) ?
-                "이 전투로 원정이 끝났습니다." : victory ? "다음 길을 준비하세요." : "등불을 들고 다시 출발할 수 있습니다.";
+                run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
+                "등불을 모두 소진했습니다." : victory ?
+                (run.Wave == ExpeditionRun.TotalWaves ? "마지막 보스를 쓰러뜨렸습니다." : "다음 길을 준비하세요.") :
+                "등불 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
             GUI.Label(new Rect(225, 275, 830, 92),
                 "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     등불 " + run.Lantern +
                 "\n" + outcome, body);
+            string reward = run.LastVictory && run.LastReward > 0 ?
+                "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
+                run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ? "10전투 돌파 · 원정 완료" :
+                "획득 골드 0 G   ·   보유 " + run.Gold + " G";
+            GUI.Label(new Rect(225, 370, 830, 43), reward, heading);
             if (run.Phase == ExpeditionPhase.Result)
             {
-                if (GUI.Button(new Rect(260, 425, 760, 75), "계속하기", primary))
+                string next = run.Lantern <= 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
+                    "원정 결과" : run.LastVictory ? "다음 전투 준비  ›" : "같은 전투 재도전  ›";
+                if (GUI.Button(new Rect(260, 425, 760, 75), next, primary))
                 { if (run.Continue()) { Save(); selectedId = null; } }
             }
             else if (GUI.Button(new Rect(260, 425, 760, 75), "거점으로", primary)) home = true;
@@ -380,7 +400,7 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(277, 407, 225, 62), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
             {
                 if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save(); modal = Modal.None; }
-                else Notice("출전은 다섯 명까지 가능합니다.");
+                else Notice("출전 1~5명 · 대기석 최대 7명을 유지해야 합니다.");
             }
             if (GUI.Button(new Rect(527, 407, 225, 62), "전승", button))
             { inheritTrait = false; choosePage = 0; modal = Modal.ChooseDonor; }
@@ -469,16 +489,9 @@ namespace Expedition.Presentation
             {
                 GUI.Label(new Rect(375, 188, 530, 54), "새 원정을 시작할까요?", heading);
                 GUI.Label(new Rect(375, 255, 530, 115),
+                    legacySave ? "이전 6전투 원정은 별도로 보관됩니다.\n골드 40G와 기본 동료 3명으로 새로 출발합니다." :
                     "현재 저장된 원정을 새 출발로 바꿉니다.\n진행과 동료 편성은 되돌릴 수 없습니다.", body);
                 ConfirmationButtons("새 원정 시작", NewRun, () => modal = Modal.None);
-                return;
-            }
-            if (modal == Modal.BattleWarning)
-            {
-                GUI.Label(new Rect(375, 188, 530, 54), "소환 기회가 남았습니다", heading);
-                GUI.Label(new Rect(375, 255, 530, 115),
-                    "남은 " + run.SummonsRemaining + "회의 소환 기회는 전투를 시작하면 사라집니다.", body);
-                ConfirmationButtons("전투 시작", () => StartBattle(false), () => modal = Modal.None);
                 return;
             }
             CatalogMember selected = run.Roster.Find(selectedId);
@@ -663,7 +676,10 @@ namespace Expedition.Presentation
                 else Save();
             }
             else if (point.y >= 550 && IsDeployed(id))
-            { if (run.SetDeployed(id, false)) Save(); }
+            {
+                if (run.SetDeployed(id, false)) Save();
+                else Notice("대기석이 가득 찼거나 마지막 출전 동료입니다.");
+            }
         }
 
         string MemberAt(Vector2 point)

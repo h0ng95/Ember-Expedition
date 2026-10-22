@@ -65,7 +65,7 @@ namespace Expedition.Core
 
         public bool Recruit(string id, string baseFormId, float x, float y)
         {
-            if (supply >= 14 || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(baseFormId) || Find(id) != null ||
+            if (supply == int.MaxValue || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(baseFormId) || Find(id) != null ||
                 float.IsNaN(x) || float.IsInfinity(x) || float.IsNaN(y) || float.IsInfinity(y)) return false;
             CatalogForm form = catalog.Get(baseFormId);
             if (!baseFormId.StartsWith("B-", StringComparison.Ordinal)) return false;
@@ -157,7 +157,7 @@ namespace Expedition.Core
         public static CatalogRoster Restore(CatalogDatabase catalog, CatalogRosterSave save)
         {
             if (catalog == null) throw new ArgumentNullException("catalog");
-            if (save == null || save.SupplyUsed < 0 || save.SupplyUsed > 14 || save.Members == null || save.History == null)
+            if (save == null || save.SupplyUsed < 0 || save.Members == null || save.History == null)
                 throw new ArgumentException("Invalid roster save.");
             var roster = new CatalogRoster(catalog);
             roster.supply = save.SupplyUsed;
@@ -209,7 +209,7 @@ namespace Expedition.Core
         }
 
         public static bool FitsSupply(int finals, int branches, int hybrids, int basics,
-            int available = 14, int maximumDeployed = 5)
+            int available = int.MaxValue, int maximumDeployed = 5)
         {
             if (finals < 0 || branches < 0 || hybrids < 0 || basics < 0 || available < 0 || maximumDeployed < 0)
                 return false;

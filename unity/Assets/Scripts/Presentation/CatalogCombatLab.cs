@@ -164,7 +164,7 @@ namespace Expedition.Presentation
             expeditionEncounter = encounter;
             expeditionResult = onResult;
             expeditionExit = onExit;
-            expeditionBackground = Resources.Load<Texture2D>(wave <= 2 ?
+            expeditionBackground = Resources.Load<Texture2D>(wave <= 5 ?
                 "Art/forest-battlefield" : "Art/ruined-outpost-battlefield");
             battle = runBattle;
             battleEffects = new CatalogBattleEffects(gameObject);
@@ -487,14 +487,16 @@ namespace Expedition.Presentation
                 GUI.color = previous;
                 if (!unit.IsAlive) continue;
                 float width = unit.IsBoss ? 174f : 74f;
-                float barY = Mathf.Max(arena.y + 10, point.y - (unit.IsBoss ? 267f : 134f));
+                float barHeight = unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
+                    unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
+                float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
                 float barX = Mathf.Clamp(point.x - width * .5f, arena.x + 3, arena.xMax - width - 3);
                 Fill(new Rect(barX - 1, barY - 1, width + 2, 8), new Color(.02f, .035f, .035f, .9f));
                 Fill(new Rect(barX, barY, width * Mathf.Clamp01(unit.Hp / unit.MaxHp), 6),
                     unit.Team == CatalogTeam.Ally ? new Color(.45f, .94f, .55f) : new Color(1f, .45f, .39f));
                 if (unit.Shield > 0) Fill(new Rect(barX, barY + 9,
                     width * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), new Color(.5f, .84f, 1f));
-                if (unit.IsBoss) GUI.Label(new Rect(barX, barY - 28, 200, 26), "성문 골렘", heading);
+                if (unit.IsBoss) GUI.Label(new Rect(barX - 30, barY - 33, 260, 31), UnitName(unit), heading);
                 else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
             }
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
@@ -528,8 +530,14 @@ namespace Expedition.Presentation
         string UnitName(CatalogBattleUnit unit)
         {
             if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
-            return unit.IsBoss ? "성문 골렘" : unit.EnemyRole == CatalogEnemyRole.Raider ||
-                unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "숲의 야수";
+            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? "잿갈기 우두머리" : "성문 골렘";
+            if (unit.Id.StartsWith("stone-elite", StringComparison.Ordinal)) return "갑주 석상";
+            if (unit.Id.StartsWith("stone-", StringComparison.Ordinal)) return "돌편 보병";
+            if (unit.Id.StartsWith("spine-", StringComparison.Ordinal)) return "가시등 짐승";
+            if (unit.Id.StartsWith("crossbow-", StringComparison.Ordinal)) return "석궁 수비병";
+            if (unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0) return "돌격 뿔짐승";
+            return unit.EnemyRole == CatalogEnemyRole.Raider ||
+                unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "뿔 야수";
         }
 
         static Vector2 ExpeditionPoint(Vector2 position, Rect arena)
@@ -543,20 +551,31 @@ namespace Expedition.Presentation
             if (bossConceptSheet == null) bossConceptSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
             bool isRaider = view.Unit.EnemyRole == CatalogEnemyRole.Raider ||
                 view.Unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0;
+            bool stone = view.Unit.Id.StartsWith("stone-", StringComparison.Ordinal);
+            bool spine = view.Unit.Id.StartsWith("spine-", StringComparison.Ordinal);
+            bool elite = view.Unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0;
             Texture2D texture = bossConceptSheet;
             Rect crop;
             float width, height;
             bool flip = false;
-            if (view.Unit.IsBoss)
+            if (view.Unit.IsBoss && view.Unit.EnemyRole == CatalogEnemyRole.Beast)
+            { crop = new Rect(892, 124, 300, 353); width = 216; height = 254; }
+            else if (view.Unit.IsBoss)
             { crop = new Rect(63, 113, 333, 395); width = 214; height = 254; flip = true; }
-            else if (isRaider)
+            else if (stone)
+            { crop = new Rect(63, 113, 333, 395); width = elite ? 138 : 96; height = elite ? 164 : 114; flip = true; }
+            else if (isRaider && !spine)
             {
                 if (raiderConcept == null) raiderConcept = Resources.Load<Texture2D>("Art/outpost-raider-archer");
                 texture = raiderConcept;
                 crop = new Rect(260, 182, 722, 904); width = 103; height = 129;
             }
-            else { crop = new Rect(892, 124, 300, 353); width = 108; height = 127; }
+            else { crop = new Rect(892, 124, 300, 353); width = elite ? 138 : 96; height = elite ? 162 : 113; }
             if (texture == null) return;
+            // Temporary shared silhouettes until the regional minion sheets are produced.
+            Color before = GUI.color;
+            if (spine) GUI.color *= new Color(.7f, .88f, 1f);
+            else if (elite) GUI.color *= new Color(1f, .8f, .62f);
             // Existing concept sprites already face left, except the golem. Motion is temporary.
             float move = view.State == 1 ? Mathf.Sin(view.StateTime * 13f) * 3f : 0;
             float lunge = view.ReleaseRemaining > 0 ? Mathf.Sin(view.ReleaseAge / .18f * Mathf.PI) * 9f : 0;
@@ -568,6 +587,7 @@ namespace Expedition.Presentation
             Rect uv = new Rect(crop.x / sourceWidth, crop.y / sourceHeight, crop.width / sourceWidth, crop.height / sourceHeight);
             if (flip) { uv.x += uv.width; uv.width = -uv.width; }
             GUI.DrawTextureWithTexCoords(destination, texture, uv, true);
+            GUI.color = before;
         }
 
         void DrawArena()

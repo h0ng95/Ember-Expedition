@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Expedition.Core;
 using UnityEditor;
 using UnityEngine;
@@ -38,8 +39,8 @@ namespace Expedition.EditorTools
             run.Move("ally-01", -1.8f, .2f);
             run.Transfer(id, "ally-01", true);
             run = RoundTrip(database, run);
-            Check(run.Undo() && run.Roster.Find(id) != null && run.SummonsRemaining == 0,
-                "Saved undo lost a confirmed summon or refunded its allowance");
+            Check(run.Undo() && run.Roster.Find(id) != null && run.Gold == 20,
+                "Saved undo lost a confirmed summon or refunded its gold");
 
             int completions = 0;
             for (uint seed = 1; seed <= 8; seed++)
@@ -47,10 +48,14 @@ namespace Expedition.EditorTools
                 run = ExpeditionRun.New(database, seed);
                 while (run.Phase == ExpeditionPhase.Preparation)
                 {
-                    while (run.SummonsRemaining > 0)
+                    while (run.CanSummon)
                     {
                         id = run.Summon();
-                        if (run.DeployedIds.Count < 5) run.SetDeployed(id, true);
+                        if (run.DeployedIds.Count < 5)
+                        {
+                            run.SetDeployed(id, true);
+                            run.Move(id, -2.9f, run.DeployedIds.Count == 4 ? 1.8f : -1.8f);
+                        }
                         else
                         {
                             string recipientId = run.Roster.Find("ally-01").FormId == "F-KN" ? "ally-02" : "ally-01";
@@ -62,6 +67,11 @@ namespace Expedition.EditorTools
                         }
                     }
                     run = RoundTrip(database, run);
+                    if (seed == 1 && (run.Wave == 5 || run.Wave == 10))
+                    {
+                        Directory.CreateDirectory("Logs");
+                        File.WriteAllText("Logs/v013-device-wave" + run.Wave + ".json", JsonUtility.ToJson(run.Capture()));
+                    }
                     CatalogBattle battle = run.BeginBattle();
                     Check(battle != null, "Preparation could not start battle");
                     battle.Step(2f);
@@ -78,8 +88,8 @@ namespace Expedition.EditorTools
                 }
                 run = RoundTrip(database, run);
                 if (run.Phase == ExpeditionPhase.Completed) completions++;
-                Debug.Log("V011 sample seed=" + seed + " phase=" + run.Phase + " wave=" + run.Wave +
-                    " victories=" + run.Victories + " supply=" + run.Roster.SupplyUsed);
+                Debug.Log("V013 sample seed=" + seed + " phase=" + run.Phase + " wave=" + run.Wave +
+                    " victories=" + run.Victories + " supply=" + run.Roster.SupplyUsed + " gold=" + run.Gold);
             }
             Check(completions > 0, "No sample party could complete the introductory expedition");
             Debug.Log("PASS: Unity expedition save and complete-run validation, " + assertions +

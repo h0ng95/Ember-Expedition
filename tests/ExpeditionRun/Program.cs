@@ -14,6 +14,8 @@ internal static class Program
         {
             catalog = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
             InitialStateAndSupply();
+            CapacityAndGoldBoundaries();
+            GoldBudgetPath();
             SummonSequenceAndRestore();
             PreparationUndo();
             GrowthAndCombination();
@@ -23,6 +25,7 @@ internal static class Program
             OpeningWavesPlayable();
             DefeatRules();
             RejectBadSaves();
+            CompareDraftFights();
             Console.WriteLine("PASS: expedition run, " + assertions + " assertions.");
             return 0;
         }
@@ -39,30 +42,124 @@ internal static class Program
     {
         var run = ExpeditionRun.New(catalog, 14);
         Check(run.Phase == ExpeditionPhase.Preparation && run.Wave == 1 && run.Lantern == 3 &&
-            run.SummonsRemaining == 1 && run.Roster.SupplyUsed == 3 && run.DeployedIds.Count == 3,
-            "First preparation has starter team, a summon, and three lanterns.");
+            run.Gold == 40 && ExpeditionRun.SummonCost == 20 && run.SummonsRemaining == 2 &&
+            run.Roster.SupplyUsed == 3 && run.DeployedIds.Count == 3,
+            "First preparation has starter team, forty gold, and three lanterns.");
         Check(run.Roster.Find("ally-01").FormId == "B-KN" &&
             run.Roster.Find("ally-02").FormId == "B-AR" &&
             run.Roster.Find("ally-03").FormId == "B-PR", "Starter roles are fixed.");
-        int summoned = 0;
-        for (int wave = 1; wave <= 6; wave++)
+        Check(run.IsBossWave == false, "First battle is ordinary.");
+        for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
-            int allowance = wave == 1 ? 1 : 2;
-            Check(run.SummonsRemaining == allowance, "Wave has the planned compressed supply.");
+            Check(run.Wave == wave && run.IsBossWave == (wave == 5 || wave == 10),
+                "Only waves five and ten are bosses.");
             Check(!string.IsNullOrEmpty(run.EncounterName) && !run.EncounterName.Contains("FOREST"),
                 "Encounter name is ready for Korean UI.");
-            for (int i = 0; i < allowance; i++)
-            {
-                string id = run.Summon();
-                Check(id != null && run.Roster.Find(id).FormId.StartsWith("B-"), "Summon always yields a base unit.");
-                summoned++;
-            }
-            Check(run.Summon() == null, "One preparation cannot spend a summon twice.");
             Check(run.BeginBattle() != null && run.ResolveBattle(true) && run.Continue(), "Wave advances once.");
         }
-        Check(summoned == 11 && run.Roster.SupplyUsed == 14 && run.Phase == ExpeditionPhase.Completed &&
-            run.Victories == 6, "Six-wave supply is 14 and final win completes run.");
+        Check(run.Gold == 290 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
+            run.Victories == 10 && run.LastReward == 0,
+            "Ten-wave unspent economy earns 250 gold and final clear grants zero.");
         Check(run.Summon() == null && run.BeginBattle() == null && !run.Continue(), "Completed run is closed.");
+    }
+
+    static void FundSaveForWaveTen(ExpeditionRunSave save)
+    {
+        save.Wave = 10;
+        save.Victories = 9;
+        save.RewardedWave = 9;
+        save.Gold = 290 - 20 * (save.Roster.SupplyUsed - 3);
+        save.LastReward = 35;
+    }
+
+    static void CapacityAndGoldBoundaries()
+    {
+        var run = ExpeditionRun.New(catalog, 33);
+        string first = run.Summon(), second = run.Summon();
+        Check(first != null && second != null && run.Gold == 0 && !run.CanSummon,
+            "Two opening purchases spend exactly forty gold.");
+        var before = run.Capture();
+        Check(run.Summon() == null && run.Gold == 0 && run.Capture().RandomState == before.RandomState,
+            "No-gold summon leaves money and RNG unchanged.");
+
+        var save = ExpeditionRun.New(catalog, 44).Capture();
+        var roster = CatalogRoster.Restore(catalog, save.Roster);
+        for (int i = 4; i <= 10; i++) roster.Recruit("ally-" + i.ToString("00"), "B-PR", -2f, 0f);
+        save.Roster = roster.Capture(); save.NextMemberNumber = 10;
+        FundSaveForWaveTen(save);
+        run = ExpeditionRun.Restore(catalog, save);
+        before = run.Capture();
+        Check(!run.CanSummon && run.Gold >= 20 && run.Summon() == null &&
+            run.Gold == before.Gold && run.Capture().RandomState == before.RandomState,
+            "Full bench rejects summon without consuming gold or RNG.");
+        Check(!run.SetDeployed("ally-01", false), "Cannot bench an active member when bench has seven.");
+        Check(run.SetDeployed("ally-04", true) && run.CanSummon && run.Summon() != null,
+            "Deploying a bench member opens exactly one summon place.");
+
+        save = ExpeditionRun.New(catalog, 45).Capture();
+        roster = CatalogRoster.Restore(catalog, save.Roster);
+        for (int i = 4; i <= 12; i++) roster.Recruit("ally-" + i.ToString("00"), "B-PR", -2f, 0f);
+        save.Roster = roster.Capture(); save.NextMemberNumber = 12;
+        save.DeployedIds = new[] { "ally-01", "ally-02", "ally-03", "ally-04", "ally-05" };
+        FundSaveForWaveTen(save);
+        run = ExpeditionRun.Restore(catalog, save);
+        Check(run.Transfer("ally-06", "ally-01", false), "Transfer frees a full bench place.");
+        int goldBefore = run.Gold;
+        string purchased = run.Summon();
+        Check(purchased != null && run.Gold == goldBefore - 20 && !run.CanUndo && !run.Undo() &&
+            run.Roster.Find("ally-06") == null && run.Roster.Find(purchased) != null,
+            "Undo rejects restored donor when later nonrefundable summon fills bench.");
+        run = ExpeditionRun.Restore(catalog, run.Capture());
+        Check(!run.CanUndo && !run.Undo(), "Capacity-blocked Undo remains blocked after restore.");
+
+        roster = new CatalogRoster(catalog);
+        for (int i = 1; i <= 17; i++)
+            Check(roster.Recruit("many-" + i, "B-PR", 0f, 0f), "Cumulative supply no longer stops at fourteen.");
+        Check(CatalogRoster.Restore(catalog, roster.Capture()).SupplyUsed == 17,
+            "Roster saves preserve supply above fourteen.");
+    }
+
+    static void GoldBudgetPath()
+    {
+        int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17 };
+        int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10 };
+        var run = ExpeditionRun.New(catalog, 555);
+        for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
+        {
+            while (run.Gold >= ExpeditionRun.SummonCost)
+            {
+                if (!run.CanSummon) FreeBenchPlace(run);
+                string id = run.Summon();
+                Check(id != null, "Budgeted summon succeeds after opening bench space.");
+                if (wave == 1) Check(run.SetDeployed(id, true), "Opening two summons join the active five.");
+            }
+            Check(run.Roster.SupplyUsed == supplied[wave - 1] && run.Gold == remaining[wave - 1],
+                "Gold budget and cumulative supply match the ten-wave plan at wave " + wave + ".");
+            var restored = ExpeditionRun.Restore(catalog, run.Capture());
+            Check(restored.Gold == run.Gold && restored.Roster.SupplyUsed == run.Roster.SupplyUsed,
+                "Saved economy retains gold and cumulative summons.");
+            run.BeginBattle(); run.ResolveBattle(true); run.Continue();
+        }
+        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 17 && run.Gold == 10,
+            "Fourteen paid summons and three starters survive the full budget path.");
+    }
+
+    static void FreeBenchPlace(ExpeditionRun run)
+    {
+        foreach (string activeId in run.DeployedIds.ToArray())
+        {
+            CatalogMember receiver = run.Roster.Find(activeId);
+            if (receiver.FormId.StartsWith("B-") && receiver.Growth == 2)
+            {
+                string branchPrefix = "E-" + CatalogRoster.FamilyCode(receiver.FormId) + "-";
+                string branch = catalog.All.First(form => form.Id.StartsWith(branchPrefix)).Id;
+                Check(run.Evolve(activeId, branch), "Growth-ready unit can branch for more donors.");
+            }
+            CatalogMember candidate = run.Roster.Members.FirstOrDefault(member => !run.DeployedIds.Contains(member.Id));
+            string donor = candidate == null ? null : candidate.Id;
+            if (donor != null && run.Transfer(donor, activeId, false)) return;
+        }
+        throw new Exception("No valid growth recipient available to open bench space.");
     }
 
     static void SummonSequenceAndRestore()
@@ -73,10 +170,9 @@ internal static class Program
             var b = ExpeditionRun.Restore(catalog, a.Capture());
             string previous = null;
             int streak = 0;
-            for (int wave = 1; wave <= 6; wave++)
+            for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
             {
-                int count = wave == 1 ? 1 : 2;
-                for (int i = 0; i < count; i++)
+                while (a.CanSummon)
                 {
                     string idA = a.Summon(), idB = b.Summon();
                     string familyA = CatalogRoster.FamilyCode(a.Roster.Find(idA).FormId);
@@ -87,7 +183,7 @@ internal static class Program
                     previous = familyA;
                     b = ExpeditionRun.Restore(catalog, b.Capture());
                 }
-                if (wave < 6)
+                if (wave < ExpeditionRun.TotalWaves)
                 {
                     a.BeginBattle(); b.BeginBattle(); a.ResolveBattle(true); b.ResolveBattle(true);
                     a.Continue(); b.Continue();
@@ -103,8 +199,8 @@ internal static class Program
         string summoned = run.Summon();
         Check(run.Transfer("ally-02", "ally-01", true) && run.Undo(), "Transfer can be undone.");
         Check(run.Roster.Find("ally-02") != null && run.Roster.Find(summoned) != null &&
-            run.Roster.SupplyUsed == 4 && run.SummonsRemaining == 0,
-            "Undo restores donor but retains later summon and spent allowance.");
+            run.Roster.SupplyUsed == 4 && run.Gold == 20,
+            "Undo restores donor but retains later summon and spent gold.");
         Check(run.Undo() && run.Roster.Find(summoned) != null &&
             run.Roster.Find("ally-01").X == -1.3f,
             "Older undo retains summon while restoring position.");
@@ -113,8 +209,8 @@ internal static class Program
             run.DeployedIds.Count == 3, "Deployment changes can be undone.");
         Check(run.SwapDeployment("ally-01", summoned) && run.DeployedIds.Contains(summoned) &&
             run.Undo() && run.DeployedIds.Contains("ally-01"), "Active/bench swap can be undone.");
-        Check(run.BeginBattle() != null && !run.Undo() && run.SummonsRemaining == 0,
-            "Battle commits preparation history and unspent summon allowance.");
+        Check(run.BeginBattle() != null && !run.Undo() && run.Gold == 20,
+            "Battle commits preparation history and carries unspent gold.");
     }
 
     static void GrowthAndCombination()
@@ -128,6 +224,7 @@ internal static class Program
         for (int i = 0; i < forms.Length; i++) roster.Recruit("ally-" + (i + 4).ToString("00"), forms[i], -2f, 0f);
         save.Roster = roster.Capture();
         save.NextMemberNumber = 9;
+        FundSaveForWaveTen(save);
         run = ExpeditionRun.Restore(catalog, save);
         Check(run.Transfer("ally-04", "ally-01", true) && run.Transfer("ally-05", "ally-01", false) &&
             run.Evolve("ally-01", "E-KN-C"), "Two donors grow and branch a knight.");
@@ -143,6 +240,7 @@ internal static class Program
         fr.Recruit("ally-04", "B-FI", -2f, 0f);
         for (int i = 5; i <= 8; i++) fr.Recruit("ally-" + i.ToString("00"), "B-IC", -2f, 0f);
         fs.Roster = fr.Capture(); fs.NextMemberNumber = 8;
+        FundSaveForWaveTen(fs);
         fusion = ExpeditionRun.Restore(catalog, fs);
         Check(fusion.Transfer("ally-05", "ally-01", false) && fusion.Transfer("ally-06", "ally-01", false) &&
             fusion.Evolve("ally-01", "E-KN-C") && fusion.Transfer("ally-07", "ally-04", false) &&
@@ -170,14 +268,14 @@ internal static class Program
             replayed.Get("ally-01").Hp == hp,
             "Continuing from the hub restarts even a cached battle at full health.");
         Check(resumedRun.ResolveBattle(true) && !resumedRun.ResolveBattle(true) && resumedRun.Continue() &&
-            resumedRun.Wave == 2 && resumedRun.SummonsRemaining == 2,
-            "Result is idempotent and next preparation receives allowance.");
+            resumedRun.Wave == 2 && resumedRun.Gold == 60 && resumedRun.LastReward == 20,
+            "Result is idempotent and reward is credited once.");
     }
 
     static void EnemyWavesAndRoles()
     {
         var run = ExpeditionRun.New(catalog, 31);
-        int[] expected = { 2, 3, 3, 4, 5, 3 };
+        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
             Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
@@ -275,12 +373,21 @@ internal static class Program
                 "Normal defeat costs one lantern.");
             run.Continue();
         }
-        Check(run.Phase == ExpeditionPhase.Defeated && run.Wave == 3, "Zero lantern ends run.");
+        Check(run.Phase == ExpeditionPhase.Defeated && run.Wave == 1 && run.Gold == 40,
+            "Three failures on same wave end run without reward.");
         run = ExpeditionRun.New(catalog, 19);
-        for (int i = 1; i < 6; i++) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
+        for (int i = 1; i < 5; i++) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
         run.BeginBattle(); run.ResolveBattle(false); run.Continue();
-        Check(run.Phase == ExpeditionPhase.Defeated && run.Lantern == 3 && run.Victories == 5,
-            "Final boss defeat ends run regardless of lanterns.");
+        Check(run.Phase == ExpeditionPhase.Preparation && run.Wave == 5 && run.Lantern == 2 &&
+            run.Victories == 4 && run.Gold == 130,
+            "First boss loss costs one lantern and retries wave five without reward.");
+        run.BeginBattle(); run.ResolveBattle(true); run.Continue();
+        Check(run.Wave == 6 && run.Gold == 180 && run.Victories == 5,
+            "Boss reward is credited once on retry victory.");
+        for (int i = 6; i < 10; i++) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
+        run.BeginBattle(); run.ResolveBattle(false); run.Continue();
+        Check(run.Phase == ExpeditionPhase.Preparation && run.Wave == 10 && run.Lantern == 1 &&
+            run.Gold == 290, "Final boss loss also retries same wave without reward.");
     }
 
     static void RejectBadSaves()
@@ -290,11 +397,21 @@ internal static class Program
         bool rejected = false;
         try { ExpeditionRun.Restore(catalog, save); } catch (ArgumentException) { rejected = true; }
         Check(rejected, "Unknown save version is rejected.");
+        save.Version = 1;
+        rejected = false;
+        try { ExpeditionRun.Restore(catalog, save); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Version-one six-wave save requires explicit new-run transition.");
         save = ExpeditionRun.New(catalog, 1).Capture();
         save.DeployedIds[0] = "absent";
         rejected = false;
         try { ExpeditionRun.Restore(catalog, save); } catch (ArgumentException) { rejected = true; }
         Check(rejected, "Corrupt deployment is rejected.");
+
+        save = ExpeditionRun.New(catalog, 1).Capture();
+        save.Gold++;
+        rejected = false;
+        try { ExpeditionRun.Restore(catalog, save); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Gold inconsistent with rewards and purchases is rejected.");
 
         save = ExpeditionRun.New(catalog, 1).Capture();
         save.LastSummonedFamily = "";
@@ -314,5 +431,42 @@ internal static class Program
         rejected = false;
         try { ExpeditionRun.Restore(catalog, save); } catch (ArgumentException) { rejected = true; }
         Check(rejected, "Base form cannot carry an unrelated branch in the save.");
+    }
+
+    static void CompareDraftFights()
+    {
+        foreach (int wave in new[] { 5, 10 })
+            foreach (bool grown in new[] { false, true })
+            {
+                var save = ExpeditionRun.New(catalog, 80).Capture();
+                save.Wave = wave;
+                save.RewardedWave = save.Victories = wave - 1;
+                save.LastReward = wave == 5 ? 30 : 35;
+                save.Gold = wave == 5 ? 130 : 290;
+                if (grown)
+                {
+                    var roster = CatalogRoster.Restore(catalog, save.Roster);
+                    string[] forms = { "B-FI", "B-IC", "B-BA", "B-PR", "B-FI", "B-IC" };
+                    for (int i = 0; i < forms.Length; i++)
+                        roster.Recruit("ally-" + (i + 4).ToString("00"), forms[i], -2.9f, i % 2 == 0 ? 1.8f : -1.8f);
+                    save.Roster = roster.Capture();
+                    save.NextMemberNumber = 9;
+                    save.Gold -= 120;
+                    save.DeployedIds = new[] { "ally-01", "ally-02", "ally-03", "ally-08", "ally-09" };
+                }
+                var run = ExpeditionRun.Restore(catalog, save);
+                if (grown)
+                    Check(run.Transfer("ally-04", "ally-01", false) &&
+                        run.Transfer("ally-05", "ally-01", false) && run.Evolve("ally-01", "E-KN-C") &&
+                        run.Transfer("ally-06", "ally-02", false) &&
+                        run.Transfer("ally-07", "ally-02", false) && run.Evolve("ally-02", "E-AR-P"),
+                        "Draft grown formation includes two legal branch evolutions.");
+                CatalogBattle battle = run.BeginBattle();
+                for (int second = 0; second < 75 && !battle.Ended; second++) battle.Step(1f);
+                int survivors = battle.Units.Count(unit => unit.Team == CatalogTeam.Ally && unit.IsAlive);
+                Console.WriteLine("Draft wave " + wave + " " + (grown ? "grown five" : "basic three") +
+                    ": " + (battle.Winner == CatalogTeam.Ally ? "win" : "no win") +
+                    " at " + battle.Time.ToString("0.0") + "s, survivors " + survivors + ".");
+            }
     }
 }

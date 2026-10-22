@@ -52,8 +52,8 @@ internal static class Program
         Check(roster.Recruit("kn", "B-KN", -2, 1) && roster.Recruit("fi", "B-FI", -1, 1), "Recruit two owners.");
         for (int i = 0; i < 12; i++)
             Check(roster.Recruit("d" + i, i % 2 == 0 ? "B-PR" : "B-AR", i, 0), "Supply accepts fourteen originals.");
-        Check(!roster.Recruit("overflow", "B-KN", 0, 0) && roster.SupplyUsed == 14,
-            "Fifteenth original cannot enter fourteen-unit supply.");
+        Check(roster.Recruit("overflow", "B-KN", 0, 0) && roster.SupplyUsed == 15,
+            "Gold-funded roster can retain a fifteenth cumulative recruit.");
         Check(roster.Transfer("d0", "kn", true) && roster.Transfer("d1", "kn", false) &&
             roster.Find("kn").Growth == 2 && roster.Find("kn").InheritedTraitId == "T-PR",
             "Two native-trait donors reach first evolution and preserve chosen inherited trait.");
@@ -99,10 +99,12 @@ internal static class Program
             CatalogRoster.FitsSupply(0, 4, 0, 1) &&
             CatalogRoster.FitsSupply(0, 0, 2, 2),
             "The documented 13/12/13/14-original expedition compositions fit supply and slots.");
-        Check(!CatalogRoster.FitsSupply(0, 0, 2, 3) &&
-            !CatalogRoster.FitsSupply(1, 0, 1, 3) &&
+        Check(!CatalogRoster.FitsSupply(0, 0, 2, 3, 14) &&
+            !CatalogRoster.FitsSupply(1, 0, 1, 3, 14) &&
             !CatalogRoster.FitsSupply(0, 0, 2, 4, 20, 5),
             "Fifteen/sixteen originals or six active slots are rejected.");
+        Check(CatalogRoster.FitsSupply(0, 0, 2, 3),
+            "Default supply estimate no longer caps a gold-funded expedition at fourteen.");
         string[][] recipes =
         {
             new[] { "H-01", "KN", "FI" }, new[] { "H-02", "KN", "PR" },

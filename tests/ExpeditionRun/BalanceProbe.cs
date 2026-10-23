@@ -82,7 +82,7 @@ internal static class ExpeditionBalanceProbe
             foreach (string policy in Policies)
             {
                 int[] wins = new int[10], reach = new int[10], timeout = new int[10];
-                double[] times = new double[10], survivors = new double[10];
+                double[] times = new double[10], survivors = new double[10], health = new double[10];
                 for (int seed = first; seed < first + count; seed++)
                 {
                     var run = ExpeditionRun.New(db, (uint)seed);
@@ -99,6 +99,8 @@ internal static class ExpeditionBalanceProbe
                         if (!battle.Ended) timeout[wave]++;
                         times[wave] += battle.Time;
                         survivors[wave] += battle.Units.Count(x => x.Team == CatalogTeam.Ally && x.IsAlive);
+                        var allies = battle.Units.Where(x => x.Team == CatalogTeam.Ally).ToArray();
+                        health[wave] += allies.Sum(x => x.Hp) / allies.Sum(x => x.MaxHp);
                         // Counterfactual continuation for isolated later-wave comparisons.
                         run.ResolveBattle(true); run.Continue();
                     }
@@ -109,7 +111,8 @@ internal static class ExpeditionBalanceProbe
                     json.Append("{\"policy\":\"").Append(policy).Append("\",\"wave\":").Append(wave + 1)
                         .Append(",\"wins\":").Append(wins[wave]).Append(",\"reachWins\":").Append(reach[wave])
                         .Append(",\"timeouts\":").Append(timeout[wave]).Append(",\"meanSeconds\":").Append(Number(times[wave] / count))
-                        .Append(",\"meanSurvivors\":").Append(Number(survivors[wave] / count)).Append('}');
+                        .Append(",\"meanSurvivors\":").Append(Number(survivors[wave] / count))
+                        .Append(",\"meanHealthFraction\":").Append(Number(health[wave] / count)).Append('}');
                     Console.WriteLine(policy + " wave=" + (wave + 1) + " wins=" + wins[wave] + "/" + count +
                         " reach=" + reach[wave] + " sec=" + Number(times[wave] / count));
                 }

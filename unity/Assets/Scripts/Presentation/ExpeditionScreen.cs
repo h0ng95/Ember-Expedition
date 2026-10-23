@@ -24,16 +24,13 @@ namespace Expedition.Presentation
             new[] { "E-IC-F", "E-IC-S" }, new[] { "E-BA-G", "E-BA-A" }
         };
         static readonly string[] Families = { "KN", "AR", "FI", "PR", "IC", "BA" };
-        static readonly string[][] HybridFamilies = {
-            new[] { "FI", "KN" }, new[] { "KN", "PR" }, new[] { "AR", "IC" },
-            new[] { "FI", "IC" }, new[] { "BA", "PR" }, new[] { "AR", "BA" }
-        };
+        const float GrowthHoverSeconds = .45f;
         static readonly string[] TraitIds = { "T-KN", "T-AR", "T-FI", "T-PR", "T-IC", "T-BA",
             "T-H01", "T-H02", "T-H03", "T-H04", "T-H05", "T-H06" };
         static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
             "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
 
-        enum Modal { None, Detail, ChooseDonor, ChoosePartner, Confirm, NewRun }
+        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -47,10 +44,12 @@ namespace Expedition.Presentation
         readonly List<CatalogMember> bench = new List<CatalogMember>();
         readonly List<CatalogMember> fieldMembers = new List<CatalogMember>(5);
         bool home = true, savePresent, badSave, inheritTrait, pointerDragging, legacySave, showHelp;
+        bool pointerTouch, hoverArmed, evolutionFromDrag, combinationFromList;
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId;
-        float toastUntil, pointerStartTime;
+        string hoverRecipientId, growthPulseId;
+        float toastUntil, hoverStartTime = -1f, growthPulseUntil;
         Vector2 pointerStart, pointerCurrent, pointerGrabOffset;
-        int benchPage, choosePage;
+        int benchPage, choosePage, combinationPage, pointerFingerId;
         Modal modal;
         GrowthAction pendingAction;
 
@@ -78,9 +77,10 @@ namespace Expedition.Presentation
         }
 
         void OnEnable() { if (art == null) art = new CatalogArtView(); }
-        void OnDisable() { if (art != null) { art.Dispose(); art = null; } }
+        void OnDisable() { CancelPointer(); if (art != null) { art.Dispose(); art = null; } }
         void OnDestroy() { if (font != null) Destroy(font); }
-        void OnApplicationPause(bool paused) { if (paused) Save(); }
+        void OnApplicationPause(bool paused) { if (paused) { CancelPointer(); Save(); } }
+        void OnApplicationFocus(bool focused) { if (!focused) CancelPointer(); }
 
         void LoadSave()
         {
@@ -241,15 +241,16 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(46, 100, 630, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
-            GUI.Label(new Rect(735, 193, 490, 65), run.IsBossWave ?
-                (run.Wave == 5 ? "직선 돌진 · 체력 절반부터 간격 단축\n전열과 후열을 같은 선에 겹치지 마세요." :
-                "범위 내려찍기 · 체력 40%부터 후속파\n탱커 주변에 동료를 밀집시키지 마세요.") :
-                "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.", body);
+            GUI.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
             if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
                 showHelp = !showHelp;
-            GUI.Label(new Rect(735, 328, 480, 145), showHelp ?
-                "끌어서 배치 · 눌러서 전승 / 진화 / 결합\n출전 최대 5명 · 대기 최대 7명\n전투 시작 시 체력 회복\n패배 시 등불 1개를 쓰고 같은 전투 재도전" :
-                "남은 골드는 다음 전투에도 유지됩니다.\n5·10전투에서 보스를 만납니다.", body);
+            GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
+                "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
+                "동료를 겹쳐 놓으면 성장 +1\n결합은 가능한 조합 목록에서 선택\n남은 골드는 다음 전투에도 유지됩니다.", body);
+            List<CatalogCombinationOption> combinations = run.GetCombinationOptions();
+            if (combinations.Count > 0 && GUI.Button(new Rect(735, 468, 315, 52),
+                combinations.Count == 1 ? database.Get(combinations[0].ResultId).Name + " 결합 가능" :
+                "결합 가능 " + combinations.Count + "쌍 보기", primary)) OpenCombinationOptions();
             fieldMembers.Clear();
             foreach (string id in run.DeployedIds)
             {
@@ -263,8 +264,10 @@ namespace Expedition.Presentation
                 DrawUnit(member, new Rect(foot.x - 48, foot.y - 113, 96, 110),
                     new Rect(foot.x - 64, foot.y, 128, 31));
             }
+            DrawDock();
             if (pointerDragging && pointerId != null)
             {
+                DrawGrowthPreview();
                 CatalogMember carried = run.Roster.Find(pointerId);
                 if (carried != null && art != null)
                 {
@@ -274,7 +277,20 @@ namespace Expedition.Presentation
                         (int)(Time.unscaledTime * 5f) % 4);
                 }
             }
-            DrawDock();
+        }
+
+        string PreparationAdvice()
+        {
+            switch (run.Wave)
+            {
+                case 1: return "기사를 앞에, 궁수와 사제를 뒤에 두세요.\n소환한 동료는 대기석에 합류합니다.";
+                case 2: return "가시등 짐승은 약해진 동료를 노립니다.\n전열 뒤에 궁수와 사제를 배치하세요.";
+                case 3: return "측면의 가시등이 후열을 노립니다.\n동료를 늘리거나 성장 2로 첫 진화를 하세요.";
+                case 4: return "정예 뿔짐승이 전열로 돌진합니다.\n기사가 버티는 동안 후열에서 공격하세요.";
+                case 5: return "직선 돌진 · 체력 절반부터 간격 단축\n전열과 후열을 같은 선에 겹치지 마세요.";
+                case 10: return "범위 내려찍기 · 체력 40%부터 후속파\n탱커 주변에 동료를 밀집시키지 마세요.";
+                default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
+            }
         }
 
         void DrawDock()
@@ -321,10 +337,18 @@ namespace Expedition.Presentation
 
         void DrawUnit(CatalogMember member, Rect sprite, Rect name)
         {
+            if (Time.unscaledTime < growthPulseUntil && member.Id == growthPulseId)
+                Fill(new Rect(sprite.x - 5, sprite.y - 5, sprite.width + 10, sprite.height + 10),
+                    new Color(.95f, .74f, .30f, .36f));
             Fill(new Rect(sprite.center.x - 28, sprite.yMax - 10, 56, 7), new Color(.02f, .06f, .04f, .7f));
             if (art != null) art.Draw(member.FormId, sprite, (int)(Time.unscaledTime * 5f) % 4);
             string label = database.Get(member.FormId).Name;
             GUI.Label(name, label, centered);
+            if (member.MaterialLocked)
+            {
+                Fill(new Rect(sprite.x, sprite.y + 2, 54, 24), new Color(.09f, .18f, .15f, .9f));
+                GUI.Label(new Rect(sprite.x, sprite.y, 54, 25), "보호", small);
+            }
         }
 
         void DrawBattleResume()
@@ -374,6 +398,7 @@ namespace Expedition.Presentation
             Fill(new Rect(0, 0, Width, Height), new Color(0f, .015f, .01f, .82f));
             if (modal == Modal.Detail) DrawDetail();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
+            else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
         }
 
@@ -412,7 +437,12 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(527, 492, 225, 62), "결합", button))
             { choosePage = 0; modal = Modal.ChoosePartner; }
             GUI.enabled = true;
-            GUI.Label(new Rect(277, 568, 725, 49), "전승과 결합에 쓰인 동료는 떠납니다. 실행 전 결과를 확인합니다.", small);
+            if (GUI.Button(new Rect(277, 492, 225, 62), member.MaterialLocked ? "재료 보호 해제" : "재료 보호", button))
+            {
+                if (run.SetMaterialLocked(member.Id, !member.MaterialLocked)) Save();
+                else Notice("재료 보호 상태를 바꾸지 못했습니다.");
+            }
+            GUI.Label(new Rect(277, 568, 725, 49), "끌어놓기로 성장합니다. 재료 보호 중인 동료는 전승·결합에 쓰이지 않습니다.", small);
         }
 
         void DrawChooseMember()
@@ -432,8 +462,10 @@ namespace Expedition.Presentation
             foreach (CatalogMember other in run.Roster.Members)
             {
                 if (other.Id == selectedId) continue;
-                string result = transfer ? null : HybridResult(selected.FormId, other.FormId);
+                string result = transfer ? null : run.Roster.HybridResult(selected.FormId, other.FormId);
                 if (!transfer && result == null) continue;
+                if (other.MaterialLocked || transfer && !run.Roster.CanTransfer(other.Id, selected.Id, inheritTrait) ||
+                    !transfer && !run.CanCombine(selected.Id, other.Id, result)) continue;
                 candidates.Add(other);
             }
             int pages = Mathf.Max(1, (candidates.Count + 11) / 12);
@@ -442,7 +474,7 @@ namespace Expedition.Presentation
             for (int index = choosePage * 12; index < candidates.Count && shown < 12; index++)
             {
                 CatalogMember other = candidates[index];
-                string result = transfer ? null : HybridResult(selected.FormId, other.FormId);
+                string result = transfer ? null : run.Roster.HybridResult(selected.FormId, other.FormId);
                 int col = shown % 2, row = shown / 2;
                 Rect slot = new Rect(250 + col * 385, 211 + row * 65, 365, 58);
                 string label = (IsDeployed(other.Id) ? "출전 · " : "대기 · ") + database.Get(other.FormId).Name;
@@ -453,6 +485,7 @@ namespace Expedition.Presentation
                     pendingAction = transfer ? GrowthAction.Transfer : GrowthAction.Combine;
                     pendingOtherId = other.Id;
                     pendingFormId = result;
+                    combinationFromList = false;
                     modal = Modal.Confirm;
                 }
                 shown++;
@@ -467,8 +500,68 @@ namespace Expedition.Presentation
             }
         }
 
-        void PrepareEvolution(CatalogMember member)
+        void OpenCombinationOptions()
         {
+            if (run == null || run.Phase != ExpeditionPhase.Preparation) return;
+            List<CatalogCombinationOption> options = run.GetCombinationOptions();
+            if (options.Count == 0) { Notice("지금 가능한 결합이 없습니다."); return; }
+            combinationPage = 0;
+            modal = Modal.CombinationOptions;
+        }
+
+        void ChooseCombinationOption(int index)
+        {
+            List<CatalogCombinationOption> options = run.GetCombinationOptions();
+            if (index < 0 || index >= options.Count)
+            { Notice("결합할 동료가 바뀌었습니다. 다시 선택해 주세요."); return; }
+            CatalogCombinationOption option = options[index];
+            if (!run.CanCombine(option.RecipientId, option.DonorId, option.ResultId))
+            { Notice("지금 가능한 결합이 아닙니다."); return; }
+            selectedId = option.RecipientId;
+            pendingOtherId = option.DonorId;
+            pendingFormId = option.ResultId;
+            pendingAction = GrowthAction.Combine;
+            combinationFromList = true;
+            modal = Modal.Confirm;
+        }
+
+        void DrawCombinationOptions()
+        {
+            List<CatalogCombinationOption> options = run.GetCombinationOptions();
+            Fill(new Rect(215, 75, 850, 585), Panel);
+            GUI.Label(new Rect(245, 92, 720, 52), "가능한 결합  " + options.Count + "쌍", heading);
+            if (GUI.Button(new Rect(980, 92, 59, 50), "×", button)) { modal = Modal.None; return; }
+            GUI.Label(new Rect(250, 146, 760, 46), "결합은 선택 사항입니다. 결과와 재료를 확인한 뒤 진행하세요.", small);
+            int pages = Mathf.Max(1, (options.Count + 4) / 5);
+            combinationPage = Mathf.Clamp(combinationPage, 0, pages - 1);
+            for (int row = 0; row < 5; row++)
+            {
+                int index = combinationPage * 5 + row;
+                if (index >= options.Count) break;
+                CatalogCombinationOption option = options[index];
+                CatalogMember recipient = run.Roster.Find(option.RecipientId);
+                CatalogMember donor = run.Roster.Find(option.DonorId);
+                if (recipient == null || donor == null) continue;
+                string label = database.Get(option.ResultId).Name + " 결합\n" +
+                    "남는 동료 " + MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
+                    "  +  재료 " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
+                    " · 전승 " + TraitName(donor.InheritedTraitId);
+                if (GUI.Button(new Rect(250, 195 + row * 78, 750, 70), label, button)) ChooseCombinationOption(index);
+            }
+            if (options.Count == 0) GUI.Label(new Rect(250, 240, 740, 80), "가능한 결합이 없습니다.", body);
+            if (pages > 1)
+            {
+                if (GUI.Button(new Rect(250, 605, 112, 40), "이전", button)) combinationPage--;
+                GUI.Label(new Rect(375, 610, 170, 30), (combinationPage + 1) + " / " + pages, small);
+                if (GUI.Button(new Rect(545, 605, 112, 40), "다음", button)) combinationPage++;
+            }
+            if (GUI.Button(new Rect(806, 605, 193, 40), "나중에", button)) modal = Modal.None;
+        }
+
+        void PrepareEvolution(CatalogMember member, bool fromDrag = false)
+        {
+            evolutionFromDrag = fromDrag;
+            selectedId = member.Id;
             if (member.FormId.StartsWith("E-", StringComparison.Ordinal))
             {
                 pendingFormId = "F-" + CatalogRoster.FamilyCode(member.FormId);
@@ -485,6 +578,8 @@ namespace Expedition.Presentation
 
         void DrawConfirmation()
         {
+            if (modal == Modal.Confirm && pendingAction == GrowthAction.Combine)
+            { DrawCombinationConfirmation(); return; }
             Fill(new Rect(335, 155, 610, 385), Panel);
             if (modal == Modal.NewRun)
             {
@@ -524,7 +619,62 @@ namespace Expedition.Presentation
                     GUI.Label(new Rect(375, 422, 500, 29), "선택: " + database.Get(pendingFormId).Name, small);
                 }
             }
-            ConfirmationButtons("실행", ExecuteGrowth, () => modal = Modal.Detail);
+            ConfirmationButtons("실행", ExecuteGrowth,
+                () => modal = pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail);
+        }
+
+        void DrawCombinationConfirmation()
+        {
+            CatalogMember recipient = run.Roster.Find(selectedId);
+            CatalogMember donor = run.Roster.Find(pendingOtherId);
+            if (recipient == null || donor == null || !run.CanCombine(selectedId, pendingOtherId, pendingFormId))
+            {
+                modal = combinationFromList ? Modal.CombinationOptions : Modal.Detail;
+                Notice("결합할 동료가 바뀌었습니다. 다시 선택해 주세요.");
+                return;
+            }
+            CatalogForm result = database.Get(pendingFormId);
+            Fill(new Rect(245, 72, 790, 576), Panel);
+            GUI.Label(new Rect(277, 91, 720, 45), "결합 결과 확인", heading);
+            GUI.Label(new Rect(277, 140, 710, 40),
+                MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
+                " + " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
+                "  →  " + result.Name, body);
+            if (art != null) art.Draw(pendingFormId, new Rect(282, 191, 170, 184),
+                (int)(Time.unscaledTime * 5f) % 4);
+            GUI.Label(new Rect(468, 192, 510, 43), result.Name, heading);
+            GUI.Label(new Rect(468, 238, 520, 56),
+                "체력 " + result.Hp.ToString("0") + "   공격 " + result.Power.ToString("0") +
+                "   방어 " + result.Defense.ToString("0"), body);
+            GUI.Label(new Rect(468, 293, 510, 50), "기술: " + CombinationSkill(pendingFormId), body);
+            GUI.Label(new Rect(277, 386, 710, 36),
+                "결과를 유지하는 동료: " + MemberPositionLabel(recipient.Id) + " " +
+                database.Get(recipient.FormId).Name +
+                " · 전승 특성 " + TraitName(recipient.InheritedTraitId) + " 유지", small);
+            int deployedAfter = run.DeployedIds.Count -
+                (IsDeployed(donor.Id) && IsDeployed(recipient.Id) ? 1 : 0);
+            GUI.Label(new Rect(277, 423, 710, 85),
+                "재료: " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
+                " · 전승 특성 " + TraitName(donor.InheritedTraitId) + "\n이 동료가 소모됩니다. 출전 " +
+                run.DeployedIds.Count + "명 → " + deployedAfter + "명 · 되돌리기 가능", body);
+            if (GUI.Button(new Rect(277, 545, 337, 65), "나중에", button))
+                modal = combinationFromList ? Modal.CombinationOptions : Modal.Detail;
+            if (GUI.Button(new Rect(650, 545, 337, 65), "결합하기", primary)) ExecuteGrowth();
+        }
+
+        static string CombinationSkill(string resultId)
+        {
+            // Summaries correspond to the H-01..06 execution cases in CatalogSkills.cs.
+            switch (resultId)
+            {
+                case "H-01": return "전방 범위 공격과 화상";
+                case "H-02": return "적 공격 후 가까운 아군 둘 회복";
+                case "H-03": return "직선 공격과 둔화";
+                case "H-04": return "범위 내 적에게 화상·둔화·피해";
+                case "H-05": return "자신과 가까운 아군 회복·공격력 강화";
+                case "H-06": return "적 표식과 가까운 아군의 추가 기본 공격";
+                default: return "고유 특성 " + resultId;
+            }
         }
 
         void ConfirmationButtons(string confirm, Action yes, Action no)
@@ -542,7 +692,15 @@ namespace Expedition.Presentation
             if (!applied) { Notice("현재 조건에서는 실행할 수 없습니다."); modal = Modal.Detail; return; }
             Save();
             Notice("동료의 성장이 반영되었습니다. 되돌리기로 취소할 수 있습니다.");
-            modal = Modal.Detail;
+            if (pendingAction == GrowthAction.Transfer)
+            {
+                CatalogMember grown = run.Roster.Find(selectedId);
+                if (ReadyToEvolve(grown)) { PrepareEvolution(grown); return; }
+            }
+            modal = pendingAction == GrowthAction.Combine && combinationFromList ||
+                pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail;
+            evolutionFromDrag = false;
+            combinationFromList = false;
         }
 
         void Summon()
@@ -587,17 +745,78 @@ namespace Expedition.Presentation
             return false;
         }
 
-        static string HybridResult(string firstForm, string secondForm)
+        string MemberPositionLabel(string id)
         {
-            if (string.IsNullOrEmpty(firstForm) || string.IsNullOrEmpty(secondForm) ||
-                !firstForm.StartsWith("E-", StringComparison.Ordinal) ||
-                !secondForm.StartsWith("E-", StringComparison.Ordinal)) return null;
-            string first = CatalogRoster.FamilyCode(firstForm), second = CatalogRoster.FamilyCode(secondForm);
-            for (int i = 0; i < HybridFamilies.Length; i++)
-                if ((HybridFamilies[i][0] == first && HybridFamilies[i][1] == second) ||
-                    (HybridFamilies[i][1] == first && HybridFamilies[i][0] == second))
-                    return "H-" + (i + 1).ToString("00");
-            return null;
+            for (int i = 0; i < run.DeployedIds.Count; i++)
+                if (run.DeployedIds[i] == id) return "출전 " + (i + 1);
+            int benchIndex = 0;
+            foreach (CatalogMember member in run.Roster.Members)
+            {
+                if (IsDeployed(member.Id)) continue;
+                benchIndex++;
+                if (member.Id == id) return "대기 " + benchIndex;
+            }
+            return "편성 밖";
+        }
+
+        static bool ReadyToEvolve(CatalogMember member)
+        {
+            return member != null && (member.FormId.StartsWith("B-", StringComparison.Ordinal) && member.Growth >= 2 ||
+                member.FormId.StartsWith("E-", StringComparison.Ordinal) && member.Growth >= 6);
+        }
+
+        void DrawGrowthPreview()
+        {
+            if (hoverRecipientId == null) return;
+            CatalogMember recipient = run.Roster.Find(hoverRecipientId);
+            if (recipient == null) return;
+            Rect target = MemberVisualRect(hoverRecipientId);
+            if (target.width > 0)
+            {
+                Fill(new Rect(target.x - 4, target.y - 4, target.width + 8, target.height + 8),
+                    hoverArmed ? new Color(.98f, .73f, .31f, .36f) : new Color(.93f, .86f, .49f, .22f));
+            }
+            string resultForm = recipient.FormId;
+            bool growth = run.CanTransfer(pointerId, hoverRecipientId);
+            CatalogMember donor = run.Roster.Find(pointerId);
+            bool quickSwap = !IsDeployed(pointerId) && IsDeployed(hoverRecipientId) && run.DeployedIds.Count >= 5;
+            string action = growth ? "성장 +1" :
+                quickSwap ? "출전 교체" : donor != null && donor.MaterialLocked ? "보호된 재료" : "성장 불가";
+            Fill(new Rect(735, 323, 493, 165), new Color(.035f, .11f, .085f, .96f));
+            if (art != null) art.Draw(resultForm, new Rect(746, 334, 106, 112), 0);
+            GUI.Label(new Rect(864, 337, 350, 37), action + "  →  " + database.Get(resultForm).Name, body);
+            if (growth)
+            {
+                string detail = "진화 진행  " + recipient.Growth + " → " +
+                    (recipient.Growth + 1) + " · 재료 동료 소모";
+                GUI.Label(new Rect(864, 377, 342, 50), quickSwap && !hoverArmed ?
+                    "빠르게 놓기: 출전 교체\n잠시 겹치기: " + action : detail, small);
+                float progress = hoverArmed ? 1f : Mathf.Clamp01((Time.unscaledTime - hoverStartTime) / GrowthHoverSeconds);
+                Fill(new Rect(864, 444, 336, 12), PanelLight);
+                Fill(new Rect(864, 444, 336 * progress, 12), Gold);
+                GUI.Label(new Rect(864, 462, 340, 24), hoverArmed ? "놓으면 " + action + " 실행" : "겹친 채 잠시 유지", small);
+            }
+            else GUI.Label(new Rect(864, 409, 340, 45), quickSwap ? "빠르게 놓으면 출전 교체" :
+                "이 대상에게 성장시킬 수 없습니다", small);
+        }
+
+        Rect MemberVisualRect(string id)
+        {
+            CatalogMember member = run.Roster.Find(id);
+            if (member == null) return new Rect();
+            if (IsDeployed(id))
+            {
+                Vector2 foot = ArenaPoint(member);
+                return new Rect(foot.x - 54, foot.y - 113, 108, 143);
+            }
+            int index = 0;
+            foreach (CatalogMember candidate in run.Roster.Members)
+            {
+                if (IsDeployed(candidate.Id)) continue;
+                if (candidate.Id == id && index / 5 == benchPage) return BenchRect(index % 5);
+                index++;
+            }
+            return new Rect();
         }
 
         static string TraitName(string id)
@@ -617,28 +836,39 @@ namespace Expedition.Presentation
         void Update()
         {
             if (home || run == null || run.Phase != ExpeditionPhase.Preparation ||
-                modal != Modal.None || viewport.width <= 0) return;
-            bool down, held, up;
+                modal != Modal.None || viewport.width <= 0) { CancelPointer(); return; }
+            bool down = false, held = false, up = false, canceled = false;
             Vector2 screen;
             if (Input.touchCount > 0)
             {
+                if (Input.touchCount > 1) { CancelPointer(); return; }
                 Touch touch = Input.GetTouch(0);
+                if (pointerId != null && (!pointerTouch || touch.fingerId != pointerFingerId))
+                { CancelPointer(); return; }
                 screen = touch.position;
-                down = touch.phase == TouchPhase.Began;
-                up = touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled;
+                down = pointerId == null && touch.phase == TouchPhase.Began;
+                canceled = touch.phase == TouchPhase.Canceled;
+                up = touch.phase == TouchPhase.Ended;
                 held = !up;
             }
             else
             {
+                if (pointerTouch) { CancelPointer(); return; }
                 screen = Input.mousePosition;
                 down = Input.GetMouseButtonDown(0);
                 held = Input.GetMouseButton(0);
                 up = Input.GetMouseButtonUp(0);
             }
+            if (canceled) { CancelPointer(); return; }
             Vector2 point = new Vector2((screen.x - viewport.x) * Width / viewport.width,
                 (Screen.height - screen.y - viewport.y) * Height / viewport.height);
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Canceled)
-            { pointerId = null; pointerDragging = false; return; }
+            ProcessPointer(point, down, held, up, Time.unscaledTime);
+            if (down && Input.touchCount > 0 && pointerId != null)
+            { pointerTouch = true; pointerFingerId = Input.GetTouch(0).fingerId; }
+        }
+
+        void ProcessPointer(Vector2 point, bool down, bool held, bool up, float now)
+        {
             if (down)
             {
                 pointerId = MemberAt(point);
@@ -647,18 +877,40 @@ namespace Expedition.Presentation
                 pointerGrabOffset = grabbed != null && IsDeployed(pointerId) ?
                     ArenaPoint(grabbed) - point : Vector2.zero;
                 pointerDragging = false;
-                pointerStartTime = Time.unscaledTime;
+                ResetHover();
             }
             if (held && pointerId != null && (point - pointerStart).sqrMagnitude > 144f)
                 pointerDragging = true;
             pointerCurrent = point + pointerGrabOffset;
+            if (pointerDragging && (held || up)) UpdateHover(point, now);
             if (!up || pointerId == null) return;
             string id = pointerId;
             bool wasDragging = pointerDragging;
-            pointerId = null;
-            pointerDragging = false;
-            if (!wasDragging && Time.unscaledTime - pointerStartTime < .7f)
+            string recipientId = hoverRecipientId;
+            bool armed = hoverArmed;
+            CancelPointer();
+            if (!wasDragging)
             { selectedId = id; modal = Modal.Detail; return; }
+            if (armed && recipientId != null)
+            {
+                bool applied = run.Transfer(id, recipientId, false);
+                if (applied)
+                {
+                    Save();
+                    growthPulseId = recipientId;
+                    growthPulseUntil = Time.unscaledTime + .6f;
+                    CatalogMember grown = run.Roster.Find(recipientId);
+                    Notice("성장 +1 · 되돌리기로 취소할 수 있습니다.");
+                    if (ReadyToEvolve(grown)) PrepareEvolution(grown, true);
+                }
+                else Notice("현재 조건에서는 성장시킬 수 없습니다.");
+                return;
+            }
+            if (recipientId != null && !IsDeployed(recipientId))
+            {
+                Notice("이 대상에게 성장시키려면 재료 보호와 성장 조건을 확인해 주세요.");
+                return;
+            }
             if (new Rect(32, 143, 687, 363).Contains(point))
             {
                 if (!IsDeployed(id))
@@ -683,14 +935,47 @@ namespace Expedition.Presentation
             }
         }
 
-        string MemberAt(Vector2 point)
+        void UpdateHover(Vector2 point, float now)
         {
-            string active = ActiveAt(point, null);
-            if (active != null) return active;
-            for (int i = 0; i < 5; i++)
+            string recipientId = MemberAt(point, pointerId);
+            CatalogMember recipient = recipientId == null ? null : run.Roster.Find(recipientId);
+            bool canGrow = recipient != null && run.CanTransfer(pointerId, recipientId);
+            if (recipientId != hoverRecipientId || canGrow && hoverStartTime < 0f)
             {
-                int index = benchPage * 5 + i;
-                if (index < bench.Count && BenchRect(i).Contains(point)) return bench[index].Id;
+                hoverRecipientId = recipientId;
+                hoverStartTime = canGrow ? now : -1f;
+                hoverArmed = false;
+            }
+            if (!canGrow) { hoverArmed = false; return; }
+            hoverArmed = now - hoverStartTime >= GrowthHoverSeconds;
+        }
+
+        void ResetHover()
+        {
+            hoverRecipientId = null;
+            hoverStartTime = -1f;
+            hoverArmed = false;
+        }
+
+        void CancelPointer()
+        {
+            pointerId = null;
+            pointerDragging = false;
+            pointerTouch = false;
+            ResetHover();
+        }
+
+        string MemberAt(Vector2 point, string except = null)
+        {
+            string active = ActiveAt(point, except);
+            if (active != null) return active;
+            int index = 0;
+            foreach (CatalogMember candidate in run.Roster.Members)
+            {
+                if (IsDeployed(candidate.Id)) continue;
+                if (candidate.Id != except && index / 5 == benchPage && BenchRect(index % 5).Contains(point))
+                    return candidate.Id;
+                index++;
             }
             return null;
         }

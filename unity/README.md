@@ -1,16 +1,16 @@
 # Ember Expedition · Unity 전투 시제품
 
-> **2026-10-23 v0.14:** 골드 소환을 사용하는 10전투 원정에 보스 패턴·분노·난도 조정을 추가했다. [현재 변경·검증 기록](../docs/design-v0.14/HANDOFF.md)을 먼저 읽는다. v0.13 원정은 이어갈 수 있다. 이전 6전투 저장은 보존되며 새 원정으로 시작한다. 아래 2026-10-18 기록과 [FIRST-SLICE.md](FIRST-SLICE.md)는 이전 시제품의 기록이다.
+> **2026-10-23 v0.17:** 3전투의 측면 원거리 적, 4전투 정예 압박, 5전투 보스 완화와 준비 안내를 적용했다. [현재 변경·검증 기록](../docs/design-v0.17/HANDOFF.md)을 먼저 읽는다. v0.16의 흡수·선택형 결합 조작과 이전 원정 저장을 유지한다. 적 그림은 임시 자산이며 [재디자인 기준](../docs/design-v0.17/enemy-art-brief.md)을 별도로 정리했다. 아래 2026-10-18 기록과 [FIRST-SLICE.md](FIRST-SLICE.md)는 이전 시제품의 기록이다.
 
-## v0.13 실행
+## v0.17 실행
 
 1. 앱 홈에서 **새 원정**을 누른다. 이전 원정이 있으면 교체 확인을 거친다.
 2. 시작 40G에서 **동료 소환 · 20G**로 대기석에 동료를 얻고 전장으로 끌어 배치한다. 출전 최대 5명, 대기 최대 7명이다.
-3. 동료를 눌러 전승·진화·결합을 선택하고 재료와 결과를 확인한다. 준비 중에는 **되돌리기**로 직전 행동을 취소할 수 있다.
+3. 재료 동료를 키울 동료 위에 끌어 약 0.45초 유지한다. 결과 미리보기에 ‘놓으면 실행’이 표시되면 놓아서 성장 +1을 얻는다. 진화 조건 달성 시 선택창이 자동으로 열린다. 특수 결합은 준비 화면의 **결합 가능** 버튼을 열어 결과를 확인하고 실행한다. 상세창에서 재료 보호와 특성 전승을 선택할 수 있다. 준비 중에는 **되돌리기**로 직전 행동을 취소할 수 있다.
 4. 승리하면 골드를 받고 다음 전투로 이동한다. 패배하면 등불 1개를 잃고 같은 전투를 재도전한다. 보스는 5/10전투에 나온다. 저장은 소환·성장·배치·전투 시작·결과 때 처리한다.
 5. **이어하기**는 준비·결과 상태를 복구하고, 중단된 전투는 동일한 시작 편성으로 다시 재생한다.
 
-`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 10전투 표본 원정을 검사한다. 일괄 빌드의 `-executeMethod Expedition.EditorTools.ExpeditionRunValidation.BuildAndroid`는 이 검사를 통과한 뒤 APK를 만든다.
+`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 10전투 표본 원정을 검사한다. `-executeMethod Expedition.EditorTools.DragGrowthValidation.BuildAndroid`는 드래그 입력 처리와 JSON 호환 검사를 통과한 뒤 APK를 만든다. 이 검사는 컴퓨터의 기존 원정 저장을 검사 종료 시 복구한다.
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 

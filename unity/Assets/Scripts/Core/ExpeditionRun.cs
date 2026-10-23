@@ -5,6 +5,13 @@ namespace Expedition.Core
 {
     public enum ExpeditionPhase { Preparation, Battle, Result, Completed, Defeated }
 
+    public sealed class CatalogCombinationOption
+    {
+        public readonly string RecipientId, DonorId, ResultId;
+        public CatalogCombinationOption(string recipientId, string donorId, string resultId)
+        { RecipientId = recipientId; DonorId = donorId; ResultId = resultId; }
+    }
+
     [Serializable]
     public sealed class ExpeditionPreparationSave
     {
@@ -45,7 +52,7 @@ namespace Expedition.Core
         static readonly string[] EncounterDescriptions =
         {
             "새끼 뿔짐승 2", "새끼 뿔짐승 2 · 가시등 짐승 1",
-            "새끼 뿔짐승 2 · 가시등 짐승 2", "돌격 뿔짐승 1 · 일반 뿔짐승 2 · 가시등 짐승 1",
+            "새끼 뿔짐승 1 · 가시등 짐승 3 (측면 1)", "돌격 뿔짐승 1 · 일반 뿔짐승 2 · 가시등 짐승 1",
             "잿갈기 우두머리 1 · 일반 졸개 2", "돌편 보병 2 · 석궁 수비병 1",
             "돌편 보병 2 · 석궁 수비병 2", "돌편 보병 3 · 석궁 수비병 2",
             "갑주 석상 1 · 돌편 보병 3 · 석궁 수비병 2", "성문 골렘 1 · 석궁 수비병 2"
@@ -200,6 +207,56 @@ namespace Expedition.Core
             return true;
         }
 
+        public bool SetMaterialLocked(string id, bool locked)
+        {
+            if (Phase != ExpeditionPhase.Preparation || !Roster.SetMaterialLocked(id, locked)) return false;
+            // Protection is a preference, not a growth action. Undo must not silently remove it.
+            foreach (var snapshot in history)
+                foreach (var member in snapshot.Roster.Members)
+                    if (member.Id == id) member.MaterialLocked = locked;
+            return true;
+        }
+
+        public bool CanTransfer(string donorId, string recipientId)
+        {
+            return Phase == ExpeditionPhase.Preparation && Roster.CanTransfer(donorId, recipientId);
+        }
+
+        public bool CanCombine(string anchorId, string otherId, string resultId)
+        {
+            return Phase == ExpeditionPhase.Preparation && Roster.CanCombine(anchorId, otherId, resultId);
+        }
+
+        public string PreviewCombination(string donorId, string recipientId)
+        {
+            var donor = Roster.Find(donorId);
+            var recipient = Roster.Find(recipientId);
+            if (donor == null || recipient == null) return null;
+            string result = Roster.HybridResult(donor.FormId, recipient.FormId);
+            return CanCombine(recipientId, donorId, result) ? result : null;
+        }
+
+        public List<CatalogCombinationOption> GetCombinationOptions()
+        {
+            var result = new List<CatalogCombinationOption>();
+            if (Phase != ExpeditionPhase.Preparation) return result;
+            var members = Roster.Members;
+            for (int i = 0; i < members.Count; i++)
+                for (int j = i + 1; j < members.Count; j++)
+                {
+                    CatalogMember recipient = members[i], donor = members[j];
+                    string form = Roster.HybridResult(recipient.FormId, donor.FormId);
+                    if (form == null || recipient.MaterialLocked && donor.MaterialLocked) continue;
+                    // Preserve protected members; otherwise retain the field member's position.
+                    if (donor.MaterialLocked || !recipient.MaterialLocked &&
+                        !deployedIds.Contains(recipient.Id) && deployedIds.Contains(donor.Id))
+                    { CatalogMember swap = recipient; recipient = donor; donor = swap; }
+                    if (CanCombine(recipient.Id, donor.Id, form))
+                        result.Add(new CatalogCombinationOption(recipient.Id, donor.Id, form));
+                }
+            return result;
+        }
+
         public bool Transfer(string donorId, string recipientId, bool replaceTrait)
         {
             if (Phase != ExpeditionPhase.Preparation) return false;
@@ -297,15 +354,15 @@ namespace Expedition.Core
                     AddMelee(result, "beast", 2, 84f, 9f, 6f);
                     AddRanged(result, "spine-raider", 1, 65f, 7f); break;
                 case 3:
-                    AddMelee(result, "beast", 2, 150f, 14f, 7f);
-                    AddRanged(result, "spine-raider", 2, 110f, 11f); break;
+                    AddMelee(result, "beast", 1, 150f, 17f, 7f);
+                    AddRanged(result, "spine-raider", 3, 125f, 19f, false, true); break;
                 case 4:
-                    result.AddEnemy("elite-beast", 340f, 25f, 12f, 1.8f, 1f, .7f,
+                    result.AddEnemy("elite-beast", 340f, 38f, 12f, 1.8f, 1f, .7f,
                         false, 3.25f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "beast", 2, 145f, 13f, 7f);
-                    AddRanged(result, "spine-raider", 1, 100f, 11f); break;
+                    AddMelee(result, "beast", 2, 145f, 22f, 7f);
+                    AddRanged(result, "spine-raider", 1, 100f, 25f); break;
                 case 5:
-                    result.AddEnemy("beast-boss", 3200f, 53f, 20f, 1.65f, 1.1f, .65f,
+                    result.AddEnemy("beast-boss", 2500f, 46f, 20f, 1.65f, 1.1f, .65f,
                         true, 3.7f, 0f, CatalogEnemyRole.Beast, true);
                     AddMelee(result, "beast", 2, 90f, 9f, 7f); break;
                 case 6:
@@ -340,13 +397,17 @@ namespace Expedition.Core
             }
         }
 
-        static void AddRanged(CatalogBattle battle, string prefix, int count, float hp, float power, bool bossEscort = false)
+        static void AddRanged(CatalogBattle battle, string prefix, int count, float hp, float power,
+            bool bossEscort = false, bool flank = false)
         {
             for (int i = 0; i < count; i++)
             {
-                float y = count == 1 ? 1.2f : (i == 0 ? -1 : 1) * (bossEscort ? 2.15f : 1.35f);
+                bool isFlanker = flank && i == count - 1;
+                float y = isFlanker ? 2.5f : count == 1 ? 1.2f : count == 3 ? (i - 1) * 1.35f :
+                    (i == 0 ? -1 : 1) * (bossEscort ? 2.15f : 1.35f);
                 battle.AddEnemy(prefix + "-" + (i + 1), hp, power, 4f, 2f, 3.6f, .55f,
-                    false, bossEscort ? 2.8f : 3.2f + i * .5f, y, CatalogEnemyRole.Raider);
+                    false, isFlanker ? -.5f : bossEscort ? 2.8f : 3.2f + i * .5f,
+                    y, CatalogEnemyRole.Raider);
             }
         }
 

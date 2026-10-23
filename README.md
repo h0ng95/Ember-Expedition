@@ -4,11 +4,14 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.14 보스 돌진·내려찍기·분노·성장 편성별 난도 조정**. [구현과 비교 결과](docs/design-v0.14/HANDOFF.md). 10전투·골드 소환·패배 재도전은 [v0.13](docs/design-v0.13/HANDOFF.md)에서 연결했다.
-- 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 범위이며 100전투는 장기 목표다.
+- 최신 구현: **v0.17 첫 보스까지의 난도와 성장 흐름 조정**. 3전투 측면 원거리 적, 4전투 정예 압박, 5전투 보스 완화를 적용했다. [변경·검증 기록](docs/design-v0.17/HANDOFF.md). 흡수 성장과 선택형 결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다.
+- 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
+- 적 미술: 현재 임시 그림을 사용한다. [지역별 졸개·정예·보스 재디자인 기준](docs/design-v0.17/enemy-art-brief.md)에 따라 별도로 제작한다.
+- 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 10전투를 다듬고 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
+- 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 개발 범위다.
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
 - 현재 흐름: **새 원정·이어하기 → 준비·골드 소환·배치·전승·진화·결합 → 10전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
-- 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이며, 12전투·유물·영구 해금은 후속 범위다.
+- 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이다. 당시 12전투안은 설계 이력이며, 현재 첫 출시 목표는 30전투다. 유물·영구 해금은 후속 범위다.
 - 직업 상세안: [v0.9 직업·진화·결합체 설계](docs/design-v0.9/unit-catalog.md) · [읽기용 직업 도감](docs/design-v0.9/unit-catalog.html). 기본·분기·최종·특수 결합 총 30형태의 능력치와 스킬을 정리한 검증 전 초안이다.
 - 새 전투 시험실: **CATALOG LAB / 30**에서 30형태의 실제 스킬·전승·진화·결합과 첫 애니메이션을 시험한다. [v0.10 제작 기록](docs/design-v0.10/production-notes.md) · [움직이는 도감](docs/design-v0.10/animation-gallery.html) · [밸런스 실험](docs/design-v0.10/balance-report.md). 30개 시트에 대기·걷기·공격·피격·쓰러짐 총 660프레임을 제작했으며, 출시 전 동작과 한 원정 전체의 균형은 계속 다듬는다.
 
@@ -25,6 +28,7 @@
 ./tests/CatalogCombat/run-balance.ps1
 ./tests/ExpeditionRun/run.ps1
 ./tests/ExpeditionRun/run-balance.ps1
+./tests/ExpeditionRun/run-early-balance.ps1
 ```
 
 ## 프로젝트 구성

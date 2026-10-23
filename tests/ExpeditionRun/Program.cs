@@ -20,6 +20,7 @@ internal static class Program
             SummonSequenceAndRestore();
             PreparationUndo();
             GrowthAndCombination();
+            GrowthPreviewAndProtection();
             BattleResumeAndProgression();
             EnemyWavesAndRoles();
             BeastChargeAndRangedAttack();
@@ -255,6 +256,75 @@ internal static class Program
             "Combination consumes other branch and Undo restores it.");
     }
 
+    static void GrowthPreviewAndProtection()
+    {
+        var run = ExpeditionRun.New(catalog, 49);
+        string donor = run.Summon();
+        uint rng = run.Capture().RandomState;
+        int gold = run.Gold;
+        Check(run.CanTransfer(donor, "ally-01") && run.PreviewCombination(donor, "ally-01") == null,
+            "Basic donor offers growth rather than a hybrid.");
+        Check(!run.CanUndo && run.Gold == gold && run.Capture().RandomState == rng,
+            "Repeated preview does not mutate history, money or RNG.");
+        Check(!run.CanTransfer(donor, donor) && !run.CanTransfer("missing", "ally-01"), "Invalid targets rejected.");
+        Check(run.SetMaterialLocked(donor, true) && !run.CanTransfer(donor, "ally-01") &&
+            !run.Transfer(donor, "ally-01", true), "Locked donor cannot be consumed even by trait transfer.");
+        Check(!run.CanUndo, "Protection toggle does not create a preparation action.");
+        run = ExpeditionRun.Restore(catalog, run.Capture());
+        Check(run.Roster.Find(donor).MaterialLocked, "Protection survives save restore.");
+        Check(run.SetMaterialLocked(donor, false) && run.SetMaterialLocked("ally-01", true) &&
+            run.Transfer(donor, "ally-01", false), "Protected recipient can still receive growth.");
+        string second = run.Summon();
+        Check(run.SetMaterialLocked(second, true) && run.Undo() && run.Roster.Find(donor) != null &&
+            run.Roster.Find(second).MaterialLocked && run.Roster.Find("ally-01").MaterialLocked && run.Gold == 0,
+            "Undo restores donor, keeps later summon and protection preferences, and never refunds summons.");
+        Check(run.SetMaterialLocked(donor, true) && run.Move("ally-02", -4f, 1f) &&
+            run.SetMaterialLocked(donor, false) && run.Undo() && !run.Roster.Find(donor).MaterialLocked,
+            "Undo preserves latest unlock preference.");
+
+        var fs = run.Capture();
+        var roster = CatalogRoster.Restore(catalog, fs.Roster);
+        for (int i = 6; i <= 9; i++) roster.Recruit("ally-" + i.ToString("00"), "B-IC", -2f, 0f);
+        fs.Roster = roster.Capture(); fs.NextMemberNumber = 9; fs.UndoHistory = new ExpeditionPreparationSave[0];
+        FundSaveForWaveTen(fs);
+        run = ExpeditionRun.Restore(catalog, fs);
+        Check(run.Transfer("ally-06", "ally-01", false) && run.Transfer("ally-07", "ally-01", false) &&
+            run.Evolve("ally-01", "E-KN-G") && run.Transfer("ally-08", "ally-03", false) &&
+            run.Transfer("ally-09", "ally-03", false) && run.Evolve("ally-03", "E-PR-H"), "Prepare two legal branches.");
+        Check(run.PreviewCombination("ally-03", "ally-01") == "H-02" &&
+            run.CanCombine("ally-01", "ally-03", "H-02"), "Preview resolves the same recipe as execution.");
+        var optionsBefore = run.Capture();
+        var options = run.GetCombinationOptions();
+        Check(options.Count == 1 && options[0].RecipientId == "ally-01" &&
+            options[0].DonorId == "ally-03" && options[0].ResultId == "H-02",
+            "Available combinations identify exact owned members and preserve protected recipient.");
+        Check(run.Roster.Find("ally-03") != null && run.Gold == optionsBefore.Gold &&
+            run.Capture().UndoHistory.Length == optionsBefore.UndoHistory.Length,
+            "Displaying a combination opportunity consumes nothing and does not create history.");
+        Check(run.PreviewCombination("ally-01", "ally-03") == null, "Reversing to use the protected unit as donor is blocked.");
+        Check(run.SetMaterialLocked("ally-03", true) && run.PreviewCombination("ally-03", "ally-01") == null &&
+            !run.Combine("ally-01", "ally-03", "H-02"), "Protection blocks combination too.");
+        Check(run.GetCombinationOptions().Count == 0, "Two protected partners do not produce an executable offer.");
+        Check(run.SetMaterialLocked("ally-01", false) && run.GetCombinationOptions()[0].RecipientId == "ally-03",
+            "When only second partner is protected, reverse the offered consumption direction.");
+        run.SetMaterialLocked("ally-03", false);
+        Check(run.SetDeployed("ally-01", false) && run.GetCombinationOptions()[0].RecipientId == "ally-03",
+            "Unprotected partner on field retains its location over a bench recipient.");
+        Check(run.Undo() && run.SetMaterialLocked("ally-01", true) && run.SetMaterialLocked("ally-03", true),
+            "Restore preparation and protection for explicit execution checks.");
+        Check(run.SetMaterialLocked("ally-03", false) && run.Combine("ally-01", "ally-03", "H-02") &&
+            run.Roster.Find("ally-01").MaterialLocked && !run.CanTransfer(second, "ally-01"),
+            "Hybrid keeps anchor protection and cannot absorb growth-only fodder.");
+        run = ExpeditionRun.Restore(catalog, run.Capture());
+        Check(run.Undo() && run.Roster.Find("ally-03") != null && run.DeployedIds.Contains("ally-03"),
+            "Saved combination Undo restores consumed deployed partner.");
+        Check(run.GetCombinationOptions().Count == 1, "Undo makes the explicit combination opportunity available again.");
+        run.BeginBattle();
+        Check(!run.CanTransfer(donor, "ally-01") && run.PreviewCombination("ally-03", "ally-01") == null &&
+            !run.SetMaterialLocked(donor, true), "Preparation actions are unavailable during combat.");
+        Check(run.GetCombinationOptions().Count == 0, "Combat never offers preparation combinations.");
+    }
+
     static void BattleResumeAndProgression()
     {
         var run = ExpeditionRun.New(catalog, 11);
@@ -289,6 +359,14 @@ internal static class Program
             Check(enemies.All(u => u.EnemyRole != CatalogEnemyRole.None), "Run enemies expose their roles.");
             Check(enemies.Select(u => u.X.ToString("0.00") + "," + u.Y.ToString("0.00")).Distinct().Count() == enemies.Length,
                 "Enemies start at distinct positions.");
+            if (wave == 3)
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.Raider) == 3 &&
+                    enemies.Any(u => u.Id == "spine-raider-3" && u.X == -.5f && u.Y == 2.5f),
+                    "Third encounter previews three ranged beasts, including a fixed side flanker.");
+            if (wave == 4)
+                Check(enemies.Any(u => u.Id == "elite-beast" && u.EnemyRole == CatalogEnemyRole.Beast &&
+                    u.NextChargeAt == 1.35f),
+                    "Fourth encounter elite uses the existing readable beast charge.");
             CatalogBattle replay = ExpeditionRun.Restore(catalog, run.Capture()).ResumeBattle();
             var replayEnemies = replay.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
             Check(enemies.Zip(replayEnemies, (a, b) => a.Id == b.Id && a.EnemyRole == b.EnemyRole &&

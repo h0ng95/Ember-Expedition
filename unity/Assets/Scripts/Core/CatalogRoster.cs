@@ -10,6 +10,7 @@ namespace Expedition.Core
         public string BranchId { get; internal set; }
         public string InheritedTraitId { get; internal set; }
         public int Growth { get; internal set; }
+        public bool MaterialLocked { get; internal set; }
         public float X { get; internal set; }
         public float Y { get; internal set; }
 
@@ -24,6 +25,7 @@ namespace Expedition.Core
     {
         public string Id, FormId, BranchId, InheritedTraitId;
         public int Growth;
+        public bool MaterialLocked;
         public float X, Y;
     }
 
@@ -82,8 +84,31 @@ namespace Expedition.Core
             return members.Find(member => member.Id == id);
         }
 
+        public bool SetMaterialLocked(string id, bool locked)
+        {
+            CatalogMember member = Find(id);
+            if (member == null || member.MaterialLocked == locked) return false;
+            member.MaterialLocked = locked;
+            foreach (var snapshot in history)
+                foreach (var item in snapshot)
+                    if (item.Id == id) item.MaterialLocked = locked;
+            return true;
+        }
+
+        public bool CanTransfer(string donorId, string recipientId, bool replaceTrait = false)
+        {
+            CatalogMember donor = Find(donorId), recipient = Find(recipientId);
+            if (donor == null || recipient == null || donor == recipient || donor.MaterialLocked) return false;
+            string incoming = catalog.Get(donor.FormId).InnateTrait;
+            bool growth = recipient.FormId.StartsWith("B-", StringComparison.Ordinal) ? recipient.Growth < 2 :
+                recipient.FormId.StartsWith("E-", StringComparison.Ordinal) && recipient.Growth < 6;
+            return growth || replaceTrait && recipient.InheritedTraitId != incoming &&
+                catalog.Get(recipient.FormId).InnateTrait != incoming;
+        }
+
         public bool Transfer(string donorId, string recipientId, bool replaceTrait)
         {
+            if (!CanTransfer(donorId, recipientId, replaceTrait)) return false;
             CatalogMember donor = Find(donorId), recipient = Find(recipientId);
             if (donor == null || recipient == null || donor == recipient) return false;
             string incoming = catalog.Get(donor.FormId).InnateTrait;
@@ -116,8 +141,28 @@ namespace Expedition.Core
             return true;
         }
 
+        public string HybridResult(string firstForm, string secondForm)
+        {
+            if (string.IsNullOrEmpty(firstForm) || string.IsNullOrEmpty(secondForm) ||
+                !firstForm.StartsWith("E-", StringComparison.Ordinal) ||
+                !secondForm.StartsWith("E-", StringComparison.Ordinal)) return null;
+            string[] families = { FamilyCode(firstForm), FamilyCode(secondForm) };
+            Array.Sort(families, StringComparer.Ordinal);
+            string recipe = families[0] + "+" + families[1];
+            foreach (var pair in hybridRecipe) if (pair.Value == recipe) return pair.Key;
+            return null;
+        }
+
+        public bool CanCombine(string anchorId, string otherId, string resultId)
+        {
+            CatalogMember anchor = Find(anchorId), other = Find(otherId);
+            return anchor != null && other != null && anchor != other && !other.MaterialLocked &&
+                resultId != null && HybridResult(anchor.FormId, other.FormId) == resultId;
+        }
+
         public bool Combine(string anchorId, string otherId, string resultId)
         {
+            if (!CanCombine(anchorId, otherId, resultId)) return false;
             CatalogMember anchor = Find(anchorId), other = Find(otherId);
             string recipe;
             if (anchor == null || other == null || anchor == other ||
@@ -175,7 +220,7 @@ namespace Expedition.Core
                 CatalogMember member = source[i];
                 result[i] = new CatalogMemberSave { Id = member.Id, FormId = member.FormId,
                     BranchId = member.BranchId, InheritedTraitId = member.InheritedTraitId,
-                    Growth = member.Growth, X = member.X, Y = member.Y };
+                    Growth = member.Growth, MaterialLocked = member.MaterialLocked, X = member.X, Y = member.Y };
             }
             return result;
         }
@@ -203,7 +248,7 @@ namespace Expedition.Core
                     throw new ArgumentException("Invalid branch for form.");
                 result.Add(new CatalogMember { Id = item.Id, FormId = item.FormId,
                     BranchId = branchId, InheritedTraitId = traitId,
-                    Growth = item.Growth, X = item.X, Y = item.Y });
+                    Growth = item.Growth, MaterialLocked = item.MaterialLocked, X = item.X, Y = item.Y });
             }
             return result;
         }

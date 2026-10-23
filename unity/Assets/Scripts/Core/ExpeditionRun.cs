@@ -369,18 +369,18 @@ namespace Expedition.Core
                     AddMelee(result, "stone-infantry", 2, 240f, 20f, 14f);
                     AddRanged(result, "crossbow-raider", 1, 150f, 16f); break;
                 case 7:
-                    AddMelee(result, "stone-infantry", 2, 260f, 21f, 14f);
-                    AddRanged(result, "crossbow-raider", 2, 160f, 17f); break;
+                    AddMelee(result, "stone-infantry", 2, 260f, 25f, 14f);
+                    AddRanged(result, "crossbow-raider", 2, 160f, 24f); break;
                 case 8:
-                    AddMelee(result, "stone-infantry", 3, 260f, 22f, 15f);
-                    AddRanged(result, "crossbow-raider", 2, 180f, 18f); break;
+                    AddMelee(result, "stone-infantry", 3, 260f, 28f, 15f);
+                    AddRanged(result, "crossbow-raider", 2, 180f, 25f); break;
                 case 9:
-                    result.AddEnemy("stone-elite", 650f, 35f, 22f, 1.8f, 1f, .55f,
+                    result.AddEnemy("stone-elite", 650f, 42f, 22f, 1.8f, 1f, .55f,
                         false, 3.45f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "stone-infantry", 3, 270f, 23f, 16f);
-                    AddRanged(result, "crossbow-raider", 2, 190f, 20f); break;
+                    AddMelee(result, "stone-infantry", 3, 270f, 29f, 16f);
+                    AddRanged(result, "crossbow-raider", 2, 190f, 28f); break;
                 case 10:
-                    result.AddEnemy("golem-boss", 5000f, 80f, 25f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("golem-boss", 4200f, 80f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
                     AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
             }

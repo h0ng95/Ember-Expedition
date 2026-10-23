@@ -95,7 +95,7 @@ namespace Expedition.Presentation
                 if (!periodic)
                 {
                     Play(source != null && IsProjectile(source) ? arrow : hit, strong ? .85f : .65f);
-                    if (strong && hitStopCooldown <= 0)
+                    if (strong && !target.IsBoss && hitStopCooldown <= 0)
                     { HitStopRemaining = .035f; hitStopCooldown = .22f; }
                 }
             }
@@ -283,7 +283,12 @@ namespace Expedition.Presentation
         public void Dispose()
         {
             foreach (AudioSource voice in voices)
-                if (voice != null) { voice.Stop(); UnityEngine.Object.Destroy(voice); }
+                if (voice != null)
+                {
+                    voice.Stop();
+                    if (Application.isPlaying) UnityEngine.Object.Destroy(voice);
+                    else UnityEngine.Object.DestroyImmediate(voice);
+                }
             effects.Clear(); launched.Clear();
         }
     }

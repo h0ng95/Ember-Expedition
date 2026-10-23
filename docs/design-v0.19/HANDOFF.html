@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>숲 적 애니메이션과 전투 적용 · v0.19</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>숲 적 애니메이션과 전투 적용 · v0.19</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 적용 내용</a>
+<a href="#section-2">2. Buddy2에서 본 모습</a>
+<a href="#section-3">3. 제작과 검증 방식</a>
+<a href="#section-4">4. 아직 다듬을 부분</a>
+<a href="#section-5">5. 주요 파일</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-23 · Unity / Android · 숲 지역 1~5전투</p>
+<p><strong>v0.18의 숲 적 4종을 각각 움직이는 캐릭터로 제작하고 실제 전투에 연결했다.</strong> 졸개·가시등·돌격 정예·잿갈기 우두머리가 서로 다른 모습과 동작을 사용한다. 전투 수치, 골드와 성장 규칙은 v0.17 기준이다.</p>
+<h2 id="section-1">1. 적용 내용</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>적</th>
+<th>외형과 동작</th>
+<th align="right">기본 표시 높이</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>뿔짐승</td>
+<td>작은 뿔과 목깃, 걷기·머리를 낮춘 들이받기</td>
+<td align="right">78</td>
+</tr>
+<tr>
+<td>가시등 짐승</td>
+<td>등에 솟은 긴 가시, 웅크리기·가시 발사 자세</td>
+<td align="right">112</td>
+</tr>
+<tr>
+<td>돌격 뿔짐승</td>
+<td>넓은 어깨와 긴 뿔, 낮은 자세에서 돌격</td>
+<td align="right">138</td>
+</tr>
+<tr>
+<td>잿갈기 우두머리</td>
+<td>큰 갈기와 앞발, 무거운 걸음·앞발 공격·돌진 준비</td>
+<td align="right">244</td>
+</tr>
+</tbody></table></div>
+<p>높이는 Unity의 1280 기준 화면 좌표에서 첫 대기 프레임의 불투명 영역 높이다. 아군은 기존 시트의 셀 크기를 기준으로 표시하므로 아군 설정 상자의 높이 144와 직접적인 실루엣 비율은 다르다. 실제 체급은 아래 기기 화면으로 확인한다.</p>
+<ul>
+<li>4개 독립 PNG 시트, 각각 24프레임, 합계 <strong>96프레임</strong>.</li>
+<li>공통: 대기 4, 피격 2, 걷기 6, 공격 6, 쓰러짐 4, 준비 자세 2.</li>
+<li>정예·보스는 마지막 2프레임을 돌진 예고에 사용한다. 졸개의 추가 준비 프레임은 예비 프레임이며 현재 전투에서 별도 돌진 예고 전용으로 사용하지 않는다.</li>
+<li>적의 원본 방향은 모두 왼쪽. 상대 이동에 따른 좌우 반전을 적용하지 않는다.</li>
+<li>실제 공격 발동 이벤트에서 공격의 타격 프레임을 시작한다. 돌진 예고·이동·공격 발동이 피격 자세보다 우선해 공격 신호가 가려지지 않는다.</li>
+<li>보스 광폭화의 색 변화와 기존 경로 예고를 유지한다.</li>
+<li>발 위치는 각 프레임의 불투명 아래쪽에 맞추고, 크기 배율은 종별로 고정한다. 쓰러지거나 몸을 웅크려도 그림을 다시 같은 키로 늘리지 않는다.</li>
+<li>마지막 적이 쓰러지는 동작을 볼 수 있게 결과 전환 전 짧은 마무리 시간을 둔다.</li>
+</ul>
+<h3>아군이 큰 적에게 가려지는 문제</h3>
+<p>실기기에서 정예와 보스의 몸에 기사가 가려지는 현상을 확인했고, 사용자도 같은 문제를 지적했다. 다음 세 가지를 함께 적용했다.</p>
+<ol>
+<li>쓰러진 유닛을 먼저 그리고, 살아 있는 유닛은 발 위치 순서로 그린다. 발 위치가 같으면 적 다음에 아군을 그려 순서를 고정한다.</li>
+<li>앞에 그려진 적이 아군 상체의 상당 부분을 가릴 때만 해당 아군 그림을 약한 청록빛·88% 불투명도로 다시 표시한다. 가려지지 않은 아군은 기존 깊이 순서를 유지한다.</li>
+<li>체력·보호막·보스 이름은 모든 캐릭터를 그린 후 표시해 적 그림 밑에 묻히지 않게 한다.</li>
+</ol>
+<p>보스 크기와 전투 좌표·사거리·충돌 판정은 변경하지 않는다. Buddy2의 보스 공격 중에도 앞에 있는 기사의 모습과 체력바가 보이는 것을 확인했다.</p>
+<p><img src="device-evidence/boss-visibility-fixed.png" alt="겹침 수정 후: 보스 앞의 기사가 보이는 모습"></p>
+<h2 id="section-2">2. Buddy2에서 본 모습</h2>
+<p>아래 화면과 영상은 Galaxy Buddy2(SM-M236L)에서 실행한 개발 APK의 기록이다. 외형 검증을 위해 3·4·5전투의 준비 상태를 만든 테스트 저장 데이터를 사용했다. 자연 진행이나 난도 통계로 해석하지 않는다. 3전투 화면은 애니메이션 적용 직후, 4·5전투 화면과 영상은 겹침 수정까지 적용한 최종 빌드에서 촬영했다. 사용자의 기존 저장은 테스트 후 복원했다.</p>
+<h3>졸개와 원거리 무리</h3>
+<p><img src="device-evidence/wave3-battle.png" alt="3전투: 뿔짐승과 가시등 짐승"></p>
+<h3>돌격 정예</h3>
+<p><img src="device-evidence/elite-battle.png" alt="4전투: 돌격 뿔짐승"></p>
+<p><a href="device-evidence/wave4-motion.mp4">정예 전투 영상 · 12초</a></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave4-motion.mp4"></video></p>
+<h3>우두머리와 호위</h3>
+<p><img src="device-evidence/boss-and-escorts.png" alt="5전투: 잿갈기 우두머리와 작은 호위"></p>
+<p><img src="device-evidence/boss-attack.png" alt="우두머리 공격 중 모습"></p>
+<p><a href="device-evidence/wave5-motion.mp4">보스 전투 영상 · 12초</a></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave5-motion.mp4"></video></p>
+<h2 id="section-3">3. 제작과 검증 방식</h2>
+<ul>
+<li>이미지 제작: 내장 imagegen. 프로젝트의 기존 숲 적 시안을 참조했다. <a href="ASSET-PROMPTS.md">첫 프롬프트와 출처</a>, <a href="spacing-correction.md">정예·보스 간격 수정</a>.</li>
+<li>코딩: SOL 구현, 상위 작업에서 코드와 실제 기기 화면 검토.</li>
+<li>프레임 추출: 원본 PNG를 수정하지 않고 알파값 0.4 초과의 불투명 범위와 빈 간격을 읽어 좌표만 저장한다. 정규 6 × 4 칸 경계를 그대로 자르면 잘리는 생성 결과를 감지하도록 했다.</li>
+<li>정예·보스 첫 결과에서 공격 프레임끼리 범위가 겹치는 문제가 발견되어, imagegen으로 간격을 넓힌 결과를 선택했다.</li>
+<li>런타임: 투명도 정리용 셰이더를 적용한 텍스처를 재사용한다. 원정 전투 종료 시 해당 렌더 텍스처와 자원을 해제한다.</li>
+<li>새 그림을 읽지 못하는 경우 기존 그림으로 복귀한다. 성채 지역의 보병·석궁병·골렘은 기존 그림을 사용한다.</li>
+</ul>
+<h3>최종 빌드 확인</h3>
+<ul>
+<li>숲 그림·프레임 매핑 검증 258개, 가림 처리 검증 12개, 전투 종료 처리 검증, 드래그 성장 검증 17개 통과.</li>
+<li>Android APK 빌드 성공, Buddy2에 업데이트 설치 완료.</li>
+<li>보스 전투에서 기사의 표시와 승리 결과 전환, 보상 저장 확인. 최종 테스트 이후 Unity·Android 오류 로그 없음.</li>
+<li>사용자의 테스트 전 저장 데이터를 복원하고 원본과 바이트 단위로 일치하는지 확인 완료.</li>
+<li>APK SHA-256: <code>97B296A42F06634293A68BEFF69506B32DDFD2111AB5EF6EC27DBBA6BD76B228</code>.</li>
+<li>로그: <code>unity/Logs/v019-visibility-build.log</code> (로컬 빌드 산출물).</li>
+</ul>
+<h2 id="section-4">4. 아직 다듬을 부분</h2>
+<ul>
+<li>96프레임은 첫 동작 제작본이다. 작은 질감·뿔·갈기와 얼굴의 프레임별 미세한 형태 차이는 추가 정리 대상이다.</li>
+<li>마지막 적의 쓰러짐 이후 결과 표시를 제외한 승리 연출·유물·연구 등은 이번 범위에 포함하지 않았다.</li>
+<li>성채 지역 적 4역할은 다음 미술 제작 대상이다. 11~30전투 콘텐츠는 별도 설계·구현 단계다.</li>
+<li>이번 기기 검증은 짧은 전투의 외형과 오류 확인이다. 장시간 발열·배터리·지속 프레임 성능을 확정한 결과는 아니다.</li>
+</ul>
+<h2 id="section-5">5. 주요 파일</h2>
+<ul>
+<li><code>unity/Assets/Resources/Art/Enemies/v019/</code>: 4개 PNG, <code>forest-manifest.json</code>, Unity 메타데이터.</li>
+<li><code>unity/Assets/Scripts/Presentation/ForestEnemyArt.cs</code>: 적 종류 선택, 프레임 우선순위, 표시 배율과 자원 관리.</li>
+<li><code>unity/Assets/Scripts/Presentation/CatalogCombatLab.cs</code>: 실제 전투 이벤트와 애니메이션 연결.</li>
+<li><code>unity/Assets/Scripts/Presentation/BattleVisibility.cs</code>: 발 위치에 따른 그리기 순서와 아군 가림 판정.</li>
+<li><code>unity/Assets/Editor/ForestEnemyArtValidation.cs</code>: 프레임 좌표 생성·검증·APK 빌드 진입점.</li>
+<li><code>unity/Assets/Editor/BattleVisibilityValidation.cs</code>, <code>CombatSettlementValidation.cs</code>: 겹침 표시와 결과 전환 검증.</li>
+<li>빌드 명령: <code>Expedition.EditorTools.ForestEnemyArtValidation.BuildAndroid</code>.</li>
+</ul>
+<p>개발 파일은 이번 작업의 변경 상태로 남긴다. 커밋·푸시는 별도로 실행하지 않았다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

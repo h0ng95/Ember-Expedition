@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>숲의 네 얼굴 · 잔불 원정대</title>
+<style>
+:root{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#24372e;background:#f0eee5;font-synthesis:none;--ink:#17372d;--muted:#697269;--line:#d4d6c8;--copper:#a04e28;--paper:#faf9f3}
+*{box-sizing:border-box}body{margin:0;line-height:1.65;word-break:keep-all}button,input{font:inherit}a{color:inherit;text-underline-offset:4px}button,a,input{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d18d48;outline-offset:4px}
+header{background:#16362c;color:#f4edda;border-bottom:5px solid #c08148;padding:38px max(24px,calc((100vw - 1240px)/2)) 32px}.eyebrow{font-size:11px;letter-spacing:.17em;font-weight:bold;color:#b6c4ad}.headline{display:flex;justify-content:space-between;gap:24px;align-items:end}h1{font-size:clamp(32px,4.5vw,54px);line-height:1.25;letter-spacing:-.06em;margin:12px 0}header p{color:#d0d7c4;max-width:680px;font-size:15px;margin:0}.edition{text-align:right;font-size:12px;color:#c3cebd;flex-shrink:0}.edition strong{display:block;font-size:22px;color:#ecc18b;font-weight:400}
+main{max-width:1288px;margin:auto;padding:28px 24px 52px}.section-title{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin:0 0 14px}h2{font-size:22px;letter-spacing:-.04em;margin:0}.sub{font-size:12px;color:var(--muted)}.tag{color:#8c4e2d;font-size:11px;border:1px solid #cab698;padding:3px 9px;border-radius:3px}
+.preview{border:1px solid #9cae99;border-radius:10px;overflow:hidden;background:#182c24;box-shadow:0 10px 26px #243b2511}.toolbar{padding:13px 18px;display:flex;justify-content:space-between;gap:14px;align-items:center;background:#203b31;color:#e9eadc}.tabs{display:flex;gap:6px}.tabs button{background:transparent;border:1px solid #6b7d6b;padding:7px 15px;border-radius:4px;color:#dce1d1;font-size:13px;cursor:pointer}.tabs button[aria-pressed="true"]{background:#e5c698;color:#24372e;border-color:#e5c698;font-weight:bold}.toolbar label{font-size:12px;display:flex;gap:7px;align-items:center}.toolbar input{accent-color:#d0a367}.viewport{position:relative;width:100%;aspect-ratio:1280/588;overflow:hidden}.stage{position:absolute;left:0;top:0;width:1280px;height:588px;transform-origin:0 0;background:url('../../unity/Assets/Resources/Art/forest-battlefield.png') center/cover}.stage::before{content:"";position:absolute;inset:0;background:linear-gradient(#102a2b11,#10251a00 55%,#17261922)}.stage.silhouette{background:#dce1cd}.stage.silhouette::before{display:none}.stage.silhouette .enemy .sprite{filter:brightness(0)}.actor{position:absolute;transform:translateX(-50%)}.sprite{background-repeat:no-repeat;image-rendering:pixelated;position:relative;z-index:1}.shadow{height:12px;border-radius:50%;background:#14201550;position:absolute;left:12%;right:12%;bottom:-4px}.actor-name{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#fff8df;text-shadow:0 1px 4px #172e1a,0 1px 3px #172e1a;font-size:15px;font-weight:bold}.silhouette .actor-name{color:#26392b;text-shadow:none}.scene-note{position:absolute;top:21px;left:23px;color:#fff6dc;background:#102b25dc;padding:8px 13px;border-left:3px solid #d8ac6f;font-size:14px;line-height:1.6;z-index:3}.scene-note span{display:block;color:#cbd4bd;font-size:11px}.caption{display:flex;align-items:center;justify-content:space-between;gap:22px;background:#fcfbf4;padding:15px 18px;font-size:13px}.caption p{margin:0;max-width:760px}.scale{display:flex;gap:9px;align-items:center;white-space:nowrap;font-size:12px}.scale input{width:106px;accent-color:#9a5c32}.scale output{min-width:34px;font-variant-numeric:tabular-nums}
+.roles{margin-top:34px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden}.portrait{height:220px;display:flex;align-items:end;justify-content:center;padding-bottom:23px;position:relative;background:radial-gradient(ellipse at bottom,#d6dac2,#eff0e5 75%);border-bottom:1px solid var(--line)}.portrait:after{content:"";height:1px;position:absolute;left:18px;right:18px;bottom:22px;background:#a9b49a}.rank{position:absolute;left:16px;top:14px;font:10px/1.2 monospace;letter-spacing:.14em;color:#67755c}.card-body{padding:17px}.card h3{font-size:18px;margin:4px 0 9px;letter-spacing:-.05em}.role{font-size:11px;font-weight:bold;color:#a1572d}.card p{font-size:13px;margin:0 0 15px;color:#596551;min-height:64px}.card dl{margin:0;border-top:1px solid #d9ddce;padding-top:12px;font-size:11px}.card dl div{display:flex;justify-content:space-between;margin:5px 0;gap:8px}.card dt{color:#78816d}.card dd{margin:0;text-align:right;color:#34462f}.card.boss{border-color:#bba070}.card.boss .portrait{background:radial-gradient(ellipse at bottom,#d6b787,#e9e5d6 80%)}
+.notes{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:32px;border-top:1px solid #bac4b2;padding-top:25px}.notes h2{font-size:18px;margin-bottom:12px}.notes p,.notes li{font-size:13px;color:#596753}.notes ul{padding-left:18px;margin:0}.notes li{margin:7px 0}.swatches{display:flex;gap:8px;margin:17px 0}.swatch{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #c6ccbb}.status{padding:15px 18px;background:#e5e9dc;border-left:3px solid #738064}.status strong{font-size:13px}.status p{margin:7px 0 0}.footer{margin-top:29px;display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#66745e}.error{background:#8e3e23;color:white;padding:14px;display:none}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.caption{align-items:start;flex-direction:column;gap:9px}.headline{align-items:start}.edition{display:none}.notes{gap:18px}.toolbar{padding:11px}.tabs button{padding:7px 10px}main{padding:22px 16px}.portrait{height:210px}}
+@media(max-width:540px){header{padding:25px 20px}.section-title .sub{display:none}.toolbar{flex-wrap:wrap}.tabs{flex:1}.tabs button{flex:1;white-space:nowrap;font-size:11px}.notes{grid-template-columns:1fr}.card-body{padding:12px}.card h3{font-size:16px}.card p{font-size:12px;min-height:80px}.portrait{height:165px}.portrait .sprite{transform:scale(.77);transform-origin:bottom center}.card dl div{flex-direction:column;gap:0}.card dd{text-align:left}.tag{font-size:10px}}
+@media print{header{background:white;color:#16362c}.edition,.toolbar,.scale{display:none}main{padding:18px 0}.preview,.card{break-inside:avoid;box-shadow:none}.grid{grid-template-columns:repeat(2,1fr)}.notes{grid-template-columns:1fr}.footer{display:none}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">EMBER EXPEDITION · CREATURE DESIGN 01</div><div class="headline"><div><h1>숲의 네 얼굴</h1><p>작은 뿔짐승 무리를 지나, 잿갈기 우두머리에게.<br>같은 숲의 생물이지만 역할과 위협은 한눈에 다르게.</p></div><div class="edition"><strong>FOREST / 01—05</strong>적 외형 시안 v0.18 · 2026.10.23</div></div></header>
+<main>
+<section aria-labelledby="preview-title">
+<div class="section-title"><h2 id="preview-title">전장 크기로 보기 <span class="tag">외형 비교</span></h2><span class="sub">기존 아군 + 새 적 시안 · 전투 시뮬레이션 아님</span></div>
+<div class="preview">
+<div class="toolbar"><div class="tabs" aria-label="조우 구성"><button data-scene="pack" aria-pressed="true">무리 조우</button><button data-scene="elite" aria-pressed="false">정예 조우</button><button data-scene="boss" aria-pressed="false">보스 조우</button></div><label><input id="silhouette" type="checkbox"> 실루엣만 보기</label></div>
+<div class="error" id="image-error" role="alert"></div>
+<div class="viewport" id="viewport"><div class="stage" id="stage" role="img" aria-label="숲 전장에서 기존 아군과 새 적 외형 비교"></div></div>
+<div class="caption"><p id="scene-description" aria-live="polite"></p><label class="scale">적 크기 <input id="scale" type="range" min="80" max="120" step="5" value="100" aria-label="적 비교 크기"><output id="scale-value" for="scale">100%</output></label></div>
+</div>
+</section>
+<section class="roles" aria-labelledby="roles-title"><div class="section-title"><h2 id="roles-title">네 가지 역할, 네 가지 실루엣</h2><span class="sub">아래 카드는 외형을 확대해서 보여줍니다.</span></div><div class="grid" id="cards"></div></section>
+<section class="notes">
+<div><h2>하나의 숲에서 나온 적들</h2><p>짙은 나무껍질, 이끼, 상아빛 뿔과 작은 호박색 눈을 공유한다. 졸개의 짧은 목깃은 정예의 어깨로, 보스의 커다란 갈기로 이어진다. 아군의 금속 갑옷과 천옷과는 재질부터 구분한다.</p><div class="swatches" aria-label="나무껍질, 숯빛, 이끼, 상아, 갈기, 호박색 눈 팔레트"><span class="swatch" style="background:#64452e" title="나무껍질"></span><span class="swatch" style="background:#28251e" title="숯빛"></span><span class="swatch" style="background:#71812f" title="이끼"></span><span class="swatch" style="background:#ead6a5" title="상아"></span><span class="swatch" style="background:#b95a21" title="갈기"></span><span class="swatch" style="background:#edb133" title="눈"></span></div><p>크기 기준은 1280 화면 좌표에서 아군 높이 144, 졸개 78, 원거리 112, 정예 138, 보스 244다. 정예는 키보다 앞쪽 어깨와 긴 뿔의 폭으로 위협을 준다. 수치는 미리보기 제안이며 현재 APK에는 반영되지 않았다.</p></div>
+<div><h2>다음은 움직임</h2><ul><li><strong>뿔짐승:</strong> 짧은 발걸음 → 머리를 낮추고 들이받기.</li><li><strong>가시등:</strong> 등을 웅크리기 → 가시가 솟음 → 전방으로 발사.</li><li><strong>돌격 정예:</strong> 앞발 고정 → 낮은 돌진 자세 → 빠른 전진.</li><li><strong>우두머리:</strong> 무거운 숨 → 갈기와 앞발을 낮춘 예고 → 돌진·광폭화.</li></ul><div class="status"><strong>현재 완료: 외형 시안과 크기 비교 화면</strong><p>원본 PNG는 투명 배경으로 저장했다. 개별 픽셀 정리, 동작별 프레임, Unity 적용과 Buddy2 검증은 후속 작업이다.</p></div></div>
+</section>
+<footer class="footer"><a href="HANDOFF.html">제작 기록</a><a href="HANDOFF.md">노션용 문서</a><a href="assets/forest-enemy-concepts-v1.png">원본 시안</a><a href="ASSET-PROMPTS.md">생성 도구·프롬프트</a></footer>
+</main>
+<script>
+const ATLAS='assets/forest-enemy-concepts-v1.png';
+const enemies=[
+ {id:'cub',name:'뿔짐승',role:'근접 졸개',rank:'01 / COMMON',crop:[152,309,403,277],height:78,cardHeight:103,identity:'짧은 뿔 · 낮은 몸체',action:'머리를 낮추고 들이받기',description:'짧은 뿔과 작은 목깃. 여러 마리가 나와도 보스처럼 보이지 않는, 가장 단순한 실루엣.'},
+ {id:'thorn',name:'가시등 짐승',role:'원거리 졸개',rank:'02 / RANGED',crop:[700,97,497,489],height:112,cardHeight:166,identity:'작은 머리 · 긴 등가시',action:'몸을 웅크린 뒤 가시 발사',description:'등 위에 모인 긴 가시가 무기. 머리의 뿔로 공격하는 뿔짐승과 외곽선부터 다르게.'},
+ {id:'elite',name:'돌격 뿔짐승',role:'정예',rank:'03 / ELITE',crop:[21,772,637,385],height:138,cardHeight:133,identity:'낮은 머리 · 긴 전방 뿔',action:'앞발을 고정한 뒤 돌진',description:'단단한 어깨와 앞을 향한 긴 뿔. 보스의 갈기 대신 낮고 넓은 돌격 자세가 특징.'},
+ {id:'boss',name:'잿갈기 우두머리',role:'보스',rank:'04 / BOSS',crop:[661,625,577,542],height:244,cardHeight:190,identity:'거대한 갈기 · 넓은 앞발',action:'돌진 예고 · 광폭화',description:'큰 갈기, 옅은 얼굴 덮개, 묵직한 앞발. 무리 한가운데에서도 우두머리로 읽히는 위압감.'}
+];
+const allies=[
+ {name:'정찰 궁수',file:'B-AR',crop:[47,54,164,194],x:218,y:424},
+ {name:'등불 사제',file:'B-PR',crop:[53,81,177,201],x:279,y:514},
+ {name:'방패 기사',file:'B-KN',crop:[59,72,147,178],x:431,y:470}
+];
+const scenes={
+ pack:{title:'작은 위협이 모이면',note:'근접 둘 + 원거리 하나 · 예시 배치',text:'졸개는 기사보다 낮게, 가시등은 긴 등가시로 구분한다. 작은 크기에서도 공격 역할이 읽히는지 비교한다.',units:[['cub',779,451],['cub',1016,414],['thorn',980,531]]},
+ elite:{title:'앞을 막아서는 돌격 정예',note:'정예 + 근접 + 원거리 · 예시 배치',text:'정예는 머리를 낮추고 뿔을 앞으로 뻗는다. 보스보다 작지만 넓은 어깨와 돌진 방향이 눈에 들어오도록 했다.',units:[['elite',845,467],['cub',1040,537],['thorn',1056,394]]},
+ boss:{title:'잿갈기 우두머리',note:'우두머리 + 호위 둘 · 예시 배치',text:'보스는 넓은 갈기와 큰 앞발로 체급을 나눈다. 호위 졸개가 곁에 있어도 실루엣과 시선이 보스에 모인다.',units:[['cub',733,414],['boss',996,480],['cub',785,551]]}
+};
+function sprite(url,crop,height,sourceWidth=1254,sourceHeight=1254){
+ const [x,y,w,h]=crop,s=height/h,el=document.createElement('div');
+ el.className='sprite';el.style.width=(w*s)+'px';el.style.height=height+'px';
+ el.style.backgroundImage='url("'+url+'")';el.style.backgroundSize=(sourceWidth*s)+'px '+(sourceHeight*s)+'px';el.style.backgroundPosition=(-x*s)+'px '+(-y*s)+'px';return el;
+}
+for(const enemy of enemies){
+ const card=document.createElement('article');card.className='card '+(enemy.id==='boss'?'boss':'');
+ card.innerHTML='<div class="portrait" role="img" aria-label="'+enemy.name+' 왼쪽을 보는 외형 시안"><span class="rank">'+enemy.rank+'</span></div><div class="card-body"><span class="role">'+enemy.role+'</span><h3>'+enemy.name+'</h3><p>'+enemy.description+'</p><dl><div><dt>식별 특징</dt><dd>'+enemy.identity+'</dd></div><div><dt>공격 동작 계획</dt><dd>'+enemy.action+'</dd></div></dl></div>';
+ card.querySelector('.portrait').append(sprite(ATLAS,enemy.crop,enemy.cardHeight));document.getElementById('cards').append(card);
+}
+const portraitObserver=new ResizeObserver(entries=>{for(const {target}of entries){const art=target.querySelector('.sprite');art.style.flexShrink='0';art.style.transform='scale('+Math.min(1,(target.clientWidth-24)/parseFloat(art.style.width),(target.clientHeight-40)/parseFloat(art.style.height))+')';art.style.transformOrigin='bottom center';}});
+document.querySelectorAll('.portrait').forEach(p=>portraitObserver.observe(p));
+let selected='pack';const stage=document.getElementById('stage'),viewport=document.getElementById('viewport'),scale=document.getElementById('scale');
+function actor(name,art,x,y,isEnemy){const el=document.createElement('div');el.className='actor '+(isEnemy?'enemy':'ally');el.style.left=x+'px';el.style.top=(y-parseFloat(art.style.height))+'px';el.style.zIndex=Math.round(y);el.innerHTML='<div class="shadow"></div>';el.append(art);const label=document.createElement('span');label.className='actor-name';label.textContent=name;el.append(label);return el;}
+function render(){
+ stage.replaceChildren();const scene=scenes[selected];
+ const note=document.createElement('div');note.className='scene-note';note.append(document.createTextNode(scene.title));const sub=document.createElement('span');sub.textContent=scene.note;note.append(sub);stage.append(note);
+ for(const ally of allies)stage.append(actor(ally.name,sprite('../../unity/Assets/Resources/Art/Units/v010/'+ally.file+'.png',ally.crop,Math.min(144,120*ally.crop[3]/ally.crop[2]),1536,1024),ally.x,ally.y,false));
+ for(const [id,x,y]of scene.units){const enemy=enemies.find(e=>e.id===id);stage.append(actor(enemy.name,sprite(ATLAS,enemy.crop,enemy.height*Number(scale.value)/100),x,y,true));}
+ document.getElementById('scene-description').textContent=scene.text;document.getElementById('scale-value').value=scale.value+'%';
+ stage.setAttribute('aria-label',scene.title+'. 기존 아군 3명과 새 적 3명의 크기 비교. 모든 적은 왼쪽을 봅니다.');
+}
+document.querySelectorAll('[data-scene]').forEach(button=>button.addEventListener('click',()=>{selected=button.dataset.scene;document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));render();}));
+document.getElementById('silhouette').addEventListener('change',event=>stage.classList.toggle('silhouette',event.target.checked));scale.addEventListener('input',render);
+new ResizeObserver(()=>{stage.style.transform='scale('+(viewport.clientWidth/1280)+')';}).observe(viewport);
+for(const url of [ATLAS,'../../unity/Assets/Resources/Art/forest-battlefield.png',...allies.map(a=>'../../unity/Assets/Resources/Art/Units/v010/'+a.file+'.png')]){const img=new Image();img.onerror=()=>{const box=document.getElementById('image-error');box.style.display='block';box.textContent='이미지를 읽지 못했습니다: '+url;};img.src=url;}
+render();
+</script>
+</body>
+</html>

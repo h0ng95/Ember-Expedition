@@ -9,6 +9,7 @@ namespace Expedition.Presentation
     public sealed class CatalogCombatLab : MonoBehaviour
     {
         const float Width = 1280f, Height = 720f, Tick = 1f / 60f;
+        const float SettlementDuration = .55f;
         const string ArtRoot = "Art/Units/v010/";
         static readonly string[] FormIds = {
             "B-KN", "B-AR", "B-FI", "B-PR", "B-IC", "B-BA",
@@ -58,6 +59,13 @@ namespace Expedition.Presentation
             public int State;
             public bool NewHit, NewRelease, WasWinding;
         }
+        struct DrawnCombatant
+        {
+            public View View;
+            public Vector2 Point;
+            public float Height;
+            public bool ForestLoaded;
+        }
         sealed class FloatText
         {
             public string Text;
@@ -86,6 +94,7 @@ namespace Expedition.Presentation
         readonly Dictionary<string, ArtEntry> artEntries = new Dictionary<string, ArtEntry>();
         readonly HashSet<string> missingSheets = new HashSet<string>();
         readonly HashSet<string> neededSheets = new HashSet<string>();
+        ForestEnemyArt forestEnemyArt;
         BattlePrototype parent;
         Camera parentCamera;
         CatalogDatabase database;
@@ -97,6 +106,8 @@ namespace Expedition.Presentation
         Action standaloneClose, expeditionExit;
         Action<bool> expeditionResult;
         bool expeditionMode;
+        bool settling, settlementVictory;
+        float settlementAge;
         int expeditionWave, expeditionTotal;
         string expeditionEncounter;
         string error, lastAction;
@@ -124,6 +135,8 @@ namespace Expedition.Presentation
             var json = Resources.Load<TextAsset>("Content/unit-catalog-v010");
             try
             {
+                if (forestEnemyArt != null) forestEnemyArt.Release();
+                forestEnemyArt = new ForestEnemyArt();
                 database = json == null ? null : CatalogDatabase.FromJson(json.text);
                 error = database == null ? "Missing Resources/Content/unit-catalog-v010.json" : null;
                 artEntries.Clear();
@@ -178,7 +191,13 @@ namespace Expedition.Presentation
         void OnDisable()
         {
             ClearBattle(); ReleaseSheets();
-            if (clippedSpriteMaterial != null) Destroy(clippedSpriteMaterial);
+            if (forestEnemyArt != null) forestEnemyArt.Release();
+            forestEnemyArt = null;
+            if (clippedSpriteMaterial != null)
+            {
+                if (Application.isPlaying) Destroy(clippedSpriteMaterial);
+                else DestroyImmediate(clippedSpriteMaterial);
+            }
             clippedSpriteMaterial = null;
         }
 
@@ -210,6 +229,8 @@ namespace Expedition.Presentation
             combatViews.Clear();
             floating.Clear();
             accumulator = clock = 0;
+            settling = settlementVictory = false;
+            settlementAge = 0;
             paused = false;
             latestSkill = null;
             bossNoticeUntil = 0;
@@ -280,8 +301,10 @@ namespace Expedition.Presentation
             }
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
-                target.HitTime = .24f;
-                target.NewHit = true;
+                // Bosses keep their own attack/locomotion pose when hit. HP,
+                // impact effects and damage numbers still communicate damage.
+                target.HitTime = target.Unit.IsBoss ? 0f : .24f;
+                target.NewHit = !target.Unit.IsBoss;
                 if (floating.Count < 24) floating.Add(new FloatText {
                     Text = "−" + e.Amount.ToString("0"), Position = new Vector2(target.Unit.X, target.Unit.Y),
                     Color = target.Unit.Team == CatalogTeam.Ally ? new Color(1f, .53f, .47f) : Gold });
@@ -308,10 +331,10 @@ namespace Expedition.Presentation
             if (battleEffects != null)
             {
                 bool impactHold = battleEffects.HitStopRemaining > 0;
-                battleEffects.Tick(dt, impactHold ? 0 : gameDt, battle);
+                battleEffects.Tick(dt, impactHold ? 0 : settling ? dt : gameDt, battle);
                 if (impactHold) return;
             }
-            if (!battle.Ended)
+            if (!battle.Ended && !settling && (!expeditionMode || clock < 75f))
             {
                 accumulator += gameDt;
                 int steps = 0;
@@ -322,40 +345,53 @@ namespace Expedition.Presentation
                     { accumulator = 0; break; }
                 }
             }
-            if (expeditionMode && (battle.Ended || clock >= 75f))
+            if (expeditionMode && !settling && (battle.Ended || clock >= 75f))
             {
-                bool victory = battle.Ended && battle.Winner == CatalogTeam.Ally;
-                Action<bool> callback = expeditionResult;
-                expeditionResult = null;
-                enabled = false;
-                if (callback != null) callback(victory);
-                return;
+                settling = true;
+                settlementVictory = battle.Ended && battle.Winner == CatalogTeam.Ally;
+                settlementAge = 0;
+                accumulator = 0;
             }
+            float visualDt = settling ? dt : gameDt;
             foreach (View view in combatViews)
             {
-                if (!view.NewHit) view.HitTime = Mathf.Max(0, view.HitTime - Mathf.Min(gameDt, .08f));
+                if (!view.NewHit) view.HitTime = Mathf.Max(0, view.HitTime - Mathf.Min(visualDt, .08f));
                 view.NewHit = false;
                 if (!view.NewRelease)
                 {
-                    float releaseDt = Mathf.Min(gameDt, .08f);
+                    float releaseDt = Mathf.Min(visualDt, .08f);
                     view.ReleaseRemaining = Mathf.Max(0, view.ReleaseRemaining - releaseDt);
                     view.ReleaseAge += releaseDt;
                 }
                 view.NewRelease = false;
                 Vector2 position = new Vector2(view.Unit.X, view.Unit.Y);
                 bool winding = view.Unit.AttackPhase != CatalogAttackPhase.Ready;
-                if (winding) view.WindupAge = view.WasWinding ? Mathf.Min(.25f, view.WindupAge + gameDt) : 0;
+                if (winding) view.WindupAge = view.WasWinding ? Mathf.Min(.25f, view.WindupAge + visualDt) : 0;
                 else view.WindupAge = 0;
                 view.WasWinding = winding;
                 int state = !view.Unit.IsAlive ? 4 : view.HitTime > 0 ? 3 :
                     view.ReleaseRemaining > 0 || winding ? 2 :
                     (position - view.LastPosition).sqrMagnitude > .00004f ? 1 : 0;
                 if (state != view.State) { view.State = state; view.StateTime = 0; }
-                else view.StateTime += gameDt;
+                else view.StateTime += visualDt;
                 view.LastPosition = position;
             }
             for (int i = floating.Count - 1; i >= 0; i--)
             { floating[i].Age += dt; if (floating[i].Age > .75f) floating.RemoveAt(i); }
+            AdvanceSettlement(dt);
+        }
+
+        void AdvanceSettlement(float realDt)
+        {
+            if (!settling || paused || battleEffects != null && battleEffects.HitStopRemaining > 0) return;
+            settlementAge += Mathf.Max(0, realDt);
+            if (settlementAge < SettlementDuration) return;
+            settling = false;
+            Action<bool> callback = expeditionResult;
+            bool victory = settlementVictory;
+            expeditionResult = null;
+            enabled = false;
+            if (callback != null) callback(victory);
         }
 
         void EnsureStyles()
@@ -485,9 +521,11 @@ namespace Expedition.Presentation
 
             Rect arena = new Rect(24, 92, 1232, 560);
             if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
-            // Draw higher feet first so the foreground characters overlap consistently.
+            // Bosses remain behind living allies and escorts. Other actors use foot depth.
             var sorted = new List<View>(combatViews);
-            sorted.Sort((a, b) => b.Unit.Y.CompareTo(a.Unit.Y));
+            sorted.Sort((a, b) => BattleVisibility.Compare(a.Unit.IsAlive, a.Unit.Y, a.Unit.Team, a.Unit.Id,
+                b.Unit.IsAlive, b.Unit.Y, b.Unit.Team, b.Unit.Id, a.Unit.IsBoss, b.Unit.IsBoss));
+            var drawn = new List<DrawnCombatant>(sorted.Count);
             foreach (View view in sorted)
             {
                 CatalogBattleUnit unit = view.Unit;
@@ -498,13 +536,28 @@ namespace Expedition.Presentation
                 if (unit.IsAlive && view.HitTime > 0)
                     point.x += (unit.Team == CatalogTeam.Ally ? -1 : 1) *
                         Mathf.Sin(view.HitTime / .24f * Mathf.PI) * 6;
-                if (unit.Team == CatalogTeam.Enemy) DrawExpeditionEnemy(view, point);
-                else DrawSheet(unit.FormId, view.State, BattleAnimationFrame(view),
+                bool forestLoaded = false;
+                float drawnHeight = 144f;
+                Rect bounds;
+                if (unit.Team == CatalogTeam.Enemy)
+                    drawnHeight = DrawExpeditionEnemy(view, point, out forestLoaded, out bounds);
+                else bounds = DrawSheet(unit.FormId, view.State, BattleAnimationFrame(view),
                     new Rect(point.x - 60, point.y - 144, 120, 144), ShouldFlip(view));
                 GUI.color = previous;
+                drawn.Add(new DrawnCombatant { View = view, Point = point,
+                    Height = drawnHeight, ForestLoaded = forestLoaded });
+            }
+            if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
+            // HUD is painted after every silhouette.
+            foreach (DrawnCombatant painted in drawn)
+            {
+                View view = painted.View;
+                CatalogBattleUnit unit = view.Unit;
+                Vector2 point = painted.Point;
                 if (!unit.IsAlive) continue;
                 float width = unit.IsBoss ? 174f : 74f;
-                float barHeight = unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
+                float barHeight = painted.ForestLoaded ? painted.Height + (unit.IsBoss ? 23f : 12f) :
+                    unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
                     unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
                 float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
                 float barX = Mathf.Clamp(point.x - width * .5f, arena.x + 3, arena.xMax - width - 3);
@@ -518,7 +571,6 @@ namespace Expedition.Presentation
                 if (unit.IsBoss && unit.BossEnraged)
                     GUI.Label(new Rect(barX, barY + 13, width, 26), "분노", centered);
             }
-            if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
             foreach (FloatText text in floating)
             {
                 Vector2 point = ExpeditionPoint(text.Position, arena);
@@ -565,8 +617,27 @@ namespace Expedition.Presentation
                 Mathf.Clamp(arena.y + 405f - position.y * 48f, arena.y + 285, arena.yMax - 35));
         }
 
-        void DrawExpeditionEnemy(View view, Vector2 foot)
+        float DrawExpeditionEnemy(View view, Vector2 foot, out bool forestLoaded, out Rect bounds)
         {
+            forestLoaded = false;
+            bounds = default(Rect);
+            string forestSpecies = ForestEnemyArt.SpeciesFor(view.Unit);
+            if (forestSpecies != null && forestEnemyArt != null)
+            {
+                int frame = ForestEnemyArt.FrameIndex(view.State, view.StateTime, view.WindupAge,
+                    view.ReleaseRemaining, view.ReleaseAge, view.Unit.ChargeWarningRemaining,
+                    view.Unit.IsCharging, view.Unit.AttackWindupRemaining,
+                    forestSpecies == ForestEnemyArt.Species[2] || forestSpecies == ForestEnemyArt.Species[3]);
+                Color beforeForest = GUI.color;
+                if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
+                bool drewForest = forestEnemyArt.Draw(forestSpecies, frame, foot, out bounds);
+                GUI.color = beforeForest;
+                if (drewForest)
+                {
+                    forestLoaded = true;
+                    return ForestEnemyArt.SilhouetteHeight(forestSpecies);
+                }
+            }
             if (bossConceptSheet == null) bossConceptSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");
             bool isRaider = view.Unit.EnemyRole == CatalogEnemyRole.Raider ||
                 view.Unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0;
@@ -590,8 +661,9 @@ namespace Expedition.Presentation
                 crop = new Rect(260, 182, 722, 904); width = 103; height = 129;
             }
             else { crop = new Rect(892, 124, 300, 353); width = elite ? 138 : 96; height = elite ? 162 : 113; }
-            if (texture == null) return;
-            // Temporary shared silhouettes until the regional minion sheets are produced.
+            bounds = new Rect(foot.x - width * .5f, foot.y - height, width, height);
+            if (texture == null) return height;
+            // Keep the prior concept silhouette only when a regional sheet is unavailable.
             Color before = GUI.color;
             if (spine) GUI.color *= new Color(.7f, .88f, 1f);
             else if (elite) GUI.color *= new Color(1f, .8f, .62f);
@@ -605,6 +677,7 @@ namespace Expedition.Presentation
             else if (view.Unit.IsBoss && view.Unit.ChargeWarningRemaining > 0)
             { destination.y += 10; destination.height -= 10; }
             if (!view.Unit.IsAlive) { destination.y += height * .72f; destination.height *= .28f; }
+            bounds = destination;
             // These legacy textures retain their original dimensions (max import size 2048).
             float sourceWidth = texture.width;
             float sourceHeight = texture.height;
@@ -612,6 +685,7 @@ namespace Expedition.Presentation
             if (flip) { uv.x += uv.width; uv.width = -uv.width; }
             GUI.DrawTextureWithTexCoords(destination, texture, uv, true);
             GUI.color = before;
+            return height;
         }
 
         void DrawArena()
@@ -912,9 +986,9 @@ namespace Expedition.Presentation
             return nearest == null ? unit.Team == CatalogTeam.Enemy : nearest.X < unit.X;
         }
 
-        void DrawSheet(string id, int state, int frame, Rect rect, bool flip)
+        Rect DrawSheet(string id, int state, int frame, Rect rect, bool flip)
         {
-            if (string.IsNullOrEmpty(id)) return;
+            if (string.IsNullOrEmpty(id)) return rect;
             ArtEntry entry;
             artEntries.TryGetValue(id, out entry);
             if (!sheets.TryGetValue(id, out Texture2D texture) && !missingSheets.Contains(id))
@@ -956,7 +1030,7 @@ namespace Expedition.Presentation
             {
                 Fill(rect, new Color(.42f, .13f, .14f));
                 GUI.Label(new Rect(rect.x, rect.center.y - 24, rect.width, 48), "MISSING ART\n" + id, centered);
-                return;
+                return rect;
             }
             int index = state == 0 ? Mathf.Clamp(frame, 0, 3) : state == 1 ? 6 + Mathf.Clamp(frame, 0, 5) :
                 state == 2 ? 12 + Mathf.Clamp(frame, 0, 5) : state == 3 ? Mathf.Clamp(frame, 4, 5) :
@@ -993,6 +1067,7 @@ namespace Expedition.Presentation
                 rect.yMax - (1f - pivotY) * drawnHeight, drawnWidth, drawnHeight);
             Texture displayed = clippedSheets.TryGetValue(id, out RenderTexture clippedSheet) ? clippedSheet : (Texture)texture;
             GUI.DrawTextureWithTexCoords(fitted, displayed, uv, true);
+            return fitted;
         }
 
         void DrawBossConcept(Vector2 foot)

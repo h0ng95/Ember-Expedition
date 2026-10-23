@@ -175,7 +175,7 @@ namespace Expedition.Core
                 AttackInterval = interval, Range = range, MoveSpeed = moveSpeed,
                 IsBoss = boss, Clock = this, NextBasicAt = .25f
             };
-            units.Add(unit); byId.Add(id, unit);
+            units.Add(unit); byId.Add(id, unit); spacingOrderDirty = true;
             if (HasTrait(unit, "T-PR")) GiveShield(unit, unit, unit.MaxHp * .1f, 4f, "T-PR");
             return unit;
         }
@@ -218,6 +218,7 @@ namespace Expedition.Core
                     if (unit.BurnTicksLeft == 0) unit.BurnUntil = Time;
                 }
             }
+            ResolveBodySpacing();
             foreach (CatalogBattleUnit unit in units)
             {
                 if (!unit.IsAlive) continue;
@@ -257,7 +258,7 @@ namespace Expedition.Core
                     if (vulnerable != null) target = vulnerable;
                 }
                 if (target == null) continue;
-                if (Distance(unit, target) > unit.Range)
+                if (!InBasicContact(unit, target))
                 {
                     MoveToward(unit, target);
                     continue;
@@ -269,6 +270,7 @@ namespace Expedition.Core
                     unit.ReleaseAt = Math.Max(Time + .25f, unit.NextBasicAt);
                 }
             }
+            ResolveBodySpacing();
             CheckEnded();
         }
 
@@ -307,7 +309,6 @@ namespace Expedition.Core
             float fraction = Math.Min(1f, (Time - actor.ChargeStartAt) / .2f);
             actor.X = actor.ChargeStartX + (actor.ChargeEndX - actor.ChargeStartX) * fraction;
             actor.Y = actor.ChargeStartY + (actor.ChargeEndY - actor.ChargeStartY) * fraction;
-            SeparateEnemy(actor);
         }
 
         void FinishCharge(CatalogBattleUnit actor)
@@ -315,7 +316,6 @@ namespace Expedition.Core
             CatalogBattleUnit target = Get(actor.PendingTargetId);
             actor.ChargeMoving = false;
             actor.AttackPhase = CatalogAttackPhase.Ready;
-            SeparateEnemy(actor);
             actor.NextChargeAt = Time + (actor.BossPatternsEnabled ?
                 actor.BossEnraged ? 5.5f : 7f : 6f);
             actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .55f);
@@ -401,7 +401,7 @@ namespace Expedition.Core
             CatalogBattleUnit target = Get(actor.PendingTargetId);
             if (target == null || !target.IsAlive || target.Team == actor.Team) target = ChooseEnemy(actor, false, false);
             actor.NextBasicAt = Time + actor.AttackInterval * (1f - Math.Min(.4f, BuffTotal(actor, CatalogBuffKind.Haste)));
-            if (target == null || Distance(actor, target) > actor.Range + .001f) return;
+            if (target == null || !InBasicContact(actor, target)) return;
             float coefficient = 1f;
             if (actor.ExtraBasicUntil > Time)
             {
@@ -425,35 +425,23 @@ namespace Expedition.Core
 
         void MoveToward(CatalogBattleUnit actor, CatalogBattleUnit target)
         {
-            float distance = Distance(actor, target);
-            if (distance < .0001f) return;
-            float travel = Math.Min(distance - actor.Range, actor.MoveSpeed * (1f - actor.SlowPercent) * Tick);
-            actor.X += (target.X - actor.X) / distance * travel;
-            actor.Y += (target.Y - actor.Y) / distance * travel;
-            if (actor.Team == CatalogTeam.Enemy && actor.EnemyRole != CatalogEnemyRole.None)
-                SeparateEnemy(actor);
-        }
-
-        void SeparateEnemy(CatalogBattleUnit actor)
-        {
-            foreach (CatalogBattleUnit other in units)
+            float dx = target.X - actor.X, dy = target.Y - actor.Y;
+            bool bodyContact = actor.Range <= 2.1f && !actor.IsBoss && !target.IsBoss &&
+                NeedsBodySpacing(actor, target);
+            if (bodyContact)
             {
-                if (other == actor || !other.IsAlive || other.Team != CatalogTeam.Enemy ||
-                    other.EnemyRole == CatalogEnemyRole.None) continue;
-                float dx = actor.X - other.X, dy = actor.Y - other.Y;
-                float distance = (float)Math.Sqrt(dx * dx + dy * dy);
-                if (distance >= .56f) continue;
-                if (distance < .0001f)
-                {
-                    actor.Y += string.CompareOrdinal(actor.Id, other.Id) < 0 ? -.56f : .56f;
-                }
-                else
-                {
-                    float push = .56f - distance;
-                    actor.X += dx / distance * push;
-                    actor.Y += dy / distance * push;
-                }
+                float reachX, reachY;
+                BodyLimits(actor, target, out reachX, out reachY);
+                dx = Math.Sign(dx) * Math.Max(0f, Math.Abs(dx) - reachX);
+                dy = Math.Sign(dy) * Math.Max(0f, Math.Abs(dy) - reachY);
             }
+            bool flanking = SteerAroundFriendlyBlocker(actor, target, ref dx, ref dy);
+            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (distance < .0001f) return;
+            float travel = Math.Min(bodyContact || flanking ? distance : distance - actor.Range,
+                actor.MoveSpeed * (1f - actor.SlowPercent) * Tick);
+            actor.X += dx / distance * travel;
+            actor.Y += dy / distance * travel;
         }
 
         CatalogBattleUnit ChooseEnemy(CatalogBattleUnit actor, bool lowestHp, bool farthest)

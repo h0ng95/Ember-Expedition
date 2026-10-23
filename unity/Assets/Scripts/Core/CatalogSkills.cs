@@ -48,7 +48,7 @@ namespace Expedition.Core
                 bool low = skill == "B-AR" || skill == "E-AR-T";
                 bool far = skill == "F-AR";
                 target = ChooseEnemy(actor, low, far);
-                if (target == null || Distance(actor, target) > actor.Range) return false;
+                if (target == null || !InBasicContact(actor, target)) return false;
             }
             actor.PendingSkillId = skill;
             actor.PendingTargetId = target == null ? null : target.Id;
@@ -65,7 +65,7 @@ namespace Expedition.Core
                 return; // Recovery waits if another healer restored the target during windup.
             if (target != null && (!target.IsAlive || target.Team == actor.Team)) target = null;
             if (target == null && !IsSupportSkill(skill)) target = ChooseEnemy(actor, false, false);
-            if (!IsSupportSkill(skill) && (target == null || Distance(actor, target) > actor.Range))
+            if (!IsSupportSkill(skill) && (target == null || !InBasicContact(actor, target)))
                 return; // A dead or escaped target does not consume the skill cooldown.
             if (skill == actor.FormId && actor.FormId.StartsWith("F-", StringComparison.Ordinal))
                 actor.NextFinalAt = Time + SkillCooldown(skill);

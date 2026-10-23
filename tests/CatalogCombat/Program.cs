@@ -21,6 +21,7 @@ internal static class Program
             FirstHitAndDefense();
             ShieldBreakAndBurn();
             FinalBranchPriority();
+            PhysicalSpacingAndReach();
             SeedDeterminism();
             Console.WriteLine("PASS: catalog combat regression, " + assertions + " assertions.");
             return 0;
@@ -32,6 +33,157 @@ internal static class Program
     {
         assertions++;
         if (!value) throw new Exception(reason);
+    }
+
+    static bool BodyOverlap(CatalogBattleUnit a, CatalogBattleUnit b,
+        float widthA, float heightA, float widthB, float heightB)
+    {
+        float overlapX = (widthA + widthB) * .5f - Math.Abs(a.X - b.X) * 83f;
+        float footA = -a.Y * 48f, footB = -b.Y * 48f;
+        float overlapY = Math.Min(footA, footB) - Math.Max(footA - heightA, footB - heightB);
+        return overlapX > .3f * Math.Min(widthA, widthB) + 2f &&
+            overlapY > .3f * Math.Min(heightA, heightB) + 2f;
+    }
+
+    static bool HasVisibleBodyOverlap(CatalogBattleUnit a, CatalogBattleUnit b,
+        float widthA, float heightA, float widthB, float heightB)
+    {
+        float overlapX = (widthA + widthB) * .5f - Math.Abs(a.X - b.X) * 83f;
+        float footA = -a.Y * 48f, footB = -b.Y * 48f;
+        float overlapY = Math.Min(footA, footB) - Math.Max(footA - heightA, footB - heightB);
+        return overlapX > 4f && overlapY > 4f;
+    }
+
+    static void PhysicalSpacingAndReach()
+    {
+        var crowded = new CatalogBattle(catalog);
+        var ally = crowded.AddUnit("ally", CatalogTeam.Ally, "B-KN", null, null, 0, 0);
+        var cub1 = crowded.AddEnemy("beast-1", 100, 8, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        var cub2 = crowded.AddEnemy("beast-2", 100, 8, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        var elite = crowded.AddEnemy("elite-beast", 250, 20, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        crowded.Step(1f / 60f);
+        Check(!BodyOverlap(ally, cub1, 70, 80, 100, 70) &&
+            !BodyOverlap(ally, cub2, 70, 80, 100, 70) &&
+            !BodyOverlap(ally, elite, 70, 80, 200, 125) &&
+            !BodyOverlap(cub1, cub2, 100, 70, 100, 70) &&
+            !BodyOverlap(cub1, elite, 100, 70, 200, 125) &&
+            !BodyOverlap(cub2, elite, 100, 70, 200, 125),
+            "identical starts keep ordinary enemies and allies substantially visible");
+        foreach (CatalogBattleUnit unit in crowded.Units)
+            Check(unit.X >= -6.4f && unit.X <= 6.4f && unit.Y >= -2.35f && unit.Y <= 2.35f,
+                "crowded separation remains inside the rendered viewport");
+        var partial = new CatalogBattle(catalog);
+        var small = partial.AddUnit("small-ally", CatalogTeam.Ally, "B-KN", null, null, 0, 0);
+        var large = partial.AddEnemy("elite-beast", 340, 38, 12, 1.8f, 1f, .7f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        partial.Step(1f / 60f);
+        Check(HasVisibleBodyOverlap(small, large, 70, 80, 200, 125),
+            "single small and large actors retain modest visible silhouette overlap");
+        Check(!BodyOverlap(small, large, 70, 80, 200, 125),
+            "large elite leaves at least 70 percent of the smaller actor clear on one axis");
+        var packed = new CatalogBattle(catalog);
+        var packedUnits = new List<CatalogBattleUnit>();
+        for (int i = 0; i < 3; i++)
+            packedUnits.Add(packed.AddUnit("packed-ally-" + i, CatalogTeam.Ally,
+                "B-KN", null, null, 0, 0));
+        for (int i = 0; i < 5; i++)
+            packedUnits.Add(packed.AddEnemy("packed-beast-" + i, 100, 8, 0, 1.8f, 1, .65f,
+                false, 0, 0, CatalogEnemyRole.Beast));
+        packed.Step(1f / 60f);
+        for (int i = 0; i < packedUnits.Count; i++)
+        for (int j = i + 1; j < packedUnits.Count; j++)
+        {
+            CatalogBattleUnit a = packedUnits[i], b = packedUnits[j];
+            if (a.Team == CatalogTeam.Ally && b.Team == CatalogTeam.Ally) continue;
+            Check(!BodyOverlap(a, b, a.Team == CatalogTeam.Ally ? 70 : 100,
+                a.Team == CatalogTeam.Ally ? 80 : 70,
+                b.Team == CatalogTeam.Ally ? 70 : 100,
+                b.Team == CatalogTeam.Ally ? 80 : 70),
+                "eight actors at one origin retain readable projected bodies");
+        }
+        foreach (CatalogBattleUnit unit in packedUnits)
+            Check(unit.X >= -6.4f && unit.X <= 6.4f && unit.Y >= -2.35f && unit.Y <= 2.35f,
+                "eight-actor crowd remains visible");
+        for (int tick = 0; tick < 8 * 60 && !crowded.Ended; tick++)
+        {
+            crowded.Step(1f / 60f);
+            if (cub1.IsAlive && cub2.IsAlive && !cub1.IsCharging && !cub2.IsCharging)
+                Check(!BodyOverlap(cub1, cub2, 100, 70, 100, 70),
+                    "converging minions remain substantially visible during combat");
+            if (ally.IsAlive && elite.IsAlive && !elite.IsCharging)
+                Check(!BodyOverlap(ally, elite, 70, 80, 200, 125),
+                    "elite never hides most of a living ally between charges");
+            foreach (CatalogBattleUnit unit in crowded.Units)
+                Check(unit.X >= -6.4f && unit.X <= 6.4f && unit.Y >= -2.35f && unit.Y <= 2.35f,
+                    "combat bodies stay inside the rendered viewport");
+        }
+
+        var bossBattle = new CatalogBattle(catalog);
+        var boss = bossBattle.AddEnemy("beast-boss", 5000, 20, 0, 1.65f, 1.1f, .65f,
+            true, 0, 0, CatalogEnemyRole.Beast, true);
+        var escort = bossBattle.AddEnemy("beast-escort", 200, 10, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        var bossAlly = bossBattle.AddUnit("boss-ally", CatalogTeam.Ally, "B-KN", null, null, 0, 0);
+        bossBattle.Step(1f / 60f);
+        Check(boss.X == 0 && boss.Y == 0 &&
+            !BodyOverlap(boss, escort, 280, 210, 100, 70),
+            "boss stays anchored while its living escort clears most of the boss body");
+        Check(bossAlly.IsAlive, "boss and ally may share the contact area");
+
+        var corpseBattle = new CatalogBattle(catalog);
+        var corpse = corpseBattle.AddEnemy("beast-corpse", 100, 10, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        corpse.Hp = 0;
+        var living = corpseBattle.AddEnemy("beast-living", 100, 10, 0, 1.8f, 1, .65f,
+            false, 0, 0, CatalogEnemyRole.Beast);
+        corpseBattle.AddUnit("target", CatalogTeam.Ally, "B-KN", null, null, -4, 0);
+        corpseBattle.Step(1f / 60f);
+        Check(corpse.X == 0 && corpse.Y == 0 && Math.Abs(living.X) < .1f,
+            "dead bodies do not push living units");
+
+        var contact = new CatalogBattle(catalog);
+        var knight = contact.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, -1.5f, 0);
+        contact.AddEnemy("beast", 110, 8, 0, 1.8f, 1, .65f,
+            false, 1.5f, 0, CatalogEnemyRole.Beast);
+        int hits = 0;
+        contact.Event += e => { if (e.Kind == CatalogEventKind.BasicHit && e.SourceId == knight.Id) hits++; };
+        for (int tick = 0; tick < 30 * 60 && !contact.Ended; tick++) contact.Step(1f / 60f);
+        Check(contact.Ended && contact.Winner == CatalogTeam.Ally && hits > 0,
+            "separated melee units can connect and complete combat");
+
+        var distant = new CatalogBattle(catalog);
+        distant.AddUnit("distant-knight", CatalogTeam.Ally, "B-KN", null, null, -4, 0);
+        distant.AddEnemy("distant-beast", 110, 8, 0, 1.8f, 1, .65f,
+            false, 4, 0, CatalogEnemyRole.Beast);
+        int premature = 0;
+        distant.Event += e => { if (e.Kind == CatalogEventKind.BasicHit) premature++; };
+        distant.Step(.4f);
+        Check(premature == 0, "body contact does not create remote melee hits");
+
+        var lane = new CatalogBattle(catalog);
+        lane.AddUnit("lane-knight", CatalogTeam.Ally, "B-KN", null, null, -1.3f, 0);
+        lane.AddUnit("lane-archer", CatalogTeam.Ally, "B-AR", null, null, -3.7f, 1.8f);
+        lane.AddUnit("lane-priest", CatalogTeam.Ally, "B-PR", null, null, -3.7f, -1.8f);
+        lane.AddEnemy("elite-beast", 340, 38, 12, 1.8f, 1f, .7f,
+            false, 3.25f, 0, CatalogEnemyRole.Beast);
+        lane.AddEnemy("beast-1", 145, 22, 7, 1.8f, 1f, .65f,
+            false, 2.1f, -.575f, CatalogEnemyRole.Beast);
+        lane.AddEnemy("beast-2", 145, 22, 7, 1.8f, 1f, .65f,
+            false, 2.65f, .575f, CatalogEnemyRole.Beast);
+        lane.AddEnemy("spine-raider-1", 100, 25, 4, 2f, 3.6f, .55f,
+            false, 3.2f, 1.2f, CatalogEnemyRole.Raider);
+        int flankHits = 0, chargeHits = 0;
+        lane.Event += e =>
+        {
+            if (e.Kind == CatalogEventKind.BasicHit && e.SourceId == "spine-raider-1") flankHits++;
+            if (e.Kind == CatalogEventKind.ChargeHit && e.SourceId == "elite-beast") chargeHits++;
+        };
+        for (int tick = 0; tick < 8 * 60 && !lane.Ended; tick++) lane.Step(1f / 60f);
+        Check(flankHits > 0 && chargeHits > 0,
+            "rear ranged escort reaches a firing lane while an elite lands its first charge");
     }
 
     static void CatalogContainsThirtyForms()

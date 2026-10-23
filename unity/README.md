@@ -1,8 +1,8 @@
 # Ember Expedition · Unity 전투 시제품
 
-> **2026-10-23 v0.17:** 3전투의 측면 원거리 적, 4전투 정예 압박, 5전투 보스 완화와 준비 안내를 적용했다. [현재 변경·검증 기록](../docs/design-v0.17/HANDOFF.md)을 먼저 읽는다. v0.16의 흡수·선택형 결합 조작과 이전 원정 저장을 유지한다. 적 그림은 임시 자산이며 [재디자인 기준](../docs/design-v0.17/enemy-art-brief.md)을 별도로 정리했다. 아래 2026-10-18 기록과 [FIRST-SLICE.md](FIRST-SLICE.md)는 이전 시제품의 기록이다.
+> **2026-10-23 v0.20:** 일반 적은 부분 겹침을 허용하고 심하게 가려질 때 간격을 보정한다. 보스 앞의 아군·호위 표시와 보스 피격 반응 정리를 적용했다. [현재 변경·검증 기록](../docs/design-v0.20/HANDOFF.md)을 먼저 읽는다. 숲 적 애니메이션은 v0.19, 전투 수치는 v0.17, 성장 조작은 v0.16 기준이다. 간격 변화에 따른 실제 난도는 별도 확인한다. 성채 적 미술은 후속 제작 대상이다. 아래 2026-10-18 기록과 [FIRST-SLICE.md](FIRST-SLICE.md)는 이전 시제품의 기록이다.
 
-## v0.17 실행
+## v0.20 실행
 
 1. 앱 홈에서 **새 원정**을 누른다. 이전 원정이 있으면 교체 확인을 거친다.
 2. 시작 40G에서 **동료 소환 · 20G**로 대기석에 동료를 얻고 전장으로 끌어 배치한다. 출전 최대 5명, 대기 최대 7명이다.
@@ -10,7 +10,7 @@
 4. 승리하면 골드를 받고 다음 전투로 이동한다. 패배하면 등불 1개를 잃고 같은 전투를 재도전한다. 보스는 5/10전투에 나온다. 저장은 소환·성장·배치·전투 시작·결과 때 처리한다.
 5. **이어하기**는 준비·결과 상태를 복구하고, 중단된 전투는 동일한 시작 편성으로 다시 재생한다.
 
-`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 10전투 표본 원정을 검사한다. `-executeMethod Expedition.EditorTools.DragGrowthValidation.BuildAndroid`는 드래그 입력 처리와 JSON 호환 검사를 통과한 뒤 APK를 만든다. 이 검사는 컴퓨터의 기존 원정 저장을 검사 종료 시 복구한다.
+`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 10전투 표본 원정을 검사한다. `-executeMethod Expedition.EditorTools.ForestEnemyArtValidation.BuildAndroid`는 적 프레임·가림·결과 전환과 기존 드래그 입력·JSON 호환 검사를 통과한 뒤 APK를 만든다. 저장 검사는 컴퓨터의 기존 원정 저장을 검사 종료 시 복구한다.
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 

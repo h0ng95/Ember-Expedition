@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>전투 간격과 보스 표시 규칙 · v0.20</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>전투 간격과 보스 표시 규칙 · v0.20</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 사용자 피드백과 기준</a>
+<a href="#section-2">2. 표시 처리</a>
+<a href="#section-3">3. 이동과 공격</a>
+<a href="#section-4">4. 확인 기록</a>
+<a href="#section-5">5. 주요 파일</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-23 · Unity / Android</p>
+<h2 id="section-1">1. 사용자 피드백과 기준</h2>
+<p>v0.19에서 큰 적에게 가려진 아군을 다시 그리는 처리를 먼저 적용했다. v0.20에서 몸 전체를 떨어뜨려 보니 전투가 너무 흩어져 보여, 후속 피드백에 따라 <strong>부분 겹침은 허용하고 완전히 묻히는 상황을 막는 방향</strong>으로 간격을 줄였다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>대상</th>
+<th>규칙</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>졸개끼리</td>
+<td>일부 겹쳐 싸울 수 있게 밀집. 서로를 통째로 가리지 않도록 최소 간격 유지</td>
+</tr>
+<tr>
+<td>졸개와 아군</td>
+<td>부분 겹침 허용. 작은 캐릭터의 몸을 알아볼 수 있도록 간격 보정</td>
+</tr>
+<tr>
+<td>졸개와 보스</td>
+<td>부분 겹침 허용. 작은 졸개 기준으로 간격을 계산하고 보스보다 앞에 표시</td>
+</tr>
+<tr>
+<td>큰 보스와 아군</td>
+<td>겹침 허용. 살아 있는 아군은 항상 보스보다 앞에 표시</td>
+</tr>
+<tr>
+<td>쓰러진 유닛</td>
+<td>살아 있는 유닛을 가리거나 이동을 막지 않음</td>
+</tr>
+</tbody></table></div>
+<p>정예는 일반 적의 간격 규칙을 적용한다. 무기를 휘두르는 순간의 끝부분과 공격 이펙트까지 서로 닿지 못하게 하는 규칙은 아니다. 전투 중 캐릭터의 몸과 남아 있는 적의 수를 알아볼 수 있도록 하는 것이 기준이다.</p>
+<h2 id="section-2">2. 표시 처리</h2>
+<ul>
+<li>쓰러진 유닛 → 보스 → 나머지 살아 있는 유닛 순서로 그린다.</li>
+<li>일반 유닛끼리는 발 위치에 따른 깊이 순서를 사용한다.</li>
+<li>보스 호위도 보스보다 앞에 표시한다. 간격 유지와 함께 큰 보스에게 졸개가 묻히는 상황을 막는다.</li>
+<li>v0.19의 청록빛 반투명 재표시는 제거했다. 아군은 원래 색과 불투명도로 표시한다.</li>
+<li>체력바·보호막·보스 이름은 모든 캐릭터 뒤에 마지막으로 그린다.</li>
+</ul>
+<h3>보스의 피격 반응 정리</h3>
+<p>보스가 맞을 때마다 자세를 바꾸고 흔들리는 모습이 부산스럽다는 피드백을 반영한다.</p>
+<ul>
+<li>보스는 피해를 받아도 피격 프레임으로 전환하지 않는다.</li>
+<li>보스의 피격에 따른 좌우 흔들림과 붉은 점멸을 제거한다.</li>
+<li>보스가 강한 공격을 받았다는 이유로 전투를 잠깐 멈추는 효과도 제거한다.</li>
+<li>피해 수치·체력 감소·타격 이펙트·소리는 유지한다. 실제 피해와 보스의 공격·돌진·광폭화·쓰러짐 동작은 그대로 작동한다.</li>
+</ul>
+<h2 id="section-3">3. 이동과 공격</h2>
+<ul>
+<li>일반 적의 몸 크기를 기준으로 간격을 계산한다. 졸개·가시등·정예·보스는 서로 다른 몸 크기를 사용한다.</li>
+<li>이전의 추가 여백 6을 제거하고, <strong>둘 중 작은 몸의 폭·높이를 기준으로 약 30% 겹침을 허용</strong>한다. 큰 적의 크기를 통째로 축소하는 방식은 작은 동료가 파묻힐 수 있어 사용하지 않는다. 이 비율은 프레임별 그림 전체가 아닌 몸 간격 계산 기준이다.</li>
+<li>적끼리는 옆으로 퍼지도록 하고, 큰 적 뒤에 막힌 공격자는 옆길을 통해 접근한다. 간격 보정으로 화면 밖으로 밀려나지 않도록 이동 가능한 범위를 제한한다.</li>
+<li>보스와 졸개 사이에서는 졸개를 이동시킨다. 간격 보정을 위해 보스의 위치나 돌진 예고 위치를 밀지 않는다.</li>
+<li>근접 기본 공격과 단일 대상 기술은 몸의 가장자리에 닿는 거리에서 사용할 수 있다. 원거리·범위 공격·지원 기술·보스의 사거리와 피해 수치는 기존 기준이다.</li>
+<li>0.2초 돌진 이동 중에는 잠깐 몸을 가로지를 수 있고, 착지 후 간격을 다시 정리한다. 공격 동작의 뿔·무기 끝부분과 이펙트는 몸 간격의 기준에 포함하지 않는다.</li>
+<li>살아 있는 아군끼리의 배치 간격은 이번 변경 대상에서 제외했다.</li>
+</ul>
+<h2 id="section-4">4. 확인 기록</h2>
+<ul>
+<li>순수 C# 전투 검사: <strong>3,011개 통과</strong>. 겹친 시작 위치, 여러 적의 접근, 화면 범위, 보스와 호위, 쓰러진 유닛, 근접 공격 성립, 정예 뒤의 원거리 적 우회·공격을 포함한다. 작은 동료와 정예가 일부 겹친 채 남아 있으면서 작은 몸의 식별 영역은 확보하는 경우도 검사한다.</li>
+<li>원정 검사: <strong>1,675개 통과</strong>.</li>
+<li>Unity 검사 통과: 숲 그림 좌표 258개, 보스 표시 순서 12개, 실제 보스·일반 적 피격 이벤트 반응, 결과 전환, 성장 조작 17개.</li>
+<li>부분 겹침 조정 APK 빌드 성공. SHA-256: <code>F2B3A0C01000FA08C66F6A2315A414013E4C9D0B29F51DDD2EB78673E7FCC097</code>.</li>
+<li>로그: <code>unity/Logs/v020-compact-build.log</code> (로컬 빌드 산출물).</li>
+<li>Galaxy Buddy2에 업데이트 설치하고 4·5전투에서 간격과 보스 표시를 확인했다. 외형 확인용 준비 상태를 사용한 검사이며 자연 진행 기록은 아니다. 테스트 전 저장 데이터를 복원하고 원본과 바이트 단위 일치 확인을 마쳤다.</li>
+</ul>
+<h3>Buddy2 화면과 영상</h3>
+<p><img src="device-evidence/compact-minion-spacing.png" alt="부분적으로 겹치며 더 가깝게 모여 있는 일반 적들"></p>
+<p><img src="device-evidence/compact-elite-contact.png" alt="정예와 일부 겹치며 가까이 공격하는 기사"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave4-compact-motion.mp4"></video></p>
+<p><a href="device-evidence/wave4-compact-motion.mp4">현재 일반 적·정예 전투 영상 · 12초</a> · <a href="device-evidence/wave4-motion.mp4">이전: 몸 전체 간격 확보</a></p>
+<p><img src="device-evidence/compact-boss-escorts.png" alt="보스와 가까이 붙으면서도 앞에 보이는 호위 두 마리"></p>
+<p><img src="device-evidence/compact-boss-front-ally.png" alt="보스보다 앞에 표시되는 기사와 점멸하지 않는 보스"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave5-compact-motion.mp4"></video></p>
+<p><a href="device-evidence/wave5-compact-motion.mp4">현재 보스 전투 영상 · 12초</a> · <a href="device-evidence/wave5-motion.mp4">이전: 몸 전체 간격 확보</a></p>
+<h3>난도에 미치는 영향</h3>
+<p>간격은 전투 결과에도 영향을 준다. 초기 구현에서 정예가 뒤로 밀려 첫 돌진이 빗나가고, 원거리 적이 정예 뒤에 갇히는 현상을 발견해 접근 동작을 수정했다.</p>
+<p>간격을 완전히 확보하던 시점의 고정 시드 1001·4전투에서 적의 총 피해량은 이전 버전 590.5 → 첫 간격 구현 256.9 → 접근 수정 후 440.3이었다. 그 표본에서 정예가 기본 공격 6회·돌진 적중 2회, 원거리 적이 기본 공격 4회를 수행했다.</p>
+<p>시드 1001~1005·기본 3명 유지 전략의 비교:</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th align="right">4전투 승리</th>
+<th align="right">평균 남은 팀 HP</th>
+<th align="right">5전투 승리</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>간격 변경 전</td>
+<td align="right">0/5</td>
+<td align="right">0%</td>
+<td align="right">0/5</td>
+</tr>
+<tr>
+<td>몸 전체 간격 확보</td>
+<td align="right">5/5</td>
+<td align="right">29.2%</td>
+<td align="right">0/5</td>
+</tr>
+<tr>
+<td><strong>현재: 부분 겹침 허용</strong></td>
+<td align="right"><strong>5/5</strong></td>
+<td align="right"><strong>4.8%</strong></td>
+<td align="right"><strong>0/5</strong></td>
+</tr>
+</tbody></table></div>
+<p>피해·체력·공격 주기·보상 수치는 바꾸지 않았다. 이는 작은 자동 진행 표본이며 플레이어 승률이 아니다. 전투 간격을 좁히면서 교전 압박은 커졌지만, 난도 조정이 완료됐다는 의미는 아니다. <a href="balance-full-clearance.json">전체 간격 표본</a>, <a href="balance-partial-overlap.json">부분 겹침 표본</a>.</p>
+<h2 id="section-5">5. 주요 파일</h2>
+<ul>
+<li><code>unity/Assets/Scripts/Core/CatalogSpacing.cs</code>: 몸 간격, 근접 접촉 거리, 옆길 접근.</li>
+<li><code>unity/Assets/Scripts/Core/CatalogBattle.cs</code>, <code>CatalogSkills.cs</code>: 이동·공격 단계 연결.</li>
+<li><code>unity/Assets/Scripts/Presentation/BattleVisibility.cs</code>: 보스와 살아 있는 유닛의 표시 순서.</li>
+<li><code>unity/Assets/Scripts/Presentation/CatalogCombatLab.cs</code>, <code>CatalogBattleEffects.cs</code>: 보스 피격 자세·점멸·흔들림·피격 정지 제거.</li>
+<li><code>unity/Assets/Editor/BossHitReactionValidation.cs</code>: 실제 전투 이벤트로 숲·성채 보스와 일반 적의 피격 표시 확인.</li>
+<li><code>tests/CatalogCombat/Program.cs</code>: 군집·공격·우회 경로 회귀 검사.</li>
+</ul>
+<p>이전 작업: <a href="../design-v0.19/HANDOFF.html">숲 적 4종 애니메이션과 실기기 영상</a>.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

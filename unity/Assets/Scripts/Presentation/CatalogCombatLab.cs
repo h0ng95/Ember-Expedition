@@ -95,6 +95,7 @@ namespace Expedition.Presentation
         readonly Dictionary<string, ArtEntry> artEntries = new Dictionary<string, ArtEntry>();
         readonly HashSet<string> missingSheets = new HashSet<string>();
         readonly HashSet<string> neededSheets = new HashSet<string>();
+        CatalogBodyScale bodyScale;
         ForestEnemyArt forestEnemyArt;
         BattlePrototype parent;
         Camera parentCamera;
@@ -138,6 +139,7 @@ namespace Expedition.Presentation
             {
                 if (forestEnemyArt != null) forestEnemyArt.Release();
                 forestEnemyArt = new ForestEnemyArt();
+                bodyScale = new CatalogBodyScale();
                 database = json == null ? null : CatalogDatabase.FromJson(json.text);
                 error = database == null ? "Missing Resources/Content/unit-catalog-v010.json" : null;
                 artEntries.Clear();
@@ -194,6 +196,7 @@ namespace Expedition.Presentation
             ClearBattle(); ReleaseSheets();
             if (forestEnemyArt != null) forestEnemyArt.Release();
             forestEnemyArt = null;
+            bodyScale = null;
             if (clippedSpriteMaterial != null)
             {
                 if (Application.isPlaying) Destroy(clippedSpriteMaterial);
@@ -561,6 +564,7 @@ namespace Expedition.Presentation
                 if (!unit.IsAlive) continue;
                 float width = unit.IsBoss ? 174f : 74f;
                 float barHeight = painted.RegionalArtLoaded ? painted.Height + (unit.IsBoss ? 23f : 12f) :
+                    unit.Team == CatalogTeam.Ally ? AllyHudHeight(unit.FormId) :
                     unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
                     unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
                 float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
@@ -619,6 +623,16 @@ namespace Expedition.Presentation
         {
             return new Vector2(Mathf.Clamp(arena.center.x + position.x * 83f, arena.x + 75, arena.xMax - 75),
                 Mathf.Clamp(arena.y + 405f - position.y * 48f, arena.y + 285, arena.yMax - 35));
+        }
+
+        float AllyHudHeight(string formId)
+        {
+            ArtEntry entry;
+            if (bodyScale == null || !artEntries.TryGetValue(formId, out entry) ||
+                entry == null || entry.frames == null || entry.frames.Length == 0 ||
+                entry.frames[0] == null) return 134f;
+            return bodyScale.IdleHudHeight(formId, entry.width, entry.height,
+                entry.frames[0].height, 120f, 144f, 12f, 134f);
         }
 
         float DrawExpeditionEnemy(View view, Vector2 foot, out bool regionalArtLoaded, out Rect bounds)
@@ -1072,9 +1086,10 @@ namespace Expedition.Presentation
             float cellWidth = entry != null && entry.width > 0 ? entry.width / 6f : texture.width / 6f;
             float cellHeight = entry != null && entry.height > 0 ? entry.height / 4f : texture.height / 4f;
             float scale = Mathf.Min(rect.width / cellWidth, rect.height / cellHeight);
-            float drawnWidth = cropWidth * scale, drawnHeight = cropHeight * scale;
-            Rect fitted = new Rect(rect.center.x - pivotX * drawnWidth,
-                rect.yMax - (1f - pivotY) * drawnHeight, drawnWidth, drawnHeight);
+            float multiplier = bodyScale == null || entry == null ? 1f :
+                bodyScale.Multiplier(id, entry.width, entry.height);
+            Rect fitted = CatalogBodyScale.Fit(rect, pivotX, pivotY,
+                cropWidth, cropHeight, scale, multiplier);
             Texture displayed = clippedSheets.TryGetValue(id, out RenderTexture clippedSheet) ? clippedSheet : (Texture)texture;
             GUI.DrawTextureWithTexCoords(fitted, displayed, uv, true);
             return fitted;

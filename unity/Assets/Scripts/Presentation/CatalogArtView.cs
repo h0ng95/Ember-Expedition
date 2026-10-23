@@ -23,6 +23,7 @@ namespace Expedition.Presentation
         readonly Dictionary<string, Texture2D> sheets = new Dictionary<string, Texture2D>();
         readonly Dictionary<string, RenderTexture> clipped = new Dictionary<string, RenderTexture>();
         readonly HashSet<string> missing = new HashSet<string>();
+        readonly CatalogBodyScale bodyScale = new CatalogBodyScale();
         Material clipMaterial;
 
         public CatalogArtView()
@@ -77,9 +78,9 @@ namespace Expedition.Presentation
             float cellWidth = entry != null && entry.width > 0 ? entry.width / 6f : sheet.width / 6f;
             float cellHeight = entry != null && entry.height > 0 ? entry.height / 4f : sheet.height / 4f;
             float scale = Mathf.Min(destination.width / cellWidth, destination.height / cellHeight);
-            Rect fitted = new Rect(destination.center.x - pivotX * cropWidth * scale,
-                destination.yMax - (1f - pivotY) * cropHeight * scale,
-                cropWidth * scale, cropHeight * scale);
+            float multiplier = entry == null ? 1f : bodyScale.Multiplier(id, entry.width, entry.height);
+            Rect fitted = CatalogBodyScale.Fit(destination, pivotX, pivotY,
+                cropWidth, cropHeight, scale, multiplier);
             RenderTexture output;
             Texture display = clipped.TryGetValue(id, out output) ? (Texture)output : sheet;
             GUI.DrawTextureWithTexCoords(fitted, display, uv, true);

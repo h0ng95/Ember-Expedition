@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>성채 적 애니메이션 · v0.21</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>성채 적 애니메이션 · v0.21</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 이번 작업</a>
+<a href="#section-2">2. 애니메이션 구성</a>
+<a href="#section-3">3. 제작 방식</a>
+<a href="#section-4">4. 검증 기록</a>
+<a href="#section-5">5. 아군 크기 질문에 대한 확인</a>
+<a href="#section-6">6. 주요 파일</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-23 · Unity / Android · 성채 지역 6~10전투</p>
+<h2 id="section-1">1. 이번 작업</h2>
+<p>기존 숲 적과 전투 간격 변경을 <code>9946458</code>에 커밋한 뒤, 성채 지역 적의 외형과 동작을 제작한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>적</th>
+<th>외형</th>
+<th>공격·준비 동작</th>
+<th align="right">기준 표시 높이</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>돌편 보병</td>
+<td>작은 돌 몸체, 둥근 방패와 짧은 돌칼</td>
+<td>칼을 들어 왼쪽으로 베기</td>
+<td align="right">90</td>
+</tr>
+<tr>
+<td>석궁 수비병</td>
+<td>가느다란 돌 머리와 긴 석궁</td>
+<td>왼쪽 조준, 발사 반동, 재장전</td>
+<td align="right">100</td>
+</tr>
+<tr>
+<td>갑주 석상 · 정예</td>
+<td>넓은 어깨, 성벽 모양 큰 방패와 철퇴</td>
+<td>철퇴 공격, 방패를 내세운 돌진 준비</td>
+<td align="right">140</td>
+</tr>
+<tr>
+<td>성문 골렘</td>
+<td>성문과 쇠창살 가슴, 성벽 머리, 거대한 돌 주먹</td>
+<td>양팔을 든 내려찍기 준비와 타격</td>
+<td align="right">244</td>
+</tr>
+</tbody></table></div>
+<p>높이는 1280 기준 화면 좌표에서 첫 대기 프레임의 불투명 영역 높이다. 보스가 웅크리거나 쓰러질 때 키를 다시 늘리지 않고 같은 배율로 표시한다.</p>
+<p><img src="assets/castle-enemy-concepts-v1.png" alt="성채 적 4종 원본 시안"></p>
+<h2 id="section-2">2. 애니메이션 구성</h2>
+<ul>
+<li>독립 PNG 4장, 각 6열 × 4행의 24프레임. 총 96프레임.</li>
+<li>대기 4, 일반 피격 2, 걷기 6, 공격 6, 쓰러짐 4, 특수 준비 2.</li>
+<li>모든 적은 왼쪽을 향한다.</li>
+<li>실제 공격 이벤트가 발생할 때 타격 자세를 재생한다.</li>
+<li>정예는 돌진 예고·이동을 우선 표시한다.</li>
+<li>골렘은 내려찍기 예고와 충격파 예고를 구분한다. 분노 상태에서 첫 내려찍기와 후속 충격파 사이에도 첫 타격 자세를 표시한다.</li>
+<li>보스 피격 프레임은 시트에 있어도 런타임에서 사용하지 않는다. 맞을 때 흔들림·붉은 점멸·피격 정지도 적용하지 않는다.</li>
+</ul>
+<h3>전투 간격</h3>
+<p>v0.20의 부분 겹침과 표시 순서를 사용한다. 작은 졸개가 통째로 묻히지 않게 간격을 유지하며, 살아 있는 아군과 호위는 큰 보스보다 앞에 표시한다.</p>
+<p>체력·피해·이동 속도·보상·소환 비용·성장 규칙은 이번 작업에서 조정하지 않는다.</p>
+<h2 id="section-3">3. 제작 방식</h2>
+<ul>
+<li>내장 imagegen으로 자체 시안과 포즈를 제작했다. <a href="ASSET-PROMPTS.md">프롬프트 기록</a>.</li>
+<li>원본 PNG는 수정하지 않고, 투명 간격과 프레임의 불투명 범위만 읽어 <code>castle-manifest.json</code>을 만든다.</li>
+<li>숲 적에 사용하던 렌더링·텍스처 캐시·투명도 처리와 프레임 좌표 생성기를 함께 사용한다.</li>
+<li>SOL이 구현하고 상위 작업에서 코드·기기 화면을 검토한다.</li>
+<li>출시용 최종 원화가 아닌 첫 동작 제작본이다. 프레임 사이 장비·돌 표면의 미세한 차이는 추가 정리 대상이다.</li>
+</ul>
+<h2 id="section-4">4. 검증 기록</h2>
+<ul>
+<li>성채 그림·좌표·동작 매핑 검사 <strong>264개</strong>, 숲 그림 회귀 검사 <strong>258개</strong> 통과.</li>
+<li>보스 표시 순서 12개, 실제 보스 피격 이벤트, 전투 종료 전환, 드래그 성장 17개 검사 통과.</li>
+<li>Android APK 빌드 성공. Galaxy Buddy2에 업데이트 설치하고 6·9·10전투의 외형과 표시를 확인했다.</li>
+<li>실기기 확인 중 성채 정예의 안내 문구에 남아 있던 “야수”를 “갑주 석상”으로 수정했다.</li>
+<li>문구 수정 후 최종 APK를 다시 빌드·설치하고 9전투를 재확인했다. 최종 APK SHA-256: <code>B7BA07B949233E99B746B3ADBB3A0BF2D6D740AB1C0C1C097E71567162AB04C2</code>.</li>
+<li>빌드 로그: <code>unity/Logs/v021-castle-final-build.log</code> (로컬 산출물). 최종 검사도 위 검증 항목을 모두 통과했고 실행 중 Unity·Android 오류 로그는 없었다.</li>
+<li>테스트 전 원정 저장을 복원하고 원본과 바이트 단위로 일치하는지 확인했다.</li>
+<li>아래 영상은 외형 검증용 저장 상태에서 촬영했다. 자연 진행이나 난도 통계가 아니며 장시간 발열·성능 검증을 대신하지 않는다.</li>
+<li>6·10전투 화면과 영상은 첫 성채 빌드, 9전투는 안내 문구 수정까지 포함한 최종 빌드에서 촬영했다. 두 빌드의 그림·전투 수치는 같다.</li>
+</ul>
+<h3>돌편 보병과 석궁 수비병 · 6전투</h3>
+<p><img src="device-evidence/castle-infantry-crossbow.png" alt="왼쪽을 향하는 돌편 보병과 뒤에서 공격하는 석궁 수비병"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave6-motion.mp4"></video></p>
+<h3>갑주 석상 · 9전투</h3>
+<p><img src="device-evidence/castle-elite.png" alt="큰 방패를 든 정예와 보병·석궁병 무리"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave9-motion.mp4"></video></p>
+<h3>성문 골렘 · 10전투</h3>
+<p><img src="device-evidence/golem-and-escorts.png" alt="성문 골렘과 앞에 보이는 호위"></p>
+<p><img src="device-evidence/golem-slam-warning.png" alt="내려찍기 예고와 별도 준비 자세"></p>
+<p><img src="device-evidence/golem-front-ally.png" alt="골렘 앞에서 보이는 수호 기사"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave10-motion.mp4"></video></p>
+<h2 id="section-5">5. 아군 크기 질문에 대한 확인</h2>
+<p>현재 아군 30형태는 동일한 셀 배율로 그려지지만, 원본 시트 안에서 캐릭터가 차지하는 면적이 서로 다르다. 직업별 체격을 수치로 정한 설계가 아니므로 현재의 크기 차이 전체를 의도된 차이라고 볼 수 없다.</p>
+<p>첫 대기 프레임 기준, 원정 전투의 표시 높이는 방패 기사 약 83, 수호 기사 약 70이다. 진화한 수호 기사가 약 16% 작게 표시된다. 전체 형태의 불투명 실루엣 높이는 약 70~101이며 무기·모자도 포함한 범위다.</p>
+<p>후속 보정에서는 몸의 기준 크기를 맞추고 직업별 어깨·장비·모자 차이를 남긴다. 프레임마다 자동 확대·축소하면 움직일 때 크기가 출렁이므로 형태별 고정 배율을 사용해야 한다. 이번 성채 패치에서는 아군 표시 크기를 변경하지 않았다.</p>
+<h2 id="section-6">6. 주요 파일</h2>
+<ul>
+<li><code>unity/Assets/Resources/Art/Enemies/v021/</code>: 성채 PNG 4장과 프레임 좌표.</li>
+<li><code>unity/Assets/Scripts/Presentation/CastleEnemyArt.cs</code>: 종류·크기·골렘 예고 우선순위.</li>
+<li><code>unity/Assets/Scripts/Presentation/ForestEnemyArt.cs</code>: 두 지역 공통 렌더링과 자원 관리.</li>
+<li><code>unity/Assets/Scripts/Presentation/CatalogCombatLab.cs</code>: 실제 공격 이벤트와 자세 연결.</li>
+<li><code>unity/Assets/Editor/CastleEnemyArtValidation.cs</code>: 성채 검증과 Android 빌드.</li>
+<li><code>unity/Assets/Editor/ForestEnemyArtValidation.cs</code>: 투명 간격과 불투명 범위를 읽는 공통 좌표 생성기.</li>
+</ul>
+<p>이전: <a href="../design-v0.20/HANDOFF.html">전투 간격과 보스 표시 규칙</a>.</p>
+<p>이전 변경의 커밋은 <code>9946458</code>이다. 이 문서의 v0.21 코드·그림·검증 기록을 이번 성채 적 커밋에 함께 포함한다. 원격 푸시는 별도다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

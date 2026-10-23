@@ -33,17 +33,23 @@ namespace Expedition.EditorTools
 
         static ForestEnemyManifest BuildManifest()
         {
+            return BuildManifest(Folder, "0.19", ForestEnemyArt.Species);
+        }
+
+        // The castle pipeline uses the same adaptive gutter and alpha bounds.
+        internal static ForestEnemyManifest BuildManifest(string folder, string version, string[] species)
+        {
             var manifest = new ForestEnemyManifest {
-                version = "0.19", sheets = new ForestEnemySheet[ForestEnemyArt.Species.Length]
+                version = version, sheets = new ForestEnemySheet[species.Length]
             };
             for (int i = 0; i < manifest.sheets.Length; i++)
-                manifest.sheets[i] = ReadSheet(ForestEnemyArt.Species[i]);
+                manifest.sheets[i] = ReadSheet(folder, species[i]);
             return manifest;
         }
 
-        static ForestEnemySheet ReadSheet(string id)
+        static ForestEnemySheet ReadSheet(string folder, string id)
         {
-            string path = Folder + "/" + id + ".png";
+            string path = folder + "/" + id + ".png";
             if (!File.Exists(path)) throw new FileNotFoundException("Forest sheet is missing", path);
             Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             try
@@ -53,7 +59,7 @@ namespace Expedition.EditorTools
                 int width = texture.width, height = texture.height;
                 Color32[] pixels = texture.GetPixels32();
                 var sheet = new ForestEnemySheet {
-                    id = id, resourcePath = "Art/Enemies/v019/" + id,
+                    id = id, resourcePath = folder.Substring("Assets/Resources/".Length) + "/" + id,
                     width = width, height = height, frames = new ForestEnemyFrame[24],
                     rowCuts = new int[5], columnCuts = new int[28]
                 };

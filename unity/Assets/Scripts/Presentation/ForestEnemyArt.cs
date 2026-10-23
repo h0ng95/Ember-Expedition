@@ -40,18 +40,24 @@ namespace Expedition.Presentation
 
         public ForestEnemyArt()
         {
-            TextAsset asset = Resources.Load<TextAsset>(ManifestPath);
-            if (asset == null) return;
-            ForestEnemyManifest manifest = JsonUtility.FromJson<ForestEnemyManifest>(asset.text);
-            if (manifest == null || manifest.sheets == null) return;
-            foreach (ForestEnemySheet sheet in manifest.sheets)
-                if (sheet != null && !string.IsNullOrEmpty(sheet.id)) entries[sheet.id] = sheet;
+            LoadManifest(ManifestPath);
+            LoadManifest(CastleEnemyArt.ManifestPath);
             Shader clipShader = Shader.Find("Expedition/CatalogSpriteClip");
             if (clipShader != null && clipShader.isSupported)
             {
                 clipMaterial = new Material(clipShader);
                 clipMaterial.SetFloat("_Cutoff", 103f / 255f);
             }
+        }
+
+        void LoadManifest(string path)
+        {
+            TextAsset asset = Resources.Load<TextAsset>(path);
+            if (asset == null) return;
+            ForestEnemyManifest manifest = JsonUtility.FromJson<ForestEnemyManifest>(asset.text);
+            if (manifest == null || manifest.sheets == null) return;
+            foreach (ForestEnemySheet sheet in manifest.sheets)
+                if (sheet != null && !string.IsNullOrEmpty(sheet.id) && Valid(sheet)) entries[sheet.id] = sheet;
         }
 
         public static string SpeciesFor(CatalogBattleUnit unit)
@@ -68,7 +74,8 @@ namespace Expedition.Presentation
         public static float SilhouetteHeight(string id)
         {
             return id == Species[0] ? 78f : id == Species[1] ? 112f :
-                id == Species[2] ? 138f : id == Species[3] ? 244f : 0f;
+                id == Species[2] ? 138f : id == Species[3] ? 244f :
+                CastleEnemyArt.SilhouetteHeight(id);
         }
 
         // Returns an absolute index in the 6 by 4 sheet. Attack release begins on

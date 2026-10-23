@@ -4,9 +4,9 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.20 전투 간격과 보스 표시 규칙**. 일반 적은 식별할 수 있는 정도의 부분 겹침을 허용한다. 보스 앞의 아군·호위 표시와 보스 피격 동작 정리를 적용했다. [변경·검증 기록](docs/design-v0.20/HANDOFF.md). 적 애니메이션은 [v0.19](docs/design-v0.19/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다. 전투 수치의 기준은 [v0.17](docs/design-v0.17/HANDOFF.md)이며 이동 간격 변경에 따른 난도는 별도 확인한다.
+- 최신 구현: **v0.21 성채 적 4종 애니메이션**. 돌편 보병·석궁 수비병·갑주 석상·성문 골렘에 독립 시트와 걷기·공격·쓰러짐을 적용했다. [변경·검증 기록](docs/design-v0.21/HANDOFF.md). 부분 겹침과 보스 앞의 아군·호위 표시는 [v0.20](docs/design-v0.20/HANDOFF.md), 숲 적 동작은 [v0.19](docs/design-v0.19/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다. 전투 수치의 기준은 [v0.17](docs/design-v0.17/HANDOFF.md)이며 이동 간격 변경에 따른 난도는 별도 확인한다.
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
-- 적 미술: 숲의 뿔짐승·가시등·돌격 정예·우두머리는 **개별 애니메이션 첫 제작본**을 사용한다. 성채 적은 임시 그림이며 후속 제작 대상이다. [v0.18 외형 시안](docs/design-v0.18/enemy-preview.html) · [v0.19 실제 전투 기록](docs/design-v0.19/HANDOFF.html) · [지역별 제작 기준](docs/design-v0.17/enemy-art-brief.md).
+- 적 미술: 숲 4종과 성채 4종은 **개별 애니메이션 첫 제작본**을 사용한다. [숲 외형 시안](docs/design-v0.18/enemy-preview.html) · [숲 전투 기록](docs/design-v0.19/HANDOFF.html) · [성채 전투 기록](docs/design-v0.21/HANDOFF.html) · [지역별 제작 기준](docs/design-v0.17/enemy-art-brief.md).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 10전투를 다듬고 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
 - 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 개발 범위다.
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
@@ -58,4 +58,4 @@
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
 - 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
-현재 기본 진입은 10전투 원정이며, 동료 30형태와 숲 적 4종의 애니메이션을 본편에서 사용한다. 성채 적은 기존 임시 그림을 크기·색으로 구분한다. 보스 패턴과 예고는 v0.14, 초반 난도 조정은 v0.17, 숲 적 동작은 v0.19, 캐릭터 간격과 보스 피격 반응 정리는 v0.20에 연결했다. 성채 적 애니메이션·지속적인 난도 조정·원정 연구·광고·출시 설정은 후속 단계다.
+현재 기본 진입은 10전투 원정이며, 동료 30형태와 숲·성채 적 8종의 애니메이션을 본편에서 사용한다. 보스 패턴과 예고는 v0.14, 초반 난도 조정은 v0.17, 숲 적 동작은 v0.19, 캐릭터 간격과 보스 피격 반응 정리는 v0.20, 성채 적 동작은 v0.21에 연결했다. 아군 크기 편차 보정·지속적인 난도 조정·11~30전투·원정 연구·광고·출시 설정은 후속 단계다.

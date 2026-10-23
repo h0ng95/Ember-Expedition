@@ -56,6 +56,7 @@ namespace Expedition.Presentation
             public CatalogBattleUnit Unit;
             public Vector2 LastPosition;
             public float StateTime, HitTime, WindupAge, ReleaseAge, ReleaseRemaining;
+            public string ReleaseAbilityId;
             public int State;
             public bool NewHit, NewRelease, WasWinding;
         }
@@ -64,7 +65,7 @@ namespace Expedition.Presentation
             public View View;
             public Vector2 Point;
             public float Height;
-            public bool ForestLoaded;
+            public bool RegionalArtLoaded;
         }
         sealed class FloatText
         {
@@ -270,6 +271,7 @@ namespace Expedition.Presentation
             {
                 source.ReleaseRemaining = .18f;
                 source.ReleaseAge = 0;
+                source.ReleaseAbilityId = e.AbilityId;
                 source.NewRelease = true;
                 if (e.Kind == CatalogEventKind.SkillUsed && clock >= bossNoticeUntil)
                 {
@@ -281,7 +283,9 @@ namespace Expedition.Presentation
             if (e.Kind == CatalogEventKind.ChargeTelegraph && source != null &&
                 (source.Unit.IsBoss || clock >= bossNoticeUntil))
             {
-                latestSkill = source.Unit.IsBoss ? "우두머리 돌진 · 표시된 경로를 공격합니다" : "야수가 몸을 낮춥니다 · 돌진 예고";
+                latestSkill = source.Unit.IsBoss ? "우두머리 돌진 · 표시된 경로를 공격합니다" :
+                    CastleEnemyArt.SpeciesFor(source.Unit) == CastleEnemyArt.Species[2] ?
+                    "갑주 석상이 방패를 듭니다 · 돌진 예고" : "야수가 몸을 낮춥니다 · 돌진 예고";
                 latestSkillUntil = clock + 1.1f;
                 if (source.Unit.IsBoss) bossNoticeUntil = latestSkillUntil;
             }
@@ -536,16 +540,16 @@ namespace Expedition.Presentation
                 if (unit.IsAlive && view.HitTime > 0)
                     point.x += (unit.Team == CatalogTeam.Ally ? -1 : 1) *
                         Mathf.Sin(view.HitTime / .24f * Mathf.PI) * 6;
-                bool forestLoaded = false;
+                bool regionalArtLoaded = false;
                 float drawnHeight = 144f;
                 Rect bounds;
                 if (unit.Team == CatalogTeam.Enemy)
-                    drawnHeight = DrawExpeditionEnemy(view, point, out forestLoaded, out bounds);
+                    drawnHeight = DrawExpeditionEnemy(view, point, out regionalArtLoaded, out bounds);
                 else bounds = DrawSheet(unit.FormId, view.State, BattleAnimationFrame(view),
                     new Rect(point.x - 60, point.y - 144, 120, 144), ShouldFlip(view));
                 GUI.color = previous;
                 drawn.Add(new DrawnCombatant { View = view, Point = point,
-                    Height = drawnHeight, ForestLoaded = forestLoaded });
+                    Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
             }
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
             // HUD is painted after every silhouette.
@@ -556,7 +560,7 @@ namespace Expedition.Presentation
                 Vector2 point = painted.Point;
                 if (!unit.IsAlive) continue;
                 float width = unit.IsBoss ? 174f : 74f;
-                float barHeight = painted.ForestLoaded ? painted.Height + (unit.IsBoss ? 23f : 12f) :
+                float barHeight = painted.RegionalArtLoaded ? painted.Height + (unit.IsBoss ? 23f : 12f) :
                     unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
                     unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
                 float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
@@ -617,25 +621,31 @@ namespace Expedition.Presentation
                 Mathf.Clamp(arena.y + 405f - position.y * 48f, arena.y + 285, arena.yMax - 35));
         }
 
-        float DrawExpeditionEnemy(View view, Vector2 foot, out bool forestLoaded, out Rect bounds)
+        float DrawExpeditionEnemy(View view, Vector2 foot, out bool regionalArtLoaded, out Rect bounds)
         {
-            forestLoaded = false;
+            regionalArtLoaded = false;
             bounds = default(Rect);
-            string forestSpecies = ForestEnemyArt.SpeciesFor(view.Unit);
-            if (forestSpecies != null && forestEnemyArt != null)
+            string castleSpecies = CastleEnemyArt.SpeciesFor(view.Unit);
+            string species = castleSpecies ?? ForestEnemyArt.SpeciesFor(view.Unit);
+            if (species != null && forestEnemyArt != null)
             {
-                int frame = ForestEnemyArt.FrameIndex(view.State, view.StateTime, view.WindupAge,
-                    view.ReleaseRemaining, view.ReleaseAge, view.Unit.ChargeWarningRemaining,
-                    view.Unit.IsCharging, view.Unit.AttackWindupRemaining,
-                    forestSpecies == ForestEnemyArt.Species[2] || forestSpecies == ForestEnemyArt.Species[3]);
+                int frame = castleSpecies != null ? CastleEnemyArt.FrameIndex(species,
+                    view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
+                    view.Unit.ChargeWarningRemaining, view.Unit.IsCharging,
+                    view.Unit.AttackWindupRemaining, view.Unit.SlamWarningRemaining,
+                    view.Unit.SlamIsAftershock, view.ReleaseAbilityId) :
+                    ForestEnemyArt.FrameIndex(view.State, view.StateTime, view.WindupAge,
+                        view.ReleaseRemaining, view.ReleaseAge, view.Unit.ChargeWarningRemaining,
+                        view.Unit.IsCharging, view.Unit.AttackWindupRemaining,
+                        species == ForestEnemyArt.Species[2] || species == ForestEnemyArt.Species[3]);
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
-                bool drewForest = forestEnemyArt.Draw(forestSpecies, frame, foot, out bounds);
+                bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds);
                 GUI.color = beforeForest;
                 if (drewForest)
                 {
-                    forestLoaded = true;
-                    return ForestEnemyArt.SilhouetteHeight(forestSpecies);
+                    regionalArtLoaded = true;
+                    return ForestEnemyArt.SilhouetteHeight(species);
                 }
             }
             if (bossConceptSheet == null) bossConceptSheet = Resources.Load<Texture2D>("Art/expedition-sprites-v2");

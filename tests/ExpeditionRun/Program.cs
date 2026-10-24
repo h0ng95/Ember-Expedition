@@ -731,7 +731,7 @@ internal static class Program
                 ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
                 var unchanged = ExpeditionRun.Restore(catalog, prior);
                 Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
-                    unchanged.Capture().Version == 3 && prior.Version == 2,
+                    unchanged.Capture().Version == 4 && prior.Version == 2,
                     "Earlier valid v2 preparation migrates without reward or mutating its input.");
                 unchanged.BeginBattle();
                 ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;
@@ -766,7 +766,7 @@ internal static class Program
         Check(reloaded.Gold == 340 && reloaded.Continue() &&
             reloaded.Phase == ExpeditionPhase.Preparation && reloaded.Wave == 11 &&
             ExpeditionRun.Restore(catalog, reloaded.Capture()).Gold == 340,
-            "v3 capture and reload cannot duplicate the migration grant.");
+            "Current capture and reload cannot duplicate the migration grant.");
         oldResult.Phase = ExpeditionPhase.Completed;
         var completed = ExpeditionRun.Restore(catalog, oldResult);
         Check(completed.Phase == ExpeditionPhase.Preparation && completed.Wave == 11 &&

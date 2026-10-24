@@ -11,6 +11,7 @@ namespace Expedition.Presentation
         const string SaveKey = "ember.expedition.run.v013";
         const string LegacySaveKey = "ember.expedition.run.v011";
         const string JournalSaveKey = "ember.expedition.story.v025";
+        const string ProgressSaveKey = "ember.expedition.progress.v027";
         const float Width = 1280f, Height = 720f;
         const float GroundY = 380f, GroundYScale = 50f;
         static readonly Color Background = ExpeditionUiTheme.Background;
@@ -31,12 +32,13 @@ namespace Expedition.Presentation
         static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
             "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
 
-        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun, Journal }
+        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun, Journal, Progress }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
         ExpeditionRun run;
         ExpeditionJournal journal;
+        ExpeditionProgress progress;
         CatalogArtView art;
         Texture2D battlefield, outpost, furnace;
         Camera backgroundCamera;
@@ -47,7 +49,8 @@ namespace Expedition.Presentation
         readonly List<CatalogMember> bench = new List<CatalogMember>();
         readonly List<CatalogMember> fieldMembers = new List<CatalogMember>(5);
         bool home = true, savePresent, badSave, inheritTrait, pointerDragging, legacySave, showHelp;
-        bool journalDirty;
+        bool journalDirty, progressDirty;
+        bool badProgress;
         bool pointerTouch, hoverArmed, evolutionFromDrag, combinationFromList;
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId, selectedStoryId;
         string hoverRecipientId, growthPulseId;
@@ -71,6 +74,7 @@ namespace Expedition.Presentation
                 outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
                 furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
                 LoadJournal();
+                LoadProgress();
                 LoadSave();
             }
             catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
@@ -105,6 +109,7 @@ namespace Expedition.Presentation
                 if (state == null) throw new InvalidOperationException("저장 형식을 읽을 수 없음");
                 run = ExpeditionRun.Restore(database, state);
                 ObserveJournal();
+                ObserveProgress();
             }
             catch (Exception exception)
             {
@@ -124,6 +129,7 @@ namespace Expedition.Presentation
                 PlayerPrefs.Save();
                 savePresent = true;
                 ObserveJournal();
+                ObserveProgress();
             }
             catch (Exception exception) { Notice("저장하지 못했습니다: " + exception.Message); }
         }
@@ -155,11 +161,44 @@ namespace Expedition.Presentation
             catch (Exception exception) { Notice("원정 기록을 저장하지 못했습니다: " + exception.Message); }
         }
 
+        void LoadProgress()
+        {
+            progress = ExpeditionProgress.New();
+            if (!PlayerPrefs.HasKey(ProgressSaveKey)) return;
+            try
+            {
+                string json = PlayerPrefs.GetString(ProgressSaveKey, "");
+                if (string.IsNullOrEmpty(json)) throw new InvalidOperationException("빈 성과 기록");
+                progress = ExpeditionProgress.Restore(JsonUtility.FromJson<ExpeditionProgressSave>(json));
+            }
+            catch (Exception)
+            {
+                badProgress = true;
+                progress = ExpeditionProgress.New();
+            }
+        }
+
+        void ObserveProgress()
+        {
+            if (run == null || progress == null || badProgress) return;
+            try
+            {
+                if (progress.Observe(run)) progressDirty = true;
+                if (!progressDirty) return;
+                PlayerPrefs.SetString(ProgressSaveKey, JsonUtility.ToJson(progress.Capture()));
+                PlayerPrefs.Save();
+                progressDirty = false;
+            }
+            catch (Exception exception) { Notice("원정 성과를 저장하지 못했습니다: " + exception.Message); }
+        }
+
         void NewRun()
         {
             try
             {
-                run = ExpeditionRun.New(database, unchecked((uint)DateTime.UtcNow.Ticks));
+                ObserveProgress();
+                run = ExpeditionRun.New(database, unchecked((uint)DateTime.UtcNow.Ticks),
+                    ExpeditionDifficulty.Normal);
                 badSave = false;
                 legacySave = false;
                 error = null;
@@ -248,23 +287,38 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
             GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
                 "꺼진 왕국에 다시 불을 밝히다", heading);
+            if (GUI.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), "원정 성과", button))
+                modal = Modal.Progress;
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
             GUI.Label(new Rect(content.x, content.y + 104, content.width, 64),
                 "이그니스가 흩어진 밤, 왕국의 결계가 무너지고 수호자들이 뒤틀렸습니다.\n" +
                 "마지막 불씨를 등불에 담아, 빼앗긴 불씨 조각을 되찾으세요.", dialogBody);
+            if (run != null)
+                GUI.Label(new Rect(content.x, content.y + 176, content.width, 33),
+                    "이어할 원정  ·  " + DifficultyLabel(run.Difficulty) + "  ·  전투 " + run.Wave +
+                    " / " + run.ContentWaves, hint);
             if (hasNotice)
                 GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
                     error ?? "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
             ExpeditionUiTheme.FooterRule(panel);
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
-            {
-                if (savePresent || legacySave) modal = Modal.NewRun; else NewRun();
-            }
+                modal = Modal.NewRun;
             GUI.enabled = modal == Modal.None && run != null;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "이어하기", button))
             { home = false; modal = Modal.None; }
             GUI.enabled = modal == Modal.None;
             if (GUI.Button(new Rect(1020, 650, 225, 48), "개발용 전투 시험실", button)) OpenLab();
+            if (badProgress)
+            {
+                ExpeditionUiTheme.PanelBox(new Rect(155, 590, 970, 48));
+                GUI.Label(new Rect(187, 598, 900, 36),
+                    "성과 기록을 읽지 못했습니다. 원본을 보관하고 성과 갱신을 멈췄습니다.", small);
+            }
+        }
+
+        static string DifficultyLabel(ExpeditionDifficulty difficulty)
+        {
+            return difficulty == ExpeditionDifficulty.Hard ? "고난도" : "일반";
         }
 
         void DrawHeader(string phase)
@@ -273,8 +327,8 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save(); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
             GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
-            GUI.Label(new Rect(530, 18, 320, 43), "전투 " + run.Wave + " / " + ExpeditionRun.TotalWaves +
-                "     등불 " + run.Lantern, body);
+            GUI.Label(new Rect(505, 18, 365, 43), DifficultyLabel(run.Difficulty) + " · 전투 " +
+                run.Wave + " / " + run.ContentWaves + "   등불 " + run.Lantern, body);
             GUI.Label(new Rect(880, 18, 170, 43), run.Gold + " G", heading);
             ExpeditionUiTheme.PanelBox(new Rect(1070, 17, 188, 43));
             GUI.Label(new Rect(1080, 21, 168, 33), phase, centered);
@@ -480,6 +534,7 @@ namespace Expedition.Presentation
             Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
             if (modal == Modal.Detail) DrawDetail();
             else if (modal == Modal.Journal) DrawJournal();
+            else if (modal == Modal.Progress) DrawProgress();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
@@ -528,6 +583,37 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Rule(new Rect(528, 285, 560, 2));
             GUI.Label(new Rect(529, 310, 559, 272), selectedUnlocked ? selectedStory.Body :
                 StoryUnlockHint(selectedStory.Id), journalBody);
+        }
+
+        void DrawProgress()
+        {
+            Rect panel = new Rect(250, 170, 780, 380);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 202, content.width, 48), "원정 성과", heading);
+            GUI.Label(new Rect(content.x, 248, content.width, 32),
+                "현재 공개 15전투  ·  전체 여정 목표 30전투", hint);
+            ExpeditionUiTheme.Rule(new Rect(content.x, 285, content.width, 2));
+            GUI.Label(new Rect(content.x, 300, content.width, 58), ProgressLine(), body);
+            ExpeditionUiTheme.Rule(new Rect(content.x, 365, content.width, 2));
+            GUI.Label(new Rect(content.x, 378, content.width, 28),
+                "일반 30전투 완료 시 고난도 도전 자격 " +
+                (badProgress ? "확인 불가" : progress != null && progress.HardUnlocked ? "획득" : "미획득") +
+                " · 고난도 전투는 준비 중", small);
+            if (badProgress)
+                GUI.Label(new Rect(content.x, 407, content.width, 24),
+                    "성과 저장 오류: 기존 기록을 보관하며 갱신하지 않습니다.", small);
+            ExpeditionUiTheme.FooterRule(panel);
+            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "닫기", button)) modal = Modal.None;
+        }
+
+        string ProgressLine()
+        {
+            if (badProgress) return "일반  ·  성과 기록을 읽을 수 없습니다.";
+            int best = progress == null ? 0 : progress.BestWave;
+            int completed = progress == null ? 0 : progress.CompletedWaves;
+            return "일반  ·  최고 격파 " + best + "전투" +
+                "\n구간 완료 " + completed + " / " + ExpeditionRun.ReleaseWaves + "전투";
         }
 
         static string StoryUnlockHint(string id)
@@ -748,14 +834,34 @@ namespace Expedition.Presentation
             { DrawCombinationConfirmation(); return; }
             if (modal == Modal.NewRun)
             {
-                Rect panel = new Rect(335, 210, 610, 300);
+                Rect panel = new Rect(205, 140, 870, 440);
                 Rect content = ExpeditionUiTheme.ContentRect(panel);
                 ExpeditionUiTheme.Window(panel);
                 GUI.Label(new Rect(content.x, panel.y + 32, content.width, 48),
-                    "새 원정을 시작할까요?", heading);
-                GUI.Label(new Rect(content.x, panel.y + 100, content.width, 76),
-                    legacySave ? "이전 6전투 원정은 별도로 보관됩니다.\n골드 40G와 기본 동료 3명으로 새로 출발합니다." :
-                    "현재 저장된 원정을 새 출발로 바꿉니다.\n진행과 동료 편성은 되돌릴 수 없습니다.", dialogBody);
+                    "새 원정", heading);
+                string warning = savePresent ?
+                    "저장된 원정을 새 출발로 교체합니다. 진행과 편성은 되돌릴 수 없습니다." :
+                    legacySave ? "이전 6전투 원정은 별도로 보관됩니다." :
+                    "등불과 기본 동료 3명으로 새로 출발합니다.";
+                GUI.Label(new Rect(content.x, panel.y + 82, content.width, 43),
+                    "현재 공개 15전투 · 전체 목표 30전투\n" + warning, small);
+                Rect normal = new Rect(content.x, 274, content.width, 78);
+                ExpeditionUiTheme.PanelBox(normal, true);
+                GUI.Label(new Rect(normal.x + 22, normal.y + 5, normal.width - 44, 31),
+                    "NORMAL · 일반  ✓", body);
+                GUI.Label(new Rect(normal.x + 22, normal.y + 38, normal.width - 44, 31),
+                    "현재 플레이 가능 · 기본 전투 규칙", small);
+                Rect locked = new Rect(content.x, 363, content.width, 78);
+                bool wasEnabled = GUI.enabled;
+                GUI.enabled = false;
+                GUI.Button(locked, "", button);
+                GUI.enabled = wasEnabled;
+                GUI.Label(new Rect(locked.x + 22, locked.y + 5, locked.width - 44, 31),
+                    "HARD · 고난도  ·  준비 중", body);
+                GUI.Label(new Rect(locked.x + 22, locked.y + 38, locked.width - 44, 31),
+                    progress != null && progress.HardUnlocked && !badProgress ?
+                    "도전 자격 획득 · 전투는 추후 공개" :
+                    "일반 30전투 완료 후 도전 자격 · 전투는 추후 공개", small);
                 ExpeditionUiTheme.FooterRule(panel);
                 ConfirmationButtons(ExpeditionUiTheme.FooterRect(panel),
                     "새 원정 시작", NewRun, () => modal = Modal.None);

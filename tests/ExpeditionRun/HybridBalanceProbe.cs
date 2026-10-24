@@ -10,6 +10,7 @@ using Expedition.Core;
 // measured counterfactually with the victory reward so later encounters remain comparable.
 internal static class HybridBalanceProbe
 {
+    static bool FrontFirst;
     sealed class Policy
     {
         public string Id, First, Second;
@@ -75,7 +76,7 @@ internal static class HybridBalanceProbe
     public sealed class Report
     {
         public int firstSeed, count;
-        public string note;
+        public string note, difficulty, growthOrder;
         public PolicySummary[] policySummaries;
         public Summary[] rows;
         public Acquisition[] acquisitions;
@@ -137,6 +138,11 @@ internal static class HybridBalanceProbe
     static CatalogMember Recipient(ExpeditionRun run, Policy policy, Progress p, string donor)
     {
         var ordered = new List<string>();
+        // Spend only the two transfers for a branch tank before recipe growth.
+        // Once it is an E form, the original target-first priorities resume.
+        CatalogMember starter = run.Roster.Find("ally-01");
+        if (FrontFirst && starter != null && starter.FormId == "B-KN")
+            ordered.Add(starter.Id);
         if (policy.First != null && p.AcquiredWave == 0)
         { ordered.Add(p.FirstId); ordered.Add(p.SecondId); }
         if (policy.NeedsBackupPriest) ordered.Add(p.BackupPriestId);
@@ -345,7 +351,8 @@ internal static class HybridBalanceProbe
             Prepare(run, policy, p, formation, actions);
             ExpeditionRunSave snapshot = run.Capture();
             var restored = ExpeditionRun.Restore(db, snapshot);
-            if (restored.Wave != run.Wave || restored.Gold != run.Gold ||
+            if (restored.Difficulty != ExpeditionDifficulty.Normal || restored.ContentWaves != run.ContentWaves ||
+                restored.Wave != run.Wave || restored.Gold != run.Gold ||
                 restored.Roster.SupplyUsed != run.Roster.SupplyUsed ||
                 Party(restored) != Party(run) || restored.Capture().RandomState != snapshot.RandomState)
                 throw new InvalidOperationException("Preparation capture/restore drifted.");
@@ -402,12 +409,20 @@ internal static class HybridBalanceProbe
 
     static void Main(string[] args)
     {
-        if (args.Length != 4) throw new ArgumentException("catalog report firstSeed count required");
+        if (args.Length != 4 && args.Length != 5)
+            throw new ArgumentException("catalog report firstSeed count [TargetFirst|FrontFirst] required");
+        if (args.Length == 5)
+        {
+            if (args[4] != "TargetFirst" && args[4] != "FrontFirst")
+                throw new ArgumentException("Unsupported growth order");
+            FrontFirst = args[4] == "FrontFirst";
+        }
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
         if (first < 1 || count < 1 || count > 1000 || (long)first + count > int.MaxValue)
             throw new ArgumentOutOfRangeException("seed range");
         CatalogDatabase db = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
         var report = new Report { firstSeed = first, count = count,
+            difficulty = "Normal", growthOrder = FrontFirst ? "FrontFirst" : "TargetFirst",
             note = "Fixed legal policies with the same seed and summon economy. A later wave assumes preceding rewards after losses; reachWins counts only uninterrupted victories. meanWinSeconds and meanLossSeconds are separate. These are not human win rates. H-02/H-05 wait for a replacement priest before consuming one. Ability damage includes shields blocked; heal is actual restored HP." };
         var summaries = new List<Summary>();
         var policySummaries = new List<PolicySummary>();

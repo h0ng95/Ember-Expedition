@@ -1,17 +1,18 @@
 # IGNIS: ASHEN OATH · Unity 전투 시제품
 
-> **2026-10-24 v0.26:** 결합 6종의 기술·역할·배치 요령을 결합 결과창과 동료 상세창에 표시했다. 같은 소환 예산의 성장 정책과 두 진형을 비교하는 도구를 추가했다. [현재 변경·검증 기록](../docs/design-v0.26/HANDOFF.md) · [난도와 클리어 해금 제안](../docs/design-v0.26/difficulty-progression-review.md). 난도 선택은 미구현이며 현재는 15전투다. 이야기·별도 기록·UI는 v0.25, 전투 수치는 v0.24 기준이다. 아래 2026-10-18 기록과 FIRST-SLICE.md는 이전 시제품 이력이다.
+> **2026-10-24 v0.27:** 현재 기본 원정은 **NORMAL**이다. **HARD**는 준비 중 버튼만 표시하며 실제 시작은 막았다. 최고 격파와 완료 구간을 새 원정과 독립적으로 저장한다. 기존 v3 저장은 Normal로 이어지고 현재 15전투 완료로 미래 30전투 보상을 해금하지 않는다. Easy 분리·피해 감소는 폐기했고 전투 수치는 유지했다. [현재 변경·검증 기록](../docs/design-v0.27/HANDOFF.md). 아래 2026-10-18 기록과 FIRST-SLICE.md는 이전 시제품 이력이다.
 
-## v0.26 실행
+## v0.27 실행
 
-1. 앱 홈에서 **새 원정**을 누른다. 이전 원정이 있으면 교체 확인을 거친다.
+1. 앱 홈에서 **새 원정**을 누른다. NORMAL과 준비 중인 HARD를 보여주는 창에서 시작한다. 이전 원정이 있으면 교체 안내를 확인한다.
 2. 시작 40G에서 **동료 소환 · 20G**로 대기석에 동료를 얻고 전장으로 끌어 배치한다. 출전 최대 5명, 대기 최대 7명이다.
 3. 재료 동료를 키울 동료 위에 끌어 약 0.45초 유지한다. 결과 미리보기에 ‘놓으면 실행’이 표시되면 놓아서 성장 +1을 얻는다. 진화 조건 달성 시 선택창이 자동으로 열린다. 특수 결합은 준비 화면의 **결합 가능** 버튼을 열어 결과를 확인하고 실행한다. 상세창에서 재료 보호와 특성 전승을 선택할 수 있다. 준비 중에는 **되돌리기**로 직전 행동을 취소할 수 있다.
 4. 승리하면 골드를 받고 다음 전투로 이동한다. 패배하면 등불 1개를 잃고 같은 전투를 재도전한다. 보스는 5/10/15전투에 나온다. 저장은 소환·성장·배치·전투 시작·결과 때 처리한다.
 5. **이어하기**는 준비·결과 상태를 복구하고, 중단된 전투는 동일한 시작 편성으로 다시 재생한다.
 6. 홈의 **원정 기록** 또는 준비 화면의 **지역 이야기**에서 열린 기록을 읽는다. 이미 열린 기록은 새 원정을 시작해도 유지된다.
+7. 홈의 **원정 성과**에서 Normal 최고 격파와 구간 완료를 확인한다. 15전투 완료 기록은 새 원정·패배·앱 재시작 후에도 유지된다. Hard는 Normal 30전투 완료 후 도전 자격을 주는 계획이며 실제 전투는 아직 없다.
 
-`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를, `tests/ExpeditionStory/run.ps1`은 기록 개방과 저장 검사를 실행한다. Unity 메뉴 **Expedition → Validate Saved Expedition**은 실제 JsonUtility 저장 왕복과 표본 원정을 검사한다. `-executeMethod Expedition.EditorTools.ExpeditionStoryValidation.BuildAndroid`는 기록 저장과 기존 저장 소급, 아군 몸 크기·발 위치·동작 배율, 숲·성채·폐광 적 프레임·가림·결과 전환과 기존 드래그 입력·JSON 호환 검사를 통과한 뒤 APK를 만든다. 폐광 manifest도 원본 PNG에서 생성한다. 저장 검사는 컴퓨터의 기존 원정 저장을 검사 종료 시 복구한다.
+`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를, `tests/ExpeditionStory/run.ps1`은 이야기 기록 검사를, `tests/ExpeditionProgress/run.ps1`은 Normal 저장·성과·Hard 제한 검사를 실행한다. Unity 메뉴 **Expedition → Validate Normal Progress**는 실제 JsonUtility로 이전 v3 저장 6종과 성과 저장을 검사한다. `-executeMethod Expedition.EditorTools.ExpeditionProgressValidation.BuildAndroid`는 새 성과 검사와 기존 이야기 저장, 아군 크기·동작, 숲·성채·폐광 적 프레임·가림·결과 전환·드래그 입력·JSON 검사를 통과한 뒤 APK를 만든다. **Validate Saved Expedition**의 표본 원정 검사도 별도로 사용할 수 있다. 폐광 manifest는 원본 PNG에서 생성한다. 기존 저장을 사용하는 검사는 종료 시 원본을 복구한다.
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 

@@ -4,7 +4,7 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.26 결합 비교·배치 안내**. 6종 결합을 같은 소환 예산과 두 진형으로 비교하는 도구를 추가하고, 결합 결과·동료 상세에 기술·역할·배치 설명을 표시했다. [변경·검증 기록](docs/design-v0.26/HANDOFF.md) · [Easy 모드·클리어 해금 비교안](docs/design-v0.26/difficulty-progression-review.md). 전투 수치는 v0.24 기준이며 난도 선택은 아직 미구현이다. 이야기·UI는 [v0.25](docs/design-v0.25/HANDOFF.md), 15전투·폐광은 [v0.24](docs/design-v0.24/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다.
+- 최신 구현: **v0.27 NORMAL 원정·성과 저장**. 현재 모드를 Normal로 정리하고 Hard는 준비 중 버튼만 표시한다. 최고 격파·15전투 완료 기록을 별도 저장하며, 미래 Normal 30전투 완료와 구분한다. [변경·검증 기록](docs/design-v0.27/HANDOFF.md). Easy 분리안은 폐기했고 기존 전투 수치는 유지했다. 성장 순서 비교와 [v0.26 결합 안내](docs/design-v0.26/HANDOFF.md), [v0.25 이야기·UI](docs/design-v0.25/HANDOFF.md), [v0.24 15전투·폐광](docs/design-v0.24/HANDOFF.md), [v0.16 성장·결합 조작](docs/design-v0.16/HANDOFF.md)을 바탕으로 Normal 완성에 집중한다.
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광 각각 4종, 총 12종은 **개별 애니메이션 첫 제작본**을 사용한다. [숲 전투 기록](docs/design-v0.19/HANDOFF.html) · [성채 전투 기록](docs/design-v0.21/HANDOFF.html) · [폐광 제작·전투 기록](docs/design-v0.24/HANDOFF.html).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 15전투이며 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
@@ -30,7 +30,9 @@
 ./tests/ExpeditionRun/run-balance.ps1
 ./tests/ExpeditionRun/run-early-balance.ps1
 ./tests/ExpeditionStory/run.ps1
-./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -ReportPath docs/design-v0.26/hybrid-training-before.json
+./tests/ExpeditionProgress/run.ps1
+./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -GrowthOrder TargetFirst
+./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -GrowthOrder FrontFirst
 ```
 
 ## 프로젝트 구성

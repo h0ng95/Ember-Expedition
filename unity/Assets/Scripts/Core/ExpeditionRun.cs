@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Expedition.Core
 {
     public enum ExpeditionPhase { Preparation, Battle, Result, Completed, Defeated }
+    public enum ExpeditionDifficulty { Normal = 0, Hard = 1 }
 
     public sealed class CatalogCombinationOption
     {
@@ -24,6 +25,8 @@ namespace Expedition.Core
     public sealed class ExpeditionRunSave
     {
         public int Version;
+        public ExpeditionDifficulty Difficulty;
+        public int ContentWaves;
         public int Wave, Lantern, Victories, NextMemberNumber, Gold, LastReward, RewardedWave;
         public bool LastVictory;
         public ExpeditionPhase Phase;
@@ -39,6 +42,7 @@ namespace Expedition.Core
     public sealed class ExpeditionRun
     {
         public const int TotalWaves = 15;
+        public const int ReleaseWaves = 30;
         public const int SummonCost = 20;
         const int MaxDeployed = 5;
         const int MaxBench = 7;
@@ -76,6 +80,8 @@ namespace Expedition.Core
         public CatalogRoster Roster { get; private set; }
         public IReadOnlyList<string> DeployedIds { get { return deployedIds.AsReadOnly(); } }
         public int Wave { get; private set; }
+        public ExpeditionDifficulty Difficulty { get; private set; }
+        public int ContentWaves { get; private set; }
         public int Lantern { get; private set; }
         public int Gold { get; private set; }
         public int LastReward { get; private set; }
@@ -97,9 +103,14 @@ namespace Expedition.Core
             this.catalog = catalog;
         }
 
-        public static ExpeditionRun New(CatalogDatabase catalog, uint seed)
+        public static ExpeditionRun New(CatalogDatabase catalog, uint seed,
+            ExpeditionDifficulty difficulty = ExpeditionDifficulty.Normal)
         {
+            if (difficulty != ExpeditionDifficulty.Normal)
+                throw new ArgumentOutOfRangeException("difficulty", "Difficulty is unavailable.");
             var run = new ExpeditionRun(catalog);
+            run.Difficulty = difficulty;
+            run.ContentWaves = TotalWaves;
             run.randomState = seed == 0 ? 0x6d2b79f5u : seed;
             run.Roster = new CatalogRoster(catalog);
             run.Wave = 1;
@@ -493,7 +504,8 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 3, Wave = Wave, Lantern = Lantern,
+            return new ExpeditionRunSave { Version = 4, Difficulty = Difficulty,
+                ContentWaves = ContentWaves, Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
                 Victories = Victories, LastVictory = LastVictory,
                 Phase = Phase, RandomState = randomState, LastSummonedFamily = lastSummonedFamily,
@@ -507,9 +519,12 @@ namespace Expedition.Core
             string lastFamily = save == null || string.IsNullOrEmpty(save.LastSummonedFamily) ?
                 null : save.LastSummonedFamily;
             bool legacy = save != null && save.Version == 2;
+            bool current = save != null && save.Version == 4;
             int saveWaves = legacy ? 10 : TotalWaves;
             int[] rewards = legacy ? LegacyVictoryRewards : VictoryRewards;
-            if (save == null || save.Version != 2 && save.Version != 3 ||
+            if (save == null || save.Version != 2 && save.Version != 3 && save.Version != 4 ||
+                current && (save.ContentWaves != TotalWaves ||
+                    save.Difficulty != ExpeditionDifficulty.Normal) ||
                 save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
                 save.Gold > TotalEarned(saveWaves, rewards) ||
@@ -523,6 +538,8 @@ namespace Expedition.Core
                 !Enum.IsDefined(typeof(ExpeditionPhase), save.Phase))
                 throw new ArgumentException("Invalid expedition save.");
             var run = new ExpeditionRun(catalog);
+            run.Difficulty = current ? save.Difficulty : ExpeditionDifficulty.Normal;
+            run.ContentWaves = TotalWaves;
             run.Roster = CatalogRoster.Restore(catalog, save.Roster);
             run.Wave = save.Wave; run.Lantern = save.Lantern;
             run.Gold = save.Gold; run.LastReward = save.LastReward;
@@ -567,7 +584,7 @@ namespace Expedition.Core
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             }
             // Convert only after the complete v2 save has passed its original ten-wave rules.
-            // A v3 capture records this grant, so subsequent reloads cannot grant it again.
+            // A current capture records this grant, so subsequent reloads cannot grant it again.
             if (legacy && save.Wave == 10 && save.LastVictory &&
                 (save.Phase == ExpeditionPhase.Result || save.Phase == ExpeditionPhase.Completed))
             {

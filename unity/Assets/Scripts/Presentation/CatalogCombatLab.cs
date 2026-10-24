@@ -183,8 +183,9 @@ namespace Expedition.Presentation
             expeditionBackground = Resources.Load<Texture2D>(wave <= 5 ?
                 "Art/forest-battlefield" : wave <= 10 ?
                 "Art/ruined-outpost-battlefield" : wave <= 15 ?
-                "Art/Environments/v024/furnace-battlefield" :
-                "Art/Environments/v029/frost-battlefield");
+                "Art/Environments/v024/furnace-battlefield" : wave <= 20 ?
+                "Art/Environments/v029/frost-battlefield" :
+                "Art/Environments/v030/garden-battlefield");
             battle = runBattle;
             battleEffects = new CatalogBattleEffects(gameObject);
             foreach (CatalogBattleUnit unit in battle.Units)
@@ -303,6 +304,8 @@ namespace Expedition.Presentation
                     "용광로 폭발 · 표시된 범위에 화상을 남깁니다" :
                     e.AbilityId == "FROST_NOVA" ?
                     "서리 폭발 · 먼 동료 위치에 빙결 원형 공격" :
+                    e.AbilityId == "GARDEN_BRIARS" ?
+                    "가시뿌리 · 먼 동료 최대 셋 발밑을 차례로 공격" :
                     e.AbilityId == "GOLEM_AFTERSHOCK" ?
                     "후속 충격파 · 작은 원 안을 다시 공격합니다" :
                     "골렘 내려찍기 · 표시된 범위를 공격합니다";
@@ -315,6 +318,7 @@ namespace Expedition.Presentation
                     (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? "돌진 간격 단축" :
                     source.Unit.EnemyRole == CatalogEnemyRole.Furnace ? "폭발 뒤 불씨파 추가" :
                     source.Unit.EnemyRole == CatalogEnemyRole.FrostWarden ? "서리 원형 공격 간격 단축" :
+                    source.Unit.EnemyRole == CatalogEnemyRole.GardenLord ? "독가시 공격 간격 단축" :
                     "내려찍기 뒤 충격파 추가");
                 latestSkillUntil = clock + 3f;
                 bossNoticeUntil = latestSkillUntil;
@@ -355,6 +359,9 @@ namespace Expedition.Presentation
                     floating.Add(new FloatText { Text = "빙결", Position = new Vector2(target.Unit.X, target.Unit.Y),
                         Color = new Color(.59f, .88f, 1f) });
             }
+            if (e.Kind == CatalogEventKind.Poison && target != null && floating.Count < 24)
+                floating.Add(new FloatText { Text = "중독", Position = new Vector2(target.Unit.X, target.Unit.Y),
+                    Color = new Color(.73f, 1f, .42f) });
         }
 
         void Update()
@@ -612,18 +619,22 @@ namespace Expedition.Presentation
                     unit.Team == CatalogTeam.Ally ? new Color(.45f, .94f, .55f) : new Color(1f, .45f, .39f));
                 if (unit.Shield > 0) Fill(new Rect(barX, barY + 9,
                     width * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), new Color(.5f, .84f, 1f));
-                if (unit.FrozenRemaining > 0f || unit.BurnRemaining > 0f)
+                float statusY = barY + 16f;
+                if (unit.FrozenRemaining > 0f)
                 {
-                    bool frozen = unit.FrozenRemaining > 0f;
-                    Rect status = new Rect(barX, barY + 16, width, 20);
-                    Fill(status, frozen ? new Color(.035f, .18f, .27f, .87f) :
-                        new Color(.32f, .095f, .035f, .87f));
-                    Color priorStatus = GUI.color;
-                    GUI.color = frozen ? new Color(.68f, .91f, 1f) : new Color(1f, .72f, .43f);
-                    GUI.Label(status, frozen ? "빙결 " + unit.FrozenRemaining.ToString("0.0") :
-                        "화상 " + unit.BurnRemaining.ToString("0.0"), centered);
-                    GUI.color = priorStatus;
+                    DrawStatus(new Rect(barX, statusY, width, 20), "빙결 ", unit.FrozenRemaining,
+                        new Color(.035f, .18f, .27f, .87f), new Color(.68f, .91f, 1f));
+                    statusY += 21f;
                 }
+                if (unit.BurnRemaining > 0f)
+                {
+                    DrawStatus(new Rect(barX, statusY, width, 20), "화상 ", unit.BurnRemaining,
+                        new Color(.32f, .095f, .035f, .87f), new Color(1f, .72f, .43f));
+                    statusY += 21f;
+                }
+                if (unit.PoisonRemaining > 0f)
+                    DrawStatus(new Rect(barX, statusY, width, 20), "중독 ", unit.PoisonRemaining,
+                        new Color(.12f, .16f, .075f, .87f), new Color(.78f, 1f, .48f));
                 if (unit.IsBoss) GUI.Label(new Rect(barX - 30, barY - 33, 260, 31), UnitName(unit), heading);
                 else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
                 if (unit.IsBoss && unit.BossEnraged)
@@ -656,9 +667,22 @@ namespace Expedition.Presentation
             }
         }
 
+        void DrawStatus(Rect rect, string name, float remaining, Color background, Color foreground)
+        {
+            Fill(rect, background);
+            Color prior = GUI.color;
+            GUI.color = foreground;
+            GUI.Label(rect, name + remaining.ToString("0.0"), centered);
+            GUI.color = prior;
+        }
+
         string UnitName(CatalogBattleUnit unit)
         {
             if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
+            if (unit.Id == "garden-boss") return "가시의 군주";
+            if (unit.Id == "garden-keeper") return "정예 황혼정원사";
+            if (unit.Id.StartsWith("garden-guard-", StringComparison.Ordinal)) return "가시 근위병";
+            if (unit.Id.StartsWith("garden-spitter-", StringComparison.Ordinal)) return "독침 사냥꾼";
             if (unit.Id == "frost-boss") return "서리의 파수꾼";
             if (unit.Id == "frost-cantor") return "찬송 감시자";
             if (unit.Id.StartsWith("frost-guard-", StringComparison.Ordinal)) return "서리 근위병";
@@ -697,14 +721,19 @@ namespace Expedition.Presentation
         {
             regionalArtLoaded = false;
             bounds = default(Rect);
-            string frostSpecies = FrostEnemyArt.SpeciesFor(view.Unit);
-            string mineSpecies = frostSpecies == null ? MineEnemyArt.SpeciesFor(view.Unit) : null;
-            string castleSpecies = frostSpecies == null && mineSpecies == null ?
+            string gardenSpecies = GardenEnemyArt.SpeciesFor(view.Unit);
+            string frostSpecies = gardenSpecies == null ? FrostEnemyArt.SpeciesFor(view.Unit) : null;
+            string mineSpecies = gardenSpecies == null && frostSpecies == null ? MineEnemyArt.SpeciesFor(view.Unit) : null;
+            string castleSpecies = gardenSpecies == null && frostSpecies == null && mineSpecies == null ?
                 CastleEnemyArt.SpeciesFor(view.Unit) : null;
-            string species = frostSpecies ?? mineSpecies ?? castleSpecies ?? ForestEnemyArt.SpeciesFor(view.Unit);
+            string species = gardenSpecies ?? frostSpecies ?? mineSpecies ?? castleSpecies ?? ForestEnemyArt.SpeciesFor(view.Unit);
             if (species != null && forestEnemyArt != null)
             {
-                int frame = frostSpecies != null ? FrostEnemyArt.FrameIndex(species,
+                int frame = gardenSpecies != null ? GardenEnemyArt.FrameIndex(species,
+                    view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
+                    view.Unit.AttackWindupRemaining, view.Unit.SlamWarningRemaining,
+                    view.ReleaseAbilityId) :
+                    frostSpecies != null ? FrostEnemyArt.FrameIndex(species,
                     view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
                     view.Unit.AttackWindupRemaining, view.Unit.SlamWarningRemaining,
                     view.ReleaseAbilityId) :

@@ -1,0 +1,43 @@
+{
+  "tool": "built-in imagegen",
+  "externalImageReferences": false,
+  "pixelEditing": false,
+  "prompts": "ASSET-PROMPTS.md",
+  "assets": [
+    {
+      "id": "garden-guard",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-2dd11329-1fc0-4e0c-8c98-9b9634e228a8.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v030/garden-guard.png",
+      "sha256": "5E0E70E9BC41A6C47769977243D93B902966295A81A39F571E1B8F60166ADE0F",
+      "byteExactCopy": true
+    },
+    {
+      "id": "garden-spitter",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-dbb2cc43-acad-4526-b77f-fe69f2bbbed9.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v030/garden-spitter.png",
+      "sha256": "8E087914CD1910E168FD54162774EC92246713B00642EE9859AE003E0C492195",
+      "byteExactCopy": true
+    },
+    {
+      "id": "garden-keeper",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-9cf190e4-3b75-465c-9a68-e578311237cd.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v030/garden-keeper.png",
+      "sha256": "C173CC3CE16CDA9DB799BDE896FD2F962CE3A9991CBCE2427018B9CAA627966D",
+      "byteExactCopy": true
+    },
+    {
+      "id": "garden-boss",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-859030cf-0eec-4df3-83c4-1a624e57686e.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v030/garden-boss.png",
+      "sha256": "2C6AB2D230A678116F1A04512D4E2791E6B71E35BB63BEE36A8671EC246E9D1B",
+      "byteExactCopy": true
+    },
+    {
+      "id": "garden-battlefield",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-572421d4-db43-4f7d-b579-786fc11d9392.png",
+      "path": "unity/Assets/Resources/Art/Environments/v030/garden-battlefield.png",
+      "sha256": "AB78D8DC004700E6DADD6605B2F1B1A0E06D3D3480486AE5CDEAE7C89F80DC5F",
+      "byteExactCopy": true
+    }
+  ]
+}

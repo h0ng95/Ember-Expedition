@@ -4,11 +4,12 @@ using System.Collections.Generic;
 namespace Expedition.Core
 {
     public enum CatalogTeam { Ally, Enemy }
-    public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace, FrostWarden }
+    public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace,
+        FrostWarden, GardenSpitter, GardenLord }
     public enum CatalogAttackPhase { Ready, WindingBasic, WindingSkill }
     public enum CatalogEventKind { SkillUsed, BasicHit, Damage, Shield, ShieldBlocked, Heal, Burn, Slow, Mark,
         Buff, TraitTriggered, Defeated, Ended, ChargeTelegraph, ChargeHit,
-        BossTelegraph, BossImpact, BossEnraged, Freeze }
+        BossTelegraph, BossImpact, BossEnraged, Freeze, Poison }
 
     public sealed class CatalogBattleEvent
     {
@@ -65,7 +66,7 @@ namespace Expedition.Core
         public float SlamWarningRemaining { get { return IsAlive &&
             (PendingSkillId == "GOLEM_SLAM" || PendingSkillId == "GOLEM_AFTERSHOCK" ||
              PendingSkillId == "FURNACE_BLAST" || PendingSkillId == "FURNACE_EMBER" ||
-             PendingSkillId == "FROST_NOVA") &&
+             PendingSkillId == "FROST_NOVA" || PendingSkillId == "GARDEN_BRIARS") &&
             AttackPhase == CatalogAttackPhase.WindingSkill ? AttackWindupRemaining : 0f; } }
         public float SlamTargetX { get { return SlamAimX; } }
         public float SlamTargetY { get { return SlamAimY; } }
@@ -73,21 +74,29 @@ namespace Expedition.Core
         public bool SlamIsAftershock { get { return PendingSkillId == "GOLEM_AFTERSHOCK" ||
             PendingSkillId == "FURNACE_EMBER"; } }
         public float BurnRemaining { get { return BurnTicksLeft > 0 ? Math.Max(0f, BurnUntil - Clock.Time) : 0f; } }
+        public float PoisonRemaining { get { return IsAlive && !Clock.Ended ?
+            Math.Max(0f, PoisonUntil - Clock.Time) : 0f; } }
         public float FrozenRemaining { get { return IsAlive && !Clock.Ended ?
             Math.Max(0f, FrozenUntil - Clock.Time) : 0f; } }
         public float SlowPercent { get { return SlowUntil > Clock.Time ? Slow : 0f; } }
         public float MarkRemaining { get { return Math.Max(0f, MarkUntil - Clock.Time); } }
 
         internal CatalogBattle Clock;
-        internal string InnateTraitId, PendingSkillId, PendingTargetId, VolleyTargetId, BurnSourceId, ShieldSourceId;
-        internal float ShieldUntil, BurnUntil, BurnNextAt, BurnDamage, Slow, SlowUntil, MarkUntil, FrozenUntil;
-        internal int BurnTicksLeft, VolleyShotsLeft;
+        internal string InnateTraitId, PendingSkillId, PendingTargetId, VolleyTargetId, BurnSourceId,
+            PoisonSourceId, ShieldSourceId;
+        internal float ShieldUntil, BurnUntil, BurnNextAt, BurnDamage, PoisonUntil, PoisonNextAt,
+            PoisonDamage, Slow, SlowUntil, MarkUntil, FrozenUntil;
+        internal int BurnTicksLeft, PoisonTicksLeft, VolleyShotsLeft, BasicHitsLanded;
         internal float NextBasicAt, ReleaseAt, NextPrimaryAt = 2f, NextFinalAt = 2f, NextCounterAt,
             NextHarmonyAt, NextSpoilsAt, NextVolleyAt, ExtraBasicUntil, ExtraBasicMultiplier;
         internal float NextChargeAt, ChargeAimX, ChargeAimY, ChargeStartX, ChargeStartY,
             ChargeEndX, ChargeEndY, ChargeStartAt;
         internal bool ChargeMoving;
         internal float NextSlamAt, SlamAimX, SlamAimY, SlamRadiusValue;
+        internal float GardenNextWarningAt;
+        internal int GardenStrikeCount, GardenStrikeIndex;
+        internal float[] GardenAimXs, GardenAimYs;
+        internal string[] GardenTargetIds;
         internal float NextGuardAt;
         internal bool FirstHitUsed, CrisisUsed;
         internal readonly List<CatalogBuff> Buffs = new List<CatalogBuff>();
@@ -156,9 +165,10 @@ namespace Expedition.Core
                 throw new ArgumentException("Invalid enemy stats.");
             if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) ||
                 (role == CatalogEnemyRole.Golem || role == CatalogEnemyRole.Furnace ||
-                 role == CatalogEnemyRole.FrostWarden) && !boss ||
+                 role == CatalogEnemyRole.FrostWarden || role == CatalogEnemyRole.GardenLord) && !boss ||
                 boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast &&
-                    role != CatalogEnemyRole.Furnace && role != CatalogEnemyRole.FrostWarden ||
+                    role != CatalogEnemyRole.Furnace && role != CatalogEnemyRole.FrostWarden &&
+                    role != CatalogEnemyRole.GardenLord ||
                 bossPatterns && !boss)
                 throw new ArgumentException("Invalid enemy role.");
             CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
@@ -170,6 +180,12 @@ namespace Expedition.Core
             enemy.NextSlamAt = bossPatterns && role == CatalogEnemyRole.Golem ? 2f : float.PositiveInfinity;
             if (bossPatterns && role == CatalogEnemyRole.Furnace) enemy.NextSlamAt = 2f;
             if (bossPatterns && role == CatalogEnemyRole.FrostWarden) enemy.NextSlamAt = 2f;
+            if (bossPatterns && role == CatalogEnemyRole.GardenLord) enemy.NextSlamAt = 2f;
+            if (role == CatalogEnemyRole.GardenLord)
+            {
+                enemy.GardenAimXs = new float[3]; enemy.GardenAimYs = new float[3];
+                enemy.GardenTargetIds = new string[3];
+            }
             enemy.NextGuardAt = role == CatalogEnemyRole.Supervisor ? 1.5f : float.PositiveInfinity;
             return enemy;
         }
@@ -225,9 +241,22 @@ namespace Expedition.Core
                 {
                     CatalogBattleUnit source = Get(unit.BurnSourceId);
                     Damage(source, unit, unit.BurnDamage, "BURN", false, true);
-                    unit.BurnTicksLeft--;
-                    unit.BurnNextAt += 1f;
-                    if (unit.BurnTicksLeft == 0) unit.BurnUntil = Time;
+                    if (unit.IsAlive)
+                    {
+                        unit.BurnTicksLeft--;
+                        unit.BurnNextAt += 1f;
+                        if (unit.BurnTicksLeft == 0) unit.BurnUntil = Time;
+                    }
+                }
+                if (unit.PoisonTicksLeft > 0 && unit.PoisonNextAt <= Time)
+                {
+                    CatalogBattleUnit source = Get(unit.PoisonSourceId);
+                    Damage(source, unit, unit.PoisonDamage, "POISON", false, true);
+                    if (unit.IsAlive)
+                    {
+                        unit.PoisonTicksLeft--;
+                        unit.PoisonNextAt += 1f;
+                    }
                 }
             }
             ResolveBodySpacing();
@@ -254,7 +283,7 @@ namespace Expedition.Core
                     }
                     else if (unit.PendingSkillId == "GOLEM_SLAM" || unit.PendingSkillId == "GOLEM_AFTERSHOCK" ||
                         unit.PendingSkillId == "FURNACE_BLAST" || unit.PendingSkillId == "FURNACE_EMBER" ||
-                        unit.PendingSkillId == "FROST_NOVA")
+                        unit.PendingSkillId == "FROST_NOVA" || unit.PendingSkillId == "GARDEN_BRIARS")
                     {
                         ReleaseSlam(unit);
                         continue;
@@ -264,11 +293,13 @@ namespace Expedition.Core
                 }
                 if (unit.VolleyShotsLeft > 0) continue; // One tracking cast finishes before basic/final actions resume.
                 if (!unit.IsAlive || unit.AttackPhase != CatalogAttackPhase.Ready) continue;
+                if (unit.GardenStrikeCount > 0 && Time < unit.GardenNextWarningAt) continue;
                 if (TryStartSlam(unit)) continue;
                 if (TryStartCharge(unit)) continue;
                 if (TryStartSkill(unit)) continue;
                 CatalogBattleUnit target = ChooseEnemy(unit, false, false);
-                if (unit.EnemyRole == CatalogEnemyRole.Raider)
+                if (unit.EnemyRole == CatalogEnemyRole.Raider ||
+                    unit.EnemyRole == CatalogEnemyRole.GardenSpitter)
                 {
                     CatalogBattleUnit vulnerable = ChooseEnemy(unit, true, false);
                     if (vulnerable != null) target = vulnerable;
@@ -397,6 +428,51 @@ namespace Expedition.Core
 
         bool TryStartSlam(CatalogBattleUnit actor)
         {
+            if (actor.BossPatternsEnabled && actor.EnemyRole == CatalogEnemyRole.GardenLord)
+            {
+                if (actor.GardenStrikeCount == 0)
+                {
+                    if (Time < actor.NextSlamAt) return false;
+                    for (int i = 0; i < actor.GardenTargetIds.Length; i++)
+                    {
+                        CatalogBattleUnit farthest = null;
+                        float farthestDistance = -1f;
+                        foreach (CatalogBattleUnit candidate in units)
+                        {
+                            if (!candidate.IsAlive || candidate.Team == actor.Team) continue;
+                            bool alreadySelected = false;
+                            for (int prior = 0; prior < i; prior++)
+                                if (actor.GardenTargetIds[prior] == candidate.Id) alreadySelected = true;
+                            if (alreadySelected) continue;
+                            float distance = Distance(actor, candidate);
+                            if (distance > farthestDistance + .00001f ||
+                                Math.Abs(distance - farthestDistance) <= .00001f && farthest != null &&
+                                string.CompareOrdinal(candidate.Id, farthest.Id) < 0)
+                            { farthest = candidate; farthestDistance = distance; }
+                        }
+                        if (farthest == null) break;
+                        actor.GardenTargetIds[i] = farthest.Id;
+                        actor.GardenAimXs[i] = farthest.X;
+                        actor.GardenAimYs[i] = farthest.Y;
+                        actor.GardenStrikeCount++;
+                    }
+                    if (actor.GardenStrikeCount == 0) return false;
+                    actor.GardenStrikeIndex = 0;
+                }
+                else if (Time < actor.GardenNextWarningAt) return true;
+                int strike = actor.GardenStrikeIndex;
+                actor.PendingTargetId = actor.GardenTargetIds[strike];
+                actor.PendingSkillId = "GARDEN_BRIARS";
+                actor.SlamAimX = actor.GardenAimXs[strike];
+                actor.SlamAimY = actor.GardenAimYs[strike];
+                actor.SlamRadiusValue = 1.25f;
+                actor.AttackPhase = CatalogAttackPhase.WindingSkill;
+                actor.GardenNextWarningAt = 0f;
+                actor.ReleaseAt = Time + (actor.BossEnraged ? .8f : 1.05f);
+                Emit(CatalogEventKind.BossTelegraph, actor, Get(actor.PendingTargetId),
+                    "GARDEN_BRIARS", 1.25f);
+                return true;
+            }
             if (actor.BossPatternsEnabled && actor.EnemyRole == CatalogEnemyRole.FrostWarden &&
                 Time >= actor.NextSlamAt)
             {
@@ -439,6 +515,32 @@ namespace Expedition.Core
 
         void ReleaseSlam(CatalogBattleUnit actor)
         {
+            if (actor.PendingSkillId == "GARDEN_BRIARS")
+            {
+                Emit(CatalogEventKind.BossImpact, actor, null, "GARDEN_BRIARS", actor.SlamRadiusValue);
+                foreach (CatalogBattleUnit candidate in units)
+                {
+                    if (!actor.IsAlive || !candidate.IsAlive || candidate.Team == actor.Team) continue;
+                    float dx = candidate.X - actor.SlamAimX, dy = candidate.Y - actor.SlamAimY;
+                    if (dx * dx + dy * dy > actor.SlamRadiusValue * actor.SlamRadiusValue) continue;
+                    Damage(actor, candidate, EffectivePower(actor) * 1.1f,
+                        "GARDEN_BRIARS", false, false);
+                    if (candidate.IsAlive) Poison(actor, candidate, 14f);
+                }
+                actor.GardenStrikeIndex++;
+                actor.PendingSkillId = null;
+                actor.AttackPhase = CatalogAttackPhase.Ready;
+                if (actor.GardenStrikeIndex < actor.GardenStrikeCount)
+                {
+                    actor.GardenNextWarningAt = Time + .35f;
+                    return;
+                }
+                actor.GardenStrikeCount = actor.GardenStrikeIndex = 0;
+                actor.GardenNextWarningAt = 0f;
+                actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
+                actor.NextSlamAt = Time + (actor.BossEnraged ? 6f : 8f);
+                return;
+            }
             if (actor.PendingSkillId == "FROST_NOVA")
             {
                 Emit(CatalogEventKind.BossImpact, actor, null, "FROST_NOVA", actor.SlamRadiusValue);
@@ -513,6 +615,12 @@ namespace Expedition.Core
             Emit(CatalogEventKind.BasicHit, actor, target, "BASIC", coefficient);
             bool alreadySlowed = target.SlowPercent > 0;
             Damage(actor, target, EffectivePower(actor) * coefficient, "BASIC", true, false);
+            if (actor.EnemyRole == CatalogEnemyRole.GardenSpitter)
+            {
+                actor.BasicHitsLanded++;
+                if (actor.BasicHitsLanded % 3 == 0 && target.IsAlive)
+                    Poison(actor, target, 6f);
+            }
             if (target.IsAlive)
             {
                 if (HasTrait(actor, "T-FI")) Burn(actor, target);
@@ -612,7 +720,8 @@ namespace Expedition.Core
                 (target.EnemyRole == CatalogEnemyRole.Beast && target.Hp <= target.MaxHp * .5f ||
                  target.EnemyRole == CatalogEnemyRole.Golem && target.Hp <= target.MaxHp * .4f ||
                  target.EnemyRole == CatalogEnemyRole.Furnace && target.Hp <= target.MaxHp * .45f ||
-                 target.EnemyRole == CatalogEnemyRole.FrostWarden && target.Hp <= target.MaxHp * .4f))
+                 target.EnemyRole == CatalogEnemyRole.FrostWarden && target.Hp <= target.MaxHp * .4f ||
+                 target.EnemyRole == CatalogEnemyRole.GardenLord && target.Hp <= target.MaxHp * .4f))
             {
                 target.BossEnraged = true;
                 Emit(CatalogEventKind.BossEnraged, target, null, "BOSS_ENRAGED", 1f);
@@ -625,6 +734,10 @@ namespace Expedition.Core
                 target.AttackPhase = CatalogAttackPhase.Ready;
                 target.FrozenUntil = 0f;
                 target.ZoneTicksLeft = 0;
+                target.GardenStrikeCount = target.GardenStrikeIndex = 0;
+                target.GardenNextWarningAt = 0f;
+                target.BurnTicksLeft = target.PoisonTicksLeft = 0;
+                target.BurnUntil = target.PoisonUntil = 0f;
                 Emit(CatalogEventKind.Defeated, source, target, ability, 0);
                 if (source != null && source.IsAlive && HasTrait(source, "T-H06") && Time >= source.NextSpoilsAt)
                 {
@@ -661,6 +774,7 @@ namespace Expedition.Core
         {
             if (target == null || !target.IsAlive) return false;
             if (HasTrait(target, "T-H02")) amount *= 1.15f;
+            if (target.PoisonRemaining > 0f) amount *= .65f;
             float actual = Math.Min(target.MaxHp - target.Hp, amount);
             if (actual <= .00001f) return false;
             target.Hp += actual;
@@ -680,6 +794,18 @@ namespace Expedition.Core
             target.BurnDamage = strength; target.BurnTicksLeft = 3; target.BurnUntil = Time + 3f;
             target.BurnSourceId = source.Id;
             Emit(CatalogEventKind.Burn, source, target, "BURN", strength);
+        }
+
+        void Poison(CatalogBattleUnit source, CatalogBattleUnit target, float strength)
+        {
+            if (!target.IsAlive) return;
+            bool active = target.PoisonUntil > Time;
+            if (active && strength + .00001f < target.PoisonDamage) return;
+            // Refresh the four-second status without delaying its existing tick cadence.
+            if (!active) target.PoisonNextAt = Time + 1f;
+            target.PoisonDamage = strength; target.PoisonTicksLeft = 4; target.PoisonUntil = Time + 4f;
+            target.PoisonSourceId = source.Id;
+            Emit(CatalogEventKind.Poison, source, target, "POISON", strength);
         }
 
         void Freeze(CatalogBattleUnit source, CatalogBattleUnit target, float duration)

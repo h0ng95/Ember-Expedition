@@ -8,7 +8,7 @@ namespace Expedition.Presentation
     // Bounded, code-drawn effects: no particle objects or additional sprite sheets per hit.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support, GroundImpact }
+        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst }
         sealed class Effect
         {
             public Vector2 Point;
@@ -49,6 +49,8 @@ namespace Expedition.Presentation
                 return new Color(1f, .38f, .11f);
             if (unit != null && unit.EnemyRole == CatalogEnemyRole.FrostWarden)
                 return new Color(.36f, .78f, 1f);
+            if (unit != null && unit.Id.StartsWith("garden-", StringComparison.Ordinal))
+                return new Color(.65f, .91f, .3f);
             if (id.Contains("-FI") || id == "H-01" || id == "H-04") return new Color(1f, .46f, .13f);
             if (id.Contains("-IC") || id == "H-03") return new Color(.4f, .85f, 1f);
             if (id.Contains("-PR") || id == "H-02" || id == "H-05") return new Color(.55f, 1f, .69f);
@@ -58,7 +60,8 @@ namespace Expedition.Presentation
 
         static bool IsArrow(CatalogBattleUnit unit)
         {
-            return unit.EnemyRole == CatalogEnemyRole.Raider || unit.FormId.Contains("-AR") ||
+            return unit.EnemyRole == CatalogEnemyRole.Raider ||
+                unit.EnemyRole == CatalogEnemyRole.GardenSpitter || unit.FormId.Contains("-AR") ||
                 unit.FormId == "H-03" || unit.FormId == "H-06";
         }
 
@@ -81,15 +84,19 @@ namespace Expedition.Presentation
             {
                 if (effects.Count == 24) effects.RemoveAt(0);
                 bool charge = e.AbilityId == "BOSS_CHARGE";
-                effects.Add(new Effect { Kind = EffectKind.GroundImpact,
+                bool roots = e.AbilityId == "GARDEN_BRIARS";
+                effects.Add(new Effect { Kind = roots ? EffectKind.RootBurst : EffectKind.GroundImpact,
                     Point = charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
-                    Color = source.EnemyRole == CatalogEnemyRole.Furnace ?
+                    Color = source.EnemyRole == CatalogEnemyRole.GardenLord ?
+                        new Color(.55f, .86f, .27f) :
+                        source.EnemyRole == CatalogEnemyRole.Furnace ?
                         new Color(1f, .37f, .1f) :
                         source.EnemyRole == CatalogEnemyRole.FrostWarden ?
                         new Color(.32f, .76f, 1f) : source.BossEnraged ?
                         new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
-                    Size = charge ? source.ChargeWidth : source.SlamRadius, Duration = .45f });
+                    Size = charge ? source.ChargeWidth : source.SlamRadius,
+                    Duration = roots ? .6f : .45f });
                 Play(hit, 1f);
             }
             if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
@@ -97,7 +104,7 @@ namespace Expedition.Presentation
                 Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction);
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
-                bool periodic = e.AbilityId == "BURN";
+                bool periodic = e.AbilityId == "BURN" || e.AbilityId == "POISON";
                 bool strong = !periodic && e.AbilityId != "BASIC";
                 Add(EffectKind.Impact, target, color, periodic ? 9 : strong ? 35 : 20, .23f, direction);
                 if (!periodic)
@@ -110,6 +117,8 @@ namespace Expedition.Presentation
             if (e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield)
                 Add(EffectKind.Support, target, e.Kind == CatalogEventKind.Heal ?
                     new Color(.45f, 1f, .6f) : new Color(.5f, .8f, 1f), 32, .4f, 1);
+            if (e.Kind == CatalogEventKind.Poison)
+                Add(EffectKind.Impact, target, new Color(.75f, 1f, .35f), 27, .35f, 1);
         }
 
         void Play(AudioClip clip, float volume)
@@ -156,7 +165,9 @@ namespace Expedition.Presentation
                 if (unit.SlamWarningRemaining > 0)
                 {
                     Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                    Color warning = unit.EnemyRole == CatalogEnemyRole.FrostWarden ?
+                    Color warning = unit.EnemyRole == CatalogEnemyRole.GardenLord ?
+                        new Color(.64f, .92f, .35f, .95f) :
+                        unit.EnemyRole == CatalogEnemyRole.FrostWarden ?
                         new Color(.35f, .83f, 1f, .95f) :
                         unit.EnemyRole == CatalogEnemyRole.Furnace ?
                         unit.SlamIsAftershock ? new Color(1f, .16f, .08f, .95f) :
@@ -164,7 +175,9 @@ namespace Expedition.Presentation
                         unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
                         new Color(1f, .65f, .2f, .8f);
                     Ring(center, unit.SlamRadius * 83, unit.SlamRadius * 48, warning, 4);
-                    Ring(center, unit.SlamRadius * 83 * .92f, unit.SlamRadius * 48 * .92f, warning, 1);
+                    Ring(center, unit.SlamRadius * 83 * .92f, unit.SlamRadius * 48 * .92f,
+                        unit.EnemyRole == CatalogEnemyRole.GardenLord ?
+                        new Color(.65f, .36f, .78f, .9f) : warning, 1);
                     Line(center - new Vector2(10, 0), center + new Vector2(10, 0), 3, warning);
                     Line(center - new Vector2(0, 6), center + new Vector2(0, 6), 3, warning);
                 }
@@ -206,11 +219,19 @@ namespace Expedition.Presentation
                     Line(foot + new Vector2(-18, -58), foot + new Vector2(-9, -73), 2, ice);
                     Line(foot + new Vector2(17, -66), foot + new Vector2(8, -79), 2, ice);
                 }
-                else if (unit.BurnRemaining > 0f)
+                if (unit.BurnRemaining > 0f)
                 {
                     Color ember = new Color(1f, .45f, .13f, .85f);
                     Line(foot + new Vector2(-16, -20), foot + new Vector2(-11, -37), 3, ember);
                     Line(foot + new Vector2(13, -13), foot + new Vector2(18, -29), 3, ember);
+                }
+                if (unit.PoisonRemaining > 0f)
+                {
+                    Color venom = new Color(.68f, .94f, .36f, .88f);
+                    Line(foot + new Vector2(-22, -29), foot + new Vector2(-18, -43), 3, venom);
+                    Line(foot + new Vector2(20, -37), foot + new Vector2(25, -51), 3, venom);
+                    Fill(new Rect(foot.x - 3, foot.y - 57, 6, 6),
+                        new Color(.64f, .34f, .77f, .9f));
                 }
             }
             foreach (CatalogBattleUnit unit in battle.Units)
@@ -249,6 +270,11 @@ namespace Expedition.Presentation
                         effect.Size * 48 * (.6f + .4f * t), impactColor, 6 * (1 - t) + 1);
                     continue;
                 }
+                if (effect.Kind == EffectKind.RootBurst)
+                {
+                    DrawRootBurst(project(effect.Point), t);
+                    continue;
+                }
                 Vector2 point = project(effect.Point) + new Vector2(0, -57);
                 Color color = effect.Color;
                 color.a = 1 - t;
@@ -280,6 +306,31 @@ namespace Expedition.Presentation
                     }
                     if (t < .35f) Fill(new Rect(point.x - 5, point.y - 5, 10, 10), new Color(1, 1, .9f, 1 - t * 2));
                 }
+            }
+        }
+
+        // Five narrow roots rise at the stored impact point, then retract into the ground.
+        // This is drawn after actors so each of the boss's separate target strikes is visible.
+        static void DrawRootBurst(Vector2 center, float progress)
+        {
+            float fade = 1f - Mathf.Clamp01((progress - .55f) / .45f);
+            Ring(center + new Vector2(0, -3), 69, 12, new Color(.23f, .11f, .28f, .7f * fade), 4);
+            for (int i = 0; i < 5; i++)
+            {
+                float local = progress - i * .035f;
+                if (local <= 0f) continue;
+                float rise = local < .19f ? local / .19f : local < .66f ? 1f :
+                    1f - Mathf.Clamp01((local - .66f) / .34f);
+                if (rise <= 0f) continue;
+                int spread = i - 2;
+                Vector2 basePoint = center + new Vector2(spread * 21f, Mathf.Abs(spread) * 2f);
+                Vector2 tip = basePoint + new Vector2(spread * 3f, -(80f - Mathf.Abs(spread) * 11f) * rise);
+                Line(basePoint, tip, 8f, new Color(.22f, .11f, .27f, .92f * fade));
+                Line(basePoint + new Vector2(2, 0), tip + new Vector2(2, 0), 3f,
+                    new Color(.53f, .88f, .27f, .95f * fade));
+                Vector2 fork = Vector2.Lerp(basePoint, tip, .52f);
+                Line(fork, fork + new Vector2(spread <= 0 ? -10f : 10f, -14f * rise), 3f,
+                    new Color(.62f, .35f, .73f, .9f * fade));
             }
         }
 

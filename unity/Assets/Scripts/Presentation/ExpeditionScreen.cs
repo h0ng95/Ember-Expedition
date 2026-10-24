@@ -40,7 +40,7 @@ namespace Expedition.Presentation
         ExpeditionJournal journal;
         ExpeditionProgress progress;
         CatalogArtView art;
-        Texture2D battlefield, outpost, furnace, frost;
+        Texture2D battlefield, outpost, furnace, frost, garden;
         Camera backgroundCamera;
         GUIStyle title, heading, body, small, centered, button, primary, hint, bossChecklist;
         GUIStyle journalTitle, journalBody, journalStatus, dialogBody;
@@ -55,7 +55,7 @@ namespace Expedition.Presentation
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId, selectedStoryId;
         string hoverRecipientId, growthPulseId;
         float toastUntil, hoverStartTime = -1f, growthPulseUntil;
-        Vector2 pointerStart, pointerCurrent, pointerGrabOffset;
+        Vector2 pointerStart, pointerCurrent, pointerGrabOffset, journalScroll;
         int benchPage, choosePage, combinationPage, pointerFingerId;
         Modal modal;
         GrowthAction pendingAction;
@@ -74,6 +74,7 @@ namespace Expedition.Presentation
                 outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
                 furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
                 frost = Resources.Load<Texture2D>("Art/Environments/v029/frost-battlefield");
+                garden = Resources.Load<Texture2D>("Art/Environments/v030/garden-battlefield");
                 LoadJournal();
                 LoadProgress();
                 LoadSave();
@@ -342,7 +343,7 @@ namespace Expedition.Presentation
             DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
             Rect field = new Rect(17, 93, 1246, 449);
             Texture2D region = run.Wave <= 5 ? battlefield : run.Wave <= 10 ? outpost :
-                run.Wave <= 15 ? furnace : frost;
+                run.Wave <= 15 ? furnace : run.Wave <= 20 ? frost : garden;
             ExpeditionUiTheme.DrawBackdrop(field, region, false);
             Fill(new Rect(32, 143, 687, 363), new Color(.045f, .05f, .065f, .28f));
             ExpeditionUiTheme.PanelBox(new Rect(724, 94, 523, 430));
@@ -355,7 +356,7 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
                 showHelp = !showHelp;
             string regionLabel = run.Wave <= 5 ? "숲길" : run.Wave <= 10 ? "성문" :
-                run.Wave <= 15 ? "폐광" : "서리 성당";
+                run.Wave <= 15 ? "폐광" : run.Wave <= 20 ? "서리 성당" : "황혼정원";
             if (GUI.Button(new Rect(990, 273, 240, 42), "지역 이야기 · " + regionLabel, button))
             {
                 StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
@@ -428,6 +429,11 @@ namespace Expedition.Presentation
                 case 18: return "시종 셋이 약한 동료를 함께 노립니다.\n보호와 회복을 나누어 배치하세요.";
                 case 19: return "찬송 감시자는 가까운 적 둘에게 보호막을 줍니다.\n보호막에 막히기 전에 목표를 고르세요.";
                 case 20: return "서리 원형 공격은 먼 동료 위치를 예고합니다.\n맞은 동료는 잠시 얼어 공격과 이동이 멈춥니다.";
+                case 21: return "가시 근위병이 전열을 지킵니다.\n독침 사냥꾼의 사격을 받을 후열을 살피세요.";
+                case 22: return "독침 사냥꾼은 세 번째 명중에 독을 남깁니다.\n중독된 동료는 회복 효과가 줄어듭니다.";
+                case 23: return "사냥꾼의 독과 근위병의 전열 압박이 겹칩니다.\n해로운 상태가 걸린 동료의 체력을 살피세요.";
+                case 24: return "황혼정원사는 가까운 적 둘에게 보호막을 줍니다.\n보호막이 없는 적부터 집중할 수도 있습니다.";
+                case 25: return "먼 동료 최대 셋 발밑에 가시가 차례로 솟습니다.\n후열을 분산 배치하세요 · 중독 중 회복량 −35%.";
                 default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
             }
         }
@@ -520,7 +526,7 @@ namespace Expedition.Presentation
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
                 "등불을 모두 소진했습니다." : victory ?
-                (run.Wave == ExpeditionRun.TotalWaves ? "서리 성당 너머의 다음 길을 찾았습니다." :
+                (run.Wave == ExpeditionRun.TotalWaves ? "황혼정원 너머 왕궁으로 난 길을 찾았습니다." :
                 "다음 길을 준비하세요.") :
                 "등불 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
             GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
@@ -568,6 +574,11 @@ namespace Expedition.Presentation
                     if (journal != null && journal.IsUnlocked(entry.Id)) entryId = entry.Id;
             }
             selectedStoryId = entryId;
+            int selectedIndex = 0;
+            for (int i = 0; i < ExpeditionStory.Entries.Count; i++)
+                if (ExpeditionStory.Entries[i].Id == entryId) { selectedIndex = i; break; }
+            journalScroll = new Vector2(0, Mathf.Clamp((selectedIndex + 1) * 52 - 440,
+                0, Mathf.Max(0, ExpeditionStory.Entries.Count * 52 + 4 - 446)));
             modal = Modal.Journal;
         }
 
@@ -583,17 +594,22 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(content.xMax - 77, 98, 77, 50), "닫기", button))
             { modal = Modal.None; return; }
             ExpeditionUiTheme.PanelBox(new Rect(content.x, 163, 320, 459));
+            Rect journalViewport = new Rect(content.x + 10, 170, 300, 443);
+            journalScroll = GUI.BeginScrollView(journalViewport, journalScroll,
+                new Rect(0, 0, 281, ExpeditionStory.Entries.Count * 52 + 4), false,
+                ExpeditionStory.Entries.Count > 8);
             for (int i = 0; i < ExpeditionStory.Entries.Count; i++)
             {
                 StoryEntry entry = ExpeditionStory.Entries[i];
                 bool unlocked = journal != null && journal.IsUnlocked(entry.Id);
-                Rect row = new Rect(content.x + 12, 170 + i * 49, 296, 48);
+                Rect row = new Rect(4, 4 + i * 52, 270, 48);
                 if (entry.Id == selectedStoryId)
                     Fill(new Rect(row.x - 3, row.y - 3, row.width + 6, row.height + 6),
                         new Color(.69f, .51f, .26f, .65f));
                 if (GUI.Button(row, (unlocked ? "열림  ·  " : "잠김  ·  ") + entry.Title, button))
                     selectedStoryId = entry.Id;
             }
+            GUI.EndScrollView();
             ExpeditionUiTheme.ParchmentBox(new Rect(496, 163, 624, 459));
             StoryEntry selectedStory = ExpeditionStory.Get(selectedStoryId) ?? ExpeditionStory.Get("intro");
             bool selectedUnlocked = journal != null && journal.IsUnlocked(selectedStory.Id);
@@ -647,6 +663,8 @@ namespace Expedition.Presentation
                 case "mine-clear": return "용광로 수호자를 쓰러뜨리면 열립니다.";
                 case "frost": return "전투 16에 도달하면 열립니다.";
                 case "frost-clear": return "서리의 파수꾼을 쓰러뜨리면 열립니다.";
+                case "garden": return "전투 21에 도달하면 열립니다.";
+                case "garden-clear": return "가시의 군주를 쓰러뜨리면 열립니다.";
                 default: return "원정을 진행하면 열립니다.";
             }
         }

@@ -29,6 +29,7 @@ internal static class Program
             MineGuardAndFurnacePattern();
             FrostWardenPattern();
             FrozenCounterBoundary();
+            GardenPoisonAndBossPattern();
             LegacyTenWaveMigration();
             BossStepPartition();
             OpeningWavesPlayable();
@@ -66,9 +67,9 @@ internal static class Program
                 "Encounter name is ready for Korean UI.");
             Check(run.BeginBattle() != null && run.ResolveBattle(true) && run.Continue(), "Wave advances once.");
         }
-        Check(run.Gold == 680 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
-            run.Victories == 20 && run.LastReward == 0,
-            "Twenty-wave unspent economy earns 640 gold and final clear grants zero.");
+        Check(run.Gold == 905 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
+            run.Victories == 25 && run.LastReward == 0,
+            "Twenty-five-wave unspent economy earns 865 gold and final clear grants zero.");
         Check(run.Summon() == null && run.BeginBattle() == null && !run.Continue(), "Completed run is closed.");
     }
 
@@ -131,13 +132,13 @@ internal static class Program
     static void GoldBudgetPath()
     {
         int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17, 20, 21, 23, 24, 26,
-            29, 31, 32, 34, 37 };
+            29, 31, 32, 34, 37, 37, 37, 37, 37, 37 };
         int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10, 0, 10, 0, 15, 15,
-            5, 0, 15, 15, 0 };
+            5, 0, 15, 15, 0, 50, 90, 130, 175, 225 };
         var run = ExpeditionRun.New(catalog, 555);
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
-            while (run.Gold >= ExpeditionRun.SummonCost)
+            while (wave <= 20 && run.Gold >= ExpeditionRun.SummonCost)
             {
                 if (!run.CanSummon) FreeBenchPlace(run);
                 string id = run.Summon();
@@ -145,14 +146,14 @@ internal static class Program
                 if (wave == 1) Check(run.SetDeployed(id, true), "Opening two summons join the active five.");
             }
             Check(run.Roster.SupplyUsed == supplied[wave - 1] && run.Gold == remaining[wave - 1],
-                "Gold budget and cumulative supply match the twenty-wave plan at wave " + wave + ".");
+                "Gold budget and cumulative supply match the twenty-five-wave plan at wave " + wave + ".");
             var restored = ExpeditionRun.Restore(catalog, run.Capture());
             Check(restored.Gold == run.Gold && restored.Roster.SupplyUsed == run.Roster.SupplyUsed,
                 "Saved economy retains gold and cumulative summons.");
             run.BeginBattle(); run.ResolveBattle(true); run.Continue();
         }
-        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 37 && run.Gold == 0,
-            "Thirty-four paid summons and three starters survive the full budget path.");
+        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 37 && run.Gold == 225,
+            "New region rewards remain available after the historical maximum-summon path.");
     }
 
     static void FreeBenchPlace(ExpeditionRun run)
@@ -355,7 +356,8 @@ internal static class Program
     static void EnemyWavesAndRoles()
     {
         var run = ExpeditionRun.New(catalog, 31);
-        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4, 4, 5, 6, 5, 3 };
+        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4, 4, 5, 6, 5, 3,
+            4, 5, 6, 5, 3 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
             Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
@@ -373,7 +375,7 @@ internal static class Program
                 Check(enemies.Any(u => u.Id == "elite-beast" && u.EnemyRole == CatalogEnemyRole.Beast &&
                     u.NextChargeAt == 1.35f),
                     "Fourth encounter elite uses the existing readable beast charge.");
-            if (wave >= 16)
+            if (wave >= 16 && wave <= 20)
             {
                 Check(enemies.All(u => u.Id.StartsWith("frost-", StringComparison.Ordinal)),
                     "Frost region uses its distinct enemy IDs.");
@@ -386,6 +388,20 @@ internal static class Program
                     CatalogEnemyRole.Supervisor, "Cantor grants supervisor guard.");
                 if (wave == 20) Check(enemies.Single(u => u.Id == "frost-boss").EnemyRole ==
                     CatalogEnemyRole.FrostWarden, "Final boss has its own frost role.");
+            }
+            if (wave >= 21)
+            {
+                Check(enemies.All(u => u.Id.StartsWith("garden-", StringComparison.Ordinal)),
+                    "Garden region uses distinct enemy IDs.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.MineWorker) ==
+                    (wave == 25 ? 0 : wave == 22 || wave == 23 ? 3 : 2),
+                    "Garden guards use the nondashing melee role.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.GardenSpitter) ==
+                    (wave == 23 ? 3 : 2), "Garden spitters use their distinct poison role.");
+                if (wave == 24) Check(enemies.Single(u => u.Id == "garden-keeper").EnemyRole ==
+                    CatalogEnemyRole.Supervisor, "Garden keeper reuses one guarded elite role.");
+                if (wave == 25) Check(enemies.Single(u => u.Id == "garden-boss").EnemyRole ==
+                    CatalogEnemyRole.GardenLord, "Garden boss owns its distinct pattern role.");
             }
             CatalogBattle replay = ExpeditionRun.Restore(catalog, run.Capture()).ResumeBattle();
             var replayEnemies = replay.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
@@ -872,6 +888,199 @@ internal static class Program
         Check(counters == 1, "The same counter works again after thaw.");
     }
 
+    static void GardenPoisonAndBossPattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit knight = battle.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, 0f, 0f);
+        knight.MoveSpeed = 0f;
+        CatalogBattleUnit spitter = battle.AddEnemy("garden-spitter-1", 1000f, 5f, 0f,
+            .6f, 3.6f, .01f, false, 2f, 0f, CatalogEnemyRole.GardenSpitter);
+        var events = new List<CatalogBattleEvent>();
+        battle.Event += events.Add;
+        StepUntil(battle, () => spitter.BasicHitsLanded >= 2, 180,
+            "Spitter lands two ordinary ranged hits.");
+        Check(knight.PoisonRemaining == 0f &&
+            !events.Any(e => e.Kind == CatalogEventKind.Poison),
+            "First two spitter hits do not poison.");
+        StepUntil(battle, () => spitter.BasicHitsLanded >= 3, 120,
+            "Third landed spitter hit occurs.");
+        Check(knight.PoisonRemaining > 3.9f && spitter.BasicHitsLanded == 3 &&
+            events.Count(e => e.Kind == CatalogEventKind.Poison && e.AbilityId == "POISON" &&
+                e.TargetId == knight.Id && Math.Abs(e.Amount - 6f) < .001f) == 1,
+            "Only the third landed basic hit starts a four-tick raw-six poison.");
+        var heal = typeof(CatalogBattle).GetMethod("Heal",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        var shield = typeof(CatalogBattle).GetMethod("GiveShield",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        var poison = typeof(CatalogBattle).GetMethod("Poison",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        var burn = typeof(CatalogBattle).GetMethod("Burn",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+            null, new[] { typeof(CatalogBattleUnit), typeof(CatalogBattleUnit), typeof(float) }, null);
+        var damage = typeof(CatalogBattle).GetMethod("Damage",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        Check(heal != null && shield != null && poison != null && burn != null && damage != null,
+            "Poison tests exercise the shared heal, shield and damage paths.");
+        knight.Hp = knight.MaxHp - 200f;
+        heal.Invoke(battle, new object[] { knight, knight, 100f, "TEST_HEAL" });
+        Check(Math.Abs(knight.Hp - (knight.MaxHp - 135f)) < .001f &&
+            events.Any(e => e.Kind == CatalogEventKind.Heal && e.AbilityId == "TEST_HEAL" &&
+                Math.Abs(e.Amount - 65f) < .001f),
+            "Every HP heal uses the shared thirty-five-percent poison reduction, including self-heal.");
+        shield.Invoke(battle, new object[] { knight, knight, 100f, 3f, "TEST_SHIELD" });
+        Check(Math.Abs(knight.Shield - 100f) < .001f,
+            "Poison does not reduce shields.");
+        poison.Invoke(battle, new object[] { spitter, knight, 14f });
+        float cadence = knight.PoisonNextAt;
+        battle.Step(.3f);
+        poison.Invoke(battle, new object[] { spitter, knight, 14f });
+        Check(knight.PoisonRemaining > 3.99f && Math.Abs(knight.PoisonNextAt - cadence) < .001f,
+            "Mid-interval refresh restores a full four seconds without moving the next damage tick.");
+        int poisonsBeforeWeak = events.Count(e => e.Kind == CatalogEventKind.Poison);
+        poison.Invoke(battle, new object[] { spitter, knight, 6f });
+        Check(knight.PoisonTicksLeft == 4 && knight.PoisonDamage == 14f &&
+            events.Count(e => e.Kind == CatalogEventKind.Poison) == poisonsBeforeWeak,
+            "A weaker poison cannot replace or stack with a stronger four-tick poison.");
+        burn.Invoke(battle, new object[] { spitter, knight, 10f });
+        knight.FrozenUntil = battle.Time + 1.1f;
+        spitter.NextBasicAt = float.PositiveInfinity;
+        spitter.AttackPhase = CatalogAttackPhase.Ready;
+        battle.Step(3.8f);
+        Check(events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "POISON" &&
+                e.TargetId == knight.Id) == 4 &&
+            events.Count(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "BURN" &&
+                e.TargetId == knight.Id) == 3 && knight.PoisonTicksLeft == 0 &&
+            knight.PoisonRemaining > .1f && knight.PoisonRemaining < .3f &&
+            knight.BurnRemaining == 0f && knight.FrozenRemaining == 0f,
+            "All poison ticks finish on cadence while its healing penalty lasts the full refreshed window.");
+        float stillPoisoned = knight.PoisonRemaining;
+        poisonsBeforeWeak = events.Count(e => e.Kind == CatalogEventKind.Poison);
+        poison.Invoke(battle, new object[] { spitter, knight, 6f });
+        Check(knight.PoisonTicksLeft == 0 && knight.PoisonDamage == 14f &&
+            Math.Abs(knight.PoisonRemaining - stillPoisoned) < .001f &&
+            events.Count(e => e.Kind == CatalogEventKind.Poison) == poisonsBeforeWeak,
+            "A weak poison cannot replace strong poison during its tick-free remaining window.");
+        knight.Hp = knight.MaxHp - 200f;
+        heal.Invoke(battle, new object[] { knight, knight, 100f, "TEST_HEAL" });
+        Check(Math.Abs(knight.Hp - (knight.MaxHp - 135f)) < .001f,
+            "Healing is still reduced after the final damage tick until four seconds elapse.");
+        battle.Step(.4f);
+        Check(knight.PoisonRemaining == 0f && knight.BurnRemaining == 0f &&
+            knight.FrozenRemaining == 0f, "Poison, burn and freeze expire independently.");
+        knight.Hp = knight.MaxHp - 200f;
+        heal.Invoke(battle, new object[] { knight, knight, 100f, "TEST_HEAL" });
+        Check(Math.Abs(knight.Hp - (knight.MaxHp - 100f)) < .001f,
+            "Healing returns to full strength when poison expires.");
+        poison.Invoke(battle, new object[] { spitter, knight, 14f });
+        damage.Invoke(battle, new object[] { spitter, knight, 10000f, "TEST_KILL", false, false });
+        Check(!knight.IsAlive && knight.PoisonRemaining == 0f && knight.PoisonTicksLeft == 0 &&
+            knight.BurnTicksLeft == 0, "Death clears poison and other periodic status state.");
+
+        var garden = new CatalogBattle(catalog);
+        CatalogBattleUnit rear = garden.AddUnit("rear", CatalogTeam.Ally, "B-KN", null, null, -4f, 0f);
+        CatalogBattleUnit second = garden.AddUnit("second", CatalogTeam.Ally, "B-AR", null, null, -3f, 2f);
+        CatalogBattleUnit front = garden.AddUnit("front", CatalogTeam.Ally, "B-PR", null, null, -1f, 0f);
+        CatalogBattleUnit witness = garden.AddUnit("witness", CatalogTeam.Ally, "B-IC", null, null, 0f, -1f);
+        foreach (CatalogBattleUnit ally in garden.Units)
+        { ally.MoveSpeed = 0f; ally.Hp = ally.MaxHp = 3000f; }
+        CatalogBattleUnit lord = garden.AddEnemy("garden-boss", 10000f, 10f, 20f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.GardenLord, true);
+        var gardenEvents = new List<CatalogBattleEvent>();
+        garden.Event += gardenEvents.Add;
+        StepUntil(garden, () => lord.SlamWarningRemaining > 0f, 180,
+            "Garden Lord warns at the farthest living ally.");
+        Check(lord.AttackTargetId == rear.Id && lord.SlamRadius == 1.25f &&
+            lord.SlamWarningRemaining > 1f && lord.GardenStrikeCount == 3 &&
+            lord.GardenTargetIds[0] == rear.Id && lord.GardenTargetIds[1] == second.Id &&
+            lord.GardenTargetIds[2] == front.Id &&
+            gardenEvents.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+                e.AbilityId == "GARDEN_BRIARS") == 1,
+            "One cast locks three distinct living allies from farthest to nearest.");
+        float fixedX = lord.SlamTargetX, fixedY = lord.SlamTargetY;
+        rear.X = -5.8f;
+        witness.X = fixedX; witness.Y = fixedY;
+        StepUntil(garden, () => gardenEvents.Any(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GARDEN_BRIARS"), 100, "First root strikes after warning.");
+        Check(lord.SlamTargetX == fixedX && lord.SlamTargetY == fixedY &&
+            witness.PoisonRemaining > 3.9f && rear.PoisonRemaining == 0f &&
+            lord.SlamWarningRemaining == 0f && lord.GardenStrikeIndex == 1,
+            "First locked root poisons its current occupant, not the ally who moved away.");
+        second.Hp = 0f;
+        StepUntil(garden, () => gardenEvents.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+            e.AbilityId == "GARDEN_BRIARS") == 2, 40,
+            "Second warning follows the first impact.");
+        Check(Math.Abs(lord.SlamTargetX - (-3f)) < .001f &&
+            Math.Abs(lord.SlamTargetY - 2f) < .001f && lord.AttackTargetId == second.Id &&
+            gardenEvents.Where(e => e.AbilityId == "GARDEN_BRIARS" &&
+                (e.Kind == CatalogEventKind.BossTelegraph || e.Kind == CatalogEventKind.BossImpact))
+                .Take(3).Last().Time - gardenEvents.First(e => e.Kind == CatalogEventKind.BossImpact &&
+                    e.AbilityId == "GARDEN_BRIARS").Time >= .34f,
+            "Second warning uses the dead target's original coordinate after a .35-second gap.");
+        StepUntil(garden, () => gardenEvents.Count(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GARDEN_BRIARS") == 2, 90, "Second root strikes its stored coordinate.");
+        Check(second.PoisonRemaining == 0f && front.PoisonRemaining == 0f &&
+            lord.GardenStrikeIndex == 2, "An empty stored point does not retarget or poison others.");
+        StepUntil(garden, () => gardenEvents.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+            e.AbilityId == "GARDEN_BRIARS") == 3, 40, "Third warning begins separately.");
+        Check(Math.Abs(lord.SlamTargetX - (-1f)) < .001f && lord.SlamTargetY == 0f &&
+            lord.AttackTargetId == front.Id, "Third root retains the original front ally's position.");
+        StepUntil(garden, () => gardenEvents.Count(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GARDEN_BRIARS") == 3, 90, "Third root strikes.");
+        Check(front.PoisonRemaining > 3.9f && lord.GardenStrikeCount == 0 &&
+            Math.Abs(lord.NextSlamAt - garden.Time - 8f) < .05f,
+            "Only after the third impact does the eight-second cooldown begin.");
+        lord.Hp = 4001f;
+        damage.Invoke(garden, new object[] { front, lord, 100f, "TEST", false, false });
+        Check(lord.BossEnraged && lord.Hp <= 4000f,
+            "Garden Lord enrages when damage crosses forty percent health.");
+        lord.NextSlamAt = garden.Time;
+        StepUntil(garden, () => lord.SlamWarningRemaining > 0f, 30,
+            "Enraged garden warning starts.");
+        Check(lord.SlamWarningRemaining > .7f && lord.SlamWarningRemaining <= .801f,
+            "Enraged garden warning shortens to .8 seconds.");
+        StepUntil(garden, () => gardenEvents.Count(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GARDEN_BRIARS") == 6, 260, "Three enraged roots strike separately.");
+        Check(Math.Abs(lord.NextSlamAt - garden.Time - 6f) < .05f,
+            "Enraged garden cooldown shortens to six seconds.");
+        var cancelled = new CatalogBattle(catalog);
+        for (int i = 0; i < 3; i++)
+        { CatalogBattleUnit ally = cancelled.AddUnit("ally" + i, CatalogTeam.Ally, "B-KN", null,
+            null, -4f + i, 0f); ally.MoveSpeed = 0f; ally.Hp = ally.MaxHp = 3000f; }
+        CatalogBattleUnit doomed = cancelled.AddEnemy("garden-boss", 10000f, 10f, 0f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.GardenLord, true);
+        int cancelledImpacts = 0;
+        cancelled.Event += e => { if (e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "GARDEN_BRIARS") cancelledImpacts++; };
+        StepUntil(cancelled, () => cancelledImpacts == 1, 220, "Cancellation test sees first root.");
+        doomed.Hp = 0f;
+        cancelled.Step(3f);
+        Check(cancelledImpacts == 1 && cancelled.Ended,
+            "Boss death cancels remaining queued roots.");
+        var solo = new CatalogBattle(catalog);
+        CatalogBattleUnit soleAlly = solo.AddUnit("sole", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        soleAlly.MoveSpeed = 0f; soleAlly.Hp = soleAlly.MaxHp = 3000f;
+        CatalogBattleUnit soloLord = solo.AddEnemy("garden-boss", 10000f, 5f, 0f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.GardenLord, true);
+        int soloWarnings = 0, soloImpacts = 0;
+        solo.Event += e =>
+        {
+            if (e.AbilityId != "GARDEN_BRIARS") return;
+            if (e.Kind == CatalogEventKind.BossTelegraph) soloWarnings++;
+            if (e.Kind == CatalogEventKind.BossImpact) soloImpacts++;
+        };
+        StepUntil(solo, () => soloWarnings == 1, 180, "Solo root warning starts.");
+        Check(soloLord.GardenStrikeCount == 1, "A lone ally produces one locked root only.");
+        StepUntil(solo, () => soloImpacts == 1, 100, "Solo root strikes.");
+        solo.Step(.5f);
+        Check(soloWarnings == 1 && soloImpacts == 1 && soloLord.GardenStrikeCount == 0,
+            "Boss never repeats a target to pad a three-root sequence.");
+        bool rejected = false;
+        try { garden.AddEnemy("false-boss", 100f, 5f, 0f, 2f, 1f, .5f,
+            false, 2f, 0f, CatalogEnemyRole.GardenLord, true); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Garden Lord role cannot be assigned to a nonboss.");
+    }
+
     static void LegacyTenWaveMigration()
     {
         var run = ExpeditionRun.New(catalog, 73);
@@ -883,7 +1092,7 @@ internal static class Program
                 ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
                 var unchanged = ExpeditionRun.Restore(catalog, prior);
                 Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
-                    unchanged.Capture().Version == 5 && prior.Version == 2,
+                    unchanged.Capture().Version == 6 && prior.Version == 2,
                     "Earlier valid v2 preparation migrates without reward or mutating its input.");
                 unchanged.BeginBattle();
                 ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;

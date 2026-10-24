@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-24",
+  "externalReferenceImages": [],
+  "programmaticPixelEdits": false,
+  "assets": [
+    {
+      "id": "frost-guard",
+      "generator": "imagegen",
+      "originalFile": "exec-9d43d3ab-77d9-4ad3-994e-fcdf91637843.png",
+      "repairInput": "exec-8472ce46-ef9c-4794-b92f-ca1791124331.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v029/frost-guard.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "7606b11a65d853163f68edb80e20c62ba2494bbbc5b42bd004770480aa81d989"
+    },
+    {
+      "id": "frost-acolyte",
+      "generator": "imagegen",
+      "originalFile": "exec-e092bc69-fb5e-49e1-bdd1-3b3f886b3f40.png",
+      "repairInput": null,
+      "destination": "unity/Assets/Resources/Art/Enemies/v029/frost-acolyte.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "70db90941daee0391363a977ff1a519244e5a1186635a5f661bbc9dcda2727ac"
+    },
+    {
+      "id": "frost-cantor",
+      "generator": "imagegen",
+      "originalFile": "exec-126314f8-b655-41c9-8733-5bcd24c214c8.png",
+      "repairInput": "exec-1ef1ef9a-42b2-4148-b8ef-592aa6cae4b1.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v029/frost-cantor.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "9af8d05a4c69ee756d51cb14429304d17315c51934a895c9de8e1dc4d0c492d3"
+    },
+    {
+      "id": "frost-boss",
+      "generator": "imagegen",
+      "originalFile": "exec-09f7a6f9-c6e3-41ff-8b15-01c603109b98.png",
+      "repairInput": null,
+      "destination": "unity/Assets/Resources/Art/Enemies/v029/frost-boss.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "559fcb2bd416b5625ce7d76919883b02e3dd6f1dae609c822ab464859c28d65e"
+    },
+    {
+      "id": "frost-battlefield",
+      "generator": "imagegen",
+      "originalFile": "exec-b66bc100-26ea-4e6b-b7d1-c1f2caec298d.png",
+      "repairInput": null,
+      "destination": "unity/Assets/Resources/Art/Environments/v029/frost-battlefield.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": false,
+      "sha256": "261694f7c77cafce11d10a43e4e878d99d8cd8f9c4efe6110ecf1d66c52a1c14"
+    }
+  ]
+}

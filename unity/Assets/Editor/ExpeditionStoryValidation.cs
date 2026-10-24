@@ -56,8 +56,8 @@ namespace Expedition.EditorTools
             for (int wave = 11; wave <= ExpeditionRun.TotalWaves; wave++)
             { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
             Check(oldJournal.Observe(run) && oldJournal.IsUnlocked("mine-clear") &&
-                oldJournal.UnlockedCount == 7 && !oldJournal.Observe(run),
-                "fifteen-wave clear did not unlock once");
+                oldJournal.IsUnlocked("frost-clear") && oldJournal.UnlockedCount == 9 &&
+                !oldJournal.Observe(run), "twenty-wave clear did not unlock once");
             RoundTrip(oldJournal);
             Debug.Log("Expedition story validated: Unity JSON and old-save observation.");
         }
@@ -65,6 +65,8 @@ namespace Expedition.EditorTools
         public static void BuildAndroid()
         {
             Validate();
+            FrostEnemyArtValidation.GenerateManifest();
+            FrostEnemyArtValidation.Validate();
             AllyBodyScaleValidation.BuildAndroid();
         }
     }

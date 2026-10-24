@@ -30,7 +30,11 @@ namespace Expedition.Core
             new StoryEntry("mine", "멈추지 않는 용광로",
                 "폐광의 용광로 수호자는 흩어진 이그니스의 파편에 매여 끝없이 쇠를 녹인다.\n원정대는 타오르는 광차길을 지나 수호자가 품은 불꽃을 되찾으려 한다."),
             new StoryEntry("mine-clear", "다음 불꽃의 단서",
-                "용광로 수호자가 멈추고 세 번째 불꽃 조각을 되찾는다.\n조각에서 다음 행선지의 단서가 드러나고 여정은 계속된다.")
+                "용광로 수호자가 멈추고 세 번째 불꽃 조각을 되찾는다.\n조각에 스민 서리빛이 북쪽 성당을 가리킨다."),
+            new StoryEntry("frost", "얼어붙은 성당",
+                "서리 성당의 수호대는 식어버린 예식의 명령을 반복한다.\n원정대는 얼어붙은 회랑에서 네 번째 이그니스 조각을 찾는다."),
+            new StoryEntry("frost-clear", "다시 울리는 종",
+                "서리의 파수꾼이 쓰러지자 성당의 종이 다시 울린다.\n네 번째 조각을 등불에 담고 다음 길을 밝힌다.")
         });
 
         static readonly Dictionary<string, StoryEntry> ById = BuildIndex();
@@ -53,6 +57,7 @@ namespace Expedition.Core
             if (wave >= 1 && wave <= 5) return Get("forest");
             if (wave >= 6 && wave <= 10) return Get("castle");
             if (wave >= 11 && wave <= 15) return Get("mine");
+            if (wave >= 16 && wave <= 20) return Get("frost");
             return null;
         }
 
@@ -63,6 +68,7 @@ namespace Expedition.Core
                 case 5: return Get("forest-clear");
                 case 10: return Get("castle-clear");
                 case 15: return Get("mine-clear");
+                case 20: return Get("frost-clear");
                 default: return null;
             }
         }
@@ -102,6 +108,8 @@ namespace Expedition.Core
             if (run.Victories >= 10) changed |= unlocked.Add("castle-clear");
             if (run.Wave >= 11) changed |= unlocked.Add("mine");
             if (run.Victories >= 15) changed |= unlocked.Add("mine-clear");
+            if (run.Wave >= 16) changed |= unlocked.Add("frost");
+            if (run.Victories >= 20) changed |= unlocked.Add("frost-clear");
             return changed;
         }
 

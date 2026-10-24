@@ -47,6 +47,8 @@ namespace Expedition.Core
             bool changed = false;
             if (run.Victories > bestWave)
             { bestWave = run.Victories; changed = true; }
+            if (run.PreviousClearWaves > completedWaves)
+            { completedWaves = run.PreviousClearWaves; changed = true; }
             bool cleared = run.Phase == ExpeditionPhase.Completed ||
                 run.Phase == ExpeditionPhase.Result && run.LastVictory &&
                     run.Wave == run.ContentWaves;

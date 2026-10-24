@@ -23,9 +23,9 @@ internal static class ExpeditionProgressTests
     {
         var normal = ExpeditionRun.New(catalog, 123);
         var explicitNormal = ExpeditionRun.New(catalog, 123, ExpeditionDifficulty.Normal);
-        Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 15 &&
-            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 4 &&
-            normal.Capture().ContentWaves == 15,
+        Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 20 &&
+            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 5 &&
+            normal.Capture().ContentWaves == 20 && normal.PreviousClearWaves == 0,
             "Default run remains current Normal content.");
         Check(normal.Capture().RandomState == explicitNormal.Capture().RandomState &&
             normal.Gold == explicitNormal.Gold &&
@@ -51,10 +51,12 @@ internal static class ExpeditionProgressTests
         save = ExpeditionRun.New(catalog, 1).Capture(); save.ContentWaves = 30;
         Reject(() => ExpeditionRun.Restore(catalog, save), "A current save cannot claim unreleased content.");
         save = ExpeditionRun.New(catalog, 1).Capture(); save.ContentWaves = 0;
-        Reject(() => ExpeditionRun.Restore(catalog, save), "A v4 save must state its content length.");
+        Reject(() => ExpeditionRun.Restore(catalog, save), "A v5 save must state its content length.");
+        save = ExpeditionRun.New(catalog, 1).Capture(); save.PreviousClearWaves = 30;
+        Reject(() => ExpeditionRun.Restore(catalog, save), "A v5 save cannot invent a prior thirty-wave clear.");
     }
 
-    static void GenuineV3Files(string directory)
+    static void OldSaveMigration(string directory)
     {
         var json = new JavaScriptSerializer();
         string[] names = { "preparation", "battle", "result-win", "result-loss",
@@ -62,6 +64,7 @@ internal static class ExpeditionProgressTests
         ExpeditionPhase[] phases = { ExpeditionPhase.Preparation, ExpeditionPhase.Battle,
             ExpeditionPhase.Result, ExpeditionPhase.Result, ExpeditionPhase.Completed,
             ExpeditionPhase.Defeated };
+        for (int version = 3; version <= 4; version++)
         for (int i = 0; i < names.Length; i++)
         {
             string source = File.ReadAllText(Path.Combine(directory, "v3-" + names[i] + ".json"));
@@ -69,22 +72,77 @@ internal static class ExpeditionProgressTests
                 "Genuine v3 fixture omits new fields: " + names[i]);
             ExpeditionRunSave old = json.Deserialize<ExpeditionRunSave>(source);
             Check(old.Version == 3, "Fixture has genuine old version.");
+            if (version == 4)
+            { old.Version = 4; old.ContentWaves = 15; old.Difficulty = ExpeditionDifficulty.Normal; }
             ExpeditionRun restored = ExpeditionRun.Restore(catalog, old);
-            Check(restored.Phase == phases[i] &&
+            bool oldClear = names[i] == "completed";
+            Check(restored.Phase == (oldClear ? ExpeditionPhase.Preparation : phases[i]) &&
                 restored.Difficulty == ExpeditionDifficulty.Normal &&
-                restored.ContentWaves == 15 && restored.Capture().Version == 4 &&
-                old.Version == 3 && old.ContentWaves == 0,
-                "Genuine v3 phase migrates as Normal: " + names[i]);
+                restored.ContentWaves == 20 && restored.Capture().Version == 5 &&
+                restored.Wave == (oldClear ? 16 : old.Wave) &&
+                restored.Gold == old.Gold + (oldClear ? 50 : 0) &&
+                restored.PreviousClearWaves == (oldClear ? 15 : 0) &&
+                old.Version == version && old.ContentWaves == (version == 3 ? 0 : 15),
+                "Old save phase migrates as Normal: v" + version + " " + names[i]);
+            ExpeditionRunSave snapshot = restored.Capture();
+            Check(snapshot.RandomState == old.RandomState &&
+                json.Serialize(snapshot.Roster) == json.Serialize(old.Roster) &&
+                snapshot.DeployedIds.SequenceEqual(old.DeployedIds) &&
+                snapshot.UndoHistory.Length == old.UndoHistory.Length &&
+                snapshot.Victories == old.Victories && snapshot.RewardedWave == old.RewardedWave,
+                "Migration preserves roster, RNG, deployment, undo and victory state.");
+            ExpeditionRun reloaded = ExpeditionRun.Restore(catalog, snapshot);
+            Check(reloaded.Gold == restored.Gold && reloaded.PreviousClearWaves == restored.PreviousClearWaves &&
+                reloaded.Phase == restored.Phase, "v5 reload neither repeats nor loses migration credit.");
             if (phases[i] == ExpeditionPhase.Battle)
                 Check(restored.ResumeBattle() != null, "Genuine v3 battle resumes.");
-            if (phases[i] == ExpeditionPhase.Completed)
+            if (oldClear)
             {
                 var progress = ExpeditionProgress.New();
-                Check(progress.Observe(restored) && progress.CompletedWaves == 15 &&
-                    progress.BestWave == 15 && !progress.HardUnlocked,
-                    "Genuine v3 clear backfills fifteen, without Hard unlock.");
+                Check(progress.Observe(reloaded) && progress.CompletedWaves == 15 &&
+                    progress.BestWave == 15 && !progress.HardUnlocked && !progress.Observe(reloaded),
+                    "Old fifteen-wave clear backfills the prior completion only once.");
             }
+            if (names[i] == "result-loss" || names[i] == "defeated")
+                Check(restored.Gold == old.Gold && restored.LastReward == 0,
+                    "Loss or defeat receives no expansion grant.");
         }
+        foreach (int version in new[] { 3, 4 })
+        {
+            var old = json.Deserialize<ExpeditionRunSave>(File.ReadAllText(
+                Path.Combine(directory, "v3-completed.json")));
+            old.Version = version;
+            if (version == 4) { old.ContentWaves = 15; old.Difficulty = ExpeditionDifficulty.Normal; }
+            old.Phase = ExpeditionPhase.Result;
+            ExpeditionRun result = ExpeditionRun.Restore(catalog, old);
+            Check(result.Phase == ExpeditionPhase.Result && result.Wave == 15 && result.Gold == 525 &&
+                result.LastReward == 50 && result.PreviousClearWaves == 15,
+                "Old final victory result gains passage reward without skipping Result.");
+            var progress = ExpeditionProgress.New();
+            Check(progress.Observe(result) && progress.CompletedWaves == 15 && !progress.HardUnlocked,
+                "Old final Result immediately records the historical clear.");
+            ExpeditionRun reloaded = ExpeditionRun.Restore(catalog, result.Capture());
+            Check(reloaded.Gold == 525 && reloaded.Continue() && reloaded.Wave == 16 &&
+                reloaded.Gold == 525 && reloaded.Phase == ExpeditionPhase.Preparation,
+                "v5 Result continues to wave sixteen without another grant.");
+            old.Gold++;
+            Reject(() => ExpeditionRun.Restore(catalog, old), "Invalid old final budget cannot bypass migration.");
+        }
+        var invalid = json.Deserialize<ExpeditionRunSave>(File.ReadAllText(
+            Path.Combine(directory, "v3-preparation.json")));
+        invalid.Version = 4; invalid.ContentWaves = 20;
+        Reject(() => ExpeditionRun.Restore(catalog, invalid), "v4 cannot claim twenty-wave content.");
+        invalid.ContentWaves = 15; invalid.Difficulty = ExpeditionDifficulty.Hard;
+        Reject(() => ExpeditionRun.Restore(catalog, invalid), "Old v4 Hard save is unavailable.");
+
+        var undo = ExpeditionRun.New(catalog, 72);
+        Check(undo.Move("ally-01", -2f, 0f) && undo.CanUndo, "Preparation fixture has real undo history.");
+        var oldUndo = undo.Capture(); oldUndo.Version = 4; oldUndo.ContentWaves = 15;
+        var migratedUndo = ExpeditionRun.Restore(catalog, oldUndo);
+        Check(migratedUndo.CanUndo && migratedUndo.Capture().UndoHistory.Length == 1 &&
+            migratedUndo.Capture().RandomState == oldUndo.RandomState &&
+            migratedUndo.Undo() && migratedUndo.Roster.Find("ally-01").X == -1.3f,
+            "v4 migration retains a usable undo snapshot and original placement.");
     }
 
     static void ProgressRules()
@@ -110,8 +168,12 @@ internal static class ExpeditionProgressTests
             complete.BeginBattle(); complete.ResolveBattle(true);
             if (wave == 15)
                 Check(progress.Observe(complete) && progress.BestWave == 15 &&
-                    progress.CompletedWaves == 15 && !progress.HardUnlocked,
-                    "Result victory records current clear without Hard unlock.");
+                    progress.CompletedWaves == 0 && !progress.HardUnlocked,
+                    "Current fifteen-wave Result records progress but not a twenty-wave clear.");
+            if (wave == 20)
+                Check(progress.Observe(complete) && progress.BestWave == 20 &&
+                    progress.CompletedWaves == 20 && !progress.HardUnlocked,
+                    "Twenty-wave Result records current clear without future Hard unlock.");
             complete.Continue();
         }
         Check(complete.Phase == ExpeditionPhase.Completed && !progress.Observe(complete),
@@ -119,8 +181,8 @@ internal static class ExpeditionProgressTests
         ExpeditionProgressSave saved = progress.Capture();
         var reloaded = ExpeditionProgress.Restore(saved);
         saved.BestWave = saved.CompletedWaves = 0;
-        Check(reloaded.BestWave == 15 && reloaded.CompletedWaves == 15 &&
-            reloaded.Capture().BestWave == 15,
+        Check(reloaded.BestWave == 20 && reloaded.CompletedWaves == 20 &&
+            reloaded.Capture().BestWave == 20,
             "Captured progress reloads independently of supplied data.");
     }
 
@@ -155,7 +217,7 @@ internal static class ExpeditionProgressTests
         try
         {
             catalog = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
-            DifficultyAndSave(); GenuineV3Files(args[1]); ProgressRules(); ProgressValidation();
+            DifficultyAndSave(); OldSaveMigration(args[1]); ProgressRules(); ProgressValidation();
             Console.WriteLine("Expedition progress: " + checks + " checks passed.");
         }
         catch (Exception e)

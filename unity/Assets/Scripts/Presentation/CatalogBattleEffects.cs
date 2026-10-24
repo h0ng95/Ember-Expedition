@@ -47,6 +47,8 @@ namespace Expedition.Presentation
             string id = unit == null ? "" : unit.FormId;
             if (unit != null && unit.EnemyRole == CatalogEnemyRole.Furnace)
                 return new Color(1f, .38f, .11f);
+            if (unit != null && unit.EnemyRole == CatalogEnemyRole.FrostWarden)
+                return new Color(.36f, .78f, 1f);
             if (id.Contains("-FI") || id == "H-01" || id == "H-04") return new Color(1f, .46f, .13f);
             if (id.Contains("-IC") || id == "H-03") return new Color(.4f, .85f, 1f);
             if (id.Contains("-PR") || id == "H-02" || id == "H-05") return new Color(.55f, 1f, .69f);
@@ -83,7 +85,9 @@ namespace Expedition.Presentation
                     Point = charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
                     Color = source.EnemyRole == CatalogEnemyRole.Furnace ?
-                        new Color(1f, .37f, .1f) : source.BossEnraged ?
+                        new Color(1f, .37f, .1f) :
+                        source.EnemyRole == CatalogEnemyRole.FrostWarden ?
+                        new Color(.32f, .76f, 1f) : source.BossEnraged ?
                         new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
                     Size = charge ? source.ChargeWidth : source.SlamRadius, Duration = .45f });
                 Play(hit, 1f);
@@ -152,7 +156,9 @@ namespace Expedition.Presentation
                 if (unit.SlamWarningRemaining > 0)
                 {
                     Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                    Color warning = unit.EnemyRole == CatalogEnemyRole.Furnace ?
+                    Color warning = unit.EnemyRole == CatalogEnemyRole.FrostWarden ?
+                        new Color(.35f, .83f, 1f, .95f) :
+                        unit.EnemyRole == CatalogEnemyRole.Furnace ?
                         unit.SlamIsAftershock ? new Color(1f, .16f, .08f, .95f) :
                         new Color(1f, .46f, .1f, .9f) :
                         unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
@@ -187,6 +193,26 @@ namespace Expedition.Presentation
 
         public void Draw(CatalogBattle battle, Func<Vector2, Vector2> project)
         {
+            foreach (CatalogBattleUnit unit in battle.Units)
+            {
+                if (!unit.IsAlive) continue;
+                Vector2 foot = project(new Vector2(unit.X, unit.Y));
+                if (unit.FrozenRemaining > 0f)
+                {
+                    Color ice = new Color(.59f, .87f, 1f, .85f);
+                    Ring(foot + new Vector2(0, -8), 28, 9, ice, 2);
+                    Line(foot + new Vector2(-25, -10), foot + new Vector2(-18, -58), 3, ice);
+                    Line(foot + new Vector2(24, -10), foot + new Vector2(17, -66), 3, ice);
+                    Line(foot + new Vector2(-18, -58), foot + new Vector2(-9, -73), 2, ice);
+                    Line(foot + new Vector2(17, -66), foot + new Vector2(8, -79), 2, ice);
+                }
+                else if (unit.BurnRemaining > 0f)
+                {
+                    Color ember = new Color(1f, .45f, .13f, .85f);
+                    Line(foot + new Vector2(-16, -20), foot + new Vector2(-11, -37), 3, ember);
+                    Line(foot + new Vector2(13, -13), foot + new Vector2(18, -29), 3, ember);
+                }
+            }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
                 if (!unit.IsAlive || unit.AttackPhase == CatalogAttackPhase.Ready || !IsProjectile(unit) ||

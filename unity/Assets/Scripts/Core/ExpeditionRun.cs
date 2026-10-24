@@ -27,6 +27,7 @@ namespace Expedition.Core
         public int Version;
         public ExpeditionDifficulty Difficulty;
         public int ContentWaves;
+        public int PreviousClearWaves;
         public int Wave, Lantern, Victories, NextMemberNumber, Gold, LastReward, RewardedWave;
         public bool LastVictory;
         public ExpeditionPhase Phase;
@@ -41,20 +42,21 @@ namespace Expedition.Core
 
     public sealed class ExpeditionRun
     {
-        public const int TotalWaves = 15;
+        public const int TotalWaves = 20;
         public const int ReleaseWaves = 30;
         public const int SummonCost = 20;
         const int MaxDeployed = 5;
         const int MaxBench = 7;
         static readonly int[] VictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
-            30, 30, 35, 40, 0 };
+            30, 30, 35, 40, 50, 35, 35, 40, 45, 0 };
         static readonly int[] LegacyVictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 0 };
         static readonly string[] Families = { "KN", "AR", "FI", "PR", "IC", "BA" };
         static readonly string[] Encounters =
         {
             "숲길 입구", "가시등 숲길", "야수의 소굴", "돌격 뿔짐승", "잿갈기 우두머리",
             "무너진 성채", "성채 수비선", "성채의 무리", "갑주 석상", "성문 골렘",
-            "폐광 입구", "잿가루 통로", "광차 갈림길", "철쇄 감독관", "용광로 수호자"
+            "폐광 입구", "잿가루 통로", "광차 갈림길", "철쇄 감독관", "용광로 수호자",
+            "서리 성당 입구", "얼어붙은 회랑", "서리 제단", "찬송의 감시자", "서리의 파수꾼"
         };
         static readonly string[] EncounterDescriptions =
         {
@@ -65,7 +67,10 @@ namespace Expedition.Core
             "갑주 석상 1 · 돌편 보병 3 · 석궁 수비병 2", "성문 골렘 1 · 석궁 수비병 2",
             "채굴병 2 · 불씨 투척병 1", "채굴병 2 · 불씨 투척병 2",
             "채굴병 3 · 불씨 투척병 2", "철쇄 감독관 1 · 채굴병 2 · 불씨 투척병 2",
-            "용광로 수호자 1 · 철쇄 감독관 1 · 불씨 투척병 2"
+            "용광로 수호자 1 · 철쇄 감독관 1 · 불씨 투척병 2",
+            "서리 근위병 2 · 서리 시종 2", "서리 근위병 3 · 서리 시종 2",
+            "서리 근위병 3 · 서리 시종 3", "찬송 감시자 1 · 서리 근위병 2 · 서리 시종 2",
+            "서리의 파수꾼 1 · 서리 시종 2"
         };
 
         readonly CatalogDatabase catalog;
@@ -82,6 +87,7 @@ namespace Expedition.Core
         public int Wave { get; private set; }
         public ExpeditionDifficulty Difficulty { get; private set; }
         public int ContentWaves { get; private set; }
+        public int PreviousClearWaves { get; private set; }
         public int Lantern { get; private set; }
         public int Gold { get; private set; }
         public int LastReward { get; private set; }
@@ -90,7 +96,7 @@ namespace Expedition.Core
             Gold >= SummonCost && Roster.Members.Count - deployedIds.Count < MaxBench; } }
         public bool CanUndo { get { return Phase == ExpeditionPhase.Preparation && history.Count > 0 &&
             FitsCapacity(history.Peek().Roster.Members.Length, history.Peek().DeployedIds.Length); } }
-        public bool IsBossWave { get { return Wave == 5 || Wave == 10 || Wave == TotalWaves; } }
+        public bool IsBossWave { get { return Wave % 5 == 0; } }
         public int Victories { get; private set; }
         public bool LastVictory { get; private set; }
         public ExpeditionPhase Phase { get; private set; }
@@ -420,6 +426,24 @@ namespace Expedition.Core
                     result.AddEnemy("mine-elite", 700f, 38f, 20f, 1.8f, 1f, .57f,
                         false, 3f, -1.25f, CatalogEnemyRole.Supervisor);
                     AddMineSlingers(result, 2, 220f, 26f); break;
+                case 16:
+                    AddFrostGuards(result, 2, 600f, 48f, 17f);
+                    AddRanged(result, "frost-acolyte", 2, 380f, 40f); break;
+                case 17:
+                    AddFrostGuards(result, 3, 720f, 55f, 17f);
+                    AddRanged(result, "frost-acolyte", 2, 450f, 46f); break;
+                case 18:
+                    AddFrostGuards(result, 3, 800f, 60f, 18f);
+                    AddRanged(result, "frost-acolyte", 3, 500f, 50f); break;
+                case 19:
+                    result.AddEnemy("frost-cantor", 1250f, 68f, 27f, 1.8f, 1f, .57f,
+                        false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
+                    AddFrostGuards(result, 2, 850f, 62f, 18f);
+                    AddRanged(result, "frost-acolyte", 2, 520f, 53f); break;
+                case 20:
+                    result.AddEnemy("frost-boss", 6000f, 85f, 28f, 1.8f, 1.1f, .48f,
+                        true, 4.1f, 0f, CatalogEnemyRole.FrostWarden, true);
+                    AddRanged(result, "frost-acolyte", 2, 280f, 36f, true); break;
             }
             return result;
         }
@@ -452,6 +476,14 @@ namespace Expedition.Core
         {
             for (int i = 0; i < count; i++)
                 battle.AddEnemy("mine-worker-" + (i + 1), hp, power, defense, 1.8f, 1f, .65f,
+                    false, 2.1f + (i % 2) * .55f, (i - (count - 1) * .5f) * 1.15f,
+                    CatalogEnemyRole.MineWorker);
+        }
+
+        static void AddFrostGuards(CatalogBattle battle, int count, float hp, float power, float defense)
+        {
+            for (int i = 0; i < count; i++)
+                battle.AddEnemy("frost-guard-" + (i + 1), hp, power, defense, 1.8f, 1f, .65f,
                     false, 2.1f + (i % 2) * .55f, (i - (count - 1) * .5f) * 1.15f,
                     CatalogEnemyRole.MineWorker);
         }
@@ -504,8 +536,9 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 4, Difficulty = Difficulty,
-                ContentWaves = ContentWaves, Wave = Wave, Lantern = Lantern,
+            return new ExpeditionRunSave { Version = 5, Difficulty = Difficulty,
+                ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
+                Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
                 Victories = Victories, LastVictory = LastVictory,
                 Phase = Phase, RandomState = randomState, LastSummonedFamily = lastSummonedFamily,
@@ -519,12 +552,19 @@ namespace Expedition.Core
             string lastFamily = save == null || string.IsNullOrEmpty(save.LastSummonedFamily) ?
                 null : save.LastSummonedFamily;
             bool legacy = save != null && save.Version == 2;
-            bool current = save != null && save.Version == 4;
-            int saveWaves = legacy ? 10 : TotalWaves;
-            int[] rewards = legacy ? LegacyVictoryRewards : VictoryRewards;
-            if (save == null || save.Version != 2 && save.Version != 3 && save.Version != 4 ||
+            bool normalSave = save != null && save.Version >= 4;
+            bool current = save != null && save.Version == 5;
+            int saveWaves = legacy ? 10 : current ? TotalWaves : 15;
+            // Validate old files against their original economy before granting expansion rewards.
+            int[] fifteenRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
+                30, 30, 35, 40, 0 };
+            int[] rewards = legacy ? LegacyVictoryRewards : current ? VictoryRewards : fifteenRewards;
+            if (save == null || save.Version < 2 || save.Version > 5 ||
+                normalSave && save.Difficulty != ExpeditionDifficulty.Normal ||
+                save.Version == 4 && save.ContentWaves != 15 ||
                 current && (save.ContentWaves != TotalWaves ||
-                    save.Difficulty != ExpeditionDifficulty.Normal) ||
+                    save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 ||
+                    save.PreviousClearWaves > save.Victories) ||
                 save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
                 save.Gold > TotalEarned(saveWaves, rewards) ||
@@ -538,8 +578,9 @@ namespace Expedition.Core
                 !Enum.IsDefined(typeof(ExpeditionPhase), save.Phase))
                 throw new ArgumentException("Invalid expedition save.");
             var run = new ExpeditionRun(catalog);
-            run.Difficulty = current ? save.Difficulty : ExpeditionDifficulty.Normal;
+            run.Difficulty = normalSave ? save.Difficulty : ExpeditionDifficulty.Normal;
             run.ContentWaves = TotalWaves;
+            run.PreviousClearWaves = current ? save.PreviousClearWaves : 0;
             run.Roster = CatalogRoster.Restore(catalog, save.Roster);
             run.Wave = save.Wave; run.Lantern = save.Lantern;
             run.Gold = save.Gold; run.LastReward = save.LastReward;
@@ -583,16 +624,17 @@ namespace Expedition.Core
                 run.history.Push(new ExpeditionPreparationSave { Roster = oldRoster.Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             }
-            // Convert only after the complete v2 save has passed its original ten-wave rules.
-            // A current capture records this grant, so subsequent reloads cannot grant it again.
-            if (legacy && save.Wave == 10 && save.LastVictory &&
+            // Convert only after the complete old save has passed its original rules.
+            // Version 5 captures include the grant, preventing duplicate rewards on reload.
+            if (!current && save.Wave == saveWaves && save.LastVictory &&
                 (save.Phase == ExpeditionPhase.Result || save.Phase == ExpeditionPhase.Completed))
             {
-                run.Gold += 50;
-                run.LastReward = 50;
+                run.Gold += VictoryRewards[saveWaves - 1];
+                run.LastReward = VictoryRewards[saveWaves - 1];
+                if (saveWaves == 15) run.PreviousClearWaves = 15;
                 if (save.Phase == ExpeditionPhase.Completed)
                 {
-                    run.Wave = 11;
+                    run.Wave = saveWaves + 1;
                     run.Phase = ExpeditionPhase.Preparation;
                 }
             }

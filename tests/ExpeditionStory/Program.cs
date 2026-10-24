@@ -23,8 +23,9 @@ internal static class Program
 
     static void CatalogAndMapping()
     {
-        string[] ids = { "intro", "forest", "forest-clear", "castle", "castle-clear", "mine", "mine-clear" };
-        Check(ExpeditionStory.Entries.Select(e => e.Id).SequenceEqual(ids), "Seven story records keep their canonical order.");
+        string[] ids = { "intro", "forest", "forest-clear", "castle", "castle-clear", "mine", "mine-clear",
+            "frost", "frost-clear" };
+        Check(ExpeditionStory.Entries.Select(e => e.Id).SequenceEqual(ids), "Nine story records keep their canonical order.");
         Check(ExpeditionStory.Entries.All(e => !string.IsNullOrEmpty(e.Title) && !string.IsNullOrEmpty(e.Body) &&
             ExpeditionStory.Get(e.Id) == e), "Every record has a stable title and body.");
         Check(ExpeditionStory.Get("missing") == null && ExpeditionStory.Get(null) == null,
@@ -32,16 +33,18 @@ internal static class Program
         Check(ExpeditionStory.ForWave(1).Id == "forest" && ExpeditionStory.ForWave(5).Id == "forest" &&
             ExpeditionStory.ForWave(6).Id == "castle" && ExpeditionStory.ForWave(10).Id == "castle" &&
             ExpeditionStory.ForWave(11).Id == "mine" && ExpeditionStory.ForWave(15).Id == "mine" &&
-            ExpeditionStory.ForWave(0) == null && ExpeditionStory.ForWave(16) == null,
-            "Regions follow the current fifteen-wave boundaries.");
+            ExpeditionStory.ForWave(16).Id == "frost" && ExpeditionStory.ForWave(20).Id == "frost" &&
+            ExpeditionStory.ForWave(0) == null && ExpeditionStory.ForWave(21) == null,
+            "Regions follow the current twenty-wave boundaries.");
         Check(ExpeditionStory.BossClear(5).Id == "forest-clear" &&
             ExpeditionStory.BossClear(10).Id == "castle-clear" &&
             ExpeditionStory.BossClear(15).Id == "mine-clear" &&
+            ExpeditionStory.BossClear(20).Id == "frost-clear" &&
             ExpeditionStory.BossClear(14) == null, "Only defeated regional bosses have clear records.");
-        Check(new[] { "forest", "castle", "mine" }.All(id =>
+        Check(new[] { "forest", "castle", "mine", "frost" }.All(id =>
             ExpeditionStory.Get(id).Body.Count(c => c == '.') == 2),
             "Preparation region excerpts contain two sentences each.");
-        Check(new[] { "forest-clear", "castle-clear", "mine-clear" }.All(id =>
+        Check(new[] { "forest-clear", "castle-clear", "mine-clear", "frost-clear" }.All(id =>
             ExpeditionStory.Get(id).Body.Count(c => c == '\n') == 1),
             "Boss clear records fit their two-line result excerpt.");
     }
@@ -80,9 +83,13 @@ internal static class Program
             restored.UnlockedCount == 6, "A new run retains previously discovered records.");
         var fifteen = WinThrough(15);
         Check(restored.Observe(fifteen) && restored.IsUnlocked("mine-clear") &&
-            restored.UnlockedCount == 7 && !restored.Observe(fifteen),
-            "The final regional clear unlocks once and does not imply a central-beacon ending.");
-        Check(ExpeditionJournal.Restore(restored.Capture()).UnlockedCount == 7,
+            restored.IsUnlocked("frost") && restored.UnlockedCount == 8 && !restored.Observe(fifteen),
+            "The mine clear and next region unlock once.");
+        var twenty = WinThrough(20);
+        Check(restored.Observe(twenty) && restored.IsUnlocked("frost-clear") &&
+            restored.UnlockedCount == 9 && !restored.Observe(twenty),
+            "The frost clear unlocks once without implying the final beacon ending.");
+        Check(ExpeditionJournal.Restore(restored.Capture()).UnlockedCount == 9,
             "Independent journal capture survives restart.");
     }
 

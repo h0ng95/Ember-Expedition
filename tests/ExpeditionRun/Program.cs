@@ -27,6 +27,8 @@ internal static class Program
             BossBeastPattern();
             GolemPattern();
             MineGuardAndFurnacePattern();
+            FrostWardenPattern();
+            FrozenCounterBoundary();
             LegacyTenWaveMigration();
             BossStepPartition();
             OpeningWavesPlayable();
@@ -58,15 +60,15 @@ internal static class Program
         Check(run.IsBossWave == false, "First battle is ordinary.");
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
-            Check(run.Wave == wave && run.IsBossWave == (wave == 5 || wave == 10 || wave == 15),
-                "Waves five, ten, and fifteen are bosses.");
+            Check(run.Wave == wave && run.IsBossWave == (wave % 5 == 0),
+                "Each fifth wave is a boss.");
             Check(!string.IsNullOrEmpty(run.EncounterName) && !run.EncounterName.Contains("FOREST"),
                 "Encounter name is ready for Korean UI.");
             Check(run.BeginBattle() != null && run.ResolveBattle(true) && run.Continue(), "Wave advances once.");
         }
-        Check(run.Gold == 475 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
-            run.Victories == 15 && run.LastReward == 0,
-            "Fifteen-wave unspent economy earns 435 gold and final clear grants zero.");
+        Check(run.Gold == 680 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
+            run.Victories == 20 && run.LastReward == 0,
+            "Twenty-wave unspent economy earns 640 gold and final clear grants zero.");
         Check(run.Summon() == null && run.BeginBattle() == null && !run.Continue(), "Completed run is closed.");
     }
 
@@ -128,8 +130,10 @@ internal static class Program
 
     static void GoldBudgetPath()
     {
-        int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17, 20, 21, 23, 24, 26 };
-        int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10, 0, 10, 0, 15, 15 };
+        int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17, 20, 21, 23, 24, 26,
+            29, 31, 32, 34, 37 };
+        int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10, 0, 10, 0, 15, 15,
+            5, 0, 15, 15, 0 };
         var run = ExpeditionRun.New(catalog, 555);
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
@@ -141,14 +145,14 @@ internal static class Program
                 if (wave == 1) Check(run.SetDeployed(id, true), "Opening two summons join the active five.");
             }
             Check(run.Roster.SupplyUsed == supplied[wave - 1] && run.Gold == remaining[wave - 1],
-                "Gold budget and cumulative supply match the fifteen-wave plan at wave " + wave + ".");
+                "Gold budget and cumulative supply match the twenty-wave plan at wave " + wave + ".");
             var restored = ExpeditionRun.Restore(catalog, run.Capture());
             Check(restored.Gold == run.Gold && restored.Roster.SupplyUsed == run.Roster.SupplyUsed,
                 "Saved economy retains gold and cumulative summons.");
             run.BeginBattle(); run.ResolveBattle(true); run.Continue();
         }
-        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 26 && run.Gold == 15,
-            "Twenty-three paid summons and three starters survive the full budget path.");
+        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 37 && run.Gold == 0,
+            "Thirty-four paid summons and three starters survive the full budget path.");
     }
 
     static void FreeBenchPlace(ExpeditionRun run)
@@ -351,7 +355,7 @@ internal static class Program
     static void EnemyWavesAndRoles()
     {
         var run = ExpeditionRun.New(catalog, 31);
-        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4 };
+        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4, 4, 5, 6, 5, 3 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
             Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
@@ -369,6 +373,20 @@ internal static class Program
                 Check(enemies.Any(u => u.Id == "elite-beast" && u.EnemyRole == CatalogEnemyRole.Beast &&
                     u.NextChargeAt == 1.35f),
                     "Fourth encounter elite uses the existing readable beast charge.");
+            if (wave >= 16)
+            {
+                Check(enemies.All(u => u.Id.StartsWith("frost-", StringComparison.Ordinal)),
+                    "Frost region uses its distinct enemy IDs.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.MineWorker) ==
+                    (wave == 20 ? 0 : wave == 17 || wave == 18 ? 3 : 2),
+                    "Frost guards use the nondashing melee role.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.Raider) ==
+                    (wave == 18 ? 3 : 2), "Frost acolytes use ranged behavior.");
+                if (wave == 19) Check(enemies.Single(u => u.Id == "frost-cantor").EnemyRole ==
+                    CatalogEnemyRole.Supervisor, "Cantor grants supervisor guard.");
+                if (wave == 20) Check(enemies.Single(u => u.Id == "frost-boss").EnemyRole ==
+                    CatalogEnemyRole.FrostWarden, "Final boss has its own frost role.");
+            }
             CatalogBattle replay = ExpeditionRun.Restore(catalog, run.Capture()).ResumeBattle();
             var replayEnemies = replay.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
             Check(enemies.Zip(replayEnemies, (a, b) => a.Id == b.Id && a.EnemyRole == b.EnemyRole &&
@@ -692,7 +710,8 @@ internal static class Program
             false, 2.5f, -1f, CatalogEnemyRole.Supervisor);
         CatalogBattleUnit slinger = battle.AddEnemy("mine-slinger-1", 500f, 5f, 5f, 2f, 3.6f, .55f,
             false, 3f, 1f, CatalogEnemyRole.Raider);
-        int guardShields = 0, blasts = 0, embers = 0, blastHits = 0, emberHits = 0;
+        int guardShields = 0, blasts = 0, embers = 0, blastHits = 0, emberHits = 0, burns = 0;
+        int burnTicks = 0; float burnDamage = 0f;
         battle.Event += e =>
         {
             if (e.Kind == CatalogEventKind.Shield && e.AbilityId == "MINE_GUARD") guardShields++;
@@ -700,6 +719,10 @@ internal static class Program
             if (e.Kind == CatalogEventKind.BossTelegraph && e.AbilityId == "FURNACE_EMBER") embers++;
             if (e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "FURNACE_BLAST") blastHits++;
             if (e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "FURNACE_EMBER") emberHits++;
+            if (e.Kind == CatalogEventKind.Burn && e.SourceId == boss.Id && e.TargetId == knight.Id &&
+                e.AbilityId == "BURN" && Math.Abs(e.Amount - 10f) < .001f) burns++;
+            if (e.Kind == CatalogEventKind.Damage && e.AbilityId == "BURN" && e.TargetId == knight.Id)
+            { burnTicks++; burnDamage += e.Amount; }
         };
         battle.Step(1.6f);
         Check(guardShields == 1 && boss.Shield > 0f && slinger.Shield == 0f &&
@@ -711,13 +734,142 @@ internal static class Program
         boss.BossEnraged = true;
         battle.Step(1f);
         Check(embers == 1 && blastHits == 1 && boss.SlamWarningRemaining > 0f && boss.SlamIsAftershock &&
-            boss.SlamRadius == 1f, "Enraged furnace warns before its separate ember pulse.");
+            boss.SlamRadius == 1f && knight.BurnRemaining > 0f && burns == 1,
+            "Furnace blast burns surviving targets with three raw ten-damage ticks.");
         battle.Step(.7f);
-        Check(emberHits == 1 && boss.SlamWarningRemaining == 0f,
-            "The ember pulse lands once after its warning.");
+        Check(emberHits == 1 && boss.SlamWarningRemaining == 0f && burns == 1,
+            "The ember pulse lands once without refreshing the burn.");
         battle.Step(4.8f);
         Check(guardShields >= 2 && boss.Shield <= 120f && slinger.Shield <= 60f,
             "Guard refresh never adds repeated shield amounts.");
+        Check(knight.BurnRemaining == 0f && burnTicks == 3 && burnDamage > 0f && burnDamage < 30f,
+            "Three raw ten-damage burn ticks use normal defense and expire without stacking.");
+    }
+
+    static void FrostWardenPattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit front = battle.AddUnit("front", CatalogTeam.Ally, "B-KN", null, null, -1f, 0f);
+        CatalogBattleUnit rear = battle.AddUnit("rear", CatalogTeam.Ally, "B-AR", null, null, -4f, 0f);
+        CatalogBattleUnit witness = battle.AddUnit("witness", CatalogTeam.Ally, "B-PR", null, null, -3f, 0f);
+        front.MoveSpeed = rear.MoveSpeed = witness.MoveSpeed = 0f;
+        front.Hp = front.MaxHp = rear.Hp = rear.MaxHp = witness.Hp = witness.MaxHp = 3000f;
+        CatalogBattleUnit boss = battle.AddEnemy("frost-boss", 10000f, 10f, 25f, 1.8f, 1.1f, .01f,
+            true, 3f, 0f, CatalogEnemyRole.FrostWarden, true);
+        var events = new List<CatalogBattleEvent>();
+        battle.Event += events.Add;
+        StepUntil(battle, () => boss.SlamWarningRemaining > 0f, 180,
+            "Frost Warden announces its distant-target nova.");
+        Check(boss.AttackTargetId == rear.Id && Math.Abs(boss.SlamTargetX - rear.X) < .01f &&
+            boss.SlamRadius == 1.1f && boss.SlamWarningRemaining > 1f &&
+            events.Count(e => e.Kind == CatalogEventKind.BossTelegraph && e.AbilityId == "FROST_NOVA") == 1,
+            "Frost nova locks the farthest living ally without the melee range cap.");
+        float lockedX = boss.SlamTargetX;
+        rear.X = -5.8f;
+        StepUntil(battle, () => events.Any(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "FROST_NOVA"), 100, "Frost nova lands after its warning.");
+        Check(boss.SlamTargetX == lockedX &&
+            events.Any(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "FROST_NOVA" &&
+                e.TargetId == witness.Id &&
+                Math.Abs(e.Amount - 15f * 100f / (100f + witness.Defense)) < .01f) &&
+            !events.Any(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "FROST_NOVA" &&
+                e.TargetId == rear.Id) && Math.Abs(boss.NextSlamAt - battle.Time - 8f) < .05f,
+            "Locked circle hits only occupants at the announced point and waits eight seconds.");
+        Check(witness.FrozenRemaining > 1f && witness.FrozenRemaining <= 1.101f &&
+            rear.FrozenRemaining == 0f &&
+            events.Count(e => e.Kind == CatalogEventKind.Freeze && e.AbilityId == "FROST_NOVA" &&
+                e.TargetId == witness.Id) == 1,
+            "Only living occupants of the nova circle receive a bounded freeze: witness=" +
+            witness.FrozenRemaining + ", rear=" + rear.FrozenRemaining + ", events=" +
+            events.Count(e => e.Kind == CatalogEventKind.Freeze && e.AbilityId == "FROST_NOVA" &&
+                e.TargetId == witness.Id));
+        boss.BossEnraged = true;
+        boss.NextSlamAt = battle.Time;
+        StepUntil(battle, () => boss.SlamWarningRemaining > 0f, 30,
+            "Enraged Frost Warden announces another nova.");
+        Check(boss.SlamWarningRemaining > .7f && boss.SlamWarningRemaining <= .8f &&
+            boss.AttackTargetId == rear.Id, "Enraged warning shortens to .8 seconds.");
+        StepUntil(battle, () => events.Count(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "FROST_NOVA") == 2, 70, "Enraged nova lands.");
+        Check(Math.Abs(boss.NextSlamAt - battle.Time - 6f) < .05f,
+            "Enraged nova repeats after six seconds.");
+        boss.Hp = 0f;
+        battle.Step(1f / 60f);
+        Check(battle.Ended && rear.FrozenRemaining == 0f && witness.FrozenRemaining == 0f,
+            "Final battle settlement hides any remaining freeze state.");
+        bool rejected = false;
+        try { battle.AddEnemy("false-boss", 100f, 5f, 0f, 2f, 1f, .5f, false, 2f, 0f,
+            CatalogEnemyRole.FrostWarden, true); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Frost Warden role cannot be assigned to a nonboss.");
+
+        var threshold = new CatalogBattle(catalog);
+        threshold.AddUnit("archer", CatalogTeam.Ally, "B-AR", null, null, 1f, 0f);
+        CatalogBattleUnit thresholdBoss = threshold.AddEnemy("frost-boss", 10000f, 5f, 0f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.FrostWarden, true);
+        thresholdBoss.Hp = 4001f;
+        int enrages = 0;
+        threshold.Event += e => { if (e.Kind == CatalogEventKind.BossEnraged) enrages++; };
+        StepUntil(threshold, () => thresholdBoss.BossEnraged, 150,
+            "Frost Warden enrages when actual damage crosses forty percent HP.");
+        Check(enrages == 1 && thresholdBoss.Hp <= 4000f,
+            "Frost enrage emits once at the forty-percent threshold.");
+
+        var pause = new CatalogBattle(catalog);
+        CatalogBattleUnit archer = pause.AddUnit("archer", CatalogTeam.Ally, "B-AR", null, null, -1f, 0f);
+        archer.Hp = archer.MaxHp = 3000f;
+        CatalogBattleUnit ice = pause.AddEnemy("frost-boss", 10000f, 10f, 0f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.FrostWarden, true);
+        int archerHits = 0, archerSkills = 0;
+        pause.Event += e =>
+        {
+            if (e.SourceId == archer.Id && e.Kind == CatalogEventKind.BasicHit) archerHits++;
+            if (e.SourceId == archer.Id && e.Kind == CatalogEventKind.SkillUsed) archerSkills++;
+        };
+        StepUntil(pause, () => ice.SlamWarningRemaining > 0f, 180, "Pause test sees frost warning.");
+        StepUntil(pause, () => ice.SlamWarningRemaining < .08f, 90,
+            "Pause test approaches frost impact.");
+        archer.AttackPhase = CatalogAttackPhase.WindingBasic;
+        archer.PendingTargetId = ice.Id;
+        archer.ReleaseAt = pause.Time + .15f;
+        StepUntil(pause, () => archer.FrozenRemaining > 0f, 20,
+            "Impact freezes the archer during an active windup.");
+        archer.X = -4f; // Out of attack range, so a nonfrozen actor would move.
+        float frozenX = archer.X, frozenY = archer.Y;
+        int hitsBeforeThaw = archerHits, skillsBeforeThaw = archerSkills;
+        pause.Step(.95f);
+        Check(archer.FrozenRemaining > 0f && archerHits == hitsBeforeThaw &&
+            archerSkills == skillsBeforeThaw && archer.AttackPhase == CatalogAttackPhase.WindingBasic &&
+            archer.X == frozenX && archer.Y == frozenY,
+            "Freeze stops movement, attacks and skills while preserving the pending windup.");
+        StepUntil(pause, () => archer.FrozenRemaining == 0f, 30, "Archer thaws.");
+        Check(archerHits == hitsBeforeThaw && archer.AttackWindupRemaining > .03f,
+            "The pending hit does not burst on the thaw tick: hits=" + archerHits +
+            ", before=" + hitsBeforeThaw + ", windup=" + archer.AttackWindupRemaining);
+        archer.X = -1f;
+        StepUntil(pause, () => archerHits > hitsBeforeThaw, 30,
+            "The saved windup finishes normally after thaw.");
+    }
+
+    static void FrozenCounterBoundary()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit knight = battle.AddUnit("knight", CatalogTeam.Ally, "E-KN-C", null, null, -1f, 0f);
+        CatalogBattleUnit attacker = battle.AddEnemy("attacker", 1000f, 5f, 0f,
+            2f, 1f, .5f, false, 1f, 0f, CatalogEnemyRole.Raider);
+        var damage = typeof(CatalogBattle).GetMethod("Damage",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        Check(damage != null, "Counter boundary can invoke the actual damage pipeline.");
+        int counters = 0;
+        battle.Event += e => { if (e.Kind == CatalogEventKind.SkillUsed && e.AbilityId == "E-KN-C") counters++; };
+        knight.Shield = 10f; knight.ShieldSourceId = knight.Id; knight.ShieldUntil = 10f;
+        damage.Invoke(battle, new object[] { attacker, knight, 100f, "FROST_NOVA", false, false });
+        Check(counters == 0, "The nova impact cannot trigger a counter before freeze is applied.");
+        knight.Shield = 10f; knight.FrozenUntil = battle.Time + 1.1f;
+        damage.Invoke(battle, new object[] { attacker, knight, 100f, "BASIC", true, false });
+        Check(counters == 0, "A frozen defender cannot counter a later shield break.");
+        knight.Shield = 10f; knight.FrozenUntil = 0f;
+        damage.Invoke(battle, new object[] { attacker, knight, 100f, "BASIC", true, false });
+        Check(counters == 1, "The same counter works again after thaw.");
     }
 
     static void LegacyTenWaveMigration()
@@ -731,7 +883,7 @@ internal static class Program
                 ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
                 var unchanged = ExpeditionRun.Restore(catalog, prior);
                 Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
-                    unchanged.Capture().Version == 4 && prior.Version == 2,
+                    unchanged.Capture().Version == 5 && prior.Version == 2,
                     "Earlier valid v2 preparation migrates without reward or mutating its input.");
                 unchanged.BeginBattle();
                 ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;

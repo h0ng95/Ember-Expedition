@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Expedition.Core
 {
     public enum CatalogTeam { Ally, Enemy }
-    public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace }
+    public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace, FrostWarden }
     public enum CatalogAttackPhase { Ready, WindingBasic, WindingSkill }
     public enum CatalogEventKind { SkillUsed, BasicHit, Damage, Shield, ShieldBlocked, Heal, Burn, Slow, Mark,
         Buff, TraitTriggered, Defeated, Ended, ChargeTelegraph, ChargeHit,
-        BossTelegraph, BossImpact, BossEnraged }
+        BossTelegraph, BossImpact, BossEnraged, Freeze }
 
     public sealed class CatalogBattleEvent
     {
@@ -64,7 +64,8 @@ namespace Expedition.Core
         public float ChargeWidth { get { return BossPatternsEnabled && EnemyRole == CatalogEnemyRole.Beast ? .7f : .95f; } }
         public float SlamWarningRemaining { get { return IsAlive &&
             (PendingSkillId == "GOLEM_SLAM" || PendingSkillId == "GOLEM_AFTERSHOCK" ||
-             PendingSkillId == "FURNACE_BLAST" || PendingSkillId == "FURNACE_EMBER") &&
+             PendingSkillId == "FURNACE_BLAST" || PendingSkillId == "FURNACE_EMBER" ||
+             PendingSkillId == "FROST_NOVA") &&
             AttackPhase == CatalogAttackPhase.WindingSkill ? AttackWindupRemaining : 0f; } }
         public float SlamTargetX { get { return SlamAimX; } }
         public float SlamTargetY { get { return SlamAimY; } }
@@ -72,12 +73,14 @@ namespace Expedition.Core
         public bool SlamIsAftershock { get { return PendingSkillId == "GOLEM_AFTERSHOCK" ||
             PendingSkillId == "FURNACE_EMBER"; } }
         public float BurnRemaining { get { return BurnTicksLeft > 0 ? Math.Max(0f, BurnUntil - Clock.Time) : 0f; } }
+        public float FrozenRemaining { get { return IsAlive && !Clock.Ended ?
+            Math.Max(0f, FrozenUntil - Clock.Time) : 0f; } }
         public float SlowPercent { get { return SlowUntil > Clock.Time ? Slow : 0f; } }
         public float MarkRemaining { get { return Math.Max(0f, MarkUntil - Clock.Time); } }
 
         internal CatalogBattle Clock;
         internal string InnateTraitId, PendingSkillId, PendingTargetId, VolleyTargetId, BurnSourceId, ShieldSourceId;
-        internal float ShieldUntil, BurnUntil, BurnNextAt, BurnDamage, Slow, SlowUntil, MarkUntil;
+        internal float ShieldUntil, BurnUntil, BurnNextAt, BurnDamage, Slow, SlowUntil, MarkUntil, FrozenUntil;
         internal int BurnTicksLeft, VolleyShotsLeft;
         internal float NextBasicAt, ReleaseAt, NextPrimaryAt = 2f, NextFinalAt = 2f, NextCounterAt,
             NextHarmonyAt, NextSpoilsAt, NextVolleyAt, ExtraBasicUntil, ExtraBasicMultiplier;
@@ -152,9 +155,10 @@ namespace Expedition.Core
             if (hp <= 0 || power <= 0 || defense < 0 || attackInterval <= .25f || range <= 0 || moveSpeed <= 0)
                 throw new ArgumentException("Invalid enemy stats.");
             if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) ||
-                (role == CatalogEnemyRole.Golem || role == CatalogEnemyRole.Furnace) && !boss ||
+                (role == CatalogEnemyRole.Golem || role == CatalogEnemyRole.Furnace ||
+                 role == CatalogEnemyRole.FrostWarden) && !boss ||
                 boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast &&
-                    role != CatalogEnemyRole.Furnace ||
+                    role != CatalogEnemyRole.Furnace && role != CatalogEnemyRole.FrostWarden ||
                 bossPatterns && !boss)
                 throw new ArgumentException("Invalid enemy role.");
             CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
@@ -165,6 +169,7 @@ namespace Expedition.Core
                 bossPatterns ? 7f : 1.35f : float.PositiveInfinity;
             enemy.NextSlamAt = bossPatterns && role == CatalogEnemyRole.Golem ? 2f : float.PositiveInfinity;
             if (bossPatterns && role == CatalogEnemyRole.Furnace) enemy.NextSlamAt = 2f;
+            if (bossPatterns && role == CatalogEnemyRole.FrostWarden) enemy.NextSlamAt = 2f;
             enemy.NextGuardAt = role == CatalogEnemyRole.Supervisor ? 1.5f : float.PositiveInfinity;
             return enemy;
         }
@@ -229,6 +234,7 @@ namespace Expedition.Core
             foreach (CatalogBattleUnit unit in units)
             {
                 if (!unit.IsAlive) continue;
+                if (unit.FrozenUntil > Time) continue;
                 TickZone(unit);
                 TickVolley(unit);
                 TryGuard(unit);
@@ -247,7 +253,8 @@ namespace Expedition.Core
                         continue;
                     }
                     else if (unit.PendingSkillId == "GOLEM_SLAM" || unit.PendingSkillId == "GOLEM_AFTERSHOCK" ||
-                        unit.PendingSkillId == "FURNACE_BLAST" || unit.PendingSkillId == "FURNACE_EMBER")
+                        unit.PendingSkillId == "FURNACE_BLAST" || unit.PendingSkillId == "FURNACE_EMBER" ||
+                        unit.PendingSkillId == "FROST_NOVA")
                     {
                         ReleaseSlam(unit);
                         continue;
@@ -390,6 +397,29 @@ namespace Expedition.Core
 
         bool TryStartSlam(CatalogBattleUnit actor)
         {
+            if (actor.BossPatternsEnabled && actor.EnemyRole == CatalogEnemyRole.FrostWarden &&
+                Time >= actor.NextSlamAt)
+            {
+                CatalogBattleUnit farthest = null;
+                float farthestDistance = -1f;
+                foreach (CatalogBattleUnit candidate in units)
+                {
+                    if (!candidate.IsAlive || candidate.Team == actor.Team) continue;
+                    float distance = Distance(actor, candidate);
+                    if (distance > farthestDistance)
+                    { farthest = candidate; farthestDistance = distance; }
+                }
+                if (farthest == null) return false;
+                actor.PendingTargetId = farthest.Id;
+                actor.PendingSkillId = "FROST_NOVA";
+                actor.SlamAimX = farthest.X;
+                actor.SlamAimY = farthest.Y;
+                actor.SlamRadiusValue = 1.1f;
+                actor.AttackPhase = CatalogAttackPhase.WindingSkill;
+                actor.ReleaseAt = Time + (actor.BossEnraged ? .8f : 1.1f);
+                Emit(CatalogEventKind.BossTelegraph, actor, farthest, "FROST_NOVA", 1.1f);
+                return true;
+            }
             if (!actor.BossPatternsEnabled ||
                 actor.EnemyRole != CatalogEnemyRole.Golem && actor.EnemyRole != CatalogEnemyRole.Furnace ||
                 Time < actor.NextSlamAt) return false;
@@ -409,6 +439,26 @@ namespace Expedition.Core
 
         void ReleaseSlam(CatalogBattleUnit actor)
         {
+            if (actor.PendingSkillId == "FROST_NOVA")
+            {
+                Emit(CatalogEventKind.BossImpact, actor, null, "FROST_NOVA", actor.SlamRadiusValue);
+                foreach (CatalogBattleUnit candidate in units)
+                {
+                    if (!actor.IsAlive || !candidate.IsAlive || candidate.Team == actor.Team) continue;
+                    float dx = candidate.X - actor.SlamAimX, dy = candidate.Y - actor.SlamAimY;
+                    if (dx * dx + dy * dy <= actor.SlamRadiusValue * actor.SlamRadiusValue)
+                    {
+                        Damage(actor, candidate, EffectivePower(actor) * 1.5f,
+                            "FROST_NOVA", false, false);
+                        if (candidate.IsAlive) Freeze(actor, candidate, 1.1f);
+                    }
+                }
+                actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
+                actor.NextSlamAt = Time + (actor.BossEnraged ? 6f : 8f);
+                actor.PendingSkillId = null;
+                actor.AttackPhase = CatalogAttackPhase.Ready;
+                return;
+            }
             bool furnace = actor.EnemyRole == CatalogEnemyRole.Furnace;
             bool aftershock = actor.PendingSkillId == "GOLEM_AFTERSHOCK" ||
                 actor.PendingSkillId == "FURNACE_EMBER";
@@ -419,9 +469,12 @@ namespace Expedition.Core
                 if (!actor.IsAlive || !candidate.IsAlive || candidate.Team == actor.Team) continue;
                 float dx = candidate.X - actor.SlamAimX, dy = candidate.Y - actor.SlamAimY;
                 if (dx * dx + dy * dy <= actor.SlamRadiusValue * actor.SlamRadiusValue)
+                {
                     Damage(actor, candidate, EffectivePower(actor) * (aftershock ?
                         furnace ? 1f : 1.1f : furnace ? 1.55f : 1.65f),
                         ability, false, false);
+                    if (candidate.IsAlive && ability == "FURNACE_BLAST") Burn(actor, candidate, 10f);
+                }
             }
             actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
             if (!aftershock)
@@ -558,7 +611,8 @@ namespace Expedition.Core
             if (target.IsAlive && target.BossPatternsEnabled && !target.BossEnraged &&
                 (target.EnemyRole == CatalogEnemyRole.Beast && target.Hp <= target.MaxHp * .5f ||
                  target.EnemyRole == CatalogEnemyRole.Golem && target.Hp <= target.MaxHp * .4f ||
-                 target.EnemyRole == CatalogEnemyRole.Furnace && target.Hp <= target.MaxHp * .45f))
+                 target.EnemyRole == CatalogEnemyRole.Furnace && target.Hp <= target.MaxHp * .45f ||
+                 target.EnemyRole == CatalogEnemyRole.FrostWarden && target.Hp <= target.MaxHp * .4f))
             {
                 target.BossEnraged = true;
                 Emit(CatalogEventKind.BossEnraged, target, null, "BOSS_ENRAGED", 1f);
@@ -569,6 +623,7 @@ namespace Expedition.Core
                 target.ChargeMoving = false;
                 target.PendingSkillId = null;
                 target.AttackPhase = CatalogAttackPhase.Ready;
+                target.FrozenUntil = 0f;
                 target.ZoneTicksLeft = 0;
                 Emit(CatalogEventKind.Defeated, source, target, ability, 0);
                 if (source != null && source.IsAlive && HasTrait(source, "T-H06") && Time >= source.NextSpoilsAt)
@@ -579,7 +634,8 @@ namespace Expedition.Core
                 }
                 return;
             }
-            if (broke && HasCounterSkill(target) && Time >= target.NextCounterAt)
+            if (broke && ability != "FROST_NOVA" && target.FrozenUntil <= Time &&
+                HasCounterSkill(target) && Time >= target.NextCounterAt)
             {
                 target.NextCounterAt = Time + 2.5f;
                 Counter(target, source);
@@ -614,14 +670,30 @@ namespace Expedition.Core
         }
 
         void Burn(CatalogBattleUnit source, CatalogBattleUnit target)
+        { Burn(source, target, EffectivePower(source) * .15f); }
+
+        void Burn(CatalogBattleUnit source, CatalogBattleUnit target, float strength)
         {
             if (!target.IsAlive) return;
-            float strength = EffectivePower(source) * .15f;
             if (target.BurnTicksLeft > 0 && strength + .00001f < target.BurnDamage) return;
             if (target.BurnTicksLeft == 0) target.BurnNextAt = Time + 1f;
             target.BurnDamage = strength; target.BurnTicksLeft = 3; target.BurnUntil = Time + 3f;
             target.BurnSourceId = source.Id;
             Emit(CatalogEventKind.Burn, source, target, "BURN", strength);
+        }
+
+        void Freeze(CatalogBattleUnit source, CatalogBattleUnit target, float duration)
+        {
+            if (!target.IsAlive) return;
+            float extension = Time + duration - Math.Max(Time, target.FrozenUntil);
+            if (extension <= 0f) return;
+            target.FrozenUntil = Time + duration;
+            // Keep a winding attack's remaining lead time, and pause already active
+            // volleys/zones so they do not fire several delayed ticks on thaw.
+            if (target.AttackPhase != CatalogAttackPhase.Ready) target.ReleaseAt += extension;
+            if (target.VolleyShotsLeft > 0) target.NextVolleyAt += extension;
+            if (target.ZoneTicksLeft > 0) target.ZoneNextAt += extension;
+            Emit(CatalogEventKind.Freeze, source, target, "FROST_NOVA", duration);
         }
 
         void Slow(CatalogBattleUnit source, CatalogBattleUnit target, float value, float duration)

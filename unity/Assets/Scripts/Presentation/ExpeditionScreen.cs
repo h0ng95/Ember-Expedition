@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Expedition.Presentation
 {
-    // Main expedition route: gold-funded recruitment and ten encounters.
+    // Main expedition route: gold-funded recruitment and fifteen encounters.
     public sealed class ExpeditionScreen : MonoBehaviour
     {
         const string SaveKey = "ember.expedition.run.v013";
@@ -36,7 +36,7 @@ namespace Expedition.Presentation
         CatalogDatabase database;
         ExpeditionRun run;
         CatalogArtView art;
-        Texture2D battlefield, outpost;
+        Texture2D battlefield, outpost, furnace;
         Camera backgroundCamera;
         GUIStyle title, heading, body, small, centered, button, primary, hint;
         Font font;
@@ -65,6 +65,7 @@ namespace Expedition.Presentation
                 database = CatalogDatabase.FromJson(content.text);
                 battlefield = Resources.Load<Texture2D>("Art/forest-battlefield");
                 outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
+                furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
                 LoadSave();
             }
             catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
@@ -199,7 +200,7 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(42, 17, 920, 60), "잔불 원정대", title);
             Fill(new Rect(155, 150, 970, 425), Panel);
             GUI.Label(new Rect(220, 192, 840, 70), "꺼진 길에 다시 불을 밝히다", heading);
-            GUI.Label(new Rect(220, 265, 840, 70), "승리로 얻은 골드로 동료를 소환하고 성장시키세요.\n열 번의 전투, 두 명의 보스가 기다립니다.", body);
+            GUI.Label(new Rect(220, 265, 840, 70), "승리로 얻은 골드로 동료를 소환하고 성장시키세요.\n열다섯 번의 전투, 세 명의 보스가 기다립니다.", body);
             if (GUI.Button(new Rect(230, 385, 385, 76), "새 원정", primary))
             {
                 if (savePresent || legacySave) modal = Modal.NewRun; else NewRun();
@@ -230,7 +231,7 @@ namespace Expedition.Presentation
         {
             DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
             Rect field = new Rect(17, 93, 1246, 449);
-            Texture2D region = run.Wave <= 5 ? battlefield : outpost;
+            Texture2D region = run.Wave <= 5 ? battlefield : run.Wave <= 10 ? outpost : furnace;
             if (region != null) GUI.DrawTexture(field, region, ScaleMode.ScaleAndCrop);
             else Fill(field, new Color(.075f, .15f, .12f));
             Fill(field, new Color(.015f, .045f, .03f, .23f));
@@ -293,6 +294,11 @@ namespace Expedition.Presentation
                 case 8: return "보병 셋과 석궁병 둘이 함께 압박합니다.\n동료의 진화·전승 상태를 점검하세요.";
                 case 9: return "갑주 석상이 돌진하고 석궁병이 약한 동료를 노립니다.\n전열과 후열을 벌리고 성장한 동료를 배치하세요.";
                 case 10: return "범위 내려찍기 · 체력 40%부터 후속파\n탱커 주변에 동료를 밀집시키지 마세요.";
+                case 11: return "잿재 채굴병은 돌진 없이 전열을 압박합니다.\n뒤의 불씨 투척병부터 견제하세요.";
+                case 12: return "불씨 투척병 둘이 약한 동료를 노립니다.\n후열을 전열에서 너무 멀리 두지 마세요.";
+                case 13: return "채굴병 셋이 전열을 묶고 투척병이 후열을 노립니다.\n보호와 회복을 나누어 배치하세요.";
+                case 14: return "감독관은 가까운 적 둘에게 4초 보호막을 줍니다.\n보호막은 7초마다 다시 생깁니다.";
+                case 15: return "범위 폭발에 대비해 동료를 흩어 배치하세요.\n체력 45%부터 후속 불씨파가 추가됩니다.";
                 default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
             }
         }
@@ -384,7 +390,8 @@ namespace Expedition.Presentation
                 "\n" + outcome, body);
             string reward = run.LastVictory && run.LastReward > 0 ?
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
-                run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ? "10전투 돌파 · 원정 완료" :
+                run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
+                ExpeditionRun.TotalWaves + "전투 돌파 · 원정 완료" :
                 "획득 골드 0 G   ·   보유 " + run.Gold + " G";
             GUI.Label(new Rect(225, 370, 830, 43), reward, heading);
             if (run.Phase == ExpeditionPhase.Result)

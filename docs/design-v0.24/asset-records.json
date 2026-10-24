@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-24",
+  "pixelEdits": false,
+  "referenceImages": [],
+  "assets": [
+    {
+      "id": "mine-worker",
+      "generator": "imagegen",
+      "originalFile": "exec-d547d9dc-1299-4f56-9cc7-bdde0ab321f6.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v024/mine-worker.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "b352cc98f2b2359384e9da30231837ba772ad536359990da2a44ef90042ff678"
+    },
+    {
+      "id": "mine-slinger",
+      "generator": "imagegen",
+      "originalFile": "exec-9c857974-0ec7-466d-b3f5-be208d07a017.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v024/mine-slinger.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "69d3e766983461712b1954c4adb5b527445e189f6eb982816df2b890a572d106"
+    },
+    {
+      "id": "mine-elite",
+      "generator": "imagegen",
+      "originalFile": "exec-a6dc4b21-927d-4a6b-bcb6-32a8f0adea71.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v024/mine-elite.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "c57f7c3a80cb8c00b772fe4aac7151a224396e1ef77982b4eecf80b3ca552e3a"
+    },
+    {
+      "id": "furnace-boss",
+      "generator": "imagegen",
+      "originalFile": "exec-88df861f-c832-4dd2-988e-c3df3f1b7860.png",
+      "destination": "unity/Assets/Resources/Art/Enemies/v024/furnace-boss.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": true,
+      "sha256": "86caf8d7a0fa4c8f67d7eb3ce060d5c1f1d2700bd7e1dc0e861be702a3f63a09"
+    },
+    {
+      "id": "furnace-battlefield",
+      "generator": "imagegen",
+      "originalFile": "exec-f879c7e7-be7e-49f8-b0b0-80032e316ab1.png",
+      "destination": "unity/Assets/Resources/Art/Environments/v024/furnace-battlefield.png",
+      "width": 1536,
+      "height": 1024,
+      "transparentBackground": false,
+      "sha256": "756822c72ff2edc2de6cca0cf1a0cc08336547e0e7c2ca64af6be3fe089162fc"
+    }
+  ]
+}

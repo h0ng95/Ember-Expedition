@@ -13,8 +13,12 @@ namespace Expedition.Core
 
         static float BodyWidth(CatalogBattleUnit unit)
         {
-            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? 280f : 210f;
+            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? 280f :
+                unit.EnemyRole == CatalogEnemyRole.Furnace ? 250f : 210f;
             if (unit.Team == CatalogTeam.Ally) return 70f;
+            if (unit.EnemyRole == CatalogEnemyRole.Supervisor) return 145f;
+            if (unit.Id.StartsWith("mine-slinger-", StringComparison.Ordinal)) return 105f;
+            if (unit.EnemyRole == CatalogEnemyRole.MineWorker) return 105f;
             if (unit.Id.StartsWith("spine-", StringComparison.Ordinal)) return 110f;
             if (unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0)
                 return unit.Id.StartsWith("stone-", StringComparison.Ordinal) ? 130f : 200f;
@@ -24,8 +28,12 @@ namespace Expedition.Core
 
         static float BodyHeight(CatalogBattleUnit unit)
         {
-            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? 210f : 220f;
+            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? 210f :
+                unit.EnemyRole == CatalogEnemyRole.Furnace ? 225f : 220f;
             if (unit.Team == CatalogTeam.Ally) return 80f;
+            if (unit.EnemyRole == CatalogEnemyRole.Supervisor) return 145f;
+            if (unit.Id.StartsWith("mine-slinger-", StringComparison.Ordinal)) return 110f;
+            if (unit.EnemyRole == CatalogEnemyRole.MineWorker) return 95f;
             if (unit.Id.StartsWith("spine-", StringComparison.Ordinal)) return 100f;
             if (unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0)
                 return unit.Id.StartsWith("stone-", StringComparison.Ordinal) ? 145f : 125f;

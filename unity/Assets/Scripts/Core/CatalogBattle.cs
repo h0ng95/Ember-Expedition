@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Expedition.Core
 {
     public enum CatalogTeam { Ally, Enemy }
-    public enum CatalogEnemyRole { None, Beast, Raider, Golem }
+    public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace }
     public enum CatalogAttackPhase { Ready, WindingBasic, WindingSkill }
     public enum CatalogEventKind { SkillUsed, BasicHit, Damage, Shield, ShieldBlocked, Heal, Burn, Slow, Mark,
         Buff, TraitTriggered, Defeated, Ended, ChargeTelegraph, ChargeHit,
@@ -63,12 +63,14 @@ namespace Expedition.Core
         public float ChargeImpactY { get { return ChargeWarningRemaining > 0f ? PredictedChargeEnd(false) : ChargeEndY; } }
         public float ChargeWidth { get { return BossPatternsEnabled && EnemyRole == CatalogEnemyRole.Beast ? .7f : .95f; } }
         public float SlamWarningRemaining { get { return IsAlive &&
-            (PendingSkillId == "GOLEM_SLAM" || PendingSkillId == "GOLEM_AFTERSHOCK") &&
+            (PendingSkillId == "GOLEM_SLAM" || PendingSkillId == "GOLEM_AFTERSHOCK" ||
+             PendingSkillId == "FURNACE_BLAST" || PendingSkillId == "FURNACE_EMBER") &&
             AttackPhase == CatalogAttackPhase.WindingSkill ? AttackWindupRemaining : 0f; } }
         public float SlamTargetX { get { return SlamAimX; } }
         public float SlamTargetY { get { return SlamAimY; } }
         public float SlamRadius { get { return SlamRadiusValue; } }
-        public bool SlamIsAftershock { get { return PendingSkillId == "GOLEM_AFTERSHOCK"; } }
+        public bool SlamIsAftershock { get { return PendingSkillId == "GOLEM_AFTERSHOCK" ||
+            PendingSkillId == "FURNACE_EMBER"; } }
         public float BurnRemaining { get { return BurnTicksLeft > 0 ? Math.Max(0f, BurnUntil - Clock.Time) : 0f; } }
         public float SlowPercent { get { return SlowUntil > Clock.Time ? Slow : 0f; } }
         public float MarkRemaining { get { return Math.Max(0f, MarkUntil - Clock.Time); } }
@@ -83,6 +85,7 @@ namespace Expedition.Core
             ChargeEndX, ChargeEndY, ChargeStartAt;
         internal bool ChargeMoving;
         internal float NextSlamAt, SlamAimX, SlamAimY, SlamRadiusValue;
+        internal float NextGuardAt;
         internal bool FirstHitUsed, CrisisUsed;
         internal readonly List<CatalogBuff> Buffs = new List<CatalogBuff>();
         internal float ZoneX, ZoneY, ZoneNextAt;
@@ -148,8 +151,10 @@ namespace Expedition.Core
         {
             if (hp <= 0 || power <= 0 || defense < 0 || attackInterval <= .25f || range <= 0 || moveSpeed <= 0)
                 throw new ArgumentException("Invalid enemy stats.");
-            if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) || role == CatalogEnemyRole.Golem && !boss ||
-                boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast ||
+            if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) ||
+                (role == CatalogEnemyRole.Golem || role == CatalogEnemyRole.Furnace) && !boss ||
+                boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast &&
+                    role != CatalogEnemyRole.Furnace ||
                 bossPatterns && !boss)
                 throw new ArgumentException("Invalid enemy role.");
             CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
@@ -159,6 +164,8 @@ namespace Expedition.Core
             enemy.NextChargeAt = role == CatalogEnemyRole.Beast ?
                 bossPatterns ? 7f : 1.35f : float.PositiveInfinity;
             enemy.NextSlamAt = bossPatterns && role == CatalogEnemyRole.Golem ? 2f : float.PositiveInfinity;
+            if (bossPatterns && role == CatalogEnemyRole.Furnace) enemy.NextSlamAt = 2f;
+            enemy.NextGuardAt = role == CatalogEnemyRole.Supervisor ? 1.5f : float.PositiveInfinity;
             return enemy;
         }
 
@@ -224,6 +231,7 @@ namespace Expedition.Core
                 if (!unit.IsAlive) continue;
                 TickZone(unit);
                 TickVolley(unit);
+                TryGuard(unit);
                 if (unit.ChargeMoving)
                 {
                     AdvanceCharge(unit);
@@ -238,7 +246,8 @@ namespace Expedition.Core
                         StartChargeMovement(unit);
                         continue;
                     }
-                    else if (unit.PendingSkillId == "GOLEM_SLAM" || unit.PendingSkillId == "GOLEM_AFTERSHOCK")
+                    else if (unit.PendingSkillId == "GOLEM_SLAM" || unit.PendingSkillId == "GOLEM_AFTERSHOCK" ||
+                        unit.PendingSkillId == "FURNACE_BLAST" || unit.PendingSkillId == "FURNACE_EMBER")
                     {
                         ReleaseSlam(unit);
                         continue;
@@ -348,34 +357,70 @@ namespace Expedition.Core
             return (float)Math.Sqrt(sideX * sideX + sideY * sideY);
         }
 
+        void TryGuard(CatalogBattleUnit actor)
+        {
+            if (actor.EnemyRole != CatalogEnemyRole.Supervisor || Time < actor.NextGuardAt) return;
+            actor.NextGuardAt = Time + 7f;
+            CatalogBattleUnit first = null, second = null;
+            foreach (CatalogBattleUnit candidate in units)
+            {
+                if (candidate == actor || !candidate.IsAlive || candidate.Team != actor.Team ||
+                    Distance(actor, candidate) > 2.4f) continue;
+                float value = Math.Min(180f, candidate.MaxHp * .12f);
+                if (candidate.Shield >= value - .00001f) continue;
+                if (first == null || GuardPriority(candidate, first) < 0)
+                { second = first; first = candidate; }
+                else if (second == null || GuardPriority(candidate, second) < 0) second = candidate;
+            }
+            if (first != null) GiveShield(actor, first,
+                Math.Min(180f, first.MaxHp * .12f), 4f, "MINE_GUARD");
+            if (second != null) GiveShield(actor, second,
+                Math.Min(180f, second.MaxHp * .12f), 4f, "MINE_GUARD");
+            // A lone supervisor still displays the mechanic without making its shield cumulative.
+            if (first == null) GiveShield(actor, actor,
+                Math.Min(180f, actor.MaxHp * .12f), 4f, "MINE_GUARD");
+        }
+
+        static int GuardPriority(CatalogBattleUnit left, CatalogBattleUnit right)
+        {
+            if (left.IsBoss != right.IsBoss) return left.IsBoss ? -1 : 1;
+            int health = (left.Hp / left.MaxHp).CompareTo(right.Hp / right.MaxHp);
+            return health != 0 ? health : string.CompareOrdinal(left.Id, right.Id);
+        }
+
         bool TryStartSlam(CatalogBattleUnit actor)
         {
-            if (!actor.BossPatternsEnabled || actor.EnemyRole != CatalogEnemyRole.Golem ||
+            if (!actor.BossPatternsEnabled ||
+                actor.EnemyRole != CatalogEnemyRole.Golem && actor.EnemyRole != CatalogEnemyRole.Furnace ||
                 Time < actor.NextSlamAt) return false;
             CatalogBattleUnit target = ChooseEnemy(actor, false, false);
             if (target == null || Distance(actor, target) > 4.3f) return false;
+            bool furnace = actor.EnemyRole == CatalogEnemyRole.Furnace;
             actor.PendingTargetId = target.Id;
-            actor.PendingSkillId = "GOLEM_SLAM";
+            actor.PendingSkillId = furnace ? "FURNACE_BLAST" : "GOLEM_SLAM";
             actor.SlamAimX = target.X;
             actor.SlamAimY = target.Y;
-            actor.SlamRadiusValue = 1.35f;
+            actor.SlamRadiusValue = furnace ? 1.25f : 1.35f;
             actor.AttackPhase = CatalogAttackPhase.WindingSkill;
-            actor.ReleaseAt = Time + 1.1f;
-            Emit(CatalogEventKind.BossTelegraph, actor, target, "GOLEM_SLAM", actor.SlamRadiusValue);
+            actor.ReleaseAt = Time + (furnace ? 1f : 1.1f);
+            Emit(CatalogEventKind.BossTelegraph, actor, target, actor.PendingSkillId, actor.SlamRadiusValue);
             return true;
         }
 
         void ReleaseSlam(CatalogBattleUnit actor)
         {
-            bool aftershock = actor.PendingSkillId == "GOLEM_AFTERSHOCK";
-            string ability = aftershock ? "GOLEM_AFTERSHOCK" : "GOLEM_SLAM";
+            bool furnace = actor.EnemyRole == CatalogEnemyRole.Furnace;
+            bool aftershock = actor.PendingSkillId == "GOLEM_AFTERSHOCK" ||
+                actor.PendingSkillId == "FURNACE_EMBER";
+            string ability = actor.PendingSkillId;
             Emit(CatalogEventKind.BossImpact, actor, null, ability, actor.SlamRadiusValue);
             foreach (CatalogBattleUnit candidate in units)
             {
                 if (!actor.IsAlive || !candidate.IsAlive || candidate.Team == actor.Team) continue;
                 float dx = candidate.X - actor.SlamAimX, dy = candidate.Y - actor.SlamAimY;
                 if (dx * dx + dy * dy <= actor.SlamRadiusValue * actor.SlamRadiusValue)
-                    Damage(actor, candidate, EffectivePower(actor) * (aftershock ? 1.1f : 1.65f),
+                    Damage(actor, candidate, EffectivePower(actor) * (aftershock ?
+                        furnace ? 1f : 1.1f : furnace ? 1.55f : 1.65f),
                         ability, false, false);
             }
             actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
@@ -384,11 +429,11 @@ namespace Expedition.Core
                 actor.NextSlamAt = Time + 8f;
                 if (actor.IsAlive && actor.BossEnraged)
                 {
-                    actor.PendingSkillId = "GOLEM_AFTERSHOCK";
-                    actor.SlamRadiusValue = .75f;
+                    actor.PendingSkillId = furnace ? "FURNACE_EMBER" : "GOLEM_AFTERSHOCK";
+                    actor.SlamRadiusValue = furnace ? 1f : .75f;
                     actor.ReleaseAt = Time + .6f;
                     Emit(CatalogEventKind.BossTelegraph, actor, Get(actor.PendingTargetId),
-                        "GOLEM_AFTERSHOCK", actor.SlamRadiusValue);
+                        actor.PendingSkillId, actor.SlamRadiusValue);
                     return;
                 }
             }
@@ -512,7 +557,8 @@ namespace Expedition.Core
             Emit(CatalogEventKind.Damage, source, target, ability, hpLoss + blocked);
             if (target.IsAlive && target.BossPatternsEnabled && !target.BossEnraged &&
                 (target.EnemyRole == CatalogEnemyRole.Beast && target.Hp <= target.MaxHp * .5f ||
-                 target.EnemyRole == CatalogEnemyRole.Golem && target.Hp <= target.MaxHp * .4f))
+                 target.EnemyRole == CatalogEnemyRole.Golem && target.Hp <= target.MaxHp * .4f ||
+                 target.EnemyRole == CatalogEnemyRole.Furnace && target.Hp <= target.MaxHp * .45f))
             {
                 target.BossEnraged = true;
                 Emit(CatalogEventKind.BossEnraged, target, null, "BOSS_ENRAGED", 1f);

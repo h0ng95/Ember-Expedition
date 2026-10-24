@@ -45,6 +45,8 @@ namespace Expedition.Presentation
         static Color AttackColor(CatalogBattleUnit unit)
         {
             string id = unit == null ? "" : unit.FormId;
+            if (unit != null && unit.EnemyRole == CatalogEnemyRole.Furnace)
+                return new Color(1f, .38f, .11f);
             if (id.Contains("-FI") || id == "H-01" || id == "H-04") return new Color(1f, .46f, .13f);
             if (id.Contains("-IC") || id == "H-03") return new Color(.4f, .85f, 1f);
             if (id.Contains("-PR") || id == "H-02" || id == "H-05") return new Color(.55f, 1f, .69f);
@@ -80,7 +82,9 @@ namespace Expedition.Presentation
                 effects.Add(new Effect { Kind = EffectKind.GroundImpact,
                     Point = charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
-                    Color = source.BossEnraged ? new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
+                    Color = source.EnemyRole == CatalogEnemyRole.Furnace ?
+                        new Color(1f, .37f, .1f) : source.BossEnraged ?
+                        new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
                     Size = charge ? source.ChargeWidth : source.SlamRadius, Duration = .45f });
                 Play(hit, 1f);
             }
@@ -148,7 +152,10 @@ namespace Expedition.Presentation
                 if (unit.SlamWarningRemaining > 0)
                 {
                     Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                    Color warning = unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
+                    Color warning = unit.EnemyRole == CatalogEnemyRole.Furnace ?
+                        unit.SlamIsAftershock ? new Color(1f, .16f, .08f, .95f) :
+                        new Color(1f, .46f, .1f, .9f) :
+                        unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
                         new Color(1f, .65f, .2f, .8f);
                     Ring(center, unit.SlamRadius * 83, unit.SlamRadius * 48, warning, 4);
                     Ring(center, unit.SlamRadius * 83 * .92f, unit.SlamRadius * 48 * .92f, warning, 1);

@@ -130,7 +130,7 @@ namespace Expedition.EditorTools
         public static void BuildAndroid()
         {
             Validate();
-            CastleEnemyArtValidation.BuildAndroid();
+            MineEnemyArtValidation.BuildAndroid();
         }
     }
 }

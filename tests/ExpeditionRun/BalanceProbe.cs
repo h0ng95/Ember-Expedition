@@ -81,13 +81,16 @@ internal static class ExpeditionBalanceProbe
             bool comma = false;
             foreach (string policy in Policies)
             {
-                int[] wins = new int[10], reach = new int[10], timeout = new int[10];
-                double[] times = new double[10], survivors = new double[10], health = new double[10];
+                int[] wins = new int[ExpeditionRun.TotalWaves], reach = new int[ExpeditionRun.TotalWaves],
+                    timeout = new int[ExpeditionRun.TotalWaves];
+                double[] times = new double[ExpeditionRun.TotalWaves],
+                    survivors = new double[ExpeditionRun.TotalWaves],
+                    health = new double[ExpeditionRun.TotalWaves];
                 for (int seed = first; seed < first + count; seed++)
                 {
                     var run = ExpeditionRun.New(db, (uint)seed);
                     bool undefeated = true;
-                    for (int wave = 0; wave < 10; wave++)
+                    for (int wave = 0; wave < ExpeditionRun.TotalWaves; wave++)
                     {
                         Prepare(run, policy);
                         var battle = run.BeginBattle();
@@ -105,7 +108,7 @@ internal static class ExpeditionBalanceProbe
                         run.ResolveBattle(true); run.Continue();
                     }
                 }
-                for (int wave = 0; wave < 10; wave++)
+                for (int wave = 0; wave < ExpeditionRun.TotalWaves; wave++)
                 {
                     if (comma) json.Append(','); comma = true;
                     json.Append("{\"policy\":\"").Append(policy).Append("\",\"wave\":").Append(wave + 1)

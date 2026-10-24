@@ -38,16 +38,19 @@ namespace Expedition.Core
 
     public sealed class ExpeditionRun
     {
-        public const int TotalWaves = 10;
+        public const int TotalWaves = 15;
         public const int SummonCost = 20;
         const int MaxDeployed = 5;
         const int MaxBench = 7;
-        static readonly int[] VictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 0 };
+        static readonly int[] VictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
+            30, 30, 35, 40, 0 };
+        static readonly int[] LegacyVictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 0 };
         static readonly string[] Families = { "KN", "AR", "FI", "PR", "IC", "BA" };
         static readonly string[] Encounters =
         {
             "숲길 입구", "가시등 숲길", "야수의 소굴", "돌격 뿔짐승", "잿갈기 우두머리",
-            "무너진 성채", "성채 수비선", "성채의 무리", "갑주 석상", "성문 골렘"
+            "무너진 성채", "성채 수비선", "성채의 무리", "갑주 석상", "성문 골렘",
+            "폐광 입구", "잿가루 통로", "광차 갈림길", "철쇄 감독관", "용광로 수호자"
         };
         static readonly string[] EncounterDescriptions =
         {
@@ -55,7 +58,10 @@ namespace Expedition.Core
             "새끼 뿔짐승 1 · 가시등 짐승 3 (측면 1)", "돌격 뿔짐승 1 · 일반 뿔짐승 2 · 가시등 짐승 1",
             "잿갈기 우두머리 1 · 일반 졸개 2", "돌편 보병 2 · 석궁 수비병 1",
             "돌편 보병 2 · 석궁 수비병 2", "돌편 보병 3 · 석궁 수비병 2",
-            "갑주 석상 1 · 돌편 보병 3 · 석궁 수비병 2", "성문 골렘 1 · 석궁 수비병 2"
+            "갑주 석상 1 · 돌편 보병 3 · 석궁 수비병 2", "성문 골렘 1 · 석궁 수비병 2",
+            "채굴병 2 · 불씨 투척병 1", "채굴병 2 · 불씨 투척병 2",
+            "채굴병 3 · 불씨 투척병 2", "철쇄 감독관 1 · 채굴병 2 · 불씨 투척병 2",
+            "용광로 수호자 1 · 철쇄 감독관 1 · 불씨 투척병 2"
         };
 
         readonly CatalogDatabase catalog;
@@ -78,7 +84,7 @@ namespace Expedition.Core
             Gold >= SummonCost && Roster.Members.Count - deployedIds.Count < MaxBench; } }
         public bool CanUndo { get { return Phase == ExpeditionPhase.Preparation && history.Count > 0 &&
             FitsCapacity(history.Peek().Roster.Members.Length, history.Peek().DeployedIds.Length); } }
-        public bool IsBossWave { get { return Wave == 5 || Wave == TotalWaves; } }
+        public bool IsBossWave { get { return Wave == 5 || Wave == 10 || Wave == TotalWaves; } }
         public int Victories { get; private set; }
         public bool LastVictory { get; private set; }
         public ExpeditionPhase Phase { get; private set; }
@@ -165,10 +171,10 @@ namespace Expedition.Core
                 members - deployed <= MaxBench;
         }
 
-        static int TotalEarned(int rewardedWave)
+        static int TotalEarned(int rewardedWave, int[] rewards)
         {
             int total = 40;
-            for (int i = 0; i < rewardedWave; i++) total += VictoryRewards[i];
+            for (int i = 0; i < rewardedWave; i++) total += rewards[i];
             return total;
         }
 
@@ -383,6 +389,26 @@ namespace Expedition.Core
                     result.AddEnemy("golem-boss", 4200f, 80f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
                     AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
+                case 11:
+                    AddMineWorkers(result, 2, 300f, 26f, 12f);
+                    AddMineSlingers(result, 1, 200f, 22f); break;
+                case 12:
+                    AddMineWorkers(result, 2, 360f, 30f, 15f);
+                    AddMineSlingers(result, 2, 230f, 25f); break;
+                case 13:
+                    AddMineWorkers(result, 3, 400f, 33f, 16f);
+                    AddMineSlingers(result, 2, 260f, 28f); break;
+                case 14:
+                    result.AddEnemy("mine-elite", 850f, 45f, 24f, 1.8f, 1f, .57f,
+                        false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
+                    AddMineWorkers(result, 2, 420f, 35f, 18f);
+                    AddMineSlingers(result, 2, 270f, 31f); break;
+                case 15:
+                    result.AddEnemy("furnace-boss", 5200f, 78f, 25f, 1.8f, 1.1f, .48f,
+                        true, 4.1f, 0f, CatalogEnemyRole.Furnace, true);
+                    result.AddEnemy("mine-elite", 700f, 38f, 20f, 1.8f, 1f, .57f,
+                        false, 3f, -1.25f, CatalogEnemyRole.Supervisor);
+                    AddMineSlingers(result, 2, 220f, 26f); break;
             }
             return result;
         }
@@ -409,6 +435,22 @@ namespace Expedition.Core
                     false, isFlanker ? -.5f : bossEscort ? 2.8f : 3.2f + i * .5f,
                     y, CatalogEnemyRole.Raider);
             }
+        }
+
+        static void AddMineWorkers(CatalogBattle battle, int count, float hp, float power, float defense)
+        {
+            for (int i = 0; i < count; i++)
+                battle.AddEnemy("mine-worker-" + (i + 1), hp, power, defense, 1.8f, 1f, .65f,
+                    false, 2.1f + (i % 2) * .55f, (i - (count - 1) * .5f) * 1.15f,
+                    CatalogEnemyRole.MineWorker);
+        }
+
+        static void AddMineSlingers(CatalogBattle battle, int count, float hp, float power)
+        {
+            for (int i = 0; i < count; i++)
+                battle.AddEnemy("mine-slinger-" + (i + 1), hp, power, 5f, 2f, 3.6f, .55f,
+                    false, 3.2f + i * .5f, count == 1 ? 1.2f : (i == 0 ? -1.35f : 1.35f),
+                    CatalogEnemyRole.Raider);
         }
 
         public bool ResolveBattle(bool victory)
@@ -451,7 +493,7 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 2, Wave = Wave, Lantern = Lantern,
+            return new ExpeditionRunSave { Version = 3, Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
                 Victories = Victories, LastVictory = LastVictory,
                 Phase = Phase, RandomState = randomState, LastSummonedFamily = lastSummonedFamily,
@@ -464,10 +506,14 @@ namespace Expedition.Core
             if (catalog == null) throw new ArgumentNullException("catalog");
             string lastFamily = save == null || string.IsNullOrEmpty(save.LastSummonedFamily) ?
                 null : save.LastSummonedFamily;
-            if (save == null || save.Version != 2 || save.Wave < 1 || save.Wave > TotalWaves ||
+            bool legacy = save != null && save.Version == 2;
+            int saveWaves = legacy ? 10 : TotalWaves;
+            int[] rewards = legacy ? LegacyVictoryRewards : VictoryRewards;
+            if (save == null || save.Version != 2 && save.Version != 3 ||
+                save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
-                save.Gold > TotalEarned(TotalWaves) ||
-                save.LastReward < 0 || save.RewardedWave < 0 || save.RewardedWave > TotalWaves ||
+                save.Gold > TotalEarned(saveWaves, rewards) ||
+                save.LastReward < 0 || save.RewardedWave < 0 || save.RewardedWave > saveWaves ||
                 save.Victories != save.RewardedWave || save.NextMemberNumber < 3 ||
                 save.RandomState == 0 || save.FamilyStreak < 0 ||
                 save.FamilyStreak > save.NextMemberNumber - 3 ||
@@ -487,7 +533,7 @@ namespace Expedition.Core
             run.deployedIds.AddRange(save.DeployedIds);
             run.ValidateDeployment();
             if (run.Roster.SupplyUsed != run.nextMemberNumber ||
-                run.Gold != (long)TotalEarned(run.RewardedWave) -
+                run.Gold != (long)TotalEarned(run.RewardedWave, rewards) -
                     (long)SummonCost * (run.Roster.SupplyUsed - 3))
                 throw new ArgumentException("Saved supply and member IDs disagree.");
             if (save.Phase != ExpeditionPhase.Preparation && save.UndoHistory.Length != 0 ||
@@ -495,16 +541,16 @@ namespace Expedition.Core
                     ((save.Phase == ExpeditionPhase.Result && save.LastVictory) ||
                      save.Phase == ExpeditionPhase.Completed ? 0 : 1) ||
                 save.Phase == ExpeditionPhase.Result && save.LastVictory &&
-                    save.LastReward != VictoryRewards[save.Wave - 1] ||
+                    save.LastReward != rewards[save.Wave - 1] ||
                 save.Phase == ExpeditionPhase.Result && !save.LastVictory && save.LastReward != 0 ||
-                save.Phase == ExpeditionPhase.Completed && (save.Wave != TotalWaves || !save.LastVictory) ||
+                save.Phase == ExpeditionPhase.Completed && (save.Wave != saveWaves || !save.LastVictory) ||
                 save.Phase == ExpeditionPhase.Completed && save.Lantern == 0 ||
                 save.Phase == ExpeditionPhase.Result && save.LastVictory && save.Lantern == 0 ||
                 save.Phase == ExpeditionPhase.Defeated && save.Lantern != 0 ||
                 (save.Phase == ExpeditionPhase.Battle || save.Phase == ExpeditionPhase.Completed ||
                  save.Phase == ExpeditionPhase.Defeated) && save.LastReward != 0 ||
                 save.Phase == ExpeditionPhase.Preparation && save.LastReward != 0 &&
-                    (save.RewardedWave == 0 || save.LastReward != VictoryRewards[save.RewardedWave - 1]) ||
+                    (save.RewardedWave == 0 || save.LastReward != rewards[save.RewardedWave - 1]) ||
                 (save.Phase == ExpeditionPhase.Preparation || save.Phase == ExpeditionPhase.Battle) &&
                     save.Lantern == 0 ||
                 !FitsCapacity(run.Roster.Members.Count, run.deployedIds.Count))
@@ -519,6 +565,19 @@ namespace Expedition.Core
                     throw new ArgumentException("Undo history has inconsistent supply.");
                 run.history.Push(new ExpeditionPreparationSave { Roster = oldRoster.Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
+            }
+            // Convert only after the complete v2 save has passed its original ten-wave rules.
+            // A v3 capture records this grant, so subsequent reloads cannot grant it again.
+            if (legacy && save.Wave == 10 && save.LastVictory &&
+                (save.Phase == ExpeditionPhase.Result || save.Phase == ExpeditionPhase.Completed))
+            {
+                run.Gold += 50;
+                run.LastReward = 50;
+                if (save.Phase == ExpeditionPhase.Completed)
+                {
+                    run.Wave = 11;
+                    run.Phase = ExpeditionPhase.Preparation;
+                }
             }
             return run;
         }

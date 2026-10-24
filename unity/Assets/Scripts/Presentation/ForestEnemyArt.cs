@@ -42,6 +42,7 @@ namespace Expedition.Presentation
         {
             LoadManifest(ManifestPath);
             LoadManifest(CastleEnemyArt.ManifestPath);
+            LoadManifest(MineEnemyArt.ManifestPath);
             Shader clipShader = Shader.Find("Expedition/CatalogSpriteClip");
             if (clipShader != null && clipShader.isSupported)
             {
@@ -63,6 +64,8 @@ namespace Expedition.Presentation
         public static string SpeciesFor(CatalogBattleUnit unit)
         {
             if (unit == null || unit.Team != CatalogTeam.Enemy) return null;
+            if (unit.Id.StartsWith("mine-", StringComparison.Ordinal) ||
+                unit.Id == "furnace-boss") return null;
             if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? Species[3] : null;
             if (unit.Id.StartsWith("stone-", StringComparison.Ordinal) ||
                 unit.Id.StartsWith("crossbow-", StringComparison.Ordinal)) return null;
@@ -75,7 +78,8 @@ namespace Expedition.Presentation
         {
             return id == Species[0] ? 78f : id == Species[1] ? 112f :
                 id == Species[2] ? 138f : id == Species[3] ? 244f :
-                CastleEnemyArt.SilhouetteHeight(id);
+                CastleEnemyArt.SilhouetteHeight(id) > 0f ? CastleEnemyArt.SilhouetteHeight(id) :
+                MineEnemyArt.SilhouetteHeight(id);
         }
 
         // Returns an absolute index in the 6 by 4 sheet. Attack release begins on

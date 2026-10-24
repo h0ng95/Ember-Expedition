@@ -26,6 +26,8 @@ internal static class Program
             BeastChargeAndRangedAttack();
             BossBeastPattern();
             GolemPattern();
+            MineGuardAndFurnacePattern();
+            LegacyTenWaveMigration();
             BossStepPartition();
             OpeningWavesPlayable();
             DefeatRules();
@@ -56,15 +58,15 @@ internal static class Program
         Check(run.IsBossWave == false, "First battle is ordinary.");
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
-            Check(run.Wave == wave && run.IsBossWave == (wave == 5 || wave == 10),
-                "Only waves five and ten are bosses.");
+            Check(run.Wave == wave && run.IsBossWave == (wave == 5 || wave == 10 || wave == 15),
+                "Waves five, ten, and fifteen are bosses.");
             Check(!string.IsNullOrEmpty(run.EncounterName) && !run.EncounterName.Contains("FOREST"),
                 "Encounter name is ready for Korean UI.");
             Check(run.BeginBattle() != null && run.ResolveBattle(true) && run.Continue(), "Wave advances once.");
         }
-        Check(run.Gold == 290 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
-            run.Victories == 10 && run.LastReward == 0,
-            "Ten-wave unspent economy earns 250 gold and final clear grants zero.");
+        Check(run.Gold == 475 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
+            run.Victories == 15 && run.LastReward == 0,
+            "Fifteen-wave unspent economy earns 435 gold and final clear grants zero.");
         Check(run.Summon() == null && run.BeginBattle() == null && !run.Continue(), "Completed run is closed.");
     }
 
@@ -126,8 +128,8 @@ internal static class Program
 
     static void GoldBudgetPath()
     {
-        int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17 };
-        int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10 };
+        int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17, 20, 21, 23, 24, 26 };
+        int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10, 0, 10, 0, 15, 15 };
         var run = ExpeditionRun.New(catalog, 555);
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
@@ -139,14 +141,14 @@ internal static class Program
                 if (wave == 1) Check(run.SetDeployed(id, true), "Opening two summons join the active five.");
             }
             Check(run.Roster.SupplyUsed == supplied[wave - 1] && run.Gold == remaining[wave - 1],
-                "Gold budget and cumulative supply match the ten-wave plan at wave " + wave + ".");
+                "Gold budget and cumulative supply match the fifteen-wave plan at wave " + wave + ".");
             var restored = ExpeditionRun.Restore(catalog, run.Capture());
             Check(restored.Gold == run.Gold && restored.Roster.SupplyUsed == run.Roster.SupplyUsed,
                 "Saved economy retains gold and cumulative summons.");
             run.BeginBattle(); run.ResolveBattle(true); run.Continue();
         }
-        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 17 && run.Gold == 10,
-            "Fourteen paid summons and three starters survive the full budget path.");
+        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 26 && run.Gold == 15,
+            "Twenty-three paid summons and three starters survive the full budget path.");
     }
 
     static void FreeBenchPlace(ExpeditionRun run)
@@ -349,7 +351,7 @@ internal static class Program
     static void EnemyWavesAndRoles()
     {
         var run = ExpeditionRun.New(catalog, 31);
-        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3 };
+        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
             Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
@@ -677,6 +679,126 @@ internal static class Program
                 Math.Abs(unit.Y - counterpart.Y) < .001f,
                 "Boss pattern combat state remains identical across Step partitioning.");
         }
+    }
+
+    static void MineGuardAndFurnacePattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit knight = battle.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, -1.3f, 0f);
+        knight.Hp = knight.MaxHp = 5000f;
+        CatalogBattleUnit boss = battle.AddEnemy("furnace-boss", 1000f, 5f, 10f, 1.8f, 1.1f, .48f,
+            true, 3f, 0f, CatalogEnemyRole.Furnace, true);
+        CatalogBattleUnit guard = battle.AddEnemy("mine-elite", 1000f, 5f, 10f, 1.8f, 1f, .57f,
+            false, 2.5f, -1f, CatalogEnemyRole.Supervisor);
+        CatalogBattleUnit slinger = battle.AddEnemy("mine-slinger-1", 500f, 5f, 5f, 2f, 3.6f, .55f,
+            false, 3f, 1f, CatalogEnemyRole.Raider);
+        int guardShields = 0, blasts = 0, embers = 0, blastHits = 0, emberHits = 0;
+        battle.Event += e =>
+        {
+            if (e.Kind == CatalogEventKind.Shield && e.AbilityId == "MINE_GUARD") guardShields++;
+            if (e.Kind == CatalogEventKind.BossTelegraph && e.AbilityId == "FURNACE_BLAST") blasts++;
+            if (e.Kind == CatalogEventKind.BossTelegraph && e.AbilityId == "FURNACE_EMBER") embers++;
+            if (e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "FURNACE_BLAST") blastHits++;
+            if (e.Kind == CatalogEventKind.BossImpact && e.AbilityId == "FURNACE_EMBER") emberHits++;
+        };
+        battle.Step(1.6f);
+        Check(guardShields == 1 && boss.Shield > 0f && slinger.Shield == 0f &&
+            boss.Shield <= 120f && guard.Shield == 0f,
+            "Supervisor shields a nearby boss without covering a distant escort.");
+        battle.Step(.6f);
+        Check(blasts == 1 && boss.SlamWarningRemaining > 0f && boss.SlamRadius == 1.25f,
+            "Furnace uses a distinct fixed-point blast warning.");
+        boss.BossEnraged = true;
+        battle.Step(1f);
+        Check(embers == 1 && blastHits == 1 && boss.SlamWarningRemaining > 0f && boss.SlamIsAftershock &&
+            boss.SlamRadius == 1f, "Enraged furnace warns before its separate ember pulse.");
+        battle.Step(.7f);
+        Check(emberHits == 1 && boss.SlamWarningRemaining == 0f,
+            "The ember pulse lands once after its warning.");
+        battle.Step(4.8f);
+        Check(guardShields >= 2 && boss.Shield <= 120f && slinger.Shield <= 60f,
+            "Guard refresh never adds repeated shield amounts.");
+    }
+
+    static void LegacyTenWaveMigration()
+    {
+        var run = ExpeditionRun.New(catalog, 73);
+        for (int wave = 1; wave < 10; wave++)
+        {
+            run.BeginBattle(); run.ResolveBattle(true); run.Continue();
+            if (wave == 4)
+            {
+                ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
+                var unchanged = ExpeditionRun.Restore(catalog, prior);
+                Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
+                    unchanged.Capture().Version == 3 && prior.Version == 2,
+                    "Earlier valid v2 preparation migrates without reward or mutating its input.");
+                unchanged.BeginBattle();
+                ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;
+                var resumedEarly = ExpeditionRun.Restore(catalog, earlyBattle);
+                Check(resumedEarly.Phase == ExpeditionPhase.Battle && resumedEarly.Wave == 5 &&
+                    resumedEarly.Gold == 130 && resumedEarly.ResumeBattle().Get("beast-boss") != null,
+                    "Earlier v2 battle state keeps its original encounter and budget.");
+            }
+        }
+        ExpeditionRunSave preparation = run.Capture(); preparation.Version = 2;
+        var resumed = ExpeditionRun.Restore(catalog, preparation);
+        Check(resumed.Wave == 10 && resumed.Phase == ExpeditionPhase.Preparation &&
+            resumed.Gold == 290 && resumed.LastReward == 35,
+            "Old v2 wave-ten preparation remains the same fight and budget.");
+        resumed.BeginBattle();
+        ExpeditionRunSave battleSave = resumed.Capture(); battleSave.Version = 2;
+        var inBattle = ExpeditionRun.Restore(catalog, battleSave);
+        Check(inBattle.Phase == ExpeditionPhase.Battle && inBattle.Gold == 290 &&
+            inBattle.ResumeBattle().Get("golem-boss") != null,
+            "Old v2 wave-ten battle resumes without early reward or encounter changes.");
+        resumed.ResolveBattle(true);
+        Check(resumed.Gold == 340 && resumed.LastReward == 50,
+            "New wave-ten victory grants the passage reward exactly once.");
+        ExpeditionRunSave oldResult = resumed.Capture(); oldResult.Version = 2;
+        oldResult.Gold -= 50; oldResult.LastReward = 0;
+        var migratedResult = ExpeditionRun.Restore(catalog, oldResult);
+        Check(migratedResult.Phase == ExpeditionPhase.Result && migratedResult.Wave == 10 &&
+            migratedResult.Gold == 340 && migratedResult.LastReward == 50 &&
+            oldResult.Gold == 290 && oldResult.LastReward == 0,
+            "Valid old victory result gains fifty without mutating the source save.");
+        var reloaded = ExpeditionRun.Restore(catalog, migratedResult.Capture());
+        Check(reloaded.Gold == 340 && reloaded.Continue() &&
+            reloaded.Phase == ExpeditionPhase.Preparation && reloaded.Wave == 11 &&
+            ExpeditionRun.Restore(catalog, reloaded.Capture()).Gold == 340,
+            "v3 capture and reload cannot duplicate the migration grant.");
+        oldResult.Phase = ExpeditionPhase.Completed;
+        var completed = ExpeditionRun.Restore(catalog, oldResult);
+        Check(completed.Phase == ExpeditionPhase.Preparation && completed.Wave == 11 &&
+            completed.Gold == 340 && completed.LastReward == 50 &&
+            ExpeditionRun.Restore(catalog, completed.Capture()).Gold == 340,
+            "Old completed ten-wave runs enter wave eleven with one grant.");
+        var lost = ExpeditionRun.Restore(catalog, preparation);
+        lost.BeginBattle(); lost.ResolveBattle(false);
+        ExpeditionRunSave oldLoss = lost.Capture(); oldLoss.Version = 2;
+        var migratedLoss = ExpeditionRun.Restore(catalog, oldLoss);
+        Check(migratedLoss.Phase == ExpeditionPhase.Result && !migratedLoss.LastVictory &&
+            migratedLoss.Gold == 290 && migratedLoss.LastReward == 0,
+            "Old wave-ten defeat receives no passage reward.");
+        var defeated = ExpeditionRun.Restore(catalog, oldLoss);
+        defeated.Continue();
+        for (int i = 0; i < 2; i++)
+        { defeated.BeginBattle(); defeated.ResolveBattle(false); defeated.Continue(); }
+        ExpeditionRunSave oldDefeated = defeated.Capture(); oldDefeated.Version = 2;
+        var migratedDefeat = ExpeditionRun.Restore(catalog, oldDefeated);
+        Check(migratedDefeat.Phase == ExpeditionPhase.Defeated && migratedDefeat.Wave == 10 &&
+            migratedDefeat.Gold == 290 && migratedDefeat.LastReward == 0,
+            "Old exhausted-lantern defeat remains terminal without migration reward.");
+        oldResult.Phase = ExpeditionPhase.Result; oldResult.Gold++;
+        bool rejected = false;
+        try { ExpeditionRun.Restore(catalog, oldResult); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Invalid old budget is rejected before migration.");
+        oldResult.Gold--; oldResult.LastReward = 50; rejected = false;
+        try { ExpeditionRun.Restore(catalog, oldResult); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Invalid old result reward cannot bypass v2 validation.");
+        preparation.Wave = 11; rejected = false;
+        try { ExpeditionRun.Restore(catalog, preparation); } catch (ArgumentException) { rejected = true; }
+        Check(rejected, "A v2 save cannot claim the new region directly.");
     }
 
     static void DefeatRules()

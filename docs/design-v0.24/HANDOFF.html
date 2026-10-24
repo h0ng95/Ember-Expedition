@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.24 · 폐광·용광로, 15전투 원정</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.24 · 폐광·용광로, 15전투 원정</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 이번에 플레이할 수 있는 내용</a>
+<a href="#section-2">2. 폐광의 적</a>
+<a href="#section-3">3. 기존 저장 이어가기</a>
+<a href="#section-4">4. 난도 측정</a>
+<a href="#section-5">5. 검증 기록</a>
+<a href="#section-6">6. 다음 개발</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · v0.23 성채 난도 조정 다음 작업</p>
+<p><strong>원정을 10전투에서 15전투로 확장했다. 기존 부대를 이어서 폐광으로 들어가고, 보호막을 주는 감독관과 용광로 수호자를 상대한다.</strong> 첫 마켓 출시 목표는 여전히 30전투다.</p>
+<h2 id="section-1">1. 이번에 플레이할 수 있는 내용</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>전투</th>
+<th>장소·편성</th>
+<th align="right">승리 보상</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>기존 성문 골렘</td>
+<td align="right">50G</td>
+<td>다음 지역을 준비하는 보스 보상 추가</td>
+</tr>
+<tr>
+<td>11</td>
+<td>폐광 입구 · 채굴병 2, 투척병 1</td>
+<td align="right">30G</td>
+<td>보스 뒤의 휴식과 새 지역 소개</td>
+</tr>
+<tr>
+<td>12</td>
+<td>잿가루 통로 · 채굴병 2, 투척병 2</td>
+<td align="right">30G</td>
+<td>약해진 동료를 노리는 원거리 압박</td>
+</tr>
+<tr>
+<td>13</td>
+<td>광차 갈림길 · 채굴병 3, 투척병 2</td>
+<td align="right">35G</td>
+<td>전열을 잡는 적 수 증가</td>
+</tr>
+<tr>
+<td>14</td>
+<td>철쇄 감독관 · 감독관 1, 채굴병 2, 투척병 2</td>
+<td align="right">40G</td>
+<td>보호막을 주는 지원 적 등장</td>
+</tr>
+<tr>
+<td>15</td>
+<td>용광로 수호자 · 보스 1, 감독관 1, 투척병 2</td>
+<td align="right">완료</td>
+<td>세 번째 보스, 현 시제품의 끝</td>
+</tr>
+</tbody></table></div>
+<p>골드는 동료 소환에 쓴다. 소환 비용은 20G다. 시작 인원·골드, 출전 5명·대기 7명, 성장·전승·진화·결합 규칙은 기존과 같다. 전투가 끝나면 다음 준비에서 동료가 회복되고, 패배하면 등불을 잃고 재도전하는 원정 규칙도 유지했다.</p>
+<p>15전투는 현재 끝이므로 소환 골드를 따로 주지 않는다. 16전투를 확장할 때 이번 10전투처럼 완료 저장과 보상을 함께 연결해야 한다.</p>
+<h2 id="section-2">2. 폐광의 적</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>적</th>
+<th>외형과 크기</th>
+<th>전투 특징</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>잿재 채굴병</td>
+<td>흙 가면·가죽 후드·곡괭이, 표시 높이 90</td>
+<td>돌진 없이 접근하는 근접 졸개</td>
+</tr>
+<tr>
+<td>불씨 투척병</td>
+<td>좁은 눈구멍·석탄통·투석구, 높이 100</td>
+<td>사거리 안에서 남은 체력 비율이 낮은 동료 우선 공격</td>
+</tr>
+<tr>
+<td>철쇄 감독관</td>
+<td>철 가면·망치·청록색 보호 등불, 높이 145</td>
+<td>주변 적에게 주기적 보호막</td>
+</tr>
+<tr>
+<td>용광로 수호자</td>
+<td>검은 철제 화로·굴뚝·거대한 양팔, 높이 244</td>
+<td>범위 폭발과 분노 후 불씨파</td>
+</tr>
+</tbody></table></div>
+<p>높이는 화면 기준 배율이며 무기나 효과가 뻗어도 매 프레임 캐릭터를 축소하지 않는다. 적은 왼쪽을 바라본다. 보스와 겹친 아군·호위는 보스 앞에 표시하고, 일반 적 사이에는 몸 크기에 맞는 간격을 유지한다. 보스는 맞을 때 피격 포즈·밀림·히트스톱을 재생하지 않는다.</p>
+<h3>감독관 보호막</h3>
+<ul>
+<li>전투 시작 1.5초 뒤 처음 사용하고, 이후 7초마다 사용한다.</li>
+<li>반경 2.4 안의 살아 있는 다른 아군 최대 2명을 보호한다. 보스를 먼저, 이후 남은 체력 비율이 낮은 대상부터 고른다.</li>
+<li>보호량은 대상 최대 체력의 12%, 상한 180. 지속 4초다.</li>
+<li>보호할 동료가 없으면 자신을 보호한다. 기존 보호막에 수치를 계속 더하지 않는다.</li>
+<li>청록색 등불 시전 포즈, 보호막 수치·막대와 전투 안내로 표시한다.</li>
+</ul>
+<h3>용광로 보스</h3>
+<ul>
+<li>HP 5,200 / 공격력 78 / 방어력 25. 큰 외형과 기본 공격 동작을 갖는다.</li>
+<li><strong>용광로 폭발:</strong> 1초 예고 후 고정된 원 안을 공격한다. 반경 1.25, 피해 배율 1.55, 재사용 간격 8초.</li>
+<li><strong>체력 45%부터 분노:</strong> 폭발 뒤 같은 중심에 더 작은 불씨파를 추가한다. 0.6초 예고, 반경 1.0, 피해 배율 1.0.</li>
+<li>주황색 원과 화로를 여는 포즈로 예고하고, 충격 이벤트에 맞춰 공격 프레임을 재생한다.</li>
+<li>자동 전투이므로 준비 단계에서 동료를 흩어 배치하는 것이 대응 방법이다.</li>
+</ul>
+<p><img src="device-evidence/furnace-combat.png" alt="용광로 보스와 아군·감독관의 표시"></p>
+<h2 id="section-3">3. 기존 저장 이어가기</h2>
+<p>저장 내부 버전을 v2에서 v3으로 올렸다. v2 데이터는 기존 10전투의 예산·단계·보상·편성 규칙으로 검증한 뒤 변환한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>기존 v2 상태</th>
+<th>업데이트 후</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1~10전투 준비 또는 진행 중</td>
+<td>같은 단계·편성·골드를 유지한다. 중단 전투는 기존 규칙대로 처음부터 다시 재생한다.</td>
+</tr>
+<tr>
+<td>10전투 승리 결과 화면</td>
+<td>결과를 유지하고 새 보상 50G를 받는다. 다음 버튼으로 11전투 진입.</td>
+</tr>
+<tr>
+<td>10전투 원정 완료</td>
+<td>11전투 준비로 이어지며 50G를 받는다.</td>
+</tr>
+<tr>
+<td>패배 결과 또는 원정 실패</td>
+<td>추가 보상 없이 기존 상태 유지.</td>
+</tr>
+</tbody></table></div>
+<p>부대·출전 배치·소환 난수 상태를 보존한다. v3로 저장한 뒤 다시 불러와도 50G를 중복 지급하지 않는다. 잘못된 예산이나 단계의 v2 저장을 정상 저장으로 고쳐 주는 방식은 사용하지 않는다.</p>
+<p>실제 Buddy2의 기존 저장은 <strong>10전투 완료 / 10G / 동료 6명</strong>이었다. 업데이트 후 <strong>11전투 준비 / 60G / 같은 동료와 배치</strong>로 이어졌다. 앱을 종료·재실행해도 60G를 유지했다.</p>
+<p><img src="device-evidence/mine-preparation.png" alt="기존 부대를 이어받은 폐광 준비 화면"></p>
+<h2 id="section-4">4. 난도 측정</h2>
+<p>SOL이 시드 1<del>40으로 조정하고, 상위 작업에서 별도 시드 **1001</del>1100**으로 확인했다. 별도 결과를 보고 수치를 재조정하지 않았다. 1~10전투의 기존 5개 정책 결과 50행은 v0.23과 모두 동일했다.</p>
+<h3>별도 100개 시드의 전투별 승리 수</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>고정 성장 정책</th>
+<th align="right">11전투</th>
+<th align="right">12전투</th>
+<th align="right">13전투</th>
+<th align="right">14전투</th>
+<th align="right">15전투</th>
+<th align="right">15전투 평균 시간</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>시작 3명, 소환 없음</td>
+<td align="right">100</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">19.83초</td>
+</tr>
+<tr>
+<td>기본형 5명, 성장 없음</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">80</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">24.04초</td>
+</tr>
+<tr>
+<td>분기 진화 분산</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">45.05초</td>
+</tr>
+<tr>
+<td>기사 최종 진화 우선</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">45.05초</td>
+</tr>
+<tr>
+<td>기사·사제 H-02 결합 우선</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">94</td>
+<td align="right">37.41초</td>
+</tr>
+</tbody></table></div>
+<p>평균 시간에는 패배가 포함된다. 기본형의 짧은 시간은 빠른 승리가 아니다. 각 전투의 비교는 앞에서 졌더라도 이전 승리 보상을 받았다고 가정한다. <strong>1전투부터 무패로 15전투까지 완료한 수는 분기 94, 최종 우선 100, H-02 우선 43회</strong>다. 기본형·시작 3명은 0회다.</p>
+<p>성장한 팀이 11~14전투를 빠르게 통과하는 보상은 남겼다. 성장 정책 두 가지가 후반에 같은 결과를 낼 만큼 편성 차이가 줄어드는 한계도 있다. H-02 정책은 10보스에서 44회만 통과했고 그중 43회가 15전투까지 완료했다. 그러므로 이번 표는 모든 결합의 균형이나 실제 사람의 승률을 입증하지 않는다. 다음 난도 조정에는 다양한 결합·배치와 수동 플레이가 필요하다.</p>
+<p><a href="balance-training.json">조정용 40개 시드</a> · <a href="balance-holdout.json">별도 100개 시드</a></p>
+<h2 id="section-5">5. 검증 기록</h2>
+<ul>
+<li>순수 C# 원정 검사 1,753개, 카탈로그 전투 검사 3,011개 통과.</li>
+<li>실제 v0.23 코어로 생성한 v2 저장과 기기의 원본 저장을 현재 코어로 읽어 이행·재로드·로스터 보존 확인.</li>
+<li>Unity: 아군 크기 460개, 폐광 적 283개, 성채 적 264개, 숲 적 258개, 표시 순서 12개, 드래그·JSON 17개와 전투 결과·보스 피격 회귀 검사 통과.</li>
+<li>새 시트 4종 × 24프레임의 투명 구간·좌표·비어 있지 않은 프레임·동작 우선순위 검증.</li>
+<li>Unity 6000.3.24f1 Android 개발 APK 빌드 성공. Buddy2에 업데이트 설치.</li>
+<li>APK SHA-256: <code>5DA22E98EA88A120229278F5A9D7BB2A2AA957FEA8512141F8C760FD03893EDA</code>.</li>
+<li>빌드 로그: <code>unity/Logs/v024-mine-expansion-build.log</code> (로컬 산출물).</li>
+</ul>
+<h3>Buddy2 실행</h3>
+<p>11전투는 사용자의 기존 부대로 이어서 확인했다. 14·15전투는 실제 코어의 소환·성장 API를 사용하고 이전 전투를 모두 승리한 seed 1 H-02 정책 체크포인트로 확인했다. 폰에서 1~15전투를 처음부터 수동 완주한 검사는 아니다.</p>
+<ul>
+<li>v2의 10전투 완료 → 11전투 준비, 기존 부대·배치 유지와 50G 단회 지급.</li>
+<li>재실행 후 60G 유지. 11전투 승리로 60→90G, 다음 12전투 준비 전환.</li>
+<li>14전투 보호막 안내·막대·새 적 표시, 승리로 15→55G, 다음 15전투 준비 전환.</li>
+<li>15전투 진행 중 앱 강제 종료 → 중단 안내 → 같은 편성으로 전투 재개. 골드·등불 유지.</li>
+<li>용광로 폭발과 분노 후 불씨파의 예고, 보스 앞의 아군·호위 표시, 15보스 승리와 원정 완료 전환.</li>
+<li>해당 실행의 <code>Unity</code>·<code>AndroidRuntime</code> 오류 로그 없음.</li>
+<li>테스트 전 원본 PlayerPrefs를 복원하고 바이트 단위 일치를 확인했다. 다음 실행에서는 사용자의 원래 10전투 완료 부대로 11전투부터 이어갈 수 있다.</li>
+</ul>
+<p><img src="device-evidence/supervisor-shield.png" alt="감독관의 보호막과 적 편성"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/wave14-motion.mp4"></video></p>
+<p><img src="device-evidence/furnace-ember.png" alt="분노 후 작은 원으로 예고하는 불씨파"></p>
+<p><video controls preload="metadata" style="width:100%;max-width:900px" src="device-evidence/resume-wave15-motion.mp4"></video></p>
+<p><img src="device-evidence/furnace-result.png" alt="15전투 승리와 원정 완료"></p>
+<h3>제작과 확인 범위</h3>
+<p>신규 적 4장과 배경 1장은 imagegen으로 생성했다. 외부 게임의 스프라이트를 입력하지 않았고, 생성된 원본 PNG를 그대로 복사했다. 애니메이션은 이번 첫 제작본이며 추후 프레임별 형태 정돈과 스타일 통일 여지가 있다. <a href="ASSET-PROMPTS.md">프롬프트와 제작 기록</a> · <a href="asset-records.json">파일·해시 기록</a>.</p>
+<p>장시간 발열·배터리·최저 프레임·효과음 청취 품질은 이번 범위에 포함하지 않는다. 현재 APK는 스토어 제출용 출시 빌드가 아니다.</p>
+<h2 id="section-6">6. 다음 개발</h2>
+<ol>
+<li>실제 플레이에서 10→15전투의 성장 선택과 난도 체감 확인. H-02 외 결합 편성 비교.</li>
+<li>16~20전투의 지역·적 역할을 설계하고, 15보스 완료 저장·보상을 연결해 확장.</li>
+<li>이후 21~30전투를 추가하고 전체 원정 길이·경제를 함께 조정.</li>
+</ol>
+<p>원정 연구·광고·유료판·출시 설정은 이후 단계다. 지금 구현한 전투 수는 15이며 출시 목표 30과 구분한다.</p>
+<h3>주요 파일</h3>
+<ul>
+<li><code>unity/Assets/Scripts/Core/ExpeditionRun.cs</code>: 15전투 진행·편성·골드·v2→v3 이행.</li>
+<li><code>unity/Assets/Scripts/Core/CatalogBattle.cs</code>: 감독관 보호막·용광로 폭발·불씨파.</li>
+<li><code>unity/Assets/Scripts/Core/CatalogSpacing.cs</code>: 폐광 적 몸 크기 간격.</li>
+<li><code>unity/Assets/Scripts/Presentation/MineEnemyArt.cs</code>: 새 시트 매핑과 동작 프레임.</li>
+<li><code>unity/Assets/Scripts/Presentation/ExpeditionScreen.cs</code>: 지역 배경·준비 안내·15전투 결과.</li>
+<li><code>unity/Assets/Editor/MineEnemyArtValidation.cs</code>: 원본에서 manifest 생성·검증·빌드 연결.</li>
+</ul>
+<p>이전 개발 기록: <a href="../design-v0.23/HANDOFF.html">v0.23 성채 난도</a>.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

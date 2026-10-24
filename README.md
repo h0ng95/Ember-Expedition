@@ -4,13 +4,13 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.23 성채 구간 난도 조정**. 7~9전투의 공격 압박을 높이고 10전투 골렘 HP를 5000→4200으로 조정했다. [변경·검증 기록](docs/design-v0.23/HANDOFF.md). 아군 몸 크기 보정은 [v0.22](docs/design-v0.22/HANDOFF.md), 성채 적 동작은 [v0.21](docs/design-v0.21/HANDOFF.md), 부분 겹침과 보스 앞의 아군·호위 표시는 [v0.20](docs/design-v0.20/HANDOFF.md), 숲 적 동작은 [v0.19](docs/design-v0.19/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다. 초반 수치는 [v0.17](docs/design-v0.17/HANDOFF.md) 기준이며, 이후 이동 간격 변화까지 포함한 현재 난도 비교는 v0.23에 기록했다.
+- 최신 구현: **v0.24 폐광·용광로 11~15전투 확장**. 새 적 4종의 애니메이션, 감독관 보호막과 용광로 보스를 추가하고 기존 10전투 완료 저장을 11전투로 연결했다. [변경·검증 기록](docs/design-v0.24/HANDOFF.md). 성채 난도는 [v0.23](docs/design-v0.23/HANDOFF.md), 아군 몸 크기는 [v0.22](docs/design-v0.22/HANDOFF.md), 성채 적 동작은 [v0.21](docs/design-v0.21/HANDOFF.md), 부분 겹침·보스 표시는 [v0.20](docs/design-v0.20/HANDOFF.md), 숲 적 동작은 [v0.19](docs/design-v0.19/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다.
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
-- 적 미술: 숲 4종과 성채 4종은 **개별 애니메이션 첫 제작본**을 사용한다. [숲 외형 시안](docs/design-v0.18/enemy-preview.html) · [숲 전투 기록](docs/design-v0.19/HANDOFF.html) · [성채 전투 기록](docs/design-v0.21/HANDOFF.html) · [지역별 제작 기준](docs/design-v0.17/enemy-art-brief.md).
-- 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 10전투를 다듬고 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
+- 적 미술: 숲·성채·폐광 각각 4종, 총 12종은 **개별 애니메이션 첫 제작본**을 사용한다. [숲 전투 기록](docs/design-v0.19/HANDOFF.html) · [성채 전투 기록](docs/design-v0.21/HANDOFF.html) · [폐광 제작·전투 기록](docs/design-v0.24/HANDOFF.html).
+- 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 15전투이며 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
 - 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 개발 범위다.
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
-- 현재 흐름: **새 원정·이어하기 → 준비·골드 소환·배치·전승·진화·결합 → 10전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
+- 현재 흐름: **새 원정·이어하기 → 준비·골드 소환·배치·전승·진화·결합 → 15전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
 - 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이다. 당시 12전투안은 설계 이력이며, 현재 첫 출시 목표는 30전투다. 유물·영구 해금은 후속 범위다.
 - 직업 상세안: [v0.9 직업·진화·결합체 설계](docs/design-v0.9/unit-catalog.md) · [읽기용 직업 도감](docs/design-v0.9/unit-catalog.html). 기본·분기·최종·특수 결합 총 30형태의 능력치와 스킬을 정리한 검증 전 초안이다.
 - 새 전투 시험실: **CATALOG LAB / 30**에서 30형태의 실제 스킬·전승·진화·결합과 첫 애니메이션을 시험한다. [v0.10 제작 기록](docs/design-v0.10/production-notes.md) · [움직이는 도감](docs/design-v0.10/animation-gallery.html) · [밸런스 실험](docs/design-v0.10/balance-report.md). 30개 시트에 대기·걷기·공격·피격·쓰러짐 총 660프레임을 제작했으며, 출시 전 동작과 한 원정 전체의 균형은 계속 다듬는다.
@@ -58,4 +58,4 @@
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
 - 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
-현재 기본 진입은 10전투 원정이며, 동료 30형태와 숲·성채 적 8종의 애니메이션을 본편에서 사용한다. 보스 패턴과 예고는 v0.14, 초반 난도 조정은 v0.17, 숲 적 동작은 v0.19, 캐릭터 간격과 보스 피격 반응 정리는 v0.20, 성채 적 동작은 v0.21, 아군 몸 크기 보정은 v0.22, 성채 난도 조정은 v0.23에 연결했다. 지속적인 동작·난도 조정·11~30전투·원정 연구·광고·출시 설정은 후속 단계다.
+현재 기본 진입은 15전투 원정이며, 동료 30형태와 숲·성채·폐광 적 12종의 애니메이션을 본편에서 사용한다. 보스는 5·10·15전투에 등장한다. 지속적인 동작·난도 조정·16~30전투·원정 연구·광고·출시 설정은 후속 단계다.

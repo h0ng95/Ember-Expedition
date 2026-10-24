@@ -181,7 +181,8 @@ namespace Expedition.Presentation
             expeditionResult = onResult;
             expeditionExit = onExit;
             expeditionBackground = Resources.Load<Texture2D>(wave <= 5 ?
-                "Art/forest-battlefield" : "Art/ruined-outpost-battlefield");
+                "Art/forest-battlefield" : wave <= 10 ?
+                "Art/ruined-outpost-battlefield" : "Art/Environments/v024/furnace-battlefield");
             battle = runBattle;
             battleEffects = new CatalogBattleEffects(gameObject);
             foreach (CatalogBattleUnit unit in battle.Units)
@@ -294,7 +295,12 @@ namespace Expedition.Presentation
             }
             if (e.Kind == CatalogEventKind.BossTelegraph && source != null)
             {
-                latestSkill = e.AbilityId == "GOLEM_AFTERSHOCK" ? "후속 충격파 · 작은 원 안을 다시 공격합니다" :
+                latestSkill = e.AbilityId == "FURNACE_EMBER" ?
+                    "후속 불씨파 · 작은 원 안을 다시 공격합니다" :
+                    e.AbilityId == "FURNACE_BLAST" ?
+                    "용광로 폭발 · 표시된 범위를 공격합니다" :
+                    e.AbilityId == "GOLEM_AFTERSHOCK" ?
+                    "후속 충격파 · 작은 원 안을 다시 공격합니다" :
                     "골렘 내려찍기 · 표시된 범위를 공격합니다";
                 latestSkillUntil = clock + 1.4f;
                 bossNoticeUntil = latestSkillUntil;
@@ -302,7 +308,9 @@ namespace Expedition.Presentation
             if (e.Kind == CatalogEventKind.BossEnraged && source != null)
             {
                 latestSkill = UnitName(source.Unit) + " 분노 · " +
-                    (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? "돌진 간격 단축" : "내려찍기 뒤 충격파 추가");
+                    (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? "돌진 간격 단축" :
+                    source.Unit.EnemyRole == CatalogEnemyRole.Furnace ? "폭발 뒤 불씨파 추가" :
+                    "내려찍기 뒤 충격파 추가");
                 latestSkillUntil = clock + 3f;
                 bossNoticeUntil = latestSkillUntil;
             }
@@ -320,6 +328,18 @@ namespace Expedition.Presentation
                 floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + e.Amount.ToString("0"),
                     Position = new Vector2(target.Unit.X, target.Unit.Y), Color = e.Kind == CatalogEventKind.Heal ?
                     new Color(.55f, 1f, .64f) : new Color(.5f, .84f, 1f) });
+            if (e.Kind == CatalogEventKind.Shield && e.AbilityId == "MINE_GUARD" && source != null)
+            {
+                source.ReleaseRemaining = .18f;
+                source.ReleaseAge = 0f;
+                source.ReleaseAbilityId = e.AbilityId;
+                source.NewRelease = true;
+                if (clock >= bossNoticeUntil)
+                {
+                    latestSkill = "철쇄 감독관 · 주변 적에게 보호막";
+                    latestSkillUntil = clock + 1.8f;
+                }
+            }
         }
 
         void Update()
@@ -609,6 +629,10 @@ namespace Expedition.Presentation
         string UnitName(CatalogBattleUnit unit)
         {
             if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
+            if (unit.Id == "furnace-boss") return "용광로 수호자";
+            if (unit.Id == "mine-elite") return "철쇄 감독관";
+            if (unit.Id.StartsWith("mine-worker-", StringComparison.Ordinal)) return "잿재 채굴병";
+            if (unit.Id.StartsWith("mine-slinger-", StringComparison.Ordinal)) return "불씨 투척병";
             if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? "잿갈기 우두머리" : "성문 골렘";
             if (unit.Id.StartsWith("stone-elite", StringComparison.Ordinal)) return "갑주 석상";
             if (unit.Id.StartsWith("stone-", StringComparison.Ordinal)) return "돌편 보병";
@@ -639,11 +663,16 @@ namespace Expedition.Presentation
         {
             regionalArtLoaded = false;
             bounds = default(Rect);
-            string castleSpecies = CastleEnemyArt.SpeciesFor(view.Unit);
-            string species = castleSpecies ?? ForestEnemyArt.SpeciesFor(view.Unit);
+            string mineSpecies = MineEnemyArt.SpeciesFor(view.Unit);
+            string castleSpecies = mineSpecies == null ? CastleEnemyArt.SpeciesFor(view.Unit) : null;
+            string species = mineSpecies ?? castleSpecies ?? ForestEnemyArt.SpeciesFor(view.Unit);
             if (species != null && forestEnemyArt != null)
             {
-                int frame = castleSpecies != null ? CastleEnemyArt.FrameIndex(species,
+                int frame = mineSpecies != null ? MineEnemyArt.FrameIndex(species,
+                    view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
+                    view.Unit.AttackWindupRemaining, view.Unit.SlamWarningRemaining,
+                    view.Unit.SlamIsAftershock, view.ReleaseAbilityId) :
+                    castleSpecies != null ? CastleEnemyArt.FrameIndex(species,
                     view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
                     view.Unit.ChargeWarningRemaining, view.Unit.IsCharging,
                     view.Unit.AttackWindupRemaining, view.Unit.SlamWarningRemaining,

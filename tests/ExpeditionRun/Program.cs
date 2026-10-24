@@ -1220,7 +1220,7 @@ internal static class Program
                 ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
                 var unchanged = ExpeditionRun.Restore(catalog, prior);
                 Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
-                    unchanged.Capture().Version == 7 && prior.Version == 2,
+                    unchanged.Capture().Version == 8 && prior.Version == 2,
                     "Earlier valid v2 preparation migrates without reward or mutating its input.");
                 unchanged.BeginBattle();
                 ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;

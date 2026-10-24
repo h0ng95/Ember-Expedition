@@ -1,0 +1,4 @@
+{"check":"purchased","runVersion":8,"progressVersion":2,"gold":200,"tactics":["bulwark","shieldcraft","marksmanship"],"research":["ember-start","ember-insight"],"runResearch":[],"formation":"standard","phase":0,"highest":11}
+{"check":"purchased","runVersion":8,"progressVersion":2,"gold":200,"tactics":["bulwark","shieldcraft","marksmanship"],"research":["ember-start","ember-insight"],"runResearch":[],"formation":"standard","phase":0,"highest":11}
+{"check":"fresh","runVersion":8,"progressVersion":2,"gold":40,"tactics":[],"research":["ember-start","ember-insight"],"runResearch":["ember-start","ember-insight"],"formation":"ember","phase":0,"highest":11}
+{"check":"battle","runVersion":8,"progressVersion":2,"gold":60,"tactics":[],"research":["ember-start","ember-insight"],"runResearch":["ember-start","ember-insight"],"formation":"ember","phase":2,"highest":11}

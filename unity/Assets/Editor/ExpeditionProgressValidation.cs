@@ -49,7 +49,7 @@ namespace Expedition.EditorTools
                     "v" + version + " " + name + ": migration changed unrelated state");
                 string migratedJson = JsonUtility.ToJson(run.Capture());
                 var restored = ExpeditionRun.Restore(catalog, JsonUtility.FromJson<ExpeditionRunSave>(migratedJson));
-                Check(restored.Capture().Version == 7 && JsonUtility.ToJson(restored.Capture()) == migratedJson,
+                Check(restored.Capture().Version == 8 && JsonUtility.ToJson(restored.Capture()) == migratedJson,
                     "v" + version + " " + name + ": v7 JSON did not round-trip");
                 var progress = ExpeditionProgress.New();
                 progress.Observe(restored);
@@ -92,6 +92,7 @@ namespace Expedition.EditorTools
             }
             ValidateTwentyWaveMigration(catalog, fixtures);
             ValidateTwentyFiveWaveMigration(catalog, fixtures);
+            ValidateResearch(catalog, fixtures);
             var normal = ExpeditionRun.New(catalog, 27);
             var blocked = normal.Capture(); blocked.Difficulty = ExpeditionDifficulty.Hard;
             bool rejected = false;
@@ -127,7 +128,7 @@ namespace Expedition.EditorTools
             var future = ExpeditionProgress.Restore(JsonUtility.FromJson<ExpeditionProgressSave>(
                 "{\"Version\":1,\"BestWave\":30,\"CompletedWaves\":30}"));
             Check(future.HardUnlocked, "Normal 30-clear entitlement boundary failed");
-            Debug.Log("PASS: Normal progress Unity JSON, v3/v4/v5/v6 to v7 migration and Hard gate; " + assertions + " checks.");
+            Debug.Log("PASS: Normal progress Unity JSON, v3/v4/v5/v6/v7 to v8 migration and Hard gate; " + assertions + " checks.");
         }
 
         static ExpeditionRunSave Decode(string s) { return JsonUtility.FromJson<ExpeditionRunSave>(s); }
@@ -151,7 +152,7 @@ namespace Expedition.EditorTools
             bool clear = name == "result-win" || name == "completed";
             var restored = ExpeditionRun.Restore(catalog, old);
             var now = restored.Capture();
-            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
+            Check(now.Version == 8 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
                 now.Wave == (name == "completed" ? 21 : old.Wave) &&
                 now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
                 now.Gold == old.Gold + (clear ? 50 : 0) &&
@@ -207,7 +208,7 @@ namespace Expedition.EditorTools
             bool clear = name == "result-win" || name == "completed";
             var restored = ExpeditionRun.Restore(catalog, old);
             var now = restored.Capture();
-            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
+            Check(now.Version == 8 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
                 now.Wave == (name == "completed" ? 26 : old.Wave) &&
                 now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
                 now.Gold == old.Gold + (clear ? 50 : 0) &&
@@ -249,6 +250,51 @@ namespace Expedition.EditorTools
         var invented = earlyReload.Capture(); invented.PreviousClearWaves = 25;
         RejectSave(catalog, invented, "A prior clear cannot exceed victories.");
     }
+
+        static void ValidateResearch(CatalogDatabase catalog, string fixtures)
+        {
+            foreach (string name in new[] { "preparation", "battle", "result-win", "result-loss", "completed", "defeated" })
+            {
+                string source = File.ReadAllText(Path.Combine(fixtures, "v7-" + name + ".json"));
+                Check(!source.Contains("TacticIds"), "v7 fixture is genuine");
+                var old = Decode(source);
+                var migrated = ExpeditionRun.Restore(catalog, old);
+                string encoded = Encode(migrated.Capture());
+                var reloaded = ExpeditionRun.Restore(catalog, Decode(encoded));
+                Check(reloaded.Capture().Version == 8 && reloaded.Gold == old.Gold && reloaded.Phase == old.Phase &&
+                    reloaded.TacticIds.Count == 0 && reloaded.LegacyResearchIds.Count == 0 && reloaded.StartFormationId == "standard" &&
+                    Encode(reloaded.Capture()) == encoded, "v7 migrates without grants or mutation: " + name);
+            }
+            var account = ExpeditionProgress.Restore(JsonUtility.FromJson<ExpeditionProgressSave>(
+                "{\"Version\":1,\"BestWave\":25,\"CompletedWaves\":25}"));
+            Check(account.ResearchPoints == 30, "Old progress receives first-clear research points");
+            foreach (var node in CatalogLegacyResearch.Nodes)
+                Check(account.PurchaseResearch(node.Id), "Research parent and cost available: " + node.Id);
+            string accountJson = Encode(account.Capture());
+            account = ExpeditionProgress.Restore(JsonUtility.FromJson<ExpeditionProgressSave>(accountJson));
+            Check(account.ResearchPoints == 3 && account.ResearchIds.Count == 6 && Encode(account.Capture()) == accountJson,
+                "Account research JSON is idempotent");
+            var run = ExpeditionRun.New(catalog, 32, ExpeditionDifficulty.Normal, account.ResearchIds, "ember");
+            for (int wave = 1; wave < 11; wave++)
+            { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
+            Check(run.PurchaseTactic("spellcraft") && run.PurchaseTactic("cinders"), "Parent and child tactics purchase");
+            run.Move("ally-01", -2, .2f);
+            string runJson = Encode(run.Capture());
+            var restored = ExpeditionRun.Restore(catalog, Decode(runJson));
+            Check(restored.StartFormationId == "ember" && restored.Roster.Find("ally-02").FormId == "B-FI" &&
+                restored.TacticIds.Count == 2 && restored.LegacyResearchIds.Count == 6 &&
+                restored.Gold == run.Gold && Encode(restored.Capture()) == runJson,
+                "Research, tactics, formation and exact gold survive Unity JSON");
+            Check(restored.Undo() && restored.TacticIds.Count == 2 && restored.Gold == run.Gold,
+                "Undo cannot refund or remove tactics");
+            restored.BeginBattle();
+            restored = ExpeditionRun.Restore(catalog, Decode(Encode(restored.Capture())));
+            Check(restored.ResumeBattle() != null && !restored.PurchaseTactic("bulwark"),
+                "Interrupted battle preserves research and rejects purchase");
+            var fresh = ExpeditionRun.New(catalog, 33, ExpeditionDifficulty.Normal, account.ResearchIds, "frost");
+            Check(fresh.TacticIds.Count == 0 && fresh.LegacyResearchIds.Count == 6 && fresh.Gold == 40,
+                "New expedition resets tactics but keeps research snapshot");
+        }
 
         public static void BuildAndroid()
         {

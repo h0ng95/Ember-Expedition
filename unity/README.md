@@ -1,8 +1,14 @@
 # IGNIS: ASHEN OATH · Unity 전투 시제품
 
-> **2026-10-24 v0.31:** 잿빛 왕궁 26~30전투, 적 4종과 배경·이야기, 큰 왕관의 수호룡을 추가했다. 보스는 직선 브레스·후열 비행 폭격·착지 충격파를 반복하며 공중에서도 모든 직업의 공격을 받는다. 이전 25전투 완료는 50G와 함께 26전투 준비로 이어진다. [변경·검증 기록](../docs/design-v0.31/HANDOFF.md). **NORMAL**만 플레이할 수 있고 **HARD**는 30전투 완료 자격을 기록해도 전투 기능은 준비 중이다. 저장은 v7, v2~v6 이행을 지원한다. 아래 이전 버전 기록은 시제품 이력이다.
+> **2026-10-24 v0.32:** 영구 연구 6개, 원정 전술 6개와 시작 편성 선택을 추가하고 일반전·후반 난도를 조정했다. **NORMAL 30전투**만 플레이할 수 있고 **HARD**는 준비 중이다. 원정 저장 v8·성과 저장 v2는 이전 원정 v2~v7·성과 v1을 읽는다. [이번 변경·검증 기록](../docs/design-v0.32/HANDOFF.md). 이전 v0.31의 잿빛 왕궁·비행 수호룡은 [왕궁 기록](../docs/design-v0.31/HANDOFF.md)에 정리되어 있다. 아래 이전 버전 기록은 시제품 이력이다.
 
-## v0.31 실행
+## v0.32 · 영구 연구와 전술
+
+거점 **원정 연구**에서 첫 돌파 포인트로 3갈래 × 2노드를 구매한다. 1전투 첫 돌파마다 1점, 5전투 보스마다 추가 1점이며 기존 최고 기록은 소급한다. 영구 연구는 다음 새 원정부터 적용된다. **새 원정**에서 기본·서약·화염·서리 시작 편성을 선택할 수 있으며, 기본 외 편성은 해당 연구가 필요하다.
+
+준비 화면 **원정 전술**에서는 6전투부터 기본 전술 40G, 11전투부터 부모가 있는 상위 전술 60G를 쓸 수 있다. 최대 3개이며 소환과 골드를 공유한다. 새 원정은 전술을 초기화하며, 준비 되돌리기로 전술을 환불하지 않는다. 원정 저장 v8, 성과·연구 저장 v2는 기존 v2~v7 원정과 v1 성과를 읽는다. [상세 규칙과 검증](../docs/design-v0.32/HANDOFF.md).
+
+## 원정 실행
 
 1. 앱 홈에서 **새 원정**을 누른다. NORMAL과 준비 중인 HARD를 보여주는 창에서 시작한다. 이전 원정이 있으면 교체 안내를 확인한다.
 2. 시작 40G에서 **동료 소환 · 20G**로 대기석에 동료를 얻고 전장으로 끌어 배치한다. 출전 최대 5명, 대기 최대 7명이다.
@@ -13,7 +19,7 @@
 7. 홈의 **원정 성과**에서 Normal 최고 격파와 구간 완료를 확인한다. 이전 15·20·25전투 완료 기록은 새 원정·패배·앱 재시작 후에도 유지된다. Hard는 Normal 30전투 완료 후 도전 자격을 기록하며 실제 전투는 아직 없다.
 8. 보스 준비 오른쪽의 **보스 준비 점검**은 현재 출전·대기·성장에 따라 바뀐다. 기존 조작 설명은 **배치·성장 도움말**로 펼친다. 안내는 선택을 돕고 전투 시작을 막지 않는다. 순수 안내 검사는 `tests/ExpeditionPreparationHints/run.ps1`로 실행한다.
 
-`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를, `tests/ExpeditionStory/run.ps1`은 이야기 기록 검사를, `tests/ExpeditionProgress/run.ps1`은 Normal 저장·성과·Hard 제한 검사를 실행한다. Unity 메뉴 **Expedition → Validate Normal Progress**는 실제 JsonUtility로 이전 v3/v4 및 v5·v6 저장 각 6종과 성과 저장을 검사한다. `-executeMethod Expedition.EditorTools.ExpeditionProgressValidation.BuildAndroid`는 새 성과 검사와 기존 이야기 저장, 아군 크기·동작, 여섯 지역의 적 프레임·가림·결과 전환·드래그 입력·JSON 검사를 통과한 뒤 APK를 만든다. **Validate Saved Expedition**의 표본 원정 검사도 별도로 사용할 수 있다. 지역 manifest는 원본 PNG에서 생성한다. 기존 저장을 사용하는 검사는 종료 시 원본을 복구한다.
+`tests/ExpeditionRun/run.ps1`은 순수 C# 원정 검사를, `tests/ExpeditionStory/run.ps1`은 이야기 기록 검사를, `tests/ExpeditionProgress/run.ps1`은 Normal 저장·성과·Hard 제한 검사를 실행한다. Unity 메뉴 **Expedition → Validate Normal Progress**는 실제 JsonUtility로 이전 v3/v4 및 v5·v6·v7 저장 각 6종, 연구·전술 저장과 성과 저장을 검사한다. `-executeMethod Expedition.EditorTools.ExpeditionProgressValidation.BuildAndroid`는 새 성과 검사와 기존 이야기 저장, 아군 크기·동작, 여섯 지역의 적 프레임·가림·결과 전환·드래그 입력·JSON 검사를 통과한 뒤 APK를 만든다. **Validate Saved Expedition**의 표본 원정 검사도 별도로 사용할 수 있다. 지역 manifest는 원본 PNG에서 생성한다. 기존 저장을 사용하는 검사는 종료 시 원본을 복구한다.
 
 2026-10-18 · Unity 6.3 LTS + C# · Android / Galaxy Buddy2 기준
 

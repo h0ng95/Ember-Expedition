@@ -138,19 +138,35 @@ namespace Expedition.Core
     {
         const float Tick = 1f / 60f;
         readonly CatalogDatabase database;
+        readonly HashSet<string> tactics = new HashSet<string>(StringComparer.Ordinal);
+        readonly HashSet<string> legacyResearch = new HashSet<string>(StringComparer.Ordinal);
+        readonly IReadOnlyList<string> publicTactics, publicLegacyResearch;
         readonly List<CatalogBattleUnit> units = new List<CatalogBattleUnit>();
         readonly Dictionary<string, CatalogBattleUnit> byId = new Dictionary<string, CatalogBattleUnit>(StringComparer.Ordinal);
         float accumulator;
         public event Action<CatalogBattleEvent> Event;
         public IReadOnlyList<CatalogBattleUnit> Units { get { return units.AsReadOnly(); } }
+        public IReadOnlyList<string> TacticIds { get { return publicTactics; } }
+        public IReadOnlyList<string> LegacyResearchIds { get { return publicLegacyResearch; } }
         public float Time { get; private set; }
         public bool Ended { get; private set; }
         public CatalogTeam? Winner { get; private set; }
 
-        public CatalogBattle(CatalogDatabase database)
+        public CatalogBattle(CatalogDatabase database) : this(database, null) { }
+
+        public CatalogBattle(CatalogDatabase database, IEnumerable<string> tacticIds,
+            IEnumerable<string> legacyResearchIds = null)
         {
             if (database == null) throw new ArgumentNullException("database");
             this.database = database;
+            var selected = new List<string>(tacticIds ?? new string[0]);
+            var permanent = new List<string>(legacyResearchIds ?? new string[0]);
+            CatalogResearch.ValidateSelection(selected, int.MaxValue);
+            CatalogLegacyResearch.ValidateSelection(permanent);
+            foreach (string id in selected) tactics.Add(id);
+            foreach (string id in permanent) legacyResearch.Add(id);
+            publicTactics = Array.AsReadOnly(selected.ToArray());
+            publicLegacyResearch = Array.AsReadOnly(permanent.ToArray());
         }
 
         public CatalogBattleUnit AddUnit(string id, CatalogTeam team, string formId, string branchId,
@@ -165,8 +181,14 @@ namespace Expedition.Core
             }
             else if (branchId != null && branchId != formId)
                 throw new ArgumentException("Only final forms accept a separate branch ID.");
+            float hp = form.Hp;
+            if (team == CatalogTeam.Ally)
+            {
+                if (form.Range <= 1.5f && tactics.Contains("bulwark")) hp *= 1.12f;
+                if (legacyResearch.Contains("tactical-vigor")) hp *= 1.05f;
+            }
             return Add(id, team, formId, branchId, inheritedTraitId, x, y,
-                form.Hp, form.Power, form.Defense, form.AttackInterval, form.Range, form.MoveSpeed,
+                hp, form.Power, form.Defense, form.AttackInterval, form.Range, form.MoveSpeed,
                 form.InnateTrait, false);
         }
 
@@ -834,6 +856,17 @@ namespace Expedition.Core
             bool basic, bool periodic)
         {
             if (!target.IsAlive || raw <= 0) return;
+            if (source != null && source.Team == CatalogTeam.Ally && target.Team == CatalogTeam.Enemy)
+            {
+                if (tactics.Contains("shieldcraft") && source.Shield > 0f) raw *= 1.15f;
+                if (tactics.Contains("marksmanship") && basic && source.Range > 2.1f) raw *= 1.15f;
+                if (tactics.Contains("exploitation") &&
+                    (target.MarkRemaining > 0f || target.SlowPercent > 0f)) raw *= 1.18f;
+                if (tactics.Contains("spellcraft") && !basic && !periodic) raw *= 1.15f;
+                if (tactics.Contains("cinders") && ability == "BURN") raw *= 1.3f;
+                if (legacyResearch.Contains("ember-insight") && !basic && !periodic) raw *= 1.05f;
+                if (legacyResearch.Contains("frost-focus") && basic) raw *= 1.05f;
+            }
             if (!target.FirstHitUsed && HasTrait(target, "T-KN"))
             {
                 target.FirstHitUsed = true;

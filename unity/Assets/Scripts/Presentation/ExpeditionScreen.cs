@@ -31,8 +31,17 @@ namespace Expedition.Presentation
             "T-H01", "T-H02", "T-H03", "T-H04", "T-H05", "T-H06" };
         static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
             "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
+        static readonly string[] LegacyBranches = { "tactical", "ember", "frost" };
+        static readonly string[] LegacyBranchNames = { "서약", "화염", "서리" };
+        static readonly string[] TacticBranches = { "defense", "precision", "arcana" };
+        static readonly string[] TacticBranchNames = { "방어", "정밀", "술식" };
+        static readonly string[] FormationIds = { "standard", "tactical", "ember", "frost" };
+        static readonly string[] FormationNames = { "기본", "서약", "화염", "서리" };
+        static readonly string[] FormationUnits = { "기사 · 궁수 · 사제", "기사 · 기수 · 사제",
+            "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
-        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun, Journal, Progress }
+        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
+            Journal, Progress, LegacyResearch, Tactics }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -53,6 +62,8 @@ namespace Expedition.Presentation
         bool badProgress;
         bool pointerTouch, hoverArmed, evolutionFromDrag, combinationFromList;
         string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId, selectedStoryId;
+        string selectedLegacyNodeId = "tactical-start", selectedTacticNodeId = "bulwark";
+        string selectedFormationId = "standard";
         string hoverRecipientId, growthPulseId;
         float toastUntil, hoverStartTime = -1f, growthPulseUntil;
         Vector2 pointerStart, pointerCurrent, pointerGrabOffset, journalScroll;
@@ -187,12 +198,17 @@ namespace Expedition.Presentation
             try
             {
                 if (progress.Observe(run)) progressDirty = true;
-                if (!progressDirty) return;
-                PlayerPrefs.SetString(ProgressSaveKey, JsonUtility.ToJson(progress.Capture()));
-                PlayerPrefs.Save();
-                progressDirty = false;
+                WriteProgress();
             }
             catch (Exception exception) { Notice("원정 성과를 저장하지 못했습니다: " + exception.Message); }
+        }
+
+        void WriteProgress()
+        {
+            if (badProgress || progress == null || !progressDirty) return;
+            PlayerPrefs.SetString(ProgressSaveKey, JsonUtility.ToJson(progress.Capture()));
+            PlayerPrefs.Save();
+            progressDirty = false;
         }
 
         void NewRun()
@@ -201,7 +217,9 @@ namespace Expedition.Presentation
             {
                 ObserveProgress();
                 run = ExpeditionRun.New(database, unchecked((uint)DateTime.UtcNow.Ticks),
-                    ExpeditionDifficulty.Normal);
+                    ExpeditionDifficulty.Normal, badProgress || progress == null ?
+                    Array.Empty<string>() : progress.ResearchIds,
+                    badProgress ? "standard" : selectedFormationId);
                 badSave = false;
                 legacySave = false;
                 error = null;
@@ -292,6 +310,9 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
             GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
                 "꺼진 왕국에 다시 불을 밝히다", heading);
+            if (GUI.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
+                "원정 연구", button))
+            { selectedLegacyNodeId = "tactical-start"; modal = Modal.LegacyResearch; }
             if (GUI.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), "원정 성과", button))
                 modal = Modal.Progress;
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
@@ -307,7 +328,7 @@ namespace Expedition.Presentation
                     error ?? "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
             ExpeditionUiTheme.FooterRule(panel);
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
-                modal = Modal.NewRun;
+            { selectedFormationId = "standard"; modal = Modal.NewRun; }
             GUI.enabled = modal == Modal.None && run != null;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "이어하기", button))
             { home = false; modal = Modal.None; }
@@ -355,16 +376,16 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
             GUI.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
-            if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
+            if (GUI.Button(new Rect(735, 270, 154, 48), showHelp ? "도움말 접기" : "배치 도움말", button))
                 showHelp = !showHelp;
-            string regionLabel = run.Wave <= 5 ? "숲길" : run.Wave <= 10 ? "성문" :
-                run.Wave <= 15 ? "폐광" : run.Wave <= 20 ? "서리 성당" :
-                run.Wave <= 25 ? "황혼정원" : "잿빛왕궁";
-            if (GUI.Button(new Rect(990, 273, 240, 42), "지역 이야기 · " + regionLabel, button))
+            if (GUI.Button(new Rect(905, 270, 154, 48), "지역 이야기", button))
             {
                 StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
                 if (regionStory != null) OpenJournal(regionStory.Id);
             }
+            if (GUI.Button(new Rect(1075, 270, 154, 48),
+                "원정 전술 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
+            { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
             if (run.IsBossWave && !showHelp)
             {
                 GUI.Label(new Rect(735, 326, 490, 28), "보스 준비 점검", hint);
@@ -412,8 +433,8 @@ namespace Expedition.Presentation
         {
             switch (run.Wave)
             {
-                case 1: return "기사를 앞에, 궁수와 사제를 뒤에 두세요.\n소환한 동료는 대기석에 합류합니다.";
-                case 2: return "가시등 짐승은 약해진 동료를 노립니다.\n전열 뒤에 궁수와 사제를 배치하세요.";
+                case 1: return "기사를 앞에, 원거리·지원 동료를 뒤에 두세요.\n소환한 동료는 대기석에 합류합니다.";
+                case 2: return "가시등 짐승은 약해진 동료를 노립니다.\n전열 뒤에 원거리·지원 동료를 배치하세요.";
                 case 3: return "측면의 가시등이 후열을 노립니다.\n동료를 늘리거나 성장 2로 첫 진화를 하세요.";
                 case 4: return "정예 뿔짐승이 전열로 돌진합니다.\n기사가 버티는 동안 후열에서 공격하세요.";
                 case 5: return "직선 돌진 · 체력 절반부터 간격 단축\n전열과 후열을 같은 선에 겹치지 마세요.";
@@ -567,6 +588,8 @@ namespace Expedition.Presentation
             if (modal == Modal.Detail) DrawDetail();
             else if (modal == Modal.Journal) DrawJournal();
             else if (modal == Modal.Progress) DrawProgress();
+            else if (modal == Modal.LegacyResearch) DrawLegacyResearch();
+            else if (modal == Modal.Tactics) DrawTactics();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
@@ -657,6 +680,183 @@ namespace Expedition.Presentation
             int completed = progress == null ? 0 : progress.CompletedWaves;
             return "일반  ·  최고 격파 " + best + "전투" +
                 "\n구간 완료 " + completed + " / " + ExpeditionRun.ReleaseWaves + "전투";
+        }
+
+        static bool HasId(IReadOnlyList<string> ids, string id)
+        {
+            if (ids == null) return false;
+            for (int i = 0; i < ids.Count; i++)
+                if (ids[i] == id) return true;
+            return false;
+        }
+
+        static CatalogLegacyResearchNode LegacyNode(string branch, int tier)
+        {
+            foreach (CatalogLegacyResearchNode node in CatalogLegacyResearch.Nodes)
+                if (node.BranchId == branch && node.Tier == tier) return node;
+            return null;
+        }
+
+        static CatalogResearchNode TacticNode(string branch, int tier)
+        {
+            foreach (CatalogResearchNode node in CatalogResearch.Nodes)
+                if (node.BranchId == branch && node.Tier == tier) return node;
+            return null;
+        }
+
+        bool DrawTreeNode(Rect rect, string titleText, string costText, bool owned,
+            bool available, bool selected)
+        {
+            if (selected)
+                Fill(new Rect(rect.x - 3, rect.y - 3, rect.width + 6, rect.height + 6),
+                    new Color(Gold.r, Gold.g, Gold.b, .8f));
+            bool clicked = GUI.Button(rect, GUIContent.none, button);
+            Color stateColor = owned ? new Color(.62f, .88f, .62f) :
+                available ? Gold : Muted;
+            Fill(new Rect(rect.x + 6, rect.y + 6, 4, rect.height - 12), stateColor);
+            GUI.Label(new Rect(rect.x + 17, rect.y + 8, rect.width - 28, 31), titleText, centered);
+            GUI.Label(new Rect(rect.x + 18, rect.y + 45, rect.width - 30, 25),
+                owned ? "보유 · " + costText : available ? costText + " · 구매 가능" :
+                costText + " · 잠김", small);
+            return clicked;
+        }
+
+        static void DrawTreeConnector(float centerX, bool owned)
+        {
+            Color color = owned ? Gold : new Color(.51f, .43f, .31f, .9f);
+            Fill(new Rect(centerX - 2, 306, 4, 42), color);
+            Fill(new Rect(centerX - 6, 338, 12, 6), color);
+        }
+
+        void DrawLegacyResearch()
+        {
+            bool unavailable = badProgress || progress == null;
+            Rect panel = new Rect(100, 75, 1080, 570);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 107, 700, 48), "원정 연구", heading);
+            GUI.Label(new Rect(content.x, 153, 1016, 30),
+                unavailable ? "성과 기록을 읽지 못해 연구 구매를 멈췄습니다." :
+                "첫 최고 격파와 보스 돌파로 획득  ·  보유 " + progress.ResearchPoints +
+                " / 획득 " + progress.ResearchEarned + "점  ·  다음 새 원정부터 적용", small);
+            for (int branch = 0; branch < 3; branch++)
+            {
+                float x = content.x + branch * 212f;
+                GUI.Label(new Rect(x, 190, 196, 28), LegacyBranchNames[branch], hint);
+                CatalogLegacyResearchNode parent = LegacyNode(LegacyBranches[branch], 1);
+                CatalogLegacyResearchNode child = LegacyNode(LegacyBranches[branch], 2);
+                if (parent == null || child == null) continue;
+                DrawTreeConnector(x + 98f, !unavailable && HasId(progress.ResearchIds, parent.Id));
+                if (DrawTreeNode(new Rect(x, 224, 196, 82), parent.Title, parent.Cost + "점",
+                    !unavailable && HasId(progress.ResearchIds, parent.Id),
+                    !unavailable && progress.CanPurchaseResearch(parent.Id),
+                    selectedLegacyNodeId == parent.Id)) selectedLegacyNodeId = parent.Id;
+                if (DrawTreeNode(new Rect(x, 348, 196, 82), child.Title, child.Cost + "점",
+                    !unavailable && HasId(progress.ResearchIds, child.Id),
+                    !unavailable && progress.CanPurchaseResearch(child.Id),
+                    selectedLegacyNodeId == child.Id)) selectedLegacyNodeId = child.Id;
+            }
+            CatalogLegacyResearchNode selected = CatalogLegacyResearch.Get(selectedLegacyNodeId) ??
+                CatalogLegacyResearch.Nodes[0];
+            bool owned = !unavailable && HasId(progress.ResearchIds, selected.Id);
+            bool canBuy = !unavailable && progress.CanPurchaseResearch(selected.Id);
+            ExpeditionUiTheme.PanelBox(new Rect(800, 194, 348, 314), true);
+            GUI.Label(new Rect(822, 211, 300, 29), owned ? "연구 완료" :
+                canBuy ? "구매 가능" : "잠긴 연구", hint);
+            GUI.Label(new Rect(822, 244, 300, 44), selected.Title, heading);
+            ExpeditionUiTheme.Rule(new Rect(822, 294, 300, 2));
+            GUI.Label(new Rect(822, 308, 300, 105), selected.Description, dialogBody);
+            GUI.Label(new Rect(822, 425, 300, 64), LegacyLockReason(selected, owned, canBuy), small);
+            ExpeditionUiTheme.FooterRule(panel);
+            bool enabled = GUI.enabled;
+            GUI.enabled = canBuy;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
+                "연구 구매  ·  " + selected.Cost + "점", primary))
+            {
+                if (progress.PurchaseResearch(selected.Id))
+                {
+                    progressDirty = true;
+                    try { WriteProgress(); Notice("연구 완료 · 다음 새 원정부터 적용됩니다."); }
+                    catch (Exception exception) { Notice("연구 저장에 실패했습니다: " + exception.Message); }
+                }
+            }
+            GUI.enabled = enabled;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button))
+                modal = Modal.None;
+        }
+
+        string LegacyLockReason(CatalogLegacyResearchNode node, bool owned, bool available)
+        {
+            if (badProgress || progress == null)
+                return "기존 성과 기록을 보관 중입니다. 연구를 저장하지 않습니다.";
+            if (owned) return "연구 효과는 새 원정 생성 시 복사됩니다. 진행 중인 원정은 그대로 이어집니다.";
+            if (available) return "연구 점수 " + node.Cost + "점을 사용합니다.";
+            if (node.PrerequisiteId != null && !HasId(progress.ResearchIds, node.PrerequisiteId))
+                return "선행 연구: " + CatalogLegacyResearch.Get(node.PrerequisiteId).Title;
+            return "연구 점수 " + (node.Cost - progress.ResearchPoints) + "점이 더 필요합니다.";
+        }
+
+        void DrawTactics()
+        {
+            if (run == null) { modal = Modal.None; return; }
+            Rect panel = new Rect(100, 75, 1080, 570);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 107, 700, 48), "원정 전술", heading);
+            GUI.Label(new Rect(content.x, 153, 1016, 30),
+                "이번 원정만 적용  ·  보유 " + run.Gold + " G  ·  " + run.TacticIds.Count +
+                " / " + CatalogResearch.MaxNodes + "개 선택", small);
+            for (int branch = 0; branch < 3; branch++)
+            {
+                float x = content.x + branch * 212f;
+                GUI.Label(new Rect(x, 190, 196, 28), TacticBranchNames[branch], hint);
+                CatalogResearchNode parent = TacticNode(TacticBranches[branch], 1);
+                CatalogResearchNode child = TacticNode(TacticBranches[branch], 2);
+                if (parent == null || child == null) continue;
+                DrawTreeConnector(x + 98f, HasId(run.TacticIds, parent.Id));
+                if (DrawTreeNode(new Rect(x, 224, 196, 82), parent.Title, parent.Cost + " G",
+                    HasId(run.TacticIds, parent.Id), run.CanPurchaseTactic(parent.Id),
+                    selectedTacticNodeId == parent.Id)) selectedTacticNodeId = parent.Id;
+                if (DrawTreeNode(new Rect(x, 348, 196, 82), child.Title, child.Cost + " G",
+                    HasId(run.TacticIds, child.Id), run.CanPurchaseTactic(child.Id),
+                    selectedTacticNodeId == child.Id)) selectedTacticNodeId = child.Id;
+            }
+            CatalogResearchNode selected = CatalogResearch.Get(selectedTacticNodeId) ??
+                CatalogResearch.Nodes[0];
+            bool owned = HasId(run.TacticIds, selected.Id);
+            bool canBuy = run.CanPurchaseTactic(selected.Id);
+            ExpeditionUiTheme.PanelBox(new Rect(800, 194, 348, 314), true);
+            GUI.Label(new Rect(822, 211, 300, 29), owned ? "전술 보유" :
+                canBuy ? "구매 가능" : "잠긴 전술", hint);
+            GUI.Label(new Rect(822, 244, 300, 44), selected.Title, heading);
+            ExpeditionUiTheme.Rule(new Rect(822, 294, 300, 2));
+            GUI.Label(new Rect(822, 308, 300, 105), selected.Description, dialogBody);
+            GUI.Label(new Rect(822, 425, 300, 64), TacticLockReason(selected, owned, canBuy), small);
+            ExpeditionUiTheme.FooterRule(panel);
+            bool enabled = GUI.enabled;
+            GUI.enabled = canBuy;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
+                "전술 구매  ·  " + selected.Cost + " G", primary))
+            {
+                if (run.PurchaseTactic(selected.Id)) Save();
+            }
+            GUI.enabled = enabled;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button))
+                modal = Modal.None;
+        }
+
+        string TacticLockReason(CatalogResearchNode node, bool owned, bool available)
+        {
+            if (owned) return "전술은 이 원정 동안 유지되며 새 원정을 시작하면 초기화됩니다.";
+            if (available) return "이번 원정 골드 " + node.Cost + " G를 사용합니다.";
+            if (run.Phase != ExpeditionPhase.Preparation) return "전술은 전투 준비 중에만 구매할 수 있습니다.";
+            if (run.Wave < node.UnlockWave) return "전투 " + node.UnlockWave + " 준비부터 열립니다.";
+            if (node.PrerequisiteId != null && !HasId(run.TacticIds, node.PrerequisiteId))
+                return "선행 전술: " + CatalogResearch.Get(node.PrerequisiteId).Title;
+            if (run.TacticIds.Count >= CatalogResearch.MaxNodes) return "이번 원정의 전술 선택은 3개까지입니다.";
+            return "골드 " + (node.Cost - run.Gold) + " G가 더 필요합니다.";
         }
 
         static string StoryUnlockHint(string id)
@@ -883,7 +1083,7 @@ namespace Expedition.Presentation
             { DrawCombinationConfirmation(); return; }
             if (modal == Modal.NewRun)
             {
-                Rect panel = new Rect(205, 140, 870, 440);
+                Rect panel = new Rect(205, 70, 870, 580);
                 Rect content = ExpeditionUiTheme.ContentRect(panel);
                 ExpeditionUiTheme.Window(panel);
                 GUI.Label(new Rect(content.x, panel.y + 32, content.width, 48),
@@ -892,25 +1092,47 @@ namespace Expedition.Presentation
                     "저장된 원정을 새 출발로 교체합니다. 진행과 편성은 되돌릴 수 없습니다." :
                     legacySave ? "이전 6전투 원정은 별도로 보관됩니다." :
                     "등불과 기본 동료 3명으로 새로 출발합니다.";
-                GUI.Label(new Rect(content.x, panel.y + 82, content.width, 43),
+                GUI.Label(new Rect(content.x, 152, content.width, 50),
                     "현재 공개 " + ExpeditionRun.TotalWaves + "전투 · 전체 목표 30전투\n" + warning, small);
-                Rect normal = new Rect(content.x, 274, content.width, 78);
+                Rect normal = new Rect(content.x, 216, content.width, 62);
                 ExpeditionUiTheme.PanelBox(normal, true);
-                GUI.Label(new Rect(normal.x + 22, normal.y + 5, normal.width - 44, 31),
+                GUI.Label(new Rect(normal.x + 20, normal.y + 6, normal.width - 40, 28),
                     "NORMAL · 일반  ✓", body);
-                GUI.Label(new Rect(normal.x + 22, normal.y + 38, normal.width - 44, 31),
+                GUI.Label(new Rect(normal.x + 20, normal.y + 34, normal.width - 40, 23),
                     "현재 플레이 가능 · 기본 전투 규칙", small);
-                Rect locked = new Rect(content.x, 363, content.width, 78);
+                Rect locked = new Rect(content.x, 288, content.width, 62);
                 bool wasEnabled = GUI.enabled;
                 GUI.enabled = false;
                 GUI.Button(locked, "", button);
                 GUI.enabled = wasEnabled;
-                GUI.Label(new Rect(locked.x + 22, locked.y + 5, locked.width - 44, 31),
+                GUI.Label(new Rect(locked.x + 20, locked.y + 6, locked.width - 40, 28),
                     "HARD · 고난도  ·  준비 중", body);
-                GUI.Label(new Rect(locked.x + 22, locked.y + 38, locked.width - 44, 31),
+                GUI.Label(new Rect(locked.x + 20, locked.y + 34, locked.width - 40, 23),
                     progress != null && progress.HardUnlocked && !badProgress ?
                     "도전 자격 획득 · 전투는 추후 공개" :
                     "일반 30전투 완료 후 도전 자격 · 전투는 추후 공개", small);
+                GUI.Label(new Rect(content.x, 364, content.width, 31), "시작 편성 선택", hint);
+                IReadOnlyList<string> research = badProgress || progress == null ?
+                    Array.Empty<string>() : progress.ResearchIds;
+                for (int i = 0; i < FormationIds.Length; i++)
+                {
+                    float cardWidth = (content.width - 3 * 12f) / 4f;
+                    Rect card = new Rect(content.x + i * (cardWidth + 12f), 402, cardWidth, 116);
+                    bool unlocked = CatalogLegacyResearch.IsFormationAvailable(FormationIds[i], research);
+                    if (selectedFormationId == FormationIds[i])
+                        Fill(new Rect(card.x - 3, card.y - 3, card.width + 6, card.height + 6),
+                            new Color(Gold.r, Gold.g, Gold.b, .8f));
+                    GUI.enabled = wasEnabled && unlocked;
+                    if (GUI.Button(card, GUIContent.none, button)) selectedFormationId = FormationIds[i];
+                    GUI.enabled = wasEnabled;
+                    GUI.Label(new Rect(card.x + 13, card.y + 9, card.width - 26, 31),
+                        FormationNames[i], centered);
+                    GUI.Label(new Rect(card.x + 12, card.y + 45, card.width - 24, 30),
+                        FormationUnits[i], small);
+                    GUI.Label(new Rect(card.x + 12, card.y + 82, card.width - 24, 24),
+                        unlocked ? selectedFormationId == FormationIds[i] ? "선택됨" : "선택 가능" :
+                        badProgress ? "기록 확인 불가" : "원정 연구 필요", small);
+                }
                 ExpeditionUiTheme.FooterRule(panel);
                 ConfirmationButtons(ExpeditionUiTheme.FooterRect(panel),
                     "새 원정 시작", NewRun, () => modal = Modal.None);

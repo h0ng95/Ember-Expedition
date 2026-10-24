@@ -9,7 +9,8 @@ using Expedition.Core;
 // a loss with hypothetical victory rewards; reachWins separately counts unbroken runs.
 internal static class ExpeditionBalanceProbe
 {
-    static readonly string[] Policies = { "starter3", "basic5", "branches", "final", "hybrid" };
+    static readonly string[] Policies = { "starter3", "basic5", "branches", "final", "hybrid",
+        "basic5_tactics", "final_tactics", "hybrid_tactics" };
     static string Branch(string form)
     {
         switch (CatalogRoster.FamilyCode(form))
@@ -40,6 +41,14 @@ internal static class ExpeditionBalanceProbe
 
     static void Prepare(ExpeditionRun run, string policy)
     {
+        bool withTactics = policy.EndsWith("_tactics", StringComparison.Ordinal);
+        if (withTactics)
+        {
+            policy = policy.Substring(0, policy.Length - "_tactics".Length);
+            foreach (string id in new[] { "bulwark", "shieldcraft", "marksmanship" })
+                if (run.CanPurchaseTactic(id) && !run.PurchaseTactic(id))
+                    throw new InvalidOperationException("Affordable tactic purchase failed: " + id);
+        }
         // Wait until another summon can refill the slot consumed by the hybrid.
         if (policy == "hybrid" && run.Wave >= 6 && run.Gold >= ExpeditionRun.SummonCost &&
             run.Roster.Find("ally-01") != null && run.Roster.Find("ally-03") != null &&
@@ -85,7 +94,10 @@ internal static class ExpeditionBalanceProbe
                     timeout = new int[ExpeditionRun.TotalWaves];
                 double[] times = new double[ExpeditionRun.TotalWaves],
                     survivors = new double[ExpeditionRun.TotalWaves],
-                    health = new double[ExpeditionRun.TotalWaves];
+                    health = new double[ExpeditionRun.TotalWaves],
+                    gold = new double[ExpeditionRun.TotalWaves],
+                    supply = new double[ExpeditionRun.TotalWaves],
+                    tactics = new double[ExpeditionRun.TotalWaves];
                 for (int seed = first; seed < first + count; seed++)
                 {
                     var run = ExpeditionRun.New(db, (uint)seed);
@@ -93,6 +105,13 @@ internal static class ExpeditionBalanceProbe
                     for (int wave = 0; wave < ExpeditionRun.TotalWaves; wave++)
                     {
                         Prepare(run, policy);
+                        var copy = ExpeditionRun.Restore(db, run.Capture());
+                        if (copy.Gold != run.Gold || copy.Roster.SupplyUsed != run.Roster.SupplyUsed ||
+                            !copy.TacticIds.SequenceEqual(run.TacticIds))
+                            throw new InvalidOperationException("Tactic budget or roster changed on reload.");
+                        gold[wave] += run.Gold;
+                        supply[wave] += run.Roster.SupplyUsed;
+                        tactics[wave] += run.TacticIds.Count;
                         var battle = run.BeginBattle();
                         while (!battle.Ended && battle.Time < 75) battle.Step(.25f);
                         bool win = battle.Ended && battle.Winner == CatalogTeam.Ally;
@@ -115,7 +134,10 @@ internal static class ExpeditionBalanceProbe
                         .Append(",\"wins\":").Append(wins[wave]).Append(",\"reachWins\":").Append(reach[wave])
                         .Append(",\"timeouts\":").Append(timeout[wave]).Append(",\"meanSeconds\":").Append(Number(times[wave] / count))
                         .Append(",\"meanSurvivors\":").Append(Number(survivors[wave] / count))
-                        .Append(",\"meanHealthFraction\":").Append(Number(health[wave] / count)).Append('}');
+                        .Append(",\"meanHealthFraction\":").Append(Number(health[wave] / count))
+                        .Append(",\"meanGoldBeforeBattle\":").Append(Number(gold[wave] / count))
+                        .Append(",\"meanSupplyBeforeBattle\":").Append(Number(supply[wave] / count))
+                        .Append(",\"meanTacticsBeforeBattle\":").Append(Number(tactics[wave] / count)).Append('}');
                     Console.WriteLine(policy + " wave=" + (wave + 1) + " wins=" + wins[wave] + "/" + count +
                         " reach=" + reach[wave] + " sec=" + Number(times[wave] / count));
                 }

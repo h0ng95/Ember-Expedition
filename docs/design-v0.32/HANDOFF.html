@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.32 · 영구 연구와 원정 전술</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.32 · 영구 연구와 원정 전술</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 두 성장 시스템의 역할</a>
+<a href="#section-2">2. 영구 연구 트리</a>
+<a href="#section-3">3. 원정 전술 트리</a>
+<a href="#section-4">4. 비교에서 채택한 기준</a>
+<a href="#section-5">5. 저장과 검증 범위</a>
+<a href="#section-6">6. 난도 조정과 실험 결과</a>
+<a href="#section-7">7. 구현 검증과 실기기 화면</a>
+<a href="#section-8">8. 다음 작업</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · IGNIS: ASHEN OATH</p>
+<p>이전 왕궁·비행 수호룡 작업은 **<code>f430538</code>**로 커밋했다. 이번 작업은 <strong>거점의 영구 연구</strong>, <strong>원정에서 골드로 선택하는 전술</strong>, <strong>일반전 난도 조정</strong>이다. Normal은 30전투이며 Hard는 준비 중 버튼으로 유지한다.</p>
+<h2 id="section-1">1. 두 성장 시스템의 역할</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>영구 연구 / Research</th>
+<th>원정 전술 / Tactics</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>위치</td>
+<td>거점의 원정 연구</td>
+<td>전투 준비의 원정 전술</td>
+</tr>
+<tr>
+<td>재화</td>
+<td>첫 돌파로 얻는 연구 포인트</td>
+<td>소환과 공유하는 원정 골드</td>
+</tr>
+<tr>
+<td>유지</td>
+<td>새 원정·실패·앱 재시작 후에도 유지</td>
+<td>해당 원정에만 유지, 새 원정에서 초기화</td>
+</tr>
+<tr>
+<td>적용</td>
+<td>다음에 새로 시작하는 원정부터</td>
+<td>구매 후 해당 원정의 다음 전투부터</td>
+</tr>
+<tr>
+<td>형태</td>
+<td>3갈래 × 2노드, 부모 연구 필요</td>
+<td>3갈래 × 2노드, 최대 3개 선택</td>
+</tr>
+<tr>
+<td>목적</td>
+<td>시작 편성을 늘리고 작은 능력 보정 제공</td>
+<td>현재 유닛 조합에 맞춘 집중 투자</td>
+</tr>
+</tbody></table></div>
+<p>현재 진행 중인 원정은 시작할 때의 영구 연구 목록을 보관한다. 거점에서 추가 연구를 구매해도 진행 중인 원정의 능력이나 시작 조건은 바뀌지 않는다. 원정 전술은 구입 확정 후 준비 행동의 되돌리기로 환불되지 않는다.</p>
+<h2 id="section-2">2. 영구 연구 트리</h2>
+<p>연구 포인트는 <strong>새로운 최고 격파 기록 1전투당 1점</strong>, <strong>5의 배수 보스 최초 격파 시 추가 1점</strong>이다. 30전투까지 총 36점이며, 현재 6개 노드를 모두 배우는 데 27점이 든다. 남은 9점은 보관된다. 반복해서 같은 전투를 깨거나 패배하는 것만으로 포인트를 추가 지급하지 않는다.</p>
+<p>기존 최고 기록에는 같은 규칙으로 소급 지급한다. 저장한 최고 기록과 구입 목록에서 잔여 포인트를 계산하므로 결과창 재접속·이어하기·다시 시작으로 보상을 중복 수령할 수 없다. 새 최고 기록을 세운 뒤 원정에 실패해도 이미 얻은 연구 포인트는 남는다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>갈래</th>
+<th>첫 노드 · 3점</th>
+<th>다음 노드 · 6점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>서약</td>
+<td>서약 편성: 기사 · 기수 · 사제</td>
+<td>원정대 체력: 모든 동료 최대 체력 +5%</td>
+</tr>
+<tr>
+<td>화염</td>
+<td>화염 편성: 기사 · 화염술사 · 사제</td>
+<td>마력 이해: 동료 직접 공격 기술 피해 +5%</td>
+</tr>
+<tr>
+<td>서리</td>
+<td>서리 편성: 기사 · 서리술사 · 사제</td>
+<td>정밀 훈련: 모든 동료 기본 공격 피해 +5%</td>
+</tr>
+</tbody></table></div>
+<p>기본 <strong>기사 · 궁수 · 사제</strong> 편성은 연구 없이 선택할 수 있다. 모든 시작 편성은 3명·40G이며, 소환의 기본 직업 풀과 확률은 동일하다. 화염·서리·서약은 플레이 방향을 바꾸는 선택지다. 위 세 능력 보정은 배우면 어느 시작 편성에도 적용된다. 반복해서 레벨을 올리는 노드는 없으며 각 노드 1회 구매다.</p>
+<h2 id="section-3">3. 원정 전술 트리</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>갈래</th>
+<th>6전투부터 · 40G</th>
+<th>11전투부터 · 60G</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>방어</td>
+<td>방벽 훈련: 근접 동료 최대 체력 +12%</td>
+<td>방패술: 보호막이 있는 동료의 피해 +15%</td>
+</tr>
+<tr>
+<td>정밀</td>
+<td>정밀 사격: 원거리 동료 기본 공격 피해 +15%</td>
+<td>약점 공략: 표식 또는 둔화 상태인 적에게 피해 +18%</td>
+</tr>
+<tr>
+<td>마력</td>
+<td>술식 연구: 동료 직접 공격 기술 피해 +15%</td>
+<td>잔불 증폭: 동료 화상 피해 +30%</td>
+</tr>
+</tbody></table></div>
+<p>상위 노드는 해당 갈래의 첫 노드가 필요하다. 한 원정에 최대 3개까지 고르므로 세 갈래의 기본기를 모두 선택하거나, 한 갈래를 완성하고 다른 기본기를 더할 수 있다. 모두 고르는 방식은 아니다. <strong>기본 전술 하나는 소환 2회, 상위 전술 하나는 소환 3회 비용</strong>이다.</p>
+<ul>
+<li>구매는 전투 준비 상태에서만 가능하다. 전투 중·결과창에서는 구매할 수 없다.</li>
+<li>이미 배운 노드, 골드 부족, 단계 미달, 부모 미습득, 선택 한도 초과는 골드를 차감하지 않는다.</li>
+<li>전술 구입은 소환 난수에 영향을 주지 않는다.</li>
+<li>표식과 둔화가 함께 있어도 약점 공략은 한 번만 적용한다.</li>
+<li>직접 공격 기술 보정은 기본공격·화상·중독·회복·보호막 수치에 적용하지 않는다.</li>
+<li>아군 강화는 적의 공격이나 적이 거는 화상에는 적용하지 않는다.</li>
+</ul>
+<p>전술 6개는 영구 연구가 없어도 사용할 수 있다. 시작 편성에 따라 투자할 갈래가 달라지며, 골드가 적을 때는 먼저 소환·전승·진화를 진행하는 편이 유리할 수 있다.</p>
+<h2 id="section-4">4. 비교에서 채택한 기준</h2>
+<ul>
+<li><strong>Hades:</strong> 거울 능력에는 Darkness를 사용하고, 해당 원정의 은혜와 코인은 사망하면 사라진다. 영구 성장과 원정 빌드를 구분하는 참고 사례다. <a href="https://www.playstation.com/en-sg/games/hades/tips-and-tricks-to-survive-your-first-hades-encounters/">공식 가이드</a></li>
+<li><strong>Rogue Legacy 2:</strong> 골드로 저택과 능력을 키우는 영구 성장 트리가 있다. 연결된 연구를 열어가는 만족감을 참고하되, 우리 첫 버전은 직접 능력 보정의 크기를 제한한다. <a href="https://news.xbox.com/en-us/2022/04/29/rogue-legacy-2-tips-and-tricks/">공식 소개</a></li>
+<li><strong>The Last Flame:</strong> 개발자는 공격력 +10% 같은 영구 능력치 성장 대신 선택지 확대를 설명했다. 오토배틀의 조합 이해가 중요한 비교 사례다. <a href="https://steamcommunity.com/app/1830970/discussions/0/592886117969199485/">개발자 답변</a></li>
+<li><strong>Slotbound:</strong> 영구 성장과 원정 중 코어·아이템을 구분해야 한다. 데모 플레이 리뷰는 원정 보상 재화로 생명과 상위 유닛 확률 등을 강화한다고 설명한다. 모든 기능이 같은 골드를 쓴다고 단정하지 않는다. <a href="https://todaywegame.gg/demos/slotbound">데모 리뷰</a></li>
+</ul>
+<p>우리의 목표는 <strong>연구가 적어도 좋은 조합으로 Normal 완주가 가능하고, 연구를 모두 해도 부실한 편성은 후반에서 어려움을 겪는 것</strong>이다. 이 목표는 아래 자동 정책 실험과 사람의 실제 플레이를 함께 보며 계속 조정한다.</p>
+<h2 id="section-5">5. 저장과 검증 범위</h2>
+<p>원정 저장은 <strong>v8</strong>, 영구 성과·연구 저장은 <strong>v2</strong>다. 기존 PlayerPrefs 키를 유지하며 원정 v2~v7과 성과 v1을 이행한다. 이전 원정은 전술·영구 연구 효과 없이 기존 기본 편성을 유지한다. v7의 30전투 완료는 추가 골드를 다시 지급하지 않는다. 기존 10·15·20·25전투 완료의 구간 확장 보상은 기존 규칙을 따른다.</p>
+<p>원정 저장에는 전술 구매 비용을 포함해 골드 예산을 검증한다. 연구 목록의 중복·존재하지 않는 ID·부모 누락·포인트 초과를 거부한다. 전술·영구 연구·시작 편성·배치·소환 난수는 저장 후에도 복원한다.</p>
+<p>현재 v7 이행 자료는 커밋 <code>f430538</code>의 원정 코드가 직접 저장한 준비·전투·승리 결과·패배 결과·완료·패배 6종이다. 이 자료는 저장 검증용이며 실제 승률 증거가 아니다.</p>
+<h2 id="section-6">6. 난도 조정과 실험 결과</h2>
+<p>1·2전투는 첫 조작을 익히는 난도로 유지하고, 3·4전투와 6전투 이후 일반전, 15·20·25·30전투 보스를 강화했다. 후반 첫 후보가 지나치게 어려워 26<del>29전투 일반 적은 v0.31 대비 체력 +15%·공격력 +10%로 한 번 보정했다. 그 뒤 코드를 고정하고 조정에 사용하지 않은 난수 9001</del>9040으로 확인했다.</p>
+<p>다음 수치는 <strong>고정 자동 정책의 실험 결과</strong>다. 단일 전투 검사는 앞선 전투를 졌더라도 이전 보상을 받았다고 가정해 이어가며, 실제로 연속 승리한 경우는 별도 집계한다. 그러므로 단일 전투 승리 횟수는 30전투 완주 횟수나 사람의 승률을 뜻하지 않는다. 전투 제한 시간은 실제 게임과 같은 75초다. 이 실험은 기본 시작 편성·영구 연구 효과 없음 기준이다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>자동 정책</th>
+<th>확인 결과</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>초기 3명 유지, 성장 없음</td>
+<td>4전투 0/40 승리</td>
+<td>초기 편성을 그대로 두고 통과하기 어려워짐</td>
+</tr>
+<tr>
+<td>기본 직업 5명, 성장 없음</td>
+<td>4전투 37/40, 5전투 4/40</td>
+<td>인원만 늘리는 것으로 첫 보스가 보장되지 않음</td>
+</tr>
+<tr>
+<td>성장 중심, 전술 없음</td>
+<td>30전투 단독 23/40, 1~30 연속 승리 7/40</td>
+<td>영구 연구·전술 없이도 해당 성장 정책의 완주 사례 있음</td>
+</tr>
+<tr>
+<td>성장 중심, 전술 3개 조기 구입</td>
+<td>30전투 단독 31/40, 연속 승리 3/40</td>
+<td>최종 전투에는 도움이 되지만 중간 성장 지연이 큼</td>
+</tr>
+<tr>
+<td>결합 6종 각각, 분산·밀집 배치 비교</td>
+<td>모든 결합 정책의 연속 승리 0/40</td>
+<td>다양한 결합 빌드의 완주 가능성은 아직 입증하지 못함</td>
+</tr>
+</tbody></table></div>
+<p>전술을 일찍 산 정책은 15전투 단독 승리가 7/40으로, 전술 없는 성장 정책의 15/40보다 낮았다. 후반 전투만 보고 전술을 필수 구매로 안내하면 중간 구간에서 성장 재화가 부족해질 수 있다. 결합별 성장 순서·편성·회복량·시간 초과를 다음 조정의 우선 대상으로 남긴다. <strong>현재 Normal 전체 밸런스는 완성 상태가 아니다.</strong> 별도 난수 결과를 보고 이번 수치를 다시 맞추지는 않았다.</p>
+<p>새 시작 편성도 난수 1~20으로 첫 5전투를 확인했다. 5명 편성에서 성장을 진행한 정책의 연속 승리는 기본·화염·서리 20/20, 서약 18/20이었다. 같은 편성을 성장 없이 두면 첫 보스까지 연속 승리는 기본·화염 4/20, 서약·서리 0/20이었다. 시작 편성 해금만으로 초반 승리를 보장하지 않는 방향이지만, 이 역시 특정 자동 정책 결과다.</p>
+<ul>
+<li><a href="balance-holdout.json">일반 정책 별도 난수 원본</a></li>
+<li><a href="hybrid-holdout.json">결합·배치별 별도 난수 원본</a></li>
+<li><a href="starting-formations.txt">시작 편성 실험 결과</a></li>
+<li>재현: <code>tests/ExpeditionRun/run-balance.ps1 -FirstSeed 9001 -Count 40 -ReportPath docs/design-v0.32/balance-holdout.json</code></li>
+<li>재현: <code>tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 9001 -Count 40 -GrowthOrder Balanced -ReportPath docs/design-v0.32/hybrid-holdout.json</code></li>
+<li>시작 편성: <code>tests/ExpeditionResearch/run-starting-formations.ps1</code></li>
+</ul>
+<h2 id="section-7">7. 구현 검증과 실기기 화면</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>검증</th>
+<th>결과</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>순수 C# 원정</td>
+<td>2,052개 검사 통과</td>
+</tr>
+<tr>
+<td>순수 C# 전투</td>
+<td>3,011개 검사 통과</td>
+</tr>
+<tr>
+<td>연구·전술</td>
+<td>61개 검사 통과</td>
+</tr>
+<tr>
+<td>성과·저장 이행</td>
+<td>421개 검사 통과</td>
+</tr>
+<tr>
+<td>Unity 실제 JsonUtility</td>
+<td>340개 검사 통과</td>
+</tr>
+<tr>
+<td>코드 검토</td>
+<td>저장 이행·중복 보상·골드 예산·되돌리기·아군 효과 경계를 검토했고 차단 결함을 발견하지 못함</td>
+</tr>
+<tr>
+<td>Galaxy Buddy2</td>
+<td>연구 구매·전술 구매·앱 프로세스 재시작·새 편성 선택·첫 전투 승리 확인</td>
+</tr>
+</tbody></table></div>
+<p>최종 Android APK를 Unity 6000.3.24f1에서 빌드하고 Buddy2에 업데이트 설치했다. 빌드 로그는 <code>unity/Logs/v032-final-build.log</code>, APK는 <code>unity/Builds/Android/expedition-combat-prototype.apk</code>다. 로그와 APK는 Git 추적에서 제외한다. 최종 APK SHA-256: <code>8F79F239856DDE6AB8559D27BF31F208406E4191D5005DBD678E615754B663DC</code>.</p>
+<p>기존 v1 최고 기록 4인 계정이 연구 4점을 받는 화면을 확인했다. 이어 임시 최고 기록 11인 검증 자료로 화염 편성·마력 이해를 구매하고, 진행 중 원정에는 소급 적용되지 않는 것을 확인했다. 11전투 준비에서 전술 3개를 사면 340G가 200G로 줄며, 앱을 종료하고 다시 열어도 구매 내역과 골드가 유지됐다.</p>
+<p>새 원정을 화염 편성으로 시작하면 기사·화염술사·사제, 40G, 전술 0개가 되고 영구 연구만 이어졌다. 첫 전투 승리 후에는 60G가 됐으며, 이미 격파한 전투여서 연구 포인트는 다시 생기지 않았다. <a href="device-checks.jsonl">실기기 저장 상태 확인 기록</a>.</p>
+<p>최종 APK에서도 수정한 안내와 화염 편성을 확인했다. 조회한 최근 2,500개 로그 범위의 Unity·AndroidRuntime 기록에는 Exception·FATAL·Unity 오류 항목이 없었다. 검증이 끝난 뒤 테스트 직전에 백업한 <strong>사용자의 전체 PlayerPrefs를 바이트 일치로 복원</strong>했다. 원래 5전투의 진행과 설정은 보존했고 임시 연구 구매·검증용 기록은 남기지 않았다.</p>
+<p>아래 화면은 Galaxy Buddy2의 실제 실행 캡처다. 연구·전술 구입 확인용 임시 진행 상태를 사용했다. 새 편성에 맞춰 1·2전투 안내도 특정 궁수 대신 원거리·지원 동료를 설명하도록 수정했다.</p>
+<h3>영구 연구</h3>
+<p><img src="screenshots/research-tree.png" alt="원정 연구 3갈래와 다음 노드"></p>
+<h3>원정 전술</h3>
+<p><img src="screenshots/tactics-tree.png" alt="골드로 선택한 원정 전술 3개"></p>
+<h3>새 원정의 시작 편성</h3>
+<p><img src="screenshots/starting-formation.png" alt="화염 편성을 선택한 새 원정 창"></p>
+<p><img src="screenshots/ember-preparation.png" alt="기사·화염술사·사제의 전투 준비"></p>
+<p>장시간 프레임 유지·발열·배터리와 30전투 전체의 사람 플레이는 이번 검증에 포함하지 않았다.</p>
+<h2 id="section-8">8. 다음 작업</h2>
+<p>영구 연구 6개와 원정 전술 6개는 게임에 연결했다. 다음 우선순위는 <strong>결합 편성의 중간 구간 생존과 30전투 완주</strong>, <strong>전술 구입 시점과 성장 비용</strong>, <strong>실기기에서 전체 원정 플레이</strong>다. 유물 시스템, 연구 트리 확장, Hard 전투는 후속 개발이다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

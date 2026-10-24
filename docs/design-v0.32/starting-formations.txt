@@ -1,0 +1,8 @@
+basic/standard w3=20 hp=0.86 w4=18 hp=0.28 w5=4 reach=4
+basic/tactical w3=20 hp=0.85 w4=11 hp=0.23 w5=0 reach=0
+basic/ember w3=20 hp=0.87 w4=18 hp=0.32 w5=4 reach=4
+basic/frost w3=20 hp=0.86 w4=13 hp=0.23 w5=0 reach=0
+grown/standard w3=20 hp=0.93 w4=20 hp=0.71 w5=20 reach=20
+grown/tactical w3=20 hp=0.93 w4=18 hp=0.55 w5=20 reach=18
+grown/ember w3=20 hp=0.94 w4=20 hp=0.70 w5=20 reach=20
+grown/frost w3=20 hp=0.93 w4=20 hp=0.69 w5=20 reach=20

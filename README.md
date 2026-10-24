@@ -4,14 +4,14 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.31 잿빛 왕궁·Normal 30전투·비행 수호룡**. 26~30전투와 적 4종·배경·이야기를 추가했다. 큰 수호룡은 직선 브레스·후열 비행 폭격·착지 충격파를 반복한다. 기존 25전투 완료는 50G와 함께 26전투로 이어진다. [변경·검증 기록](docs/design-v0.31/HANDOFF.md). Normal만 플레이 가능하며 30전투 완료 후에도 Hard 전투는 준비 중이다. [v0.30 황혼 정원·중독](docs/design-v0.30/HANDOFF.md).
+- 최신 구현: **v0.32 영구 연구·원정 전술·일반전 난도 조정**. 거점 연구 6개와 골드 전술 6개를 연결된 트리로 제공한다. 영구 연구는 시작 편성과 작은 능력 보정, 전술은 원정마다 골드를 나눠 쓰는 선택이다. [변경·검증 기록](docs/design-v0.32/HANDOFF.md). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [v0.31 왕궁·비행 수호룡](docs/design-v0.31/HANDOFF.md).
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광·서리 성당·황혼 정원·잿빛 왕궁 각각 4종, 총 24종은 **개별 애니메이션 첫 제작본**을 사용한다. [왕궁 제작·검증](docs/design-v0.31/HANDOFF.html).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 30전투 경로를 연결했으며 전체 난도·연출과 출시 준비는 진행 중이다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
-- 설계안: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 신규 졸개 미술·실제 플레이 난도 조정·원정 연구는 후속 개발 범위다.
+- 설계 이력: [v0.13 노션용 문서](docs/design-v0.13/expedition-economy.md) · [읽기용 문서](docs/design-v0.13/expedition-economy.html). 현재 연구와 재화 규칙은 v0.32 문서를 따른다.
 - 상품 계획: 광고가 있는 무료 앱 + 광고 없는 별도 유료 앱, 인앱결제 없음
-- 현재 흐름: **새 원정·이어하기 → 준비·골드 소환·배치·전승·진화·결합 → 30전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
-- 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이다. 당시 12전투안은 설계 이력이며, 현재 첫 출시 목표는 30전투다. 유물·영구 해금은 후속 범위다.
+- 현재 흐름: **거점 연구 → 새 원정 편성 선택·이어하기 → 준비·골드 소환·전술·배치·성장 → 30전투 → 원정 결과**. 기존 별점 지도는 본편 진입에서 제외했다. 30형태 시험실은 홈의 개발용 메뉴에 남겼다.
+- 기준 기획: [v0.8 게임 기획과 디자인 재정립](docs/design-v0.8/ember-expedition-replan.md) · [읽기용 문서](docs/design-v0.8/ember-expedition-replan.html) · [화면 구성 시안](docs/design-v0.8/ui-concept.html). v0.11은 버튼 소환과 연속 원정을 먼저 연결한 축약판이다. 당시 12전투안은 설계 이력이며, 현재 첫 출시 목표는 30전투다. 유물은 후속 범위이며 첫 영구 연구는 v0.32에 연결했다.
 - 직업 상세안: [v0.9 직업·진화·결합체 설계](docs/design-v0.9/unit-catalog.md) · [읽기용 직업 도감](docs/design-v0.9/unit-catalog.html). 기본·분기·최종·특수 결합 총 30형태의 능력치와 스킬을 정리한 검증 전 초안이다.
 - 새 전투 시험실: **CATALOG LAB / 30**에서 30형태의 실제 스킬·전승·진화·결합과 첫 애니메이션을 시험한다. [v0.10 제작 기록](docs/design-v0.10/production-notes.md) · [움직이는 도감](docs/design-v0.10/animation-gallery.html) · [밸런스 실험](docs/design-v0.10/balance-report.md). 30개 시트에 대기·걷기·공격·피격·쓰러짐 총 660프레임을 제작했으며, 출시 전 동작과 한 원정 전체의 균형은 계속 다듬는다.
 
@@ -31,6 +31,7 @@
 ./tests/ExpeditionRun/run-early-balance.ps1
 ./tests/ExpeditionStory/run.ps1
 ./tests/ExpeditionProgress/run.ps1
+./tests/ExpeditionResearch/run.ps1
 ./tests/ExpeditionPreparationHints/run.ps1
 ./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -GrowthOrder TargetFirst
 ./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -GrowthOrder FrontFirst
@@ -64,4 +65,4 @@
 - `Library/`, `Temp/`, `Builds/`, 로그, 인증 정보, 앱 서명키는 커밋하지 않는다.
 - 원격 저장소는 [h0ng95/Ember-Expedition](https://github.com/h0ng95/Ember-Expedition)이며 `main`의 최초 업로드를 완료했다. Unity 실행 검증 상태는 `unity/README.md`에 기록한다.
 
-현재 기본 진입은 30전투 원정이며, 동료 30형태와 여섯 지역 적 24종의 애니메이션을 사용한다. 보스는 5·10·15·20·25·30전투에 등장한다. 전체 난도와 회복량 조정·원정 연구·광고·출시 설정은 후속 단계다.
+현재 기본 진입은 30전투 원정이며, 동료 30형태와 여섯 지역 적 24종의 애니메이션을 사용한다. 보스는 5·10·15·20·25·30전투에 등장한다. 전체 난도와 회복량의 추가 조정·유물·연구 확장·광고·출시 설정은 후속 단계다.

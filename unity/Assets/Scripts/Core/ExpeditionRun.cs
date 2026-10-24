@@ -28,6 +28,8 @@ namespace Expedition.Core
         public ExpeditionDifficulty Difficulty;
         public int ContentWaves;
         public int PreviousClearWaves;
+        public string[] TacticIds, LegacyResearchIds;
+        public string StartFormationId;
         public int Wave, Lantern, Victories, NextMemberNumber, Gold, LastReward, RewardedWave;
         public bool LastVictory;
         public ExpeditionPhase Phase;
@@ -84,6 +86,8 @@ namespace Expedition.Core
 
         readonly CatalogDatabase catalog;
         readonly List<string> deployedIds = new List<string>(5);
+        readonly List<string> tacticIds = new List<string>(CatalogResearch.MaxNodes);
+        readonly List<string> legacyResearchIds = new List<string>();
         readonly Stack<ExpeditionPreparationSave> history = new Stack<ExpeditionPreparationSave>();
         CatalogBattle battle;
         uint randomState;
@@ -93,6 +97,9 @@ namespace Expedition.Core
 
         public CatalogRoster Roster { get; private set; }
         public IReadOnlyList<string> DeployedIds { get { return deployedIds.AsReadOnly(); } }
+        public IReadOnlyList<string> TacticIds { get { return tacticIds.AsReadOnly(); } }
+        public IReadOnlyList<string> LegacyResearchIds { get { return legacyResearchIds.AsReadOnly(); } }
+        public string StartFormationId { get; private set; }
         public int Wave { get; private set; }
         public ExpeditionDifficulty Difficulty { get; private set; }
         public int ContentWaves { get; private set; }
@@ -119,23 +126,50 @@ namespace Expedition.Core
         }
 
         public static ExpeditionRun New(CatalogDatabase catalog, uint seed,
-            ExpeditionDifficulty difficulty = ExpeditionDifficulty.Normal)
+            ExpeditionDifficulty difficulty = ExpeditionDifficulty.Normal,
+            IEnumerable<string> legacyResearchIds = null, string startFormationId = "standard")
         {
             if (difficulty != ExpeditionDifficulty.Normal)
                 throw new ArgumentOutOfRangeException("difficulty", "Difficulty is unavailable.");
+            var selectedLegacy = new List<string>(legacyResearchIds ?? new string[0]);
+            CatalogLegacyResearch.ValidateSelection(selectedLegacy);
+            if (!CatalogLegacyResearch.IsFormationAvailable(startFormationId, selectedLegacy))
+                throw new ArgumentException("Starting formation is unavailable.", "startFormationId");
+            string[] startingForms = CatalogLegacyResearch.GetFormationUnits(startFormationId);
             var run = new ExpeditionRun(catalog);
             run.Difficulty = difficulty;
             run.ContentWaves = TotalWaves;
+            run.legacyResearchIds.AddRange(selectedLegacy);
+            run.StartFormationId = startFormationId;
             run.randomState = seed == 0 ? 0x6d2b79f5u : seed;
             run.Roster = new CatalogRoster(catalog);
             run.Wave = 1;
             run.Lantern = 3;
             run.Gold = 40;
             run.Phase = ExpeditionPhase.Preparation;
-            run.RecruitStart("B-KN", -1.3f, 0f);
-            run.RecruitStart("B-AR", -3.5f, .8f);
-            run.RecruitStart("B-PR", -3.5f, -.8f);
+            run.RecruitStart(startingForms[0], -1.3f, 0f);
+            run.RecruitStart(startingForms[1], -3.5f, .8f);
+            run.RecruitStart(startingForms[2], -3.5f, -.8f);
             return run;
+        }
+
+        public bool CanPurchaseTactic(string id)
+        {
+            CatalogResearchNode node = CatalogResearch.Get(id);
+            return Phase == ExpeditionPhase.Preparation && node != null &&
+                Wave >= node.UnlockWave && Gold >= node.Cost &&
+                tacticIds.Count < CatalogResearch.MaxNodes && !tacticIds.Contains(id) &&
+                (node.PrerequisiteId == null || tacticIds.Contains(node.PrerequisiteId));
+        }
+
+        public bool PurchaseTactic(string id)
+        {
+            if (!CanPurchaseTactic(id)) return false;
+            CatalogResearchNode node = CatalogResearch.Get(id);
+            tacticIds.Add(id);
+            Gold -= node.Cost;
+            // A confirmed research purchase is outside preparation Undo, like a summon.
+            return true;
         }
 
         void RecruitStart(string formId, float x, float y)
@@ -372,7 +406,7 @@ namespace Expedition.Core
 
         CatalogBattle CreateBattle()
         {
-            var result = new CatalogBattle(catalog);
+            var result = new CatalogBattle(catalog, tacticIds, legacyResearchIds);
             foreach (string id in deployedIds)
             {
                 CatalogMember member = Roster.Find(id);
@@ -386,109 +420,109 @@ namespace Expedition.Core
                     AddMelee(result, "beast", 2, 84f, 9f, 6f);
                     AddRanged(result, "spine-raider", 1, 65f, 7f); break;
                 case 3:
-                    AddMelee(result, "beast", 1, 175f, 20f, 7f);
-                    AddRanged(result, "spine-raider", 3, 150f, 23f, false, true); break;
+                    AddMelee(result, "beast", 1, 190f, 24f, 7f);
+                    AddRanged(result, "spine-raider", 3, 175f, 30f, false, true); break;
                 case 4:
-                    result.AddEnemy("elite-beast", 400f, 42f, 12f, 1.8f, 1f, .7f,
+                    result.AddEnemy("elite-beast", 550f, 62f, 12f, 1.8f, 1f, .7f,
                         false, 3.25f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "beast", 2, 165f, 26f, 7f);
-                    AddRanged(result, "spine-raider", 1, 120f, 28f); break;
+                    AddMelee(result, "beast", 2, 220f, 40f, 7f);
+                    AddRanged(result, "spine-raider", 1, 165f, 43f); break;
                 case 5:
                     result.AddEnemy("beast-boss", 2500f, 46f, 20f, 1.65f, 1.1f, .65f,
                         true, 3.7f, 0f, CatalogEnemyRole.Beast, true);
                     AddMelee(result, "beast", 2, 90f, 9f, 7f); break;
                 case 6:
-                    AddMelee(result, "stone-infantry", 2, 320f, 27f, 14f);
-                    AddRanged(result, "crossbow-raider", 1, 190f, 22f); break;
+                    AddMelee(result, "stone-infantry", 2, 400f, 40f, 14f);
+                    AddRanged(result, "crossbow-raider", 1, 260f, 35f); break;
                 case 7:
-                    AddMelee(result, "stone-infantry", 2, 320f, 33f, 14f);
-                    AddRanged(result, "crossbow-raider", 2, 200f, 30f); break;
+                    AddMelee(result, "stone-infantry", 2, 420f, 45f, 14f);
+                    AddRanged(result, "crossbow-raider", 2, 270f, 40f); break;
                 case 8:
-                    AddMelee(result, "stone-infantry", 3, 300f, 34f, 15f);
-                    AddRanged(result, "crossbow-raider", 2, 215f, 31f); break;
+                    AddMelee(result, "stone-infantry", 3, 440f, 48f, 15f);
+                    AddRanged(result, "crossbow-raider", 2, 300f, 45f); break;
                 case 9:
-                    result.AddEnemy("stone-elite", 650f, 42f, 22f, 1.8f, 1f, .55f,
+                    result.AddEnemy("stone-elite", 770f, 55f, 22f, 1.8f, 1f, .55f,
                         false, 3.45f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "stone-infantry", 3, 270f, 29f, 16f);
-                    AddRanged(result, "crossbow-raider", 2, 190f, 28f); break;
+                    AddMelee(result, "stone-infantry", 3, 370f, 40f, 16f);
+                    AddRanged(result, "crossbow-raider", 2, 275f, 38f); break;
                 case 10:
                     result.AddEnemy("golem-boss", 4200f, 80f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
                     AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
                 case 11:
-                    AddMineWorkers(result, 2, 420f, 36f, 12f);
-                    AddMineSlingers(result, 1, 270f, 30f); break;
+                    AddMineWorkers(result, 2, 550f, 50f, 12f);
+                    AddMineSlingers(result, 1, 380f, 42f); break;
                 case 12:
-                    AddMineWorkers(result, 2, 480f, 40f, 15f);
-                    AddMineSlingers(result, 2, 300f, 34f); break;
+                    AddMineWorkers(result, 2, 620f, 55f, 15f);
+                    AddMineSlingers(result, 2, 410f, 47f); break;
                 case 13:
-                    AddMineWorkers(result, 3, 520f, 44f, 16f);
-                    AddMineSlingers(result, 2, 330f, 38f); break;
+                    AddMineWorkers(result, 3, 700f, 60f, 16f);
+                    AddMineSlingers(result, 2, 450f, 51f); break;
                 case 14:
-                    result.AddEnemy("mine-elite", 950f, 50f, 24f, 1.8f, 1f, .57f,
+                    result.AddEnemy("mine-elite", 1200f, 66f, 24f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddMineWorkers(result, 2, 500f, 44f, 18f);
-                    AddMineSlingers(result, 2, 330f, 38f); break;
+                    AddMineWorkers(result, 2, 660f, 59f, 18f);
+                    AddMineSlingers(result, 2, 450f, 51f); break;
                 case 15:
-                    result.AddEnemy("furnace-boss", 5200f, 78f, 25f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("furnace-boss", 6000f, 98f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Furnace, true);
-                    result.AddEnemy("mine-elite", 700f, 38f, 20f, 1.8f, 1f, .57f,
+                    result.AddEnemy("mine-elite", 850f, 52f, 20f, 1.8f, 1f, .57f,
                         false, 3f, -1.25f, CatalogEnemyRole.Supervisor);
-                    AddMineSlingers(result, 2, 220f, 26f); break;
+                    AddMineSlingers(result, 2, 300f, 36f); break;
                 case 16:
-                    AddFrostGuards(result, 2, 600f, 48f, 17f);
-                    AddRanged(result, "frost-acolyte", 2, 380f, 40f); break;
+                    AddFrostGuards(result, 2, 790f, 67f, 17f);
+                    AddRanged(result, "frost-acolyte", 2, 500f, 55f); break;
                 case 17:
-                    AddFrostGuards(result, 3, 720f, 55f, 17f);
-                    AddRanged(result, "frost-acolyte", 2, 450f, 46f); break;
+                    AddFrostGuards(result, 3, 930f, 75f, 17f);
+                    AddRanged(result, "frost-acolyte", 2, 590f, 61f); break;
                 case 18:
-                    AddFrostGuards(result, 3, 800f, 60f, 18f);
-                    AddRanged(result, "frost-acolyte", 3, 500f, 50f); break;
+                    AddFrostGuards(result, 3, 1040f, 82f, 18f);
+                    AddRanged(result, "frost-acolyte", 3, 660f, 67f); break;
                 case 19:
-                    result.AddEnemy("frost-cantor", 1250f, 68f, 27f, 1.8f, 1f, .57f,
+                    result.AddEnemy("frost-cantor", 1650f, 90f, 27f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddFrostGuards(result, 2, 850f, 62f, 18f);
-                    AddRanged(result, "frost-acolyte", 2, 520f, 53f); break;
+                    AddFrostGuards(result, 2, 1100f, 86f, 18f);
+                    AddRanged(result, "frost-acolyte", 2, 680f, 71f); break;
                 case 20:
-                    result.AddEnemy("frost-boss", 6000f, 85f, 28f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("frost-boss", 7400f, 110f, 28f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.FrostWarden, true);
-                    AddRanged(result, "frost-acolyte", 2, 280f, 36f, true); break;
+                    AddRanged(result, "frost-acolyte", 2, 380f, 46f, true); break;
                 case 21:
-                    AddGardenGuards(result, 2, 700f, 60f, 20f);
-                    AddGardenSpitters(result, 2, 420f, 45f); break;
+                    AddGardenGuards(result, 2, 920f, 83f, 20f);
+                    AddGardenSpitters(result, 2, 540f, 60f); break;
                 case 22:
-                    AddGardenGuards(result, 3, 800f, 68f, 20f);
-                    AddGardenSpitters(result, 2, 480f, 52f); break;
+                    AddGardenGuards(result, 3, 1050f, 92f, 20f);
+                    AddGardenSpitters(result, 2, 620f, 68f); break;
                 case 23:
-                    AddGardenGuards(result, 3, 900f, 72f, 21f);
-                    AddGardenSpitters(result, 3, 540f, 55f); break;
+                    AddGardenGuards(result, 3, 1170f, 98f, 21f);
+                    AddGardenSpitters(result, 3, 700f, 74f); break;
                 case 24:
-                    result.AddEnemy("garden-keeper", 1500f, 78f, 30f, 1.8f, 1f, .57f,
+                    result.AddEnemy("garden-keeper", 1950f, 103f, 30f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddGardenGuards(result, 2, 950f, 74f, 21f);
-                    AddGardenSpitters(result, 2, 570f, 58f); break;
+                    AddGardenGuards(result, 2, 1230f, 101f, 21f);
+                    AddGardenSpitters(result, 2, 740f, 78f); break;
                 case 25:
-                    result.AddEnemy("garden-boss", 7000f, 100f, 32f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("garden-boss", 8500f, 125f, 32f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.GardenLord, true);
-                    AddGardenSpitters(result, 2, 340f, 45f, true); break;
+                    AddGardenSpitters(result, 2, 450f, 60f, true); break;
                 case 26:
-                    AddPalaceGuards(result, 2, 1050f, 80f, 24f);
-                    AddRanged(result, "palace-arbalist", 2, 620f, 64f); break;
+                    AddPalaceGuards(result, 2, 1207.5f, 88f, 24f);
+                    AddRanged(result, "palace-arbalist", 2, 713f, 70.4f); break;
                 case 27:
-                    AddPalaceGuards(result, 3, 1150f, 85f, 24f);
-                    AddRanged(result, "palace-arbalist", 2, 680f, 70f); break;
+                    AddPalaceGuards(result, 3, 1322.5f, 93.5f, 24f);
+                    AddRanged(result, "palace-arbalist", 2, 782f, 77f); break;
                 case 28:
-                    AddPalaceGuards(result, 3, 1250f, 90f, 26f);
-                    AddRanged(result, "palace-arbalist", 3, 740f, 74f); break;
+                    AddPalaceGuards(result, 3, 1437.5f, 99f, 26f);
+                    AddRanged(result, "palace-arbalist", 3, 851f, 81.4f); break;
                 case 29:
-                    result.AddEnemy("palace-sentinel", 1900f, 98f, 34f, 1.8f, 1f, .57f,
+                    result.AddEnemy("palace-sentinel", 2185f, 107.8f, 34f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddPalaceGuards(result, 2, 1320f, 94f, 26f);
-                    AddRanged(result, "palace-arbalist", 2, 770f, 78f); break;
+                    AddPalaceGuards(result, 2, 1518f, 103.4f, 26f);
+                    AddRanged(result, "palace-arbalist", 2, 885.5f, 85.8f); break;
                 case 30:
-                    result.AddEnemy("palace-boss", 9000f, 112f, 36f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("palace-boss", 10800f, 145f, 36f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.CrownDrake, true);
-                    AddRanged(result, "palace-arbalist", 2, 460f, 60f, true); break;
+                    AddRanged(result, "palace-arbalist", 2, 600f, 78f, true); break;
             }
             return result;
         }
@@ -610,8 +644,10 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 7, Difficulty = Difficulty,
+            return new ExpeditionRunSave { Version = 8, Difficulty = Difficulty,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
+                TacticIds = tacticIds.ToArray(), LegacyResearchIds = legacyResearchIds.ToArray(),
+                StartFormationId = StartFormationId,
                 Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
                 Victories = Victories, LastVictory = LastVictory,
@@ -629,8 +665,9 @@ namespace Expedition.Core
             bool normalSave = save != null && save.Version >= 4;
             bool twenty = save != null && save.Version == 5;
             bool twentyFive = save != null && save.Version == 6;
-            bool current = save != null && save.Version == 7;
-            int saveWaves = legacy ? 10 : current ? TotalWaves : twentyFive ? 25 : twenty ? 20 : 15;
+            bool thirty = save != null && save.Version == 7;
+            bool current = save != null && save.Version == 8;
+            int saveWaves = legacy ? 10 : current || thirty ? TotalWaves : twentyFive ? 25 : twenty ? 20 : 15;
             // Validate old files against their original economy before granting expansion rewards.
             int[] fifteenRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
                 30, 30, 35, 40, 0 };
@@ -638,9 +675,9 @@ namespace Expedition.Core
                 30, 30, 35, 40, 50, 35, 35, 40, 45, 0 };
             int[] twentyFiveRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
                 30, 30, 35, 40, 50, 35, 35, 40, 45, 50, 40, 40, 45, 50, 0 };
-            int[] rewards = legacy ? LegacyVictoryRewards : current ? VictoryRewards :
+            int[] rewards = legacy ? LegacyVictoryRewards : current || thirty ? VictoryRewards :
                 twentyFive ? twentyFiveRewards : twenty ? twentyRewards : fifteenRewards;
-            if (save == null || save.Version < 2 || save.Version > 7 ||
+            if (save == null || save.Version < 2 || save.Version > 8 ||
                 normalSave && save.Difficulty != ExpeditionDifficulty.Normal ||
                 save.Version == 4 && save.ContentWaves != 15 ||
                 twenty && (save.ContentWaves != 20 ||
@@ -650,10 +687,12 @@ namespace Expedition.Core
                     save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 &&
                     save.PreviousClearWaves != 20 ||
                     save.PreviousClearWaves > save.Victories) ||
-                current && (save.ContentWaves != TotalWaves ||
+                (current || thirty) && (save.ContentWaves != TotalWaves ||
                     save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 &&
                     save.PreviousClearWaves != 20 && save.PreviousClearWaves != 25 ||
                     save.PreviousClearWaves > save.Victories) ||
+                current && (save.TacticIds == null || save.LegacyResearchIds == null ||
+                    !CatalogLegacyResearch.IsFormationAvailable(save.StartFormationId, save.LegacyResearchIds)) ||
                 save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
                 save.Gold > TotalEarned(saveWaves, rewards) ||
@@ -666,10 +705,17 @@ namespace Expedition.Core
                 save.DeployedIds == null || save.UndoHistory == null ||
                 !Enum.IsDefined(typeof(ExpeditionPhase), save.Phase))
                 throw new ArgumentException("Invalid expedition save.");
+            string[] selectedTactics = current ? save.TacticIds : new string[0];
+            string[] selectedLegacy = current ? save.LegacyResearchIds : new string[0];
+            int tacticCost = CatalogResearch.ValidateSelection(selectedTactics, save.Wave);
+            CatalogLegacyResearch.ValidateSelection(selectedLegacy);
             var run = new ExpeditionRun(catalog);
             run.Difficulty = normalSave ? save.Difficulty : ExpeditionDifficulty.Normal;
             run.ContentWaves = TotalWaves;
             run.PreviousClearWaves = save.Version >= 5 ? save.PreviousClearWaves : 0;
+            run.tacticIds.AddRange(selectedTactics);
+            run.legacyResearchIds.AddRange(selectedLegacy);
+            run.StartFormationId = current ? save.StartFormationId : "standard";
             run.Roster = CatalogRoster.Restore(catalog, save.Roster);
             run.Wave = save.Wave; run.Lantern = save.Lantern;
             run.Gold = save.Gold; run.LastReward = save.LastReward;
@@ -681,7 +727,7 @@ namespace Expedition.Core
             run.ValidateDeployment();
             if (run.Roster.SupplyUsed != run.nextMemberNumber ||
                 run.Gold != (long)TotalEarned(run.RewardedWave, rewards) -
-                    (long)SummonCost * (run.Roster.SupplyUsed - 3))
+                    (long)SummonCost * (run.Roster.SupplyUsed - 3) - tacticCost)
                 throw new ArgumentException("Saved supply and member IDs disagree.");
             if (save.Phase != ExpeditionPhase.Preparation && save.UndoHistory.Length != 0 ||
                 save.RewardedWave != save.Wave -
@@ -714,8 +760,8 @@ namespace Expedition.Core
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             }
             // Convert only after the complete old save has passed its original rules.
-            // Version 7 captures include the grant, preventing duplicate rewards on reload.
-            if (!current && save.Wave == saveWaves && save.LastVictory &&
+            // Current-content captures include prior expansion grants, preventing duplicates on reload.
+            if (saveWaves < TotalWaves && save.Wave == saveWaves && save.LastVictory &&
                 (save.Phase == ExpeditionPhase.Result || save.Phase == ExpeditionPhase.Completed))
             {
                 run.Gold += VictoryRewards[saveWaves - 1];

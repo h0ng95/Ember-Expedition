@@ -24,7 +24,7 @@ internal static class ExpeditionProgressTests
         var normal = ExpeditionRun.New(catalog, 123);
         var explicitNormal = ExpeditionRun.New(catalog, 123, ExpeditionDifficulty.Normal);
         Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 30 &&
-            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 7 &&
+            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 8 &&
             normal.Capture().ContentWaves == 30 && normal.PreviousClearWaves == 0,
             "Default run remains current Normal content.");
         Check(normal.Capture().RandomState == explicitNormal.Capture().RandomState &&
@@ -78,7 +78,7 @@ internal static class ExpeditionProgressTests
             bool oldClear = names[i] == "completed";
             Check(restored.Phase == (oldClear ? ExpeditionPhase.Preparation : phases[i]) &&
                 restored.Difficulty == ExpeditionDifficulty.Normal &&
-                restored.ContentWaves == 30 && restored.Capture().Version == 7 &&
+                restored.ContentWaves == 30 && restored.Capture().Version == 8 &&
                 restored.Wave == (oldClear ? 16 : old.Wave) &&
                 restored.Gold == old.Gold + (oldClear ? 50 : 0) &&
                 restored.PreviousClearWaves == (oldClear ? 15 : 0) &&
@@ -183,7 +183,7 @@ internal static class ExpeditionProgressTests
             bool clear = name == "result-win" || name == "completed";
             var restored = ExpeditionRun.Restore(catalog, old);
             var now = restored.Capture();
-            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
+            Check(now.Version == 8 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
                 now.Wave == (name == "completed" ? 21 : old.Wave) &&
                 now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
                 now.Gold == old.Gold + (clear ? 50 : 0) &&
@@ -239,7 +239,7 @@ internal static class ExpeditionProgressTests
             bool clear = name == "result-win" || name == "completed";
             var restored = ExpeditionRun.Restore(catalog, old);
             var now = restored.Capture();
-            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
+            Check(now.Version == 8 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
                 now.Wave == (name == "completed" ? 26 : old.Wave) &&
                 now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
                 now.Gold == old.Gold + (clear ? 50 : 0) &&
@@ -332,7 +332,7 @@ internal static class ExpeditionProgressTests
     static void ProgressValidation()
     {
         Reject(() => ExpeditionProgress.Restore(null), "Missing progress is invalid.");
-        var save = ExpeditionProgress.New().Capture(); save.Version = 2;
+        var save = ExpeditionProgress.New().Capture(); save.Version = 3;
         Reject(() => ExpeditionProgress.Restore(save), "Unknown progress version is invalid.");
         save = ExpeditionProgress.New().Capture(); save.BestWave = -1;
         Reject(() => ExpeditionProgress.Restore(save), "Negative best wave is invalid.");
@@ -355,12 +355,111 @@ internal static class ExpeditionProgressTests
             "Stable minimum preserves old fifteen-wave clears after expansion.");
     }
 
+    static void LegacyResearchRules()
+    {
+        var json = new JavaScriptSerializer();
+        var account = ExpeditionProgress.New();
+        Check(account.ResearchPoints == 0 && !account.PurchaseResearch("ember-start") &&
+            !account.PurchaseResearch(null) && !account.PurchaseResearch("bad"),
+            "Research cannot be bought without earned points or a known ID.");
+        var run = ExpeditionRun.New(catalog, 32);
+        for (int wave = 1; wave <= 5; wave++)
+        {
+            run.BeginBattle(); run.ResolveBattle(true);
+            Check(account.Observe(run) && account.ResearchPoints == wave + wave / 5,
+                "First-clear reward includes a boss point.");
+            Check(!account.Observe(run), "Result reload cannot award twice.");
+            run.Continue();
+            Check(!account.Observe(run), "Continue does not repeat research reward.");
+        }
+        Check(!account.PurchaseResearch("ember-insight") && account.ResearchPoints == 6,
+            "Child requires its parent even with enough points.");
+        Check(account.PurchaseResearch("ember-start") && account.ResearchPoints == 3 &&
+            !account.PurchaseResearch("ember-start"), "Research purchase charges exactly once.");
+        Check(run.LegacyResearchIds.Count == 0 && run.StartFormationId == "standard",
+            "Buying account research does not change a running expedition.");
+        var captured = account.Capture();
+        var reloaded = ExpeditionProgress.Restore(json.Deserialize<ExpeditionProgressSave>(json.Serialize(captured)));
+        captured.ResearchIds[0] = "bad";
+        Check(reloaded.ResearchPoints == 3 && reloaded.ResearchIds.Single() == "ember-start",
+            "Owned nodes and earned balance survive JSON independently of caller arrays.");
+        var next = ExpeditionRun.New(catalog, 33, ExpeditionDifficulty.Normal, reloaded.ResearchIds, "ember");
+        Check(next.Roster.Find("ally-02").FormId == "B-FI" && next.TacticIds.Count == 0 &&
+            next.LegacyResearchIds.Single() == "ember-start", "New run uses unlocked formation and no tactics.");
+        Check(!reloaded.Observe(next) && reloaded.ResearchPoints == 3,
+            "Restart cannot reset or duplicate permanent rewards.");
+        for (int wave = 1; wave <= 5; wave++)
+        { next.BeginBattle(); next.ResolveBattle(true); Check(!reloaded.Observe(next), "Repeated clear is not farmable."); next.Continue(); }
+        next.BeginBattle(); next.ResolveBattle(false);
+        Check(!reloaded.Observe(next) && reloaded.ResearchPoints == 3, "Loss preserves earned research.");
+        Reject(() => ExpeditionRun.New(catalog, 1, ExpeditionDifficulty.Normal, null, "ember"),
+            "Locked formation cannot start.");
+        Reject(() => ExpeditionRun.New(catalog, 1, ExpeditionDifficulty.Normal, null, "bad"),
+            "Unknown formation cannot start.");
+
+        var old = new ExpeditionProgressSave { Version = 1, BestWave = 30, CompletedWaves = 30 };
+        var migrated = ExpeditionProgress.Restore(old);
+        Check(migrated.ResearchPoints == 36 && migrated.ResearchIds.Count == 0 && migrated.HardUnlocked,
+            "Existing progress backfills first-clear points and keeps entitlement.");
+        foreach (var node in CatalogLegacyResearch.Nodes)
+            Check(migrated.PurchaseResearch(node.Id), "Every permanent node can be earned within Normal.");
+        Check(migrated.ResearchPoints == 9 && migrated.ResearchIds.Count == 6,
+            "All six nodes cost 27 points, not an unbounded stat ladder.");
+        var saved = migrated.Capture();
+        Check(ExpeditionProgress.Restore(json.Deserialize<ExpeditionProgressSave>(json.Serialize(saved))).ResearchPoints == 9,
+            "Fully researched account reload has exact balance.");
+        foreach (string formation in new[] { "standard", "tactical", "ember", "frost" })
+        {
+            var formed = ExpeditionRun.New(catalog, 66, ExpeditionDifficulty.Normal, migrated.ResearchIds, formation);
+            Check(formed.Roster.Members.Select(x => x.FormId).SequenceEqual(CatalogLegacyResearch.GetFormationUnits(formation)) &&
+                formed.Gold == 40 && formed.DeployedIds.Count == 3, "Unlocked formation keeps budget and unit count.");
+            var roundtrip = ExpeditionRun.Restore(catalog, json.Deserialize<ExpeditionRunSave>(json.Serialize(formed.Capture())));
+            Check(roundtrip.StartFormationId == formation && roundtrip.LegacyResearchIds.Count == 6,
+                "Formation and immutable research snapshot persist.");
+        }
+        old.ResearchIds = new[] { "ember-start" };
+        Reject(() => ExpeditionProgress.Restore(old), "v1 cannot smuggle new research fields.");
+        foreach (string[] ids in new[] { new[] { "unknown" }, new[] { "ember-start", "ember-start" },
+            new[] { "ember-insight" }, new string[] { null } })
+        {
+            saved = migrated.Capture(); saved.ResearchIds = ids;
+            Reject(() => ExpeditionProgress.Restore(saved), "Unknown, duplicate and orphan research rejected.");
+        }
+        saved = migrated.Capture(); saved.ResearchIds = null;
+        Reject(() => ExpeditionProgress.Restore(saved), "Current account requires research array.");
+        saved = migrated.Capture(); saved.BestWave = 1; saved.CompletedWaves = 0;
+        Reject(() => ExpeditionProgress.Restore(saved), "Overspent research save rejected.");
+        var formations = CatalogLegacyResearch.GetFormationUnits("standard"); formations[0] = "bad";
+        Check(CatalogLegacyResearch.GetFormationUnits("standard")[0] == "B-KN", "Formation catalog cannot be mutated.");
+    }
+
+    static void V7Migration(string directory)
+    {
+        foreach (string name in new[] { "preparation", "battle", "result-win", "result-loss", "completed", "defeated" })
+        {
+            string source = File.ReadAllText(Path.Combine(directory, "v7-" + name + ".json"));
+            Check(!source.Contains("TacticIds") && !source.Contains("LegacyResearchIds"), "Genuine v7 fixture lacks research.");
+            var old = Decode(source);
+            var current = ExpeditionRun.Restore(catalog, old);
+            Check(old.Version == 7 && current.Capture().Version == 8 && current.Gold == old.Gold &&
+                current.Wave == old.Wave && current.Phase == old.Phase && current.TacticIds.Count == 0 &&
+                current.LegacyResearchIds.Count == 0 && current.StartFormationId == "standard" &&
+                current.Capture().RandomState == old.RandomState && Encode(current.Capture().Roster) == Encode(old.Roster),
+                "v7 preserves economy, phase, RNG and party without expansion grants.");
+            string encoded = Encode(current.Capture());
+            Check(Encode(ExpeditionRun.Restore(catalog, Decode(encoded)).Capture()) == encoded, "v8 save is idempotent.");
+            if (name == "preparation") Check(current.Undo(), "v7 undo survives research migration.");
+            if (name == "battle") Check(current.ResumeBattle() != null, "v7 battle resumes.");
+        }
+    }
+
     static void Main(string[] args)
     {
         try
         {
             catalog = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
             DifficultyAndSave(); OldSaveMigration(args[1]); TwentyWaveMigration(args[1]); TwentyFiveWaveMigration(args[1]); ProgressRules(); ProgressValidation();
+            V7Migration(args[1]); LegacyResearchRules();
             Console.WriteLine("Expedition progress: " + checks + " checks passed.");
         }
         catch (Exception e)

@@ -76,7 +76,11 @@ namespace Expedition.Presentation
         {
             EnsureTextures();
             float radius = tier == 1 ? 27 : 32;
-            bool clicked = GUI.Button(new Rect(center.x - 48, center.y - 38, 96, 109), GUIContent.none, GUIStyle.none);
+            float hitRadius = radius + 3;
+            bool clicked = GUI.Button(new Rect(center.x - 48, center.y - hitRadius, 96, hitRadius * 2),
+                GUIContent.none, GUIStyle.none);
+            // The title and cost are part of the same visible target on a touch screen.
+            clicked |= GUI.Button(new Rect(center.x - 95, center.y + 39, 190, 49), GUIContent.none, GUIStyle.none);
             Color state = owned ? color : available ? Color.Lerp(color, Color.white, .25f) : new Color(.38f, .4f, .46f);
             if (owned || selected || available)
             {

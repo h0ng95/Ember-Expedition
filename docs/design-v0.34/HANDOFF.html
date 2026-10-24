@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.34 · 결합체 역할 보완과 Normal 난도 점검</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.34 · 결합체 역할 보완과 Normal 난도 점검</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 결합했을 때 역할이 좋아지도록</a>
+<a href="#section-2">2. UI 정렬과 글자 영역</a>
+<a href="#section-3">3. 변경 전후 비교</a>
+<a href="#section-4">4. 별도 시드 576회</a>
+<a href="#section-5">5. Normal 난이도 흐름에서 확인한 점</a>
+<a href="#section-6">6. 검증 기록</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · IGNIS: ASHEN OATH</p>
+<p>잿불 검위의 전열 생존력과 성가 기수의 회복 대상을 개선했다. 신규·연구 계정을 나누어 같은 조건으로 Normal 30을 비교하고, 길어진 기술 설명과 동료 상세·결합 확인 창의 여백을 정리했다. <strong>두 결합체 모두 독립 시드에서 실제 결합 후 완주를 확인했다. 성가 기수의 편성 의존성과 후반 난도 편차는 남아 있다.</strong></p>
+<h2 id="section-1">1. 결합했을 때 역할이 좋아지도록</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>이전</th>
+<th>이번 변경</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>잿불 검위 최대 체력</td>
+<td>405</td>
+<td>445</td>
+</tr>
+<tr>
+<td>잿불 검위 방어</td>
+<td>39</td>
+<td>45</td>
+</tr>
+<tr>
+<td>잿불 검위 기술</td>
+<td>6초 주기의 화염 범위 공격</td>
+<td>기존 공격 후 자신의 최대 체력 15% 보호막, 4초</td>
+</tr>
+<tr>
+<td>성가 기수 기술 주기</td>
+<td>8초</td>
+<td>7초</td>
+</tr>
+<tr>
+<td>성가 기수 회복 계수</td>
+<td>위력 180%</td>
+<td>시전 시점 위력 220%</td>
+</tr>
+<tr>
+<td>성가 기수 대상</td>
+<td>자신 + 거리 3.2 내 가까운 동료 2명</td>
+<td>자신 + 거리 4.5 내 체력 비율이 낮은 동료 최대 2명</td>
+</tr>
+<tr>
+<td>성가 기수 공격력 강화</td>
+<td>같은 대상 +15%, 4초</td>
+<td>유지</td>
+</tr>
+</tbody></table></div>
+<p>잿불 검위는 방패 기사를 재료로 소비하면서 잃던 전열 방어 능력을 자기 보호막으로 일부 보완한다. 부대 전체에 보호막을 주지는 않는다. 타깃이 죽거나 사거리 밖으로 벗어나 기술이 취소되면 보호막도 생기지 않는다. 이미 남아 있는 보호막을 반복해서 쌓지 않는다.</p>
+<p>성가 기수는 가까운 멀쩡한 동료 때문에 더 다친 동료를 놓치는 문제를 줄인다. 범위 밖의 동료는 대상이 아니고, 자신 이외 대상은 최대 2명이다. 자기 공격력 강화 후 다른 동료의 회복량만 증가하던 순서를 수정해, 세 대상에 같은 시전 시점 위력을 사용한다. 실제 연속 발동 간격에는 7초 대기와 다음 시전의 약 0.25초 준비 동작이 함께 들어간다.</p>
+<p>다른 직업·적·소환 가격·전술 가격과 저장 버전은 변경하지 않았다. H-01/H-05의 기술 설명을 카탈로그에서 읽어 실제 능력과 UI 문구를 함께 관리한다.</p>
+<h2 id="section-2">2. UI 정렬과 글자 영역</h2>
+<ul>
+<li>동료 상세 창을 화면 중심에 맞췄다. 기술 설명은 여러 줄 영역을 확보하고, 고유·전승 특성 및 역할 안내와 분리했다.</li>
+<li>상세 버튼 6개는 같은 폭의 3열 × 2행으로 정렬하고 가로·세로 간격을 16으로 통일했다.</li>
+<li>결합 확인 창을 넓혀 기술·재료 설명이 잘리지 않도록 했다. 아래 두 버튼과 창 하단 사이에는 공통 여백 32를 유지한다.</li>
+<li>연구 노드는 원형 아이콘뿐 아니라 제목·비용 문구를 눌러도 선택된다. 인접 노드와 입력 영역이 겹치지 않도록 원형 영역의 위아래 경계를 조정했다.</li>
+<li>UI 검토에서 최대 6개 적용 효과, 5명 전투 기여도, 긴 기술 설명을 확인 대상으로 삼았다. 배운 경로·잠긴 경로 연결선의 좌표 계산은 v0.33 수정본을 유지한다.</li>
+</ul>
+<p>아래는 최종 APK의 Galaxy Buddy2 화면이다. 패널 중심은 노치 영역을 제외한 화면 안전 영역을 기준으로 맞춘다.</p>
+<p><img src="screenshots/song-combination.png" alt="길어진 기술 설명과 하단 여백을 확인한 결합 창"></p>
+<p><img src="screenshots/flame-detail.png" alt="세 칸씩 같은 간격으로 정렬한 동료 상세"></p>
+<p><img src="screenshots/six-effects.png" alt="연구 세 개와 전술 세 개를 함께 표시한 효과 창"></p>
+<p><a href="screenshots/song-detail.png">성가 기수 상세</a> · <a href="screenshots/research-touch.png">연구 노드의 문구 터치 확인</a></p>
+<h2 id="section-3">3. 변경 전후 비교</h2>
+<p>Balanced 자동 정책, 시드 1~12를 사용했다. 신규/연구 계정 × 일반 최종 진화/H-01/H-05 × 전술 미구매/조기/지연/맞춤의 24조건으로, 변경 전 288회·변경 후 288회다. 변경 전은 v0.33의 Core와 카탈로그 복사본을 같은 새 검사기로 실행했다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>계정·정책</th>
+<th align="right">변경 전 완주 / 12</th>
+<th align="right">변경 후 완주 / 12</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>신규 · 일반 최종 진화 · 전술 없음</td>
+<td align="right">10</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>신규 · 잿불 검위 · 지연 전술</td>
+<td align="right">0</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>신규 · 성가 기수 · 전술 없음</td>
+<td align="right">0</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>신규 · 성가 기수 · 맞춤 전술</td>
+<td align="right">0</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>연구 · 잿불 검위 · 전술 없음</td>
+<td align="right">1</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>연구 · 성가 기수 · 전술 없음</td>
+<td align="right">2</td>
+<td align="right">7</td>
+</tr>
+</tbody></table></div>
+<p>위 표는 핵심 조건의 요약이며 모든 조건은 <a href="balance-before.json">변경 전</a>·<a href="balance-after.json">변경 후</a> 데이터에 남겼다. 일반 최종 진화 정책의 결과는 두 버전에서 동일했다.</p>
+<h2 id="section-4">4. 별도 시드 576회</h2>
+<p>수치를 고정한 뒤 시드 <strong>34001~34024</strong>를 사용했다. 표의 각 값은 <strong>24회 중 30전투 완주 수</strong>다. 이 결과를 본 뒤 수치를 다시 바꾸지 않았다.</p>
+<h3>연구 없는 신규 계정</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>편성 정책</th>
+<th align="right">전술 없음</th>
+<th align="right">조기 구매</th>
+<th align="right">11전투부터 구매</th>
+<th align="right">맞춤 기본 전술 1개</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>일반 최종 진화</td>
+<td align="right">10</td>
+<td align="right">13</td>
+<td align="right">13</td>
+<td align="right">7</td>
+</tr>
+<tr>
+<td>잿불 검위</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>성가 기수</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+</tbody></table></div>
+<h3>현재 연구 6개를 완료한 계정</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>편성 정책</th>
+<th align="right">전술 없음</th>
+<th align="right">조기 구매</th>
+<th align="right">11전투부터 구매</th>
+<th align="right">맞춤 기본 전술 1개</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>일반 최종 진화</td>
+<td align="right">13</td>
+<td align="right">17</td>
+<td align="right">19</td>
+<td align="right">17</td>
+</tr>
+<tr>
+<td>잿불 검위</td>
+<td align="right">6</td>
+<td align="right">10</td>
+<td align="right">14</td>
+<td align="right">11</td>
+</tr>
+<tr>
+<td>성가 기수</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">6</td>
+</tr>
+</tbody></table></div>
+<p>두 계정 모두 기본 기사·궁수·사제 3명과 같은 시드로 시작한다. 연구 계정은 27포인트로 현재 연구 6개를 모두 연 상태이며, 다른 시작 편성의 효과는 섞지 않았다. 여러 원정을 거쳐 연구 포인트를 버는 과정 자체를 모의한 것은 아니다.</p>
+<p>H 계열 완주는 전부 목표 결합체를 실제로 출전한 원정이었다. 결합체 없이 완주한 경우는 0회다. <strong>고정된 자동 플레이 정책의 진단 결과이며 사람의 승률이나 완벽한 균형을 뜻하지 않는다.</strong> 지출 정책에 따라 연구가 없어도 완주 경로는 있지만, 성가 기수는 아직 일반 최종 진화 편성보다 불리한 조건이 많다.</p>
+<p><a href="balance-holdout.json">독립 시드 전체 데이터</a> · <a href="../../tests/ExpeditionRun/README-end-to-end-balance.md">실행 안내</a></p>
+<h2 id="section-5">5. Normal 난이도 흐름에서 확인한 점</h2>
+<p>일반 최종 진화·전술 미구매 정책의 독립 시드를 기준으로 봤다. 아래 초회 승리 비율은 <strong>해당 전투까지 도달한 원정만</strong> 분모로 사용한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>전투</th>
+<th align="right">신규 초회 승리</th>
+<th align="right">연구 초회 승리</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1~4</td>
+<td align="right">각 24/24</td>
+<td align="right">각 24/24</td>
+<td>이 자동 정책에서는 입문 구간이 안정적</td>
+</tr>
+<tr>
+<td>23</td>
+<td align="right">20/24</td>
+<td align="right">24/24</td>
+<td>후반 일반전부터 연구 효과 차이가 나타남</td>
+</tr>
+<tr>
+<td>25 보스</td>
+<td align="right">15/22</td>
+<td align="right">19/24</td>
+<td>후반 구간의 뚜렷한 고비</td>
+</tr>
+<tr>
+<td>29</td>
+<td align="right">2/12</td>
+<td align="right">13/20</td>
+<td>신규 계정에서 배치·재도전 의존도가 큼</td>
+</tr>
+<tr>
+<td>30 보스</td>
+<td align="right">8/10</td>
+<td align="right">8/18</td>
+<td>연구 계정도 도달만으로 승리가 보장되지 않음</td>
+</tr>
+</tbody></table></div>
+<p>30전투 시간 초과는 신규 2회·연구 6회였다. 연구 계정이 더 많이 도달하고 조기 탈락하던 편성도 포함하므로, 단순한 최종 보스 승률 비교로 연구가 불리하다고 해석하면 안 된다. 29전투에서 패배 후 배치를 바꾸는 재도전 효과도 결과에 포함된다.</p>
+<p>계획대로 성장시키는 자동 편성의 초반 결과만으로 초반 전체가 적절하다고 단정하지 않았다. 반대로 이 자료만으로 적 전체를 일괄 강화하지도 않았다. 다음 플레이 점검은 <strong>성가 기수의 실전 기여, 신규 계정 23~30전투, 29전투의 배치 가독성</strong>에 집중한다. Hard와 추가 유물은 이후 범위다.</p>
+<h2 id="section-6">6. 검증 기록</h2>
+<ul>
+<li>HybridCombat 15개: 보호막 비중첩·자기 대상, 실제 준비/발동 경로의 사거리 이탈·타깃 사망, 부상자 우선·거리·인원 제한, 회복량 일치, 실제 재시전 간격.</li>
+<li>CatalogCombat 3,011개, ExpeditionRun 2,052개, ExpeditionResearch 61개 통과.</li>
+<li>기존 전투 Review 109개 통과. TimingReview의 오래된 Reflection 호출이 추가된 Burn 오버로드를 구분하지 못하던 테스트 문제를 수정했다. 게임 Core를 바꿔 통과시키지 않았다.</li>
+<li>ASTRA가 발견한 H-05 자기 버프 적용 순서와 연구 노드 입력 영역 경계 문제를 반영했다.</li>
+<li>저장·복원, 패배 시 등불 소모, 승리 때만 재화 획득, 같은 시드의 재현성을 유지한다. 전투별 도달·초회 승리·재도전·시간 초과 집계를 추가했다.</li>
+</ul>
+<p>최종 Unity 빌드는 종료 코드 0으로 완료됐다. 실제 Unity JsonUtility 저장 호환 340개, 드래그 입력·JSON 17개를 포함한 기존 Android 빌드 검증도 통과했다.</p>
+<p>Galaxy Buddy2에서 동료 상세 두 종류, 결합 확인과 실제 결합, 출전 인원 복구, 효과 6개, 전투 기여도 5행을 확인했다. 연구 문구 하단을 누르는 동작과 인접 원형 노드 위쪽을 누르는 동작이 각각 올바른 노드를 선택했다. 글자 잘림이나 하단 버튼 침범은 발견하지 못했다.</p>
+<p><img src="screenshots/battle-report.png" alt="기기 전투의 실제 보호·회복 집계"></p>
+<p>별도 UI 확인용 26전투 저장에서 결합 후 실제 전투를 실행해 잿불 검위의 보호 157, 성가 기수의 회복 158이 집계됐다. 이 임시 편성·진행도는 밸런스 통계에 포함하지 않는다. 원본 PlayerPrefs 전체를 테스트 전에 새로 백업했고, 종료 후 <strong>바이트 단위 동일성을 확인하며 복원</strong>했다. 마지막 실행 로그 범위에서 Unity 예외·AndroidRuntime 크래시는 발견되지 않았다. 장시간 성능·발열과 사람의 30전투 연속 플레이는 이번 검증 범위가 아니다.</p>
+<p>최종 APK: <code>unity/Builds/Android/expedition-combat-prototype.apk</code></p>
+<p>SHA-256: <code>038A93AF9A1D043A30DC554A3F450C1A941BB7121A566F045E21015410190B85</code></p>
+<p>기준 커밋은 v0.33 <code>09dae1b</code>이며 이번 기록은 그 이후의 v0.34 변경을 다룬다. 이전 v0.7 문서의 별도 수정은 보존했다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

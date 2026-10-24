@@ -12,7 +12,8 @@ namespace Expedition.Core
                 case "B-PR": case "E-AR-P": case "E-AR-T": case "E-PR-G": case "E-PR-H":
                 case "H-03": return 5f;
                 case "E-IC-S": return 4f;
-                case "B-BA": case "H-05": return 8f;
+                case "B-BA": return 8f;
+                case "H-05": return 7f;
                 case "E-FI-B": case "E-FI-E": case "E-IC-F": case "E-BA-G": case "E-BA-A":
                 case "H-02": return 7f;
                 case "F-AR": return 10f;
@@ -140,7 +141,10 @@ namespace Expedition.Core
                             GiveBuff(a, ally, CatalogBuffKind.DamageReduction, .15f, 5f, id);
                         }
                     break;
-                case "H-01": ConeHit(a, target, 2f, 3, 2.4f, id, true, 0, 0); break;
+                case "H-01":
+                    ConeHit(a, target, 2f, 3, 2.4f, id, true, 0, 0);
+                    GiveShield(a, a, a.MaxHp * .15f, 4f, id);
+                    break;
                 case "H-02":
                     Direct(a, target, 1.6f, id);
                     foreach (CatalogBattleUnit ally in LowestAllies(a, 2.5f, 2, false))
@@ -155,14 +159,17 @@ namespace Expedition.Core
                     }
                     break;
                 case "H-05":
-                    Heal(a, a, EffectivePower(a) * 1.8f, id);
+                {
+                    float songHeal = EffectivePower(a) * 2.2f;
+                    Heal(a, a, songHeal, id);
                     GiveBuff(a, a, CatalogBuffKind.Power, .15f, 4f, id);
-                    foreach (CatalogBattleUnit ally in NearbyAllies(a, 3.2f, true, 2))
+                    foreach (CatalogBattleUnit ally in LowestAllies(a, 4.5f, 2, true))
                     {
-                        Heal(a, ally, EffectivePower(a) * 1.8f, id);
+                        Heal(a, ally, songHeal, id);
                         GiveBuff(a, ally, CatalogBuffKind.Power, .15f, 4f, id);
                     }
                     break;
+                }
                 case "H-06":
                     Mark(a, target, 5f);
                     a.ExtraBasicMultiplier = .6f; a.ExtraBasicUntil = Time + 5f;

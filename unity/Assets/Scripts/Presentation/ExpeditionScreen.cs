@@ -734,49 +734,51 @@ namespace Expedition.Presentation
         {
             CatalogMember member = run == null ? null : run.Roster.Find(selectedId);
             if (member == null) { modal = Modal.None; return; }
-            Rect panel = new Rect(245, 76, 790, 570);
+            Rect panel = new Rect(245, 75, 790, 570);
             ExpeditionUiTheme.Window(panel);
             CatalogForm form = database.Get(member.FormId);
             GUI.Label(new Rect(277, 99, 560, 48), form.Name, heading);
             if (GUI.Button(new Rect(943, 108, 60, 54), "×", button)) { modal = Modal.None; return; }
             if (art != null) art.Draw(member.FormId, new Rect(290, 154, 155, 175), (int)(Time.unscaledTime * 5f) % 4);
-            GUI.Label(new Rect(468, 157, 515, 91),
+            GUI.Label(new Rect(468, 157, 535, 72),
                 "체력 " + form.Hp.ToString("0") + "   공격 " + form.Power.ToString("0") +
                 "   방어 " + form.Defense.ToString("0") + "\n" +
                 "공격 간격 " + form.AttackInterval.ToString("0.0") + "초   사거리 " + form.Range.ToString("0.0"), body);
             int target = member.FormId.StartsWith("B-", StringComparison.Ordinal) ? 2 :
                 member.FormId.StartsWith("E-", StringComparison.Ordinal) ? 6 : 0;
             HybridGuidance guidance = HybridGuide(member.FormId);
-            GUI.Label(new Rect(468, 259, 510, 58), guidance != null ? "기술: " + guidance.Skill :
-                target > 0 ? "진화 진행  " + member.Growth + " / " + target : "최종 형태", hint);
-            GUI.Label(new Rect(468, 309, 510, 34), "고유 특성: " + TraitName(form.InnateTrait) +
+            EnsureRuneStyles();
+            GUI.Label(new Rect(468, 239, 535, 88), guidance != null ? "기술: " + HybridSkillText(form, guidance) :
+                target > 0 ? "진화 진행  " + member.Growth + " / " + target : "최종 형태", runeBody);
+            GUI.Label(new Rect(277, 334, 726, 30), "고유 특성: " + TraitName(form.InnateTrait) +
                 "    전승 특성: " + TraitName(member.InheritedTraitId), small);
             if (guidance != null)
-                GUI.Label(new Rect(277, 347, 726, 49), guidance.Tactic, hint);
+                GUI.Label(new Rect(277, 368, 726, 49), guidance.Tactic, hint);
             else
-                GUI.Label(new Rect(285, 347, 700, 40), "성장과 편성", heading);
-            if (GUI.Button(new Rect(277, 407, 225, 62), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
+                GUI.Label(new Rect(277, 368, 726, 40), "성장과 편성", heading);
+            Rect firstActions = new Rect(277, 430, 726, 58), secondActions = new Rect(277, 504, 726, 58);
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 0, 3), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
             {
                 if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save(); modal = Modal.None; }
                 else Notice("출전 1~5명 · 대기석 최대 7명을 유지해야 합니다.");
             }
-            if (GUI.Button(new Rect(527, 407, 225, 62), "전승", button))
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 1, 3), "전승", button))
             { inheritTrait = false; choosePage = 0; modal = Modal.ChooseDonor; }
             GUI.enabled = target > 0 && member.Growth >= target;
-            if (GUI.Button(new Rect(776, 407, 225, 62), "진화", button)) PrepareEvolution(member);
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 2, 3), "진화", button)) PrepareEvolution(member);
             GUI.enabled = true;
             GUI.enabled = member.FormId.StartsWith("E-", StringComparison.Ordinal);
-            if (GUI.Button(new Rect(527, 492, 225, 62), "결합", button))
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 1, 3), "결합", button))
             { choosePage = 0; modal = Modal.ChoosePartner; }
             GUI.enabled = true;
-            if (GUI.Button(new Rect(277, 492, 225, 62), member.MaterialLocked ? "재료 보호 해제" : "재료 보호", button))
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 0, 3), member.MaterialLocked ? "재료 보호 해제" : "재료 보호", button))
             {
                 if (run.SetMaterialLocked(member.Id, !member.MaterialLocked)) Save();
                 else Notice("재료 보호 상태를 바꾸지 못했습니다.");
             }
-            if (GUI.Button(new Rect(776, 492, 225, 62), "적용 효과", button))
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 2, 3), "적용 효과", button))
                 OpenMemberEffects(member);
-            GUI.Label(new Rect(277, 568, 725, 49), "끌어놓기로 성장합니다. 재료 보호 중인 동료는 전승·결합에 쓰이지 않습니다.", small);
+            GUI.Label(new Rect(277, 578, 726, 36), "끌어놓기로 성장합니다. 재료 보호 중인 동료는 전승·결합에 쓰이지 않습니다.", small);
         }
 
         void DrawChooseMember()
@@ -1049,32 +1051,33 @@ namespace Expedition.Presentation
             }
             CatalogForm result = database.Get(pendingFormId);
             HybridGuidance guidance = HybridGuide(pendingFormId);
-            Rect panel = new Rect(245, 72, 790, 576);
+            Rect panel = new Rect(205, 35, 870, 650);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 104, content.width, 45), "결합 결과 확인", heading);
-            GUI.Label(new Rect(content.x, 155, content.width, 40),
+            GUI.Label(new Rect(content.x, 67, content.width, 45), "결합 결과 확인", heading);
+            GUI.Label(new Rect(content.x, 117, content.width, 52),
                 MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
                 " + " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
                 "  →  " + result.Name, body);
-            if (art != null) art.Draw(pendingFormId, new Rect(content.x + 5, 205, 170, 184),
+            if (art != null) art.Draw(pendingFormId, new Rect(content.x + 5, 176, 170, 184),
                 (int)(Time.unscaledTime * 5f) % 4);
-            GUI.Label(new Rect(468, 205, content.xMax - 468, 43), result.Name, heading);
-            GUI.Label(new Rect(468, 251, content.xMax - 468, 49),
+            GUI.Label(new Rect(440, 173, content.xMax - 440, 43), result.Name, heading);
+            GUI.Label(new Rect(440, 220, content.xMax - 440, 40),
                 "체력 " + result.Hp.ToString("0") + "   공격 " + result.Power.ToString("0") +
                 "   방어 " + result.Defense.ToString("0"), body);
-            GUI.Label(new Rect(468, 304, content.xMax - 468, 33),
-                "기술: " + (guidance == null ? "고유 특성 " + pendingFormId : guidance.Skill), body);
+            EnsureRuneStyles();
+            GUI.Label(new Rect(440, 270, content.xMax - 440, 94),
+                "기술: " + (guidance == null ? "고유 특성 " + pendingFormId : HybridSkillText(result, guidance)), runeBody);
             if (guidance != null)
-                GUI.Label(new Rect(468, 344, content.xMax - 468, 46), guidance.Tactic, hint);
-            GUI.Label(new Rect(content.x, 398, content.width, 36),
+                GUI.Label(new Rect(content.x, 373, content.width, 46), guidance.Tactic, hint);
+            GUI.Label(new Rect(content.x, 429, content.width, 32),
                 "결과를 유지하는 동료: " + MemberPositionLabel(recipient.Id) + " " +
                 database.Get(recipient.FormId).Name +
                 " · 전승 특성 " + TraitName(recipient.InheritedTraitId) + " 유지", small);
             int deployedAfter = run.DeployedIds.Count -
                 (IsDeployed(donor.Id) && IsDeployed(recipient.Id) ? 1 : 0);
-            GUI.Label(new Rect(content.x, 437, content.width, 77),
+            GUI.Label(new Rect(content.x, 469, content.width, 65),
                 "재료: " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
                 " · 전승 특성 " + TraitName(donor.InheritedTraitId) + "\n이 동료가 소모됩니다. 출전 " +
                 run.DeployedIds.Count + "명 → " + deployedAfter + "명 · 되돌리기 가능", body);
@@ -1096,11 +1099,14 @@ namespace Expedition.Presentation
             }
         }
 
-        static readonly HybridGuidance H01Guide = new HybridGuidance("전방 범위 공격과 화상", "전열 범위 공격", "적이 모이는 앞줄");
+        static string HybridSkillText(CatalogForm form, HybridGuidance guidance)
+        { return string.IsNullOrEmpty(form.Description) ? guidance.Skill : form.Description; }
+
+        static readonly HybridGuidance H01Guide = new HybridGuidance("전방 화염 공격 · 적중 후 자신 보호막", "전열 범위 공격·자기 보호", "적이 모이는 앞줄");
         static readonly HybridGuidance H02Guide = new HybridGuidance("근접 타격·주변 최대 2명 회복(자신 가능)", "전열 근접 회복", "전열 곁 · 먼 후열은 회복 불가");
         static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 이동 둔화", "후열 관통·이동 둔화", "적의 진로가 겹치는 뒤쪽");
         static readonly HybridGuidance H04Guide = new HybridGuidance("범위 내 적에게 화상·둔화·피해", "후열 범위 견제", "뭉친 적을 겨냥하는 뒤쪽");
-        static readonly HybridGuidance H05Guide = new HybridGuidance("자신과 가까운 아군 회복·공격력 강화", "전열 근처 회복·지원", "앞줄 곁, 아군과 너무 멀지 않게");
+        static readonly HybridGuidance H05Guide = new HybridGuidance("자신과 부상자 2명 우선 회복·공격력 강화", "부상자 회복·공격 지원", "아군이 거리 4.5 안에 들어오는 중열");
         static readonly HybridGuidance H06Guide = new HybridGuidance("표식·5초 안 다음 기본공격 1회 +60%", "후열 단발 공격 지원", "본인 + 거리 3 내 가까운 아군 2명");
 
         static HybridGuidance HybridGuide(string formId)

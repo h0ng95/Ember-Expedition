@@ -4,7 +4,7 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.33 연구 보드·적용 효과·전투 기여도**. 원형 노드와 경로로 연구·전술을 표시하고 동료별 효과와 실제 전투 기여도를 확인한다. 실제 원정 1,120회에서 빌드·지출 순서를 비교했으며 H-01·H-05는 추가 조정이 필요하다. [변경·검증 기록](docs/design-v0.33/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.33/HANDOFF.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. 연구·전술 규칙은 [v0.32](docs/design-v0.32/HANDOFF.md)를 따른다.
+- 최신 구현: **v0.34 결합체 역할 보완·Normal 난도 점검**. 잿불 검위의 자기 보호막과 성가 기수의 부상자 우선 회복을 추가하고, 신규·연구 계정 및 전술 지출 순서를 비교했다. 동료 상세·결합 확인의 기술 설명과 버튼 간격도 정리했다. [변경·검증 기록](docs/design-v0.34/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.34/HANDOFF.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [연구·전술 규칙](docs/design-v0.32/HANDOFF.md) · [연구 보드·전투 기여도](docs/design-v0.33/HANDOFF.md).
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광·서리 성당·황혼 정원·잿빛 왕궁 각각 4종, 총 24종은 **개별 애니메이션 첫 제작본**을 사용한다. [왕궁 제작·검증](docs/design-v0.31/HANDOFF.html).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 30전투 경로를 연결했으며 전체 난도·연출과 출시 준비는 진행 중이다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
@@ -33,6 +33,7 @@
 ./tests/ExpeditionProgress/run.ps1
 ./tests/ExpeditionResearch/run.ps1
 ./tests/CatalogBattleReport/run.ps1
+./tests/HybridCombat/run.ps1
 ./tests/ExpeditionRun/run-end-to-end-balance.ps1 -FirstSeed 19001 -Count 40 -GrowthOrder Balanced -Spending all -ReportPath .local-tools/balance-holdout.json
 ./tests/ExpeditionPreparationHints/run.ps1
 ./tests/ExpeditionRun/run-hybrid-balance.ps1 -FirstSeed 1 -Count 40 -GrowthOrder TargetFirst

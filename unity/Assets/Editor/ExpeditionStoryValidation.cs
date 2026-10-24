@@ -57,8 +57,8 @@ namespace Expedition.EditorTools
             { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
             Check(oldJournal.Observe(run) && oldJournal.IsUnlocked("mine-clear") &&
                 oldJournal.IsUnlocked("frost-clear") && oldJournal.IsUnlocked("garden-clear") &&
-                oldJournal.UnlockedCount == 11 && !oldJournal.Observe(run),
-                "twenty-five-wave clear did not unlock once");
+                oldJournal.IsUnlocked("palace-clear") && oldJournal.UnlockedCount == 13 &&
+                !oldJournal.Observe(run), "thirty-wave clear did not unlock once");
             RoundTrip(oldJournal);
             Debug.Log("Expedition story validated: Unity JSON and old-save observation.");
         }
@@ -70,6 +70,8 @@ namespace Expedition.EditorTools
             FrostEnemyArtValidation.Validate();
             GardenEnemyArtValidation.GenerateManifest();
             GardenEnemyArtValidation.Validate();
+            PalaceEnemyArtValidation.GenerateManifest();
+            PalaceEnemyArtValidation.Validate();
             AllyBodyScaleValidation.BuildAndroid();
         }
     }

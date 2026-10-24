@@ -38,7 +38,11 @@ namespace Expedition.Core
             new StoryEntry("garden", "독가시의 정원",
                 "황혼정원에는 독가시가 왕궁으로 난 길을 뒤덮었다.\n원정대는 잊힌 정원사의 경계를 넘어 다섯 번째 조각을 찾는다."),
             new StoryEntry("garden-clear", "왕궁으로 난 길",
-                "가시의 군주가 물러나고 다섯 번째 이그니스 조각을 되찾는다.\n정원 너머 왕궁의 불빛을 따라 마지막 길로 향한다.")
+                "가시의 군주가 물러나고 다섯 번째 이그니스 조각을 되찾는다.\n정원 너머 잿빛왕궁의 불빛을 따라 마지막 길로 향한다."),
+            new StoryEntry("palace", "잿빛왕궁",
+                "꺼진 왕궁의 결계는 오래된 수호 명령만 되풀이한다.\n원정대는 왕관의 수호룡을 넘어 마지막 불꽃 조각을 찾는다."),
+            new StoryEntry("palace-clear", "다시 타오르는 이그니스",
+                "왕관의 수호룡이 날개를 접자 마지막 불꽃 조각이 깨어난다.\n모은 조각으로 이그니스를 재점화해 왕궁 결계를 밝힌다.")
         });
 
         static readonly Dictionary<string, StoryEntry> ById = BuildIndex();
@@ -63,6 +67,7 @@ namespace Expedition.Core
             if (wave >= 11 && wave <= 15) return Get("mine");
             if (wave >= 16 && wave <= 20) return Get("frost");
             if (wave >= 21 && wave <= 25) return Get("garden");
+            if (wave >= 26 && wave <= 30) return Get("palace");
             return null;
         }
 
@@ -75,6 +80,7 @@ namespace Expedition.Core
                 case 15: return Get("mine-clear");
                 case 20: return Get("frost-clear");
                 case 25: return Get("garden-clear");
+                case 30: return Get("palace-clear");
                 default: return null;
             }
         }
@@ -118,6 +124,8 @@ namespace Expedition.Core
             if (run.Victories >= 20) changed |= unlocked.Add("frost-clear");
             if (run.Wave >= 21) changed |= unlocked.Add("garden");
             if (run.Victories >= 25) changed |= unlocked.Add("garden-clear");
+            if (run.Wave >= 26) changed |= unlocked.Add("palace");
+            if (run.Victories >= 30) changed |= unlocked.Add("palace-clear");
             return changed;
         }
 

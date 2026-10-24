@@ -1,0 +1,32 @@
+{
+  "before": {
+    "Version": 7,
+    "Difficulty": 0,
+    "ContentWaves": 30,
+    "Wave": 26,
+    "Phase": 0,
+    "Victories": 25,
+    "Gold": 55,
+    "Progress": "{\"Version\":1,\"BestWave\":25,\"CompletedWaves\":25}"
+  },
+  "after": {
+    "Version": 7,
+    "Difficulty": 0,
+    "ContentWaves": 30,
+    "Wave": 26,
+    "Phase": 2,
+    "Victories": 26,
+    "Gold": 100,
+    "Progress": "{\"Version\":1,\"BestWave\":26,\"CompletedWaves\":25}"
+  },
+  "restarted": {
+    "Version": 7,
+    "Difficulty": 0,
+    "ContentWaves": 30,
+    "Wave": 26,
+    "Phase": 2,
+    "Victories": 26,
+    "Gold": 100,
+    "Progress": "{\"Version\":1,\"BestWave\":26,\"CompletedWaves\":25}"
+  }
+}

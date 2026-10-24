@@ -23,9 +23,9 @@ internal static class ExpeditionProgressTests
     {
         var normal = ExpeditionRun.New(catalog, 123);
         var explicitNormal = ExpeditionRun.New(catalog, 123, ExpeditionDifficulty.Normal);
-        Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 25 &&
-            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 6 &&
-            normal.Capture().ContentWaves == 25 && normal.PreviousClearWaves == 0,
+        Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 30 &&
+            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 7 &&
+            normal.Capture().ContentWaves == 30 && normal.PreviousClearWaves == 0,
             "Default run remains current Normal content.");
         Check(normal.Capture().RandomState == explicitNormal.Capture().RandomState &&
             normal.Gold == explicitNormal.Gold &&
@@ -48,7 +48,7 @@ internal static class ExpeditionProgressTests
         Reject(() => ExpeditionRun.Restore(catalog, save), "A current save cannot inject Hard.");
         save = ExpeditionRun.New(catalog, 1).Capture(); save.Difficulty = (ExpeditionDifficulty)99;
         Reject(() => ExpeditionRun.Restore(catalog, save), "Unknown saved difficulty is invalid.");
-        save = ExpeditionRun.New(catalog, 1).Capture(); save.ContentWaves = 30;
+        save = ExpeditionRun.New(catalog, 1).Capture(); save.ContentWaves = 31;
         Reject(() => ExpeditionRun.Restore(catalog, save), "A current save cannot claim unreleased content.");
         save = ExpeditionRun.New(catalog, 1).Capture(); save.ContentWaves = 0;
         Reject(() => ExpeditionRun.Restore(catalog, save), "A v6 save must state its content length.");
@@ -78,7 +78,7 @@ internal static class ExpeditionProgressTests
             bool oldClear = names[i] == "completed";
             Check(restored.Phase == (oldClear ? ExpeditionPhase.Preparation : phases[i]) &&
                 restored.Difficulty == ExpeditionDifficulty.Normal &&
-                restored.ContentWaves == 25 && restored.Capture().Version == 6 &&
+                restored.ContentWaves == 30 && restored.Capture().Version == 7 &&
                 restored.Wave == (oldClear ? 16 : old.Wave) &&
                 restored.Gold == old.Gold + (oldClear ? 50 : 0) &&
                 restored.PreviousClearWaves == (oldClear ? 15 : 0) &&
@@ -93,7 +93,7 @@ internal static class ExpeditionProgressTests
                 "Migration preserves roster, RNG, deployment, undo and victory state.");
             ExpeditionRun reloaded = ExpeditionRun.Restore(catalog, snapshot);
             Check(reloaded.Gold == restored.Gold && reloaded.PreviousClearWaves == restored.PreviousClearWaves &&
-                reloaded.Phase == restored.Phase, "v6 reload neither repeats nor loses migration credit.");
+                reloaded.Phase == restored.Phase, "v7 reload neither repeats nor loses migration credit.");
             if (phases[i] == ExpeditionPhase.Battle)
                 Check(restored.ResumeBattle() != null, "Genuine v3 battle resumes.");
             if (oldClear)
@@ -124,7 +124,7 @@ internal static class ExpeditionProgressTests
             ExpeditionRun reloaded = ExpeditionRun.Restore(catalog, result.Capture());
             Check(reloaded.Gold == 525 && reloaded.Continue() && reloaded.Wave == 16 &&
                 reloaded.Gold == 525 && reloaded.Phase == ExpeditionPhase.Preparation,
-                "v6 Result continues to wave sixteen without another grant.");
+                "v7 Result continues to wave sixteen without another grant.");
             old.Gold++;
             Reject(() => ExpeditionRun.Restore(catalog, old), "Invalid old final budget cannot bypass migration.");
         }
@@ -183,7 +183,7 @@ internal static class ExpeditionProgressTests
             bool clear = name == "result-win" || name == "completed";
             var restored = ExpeditionRun.Restore(catalog, old);
             var now = restored.Capture();
-            Check(now.Version == 6 && now.ContentWaves == 25 && now.Difficulty == ExpeditionDifficulty.Normal &&
+            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
                 now.Wave == (name == "completed" ? 21 : old.Wave) &&
                 now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
                 now.Gold == old.Gold + (clear ? 50 : 0) &&
@@ -197,10 +197,10 @@ internal static class ExpeditionProgressTests
                 "v5 migration preserves roster, RNG, economy history and deployment: " + name);
             Check(Encode(old) == original, "Migration leaves supplied v5 snapshot unchanged: " + name);
             var reloaded = ExpeditionRun.Restore(catalog, Decode(Encode(now)));
-            Check(Encode(reloaded.Capture()) == Encode(now), "v6 JSON is idempotent: " + name);
+            Check(Encode(reloaded.Capture()) == Encode(now), "v7 JSON is idempotent: " + name);
             var progress = ExpeditionProgress.New(); progress.Observe(reloaded);
             Check(progress.CompletedWaves == (clear ? 20 : prior) && progress.BestWave == old.Victories &&
-                !progress.HardUnlocked && !progress.Observe(reloaded), "Historical clear remains distinct from Normal25.");
+                !progress.HardUnlocked && !progress.Observe(reloaded), "Historical clear remains distinct from Normal30.");
             if (name == "result-win")
                 Check(reloaded.Continue() && reloaded.Wave == 21 && reloaded.Gold == now.Gold,
                     "Winning result continues to 21 without a second grant.");
@@ -223,6 +223,62 @@ internal static class ExpeditionProgressTests
         Check(earlyReload.Wave == 1 && earlyReload.Gold == 20 && earlyReload.CanUndo &&
             earlyReload.PreviousClearWaves == 0, "An early v5 save receives no completion bonus.");
         var invented = earlyReload.Capture(); invented.PreviousClearWaves = 20;
+        RejectSave(catalog, invented, "A prior clear cannot exceed victories.");
+    }
+
+    static void TwentyFiveWaveMigration(string directory)
+    {
+        string[] names = { "preparation", "battle", "result-win", "result-loss", "completed", "defeated" };
+        foreach (string name in names)
+        foreach (int prior in new[] { 0, 15, 20 })
+        {
+            var old = Decode(File.ReadAllText(Path.Combine(directory, "v6-" + name + ".json")));
+            Check(old.Version == 6 && old.ContentWaves == 25, "Fixture uses the committed v6 save shape.");
+            old.PreviousClearWaves = prior;
+            string original = Encode(old);
+            bool clear = name == "result-win" || name == "completed";
+            var restored = ExpeditionRun.Restore(catalog, old);
+            var now = restored.Capture();
+            Check(now.Version == 7 && now.ContentWaves == 30 && now.Difficulty == ExpeditionDifficulty.Normal &&
+                now.Wave == (name == "completed" ? 26 : old.Wave) &&
+                now.Phase == (name == "completed" ? ExpeditionPhase.Preparation : old.Phase) &&
+                now.Gold == old.Gold + (clear ? 50 : 0) &&
+                now.LastReward == (clear ? 50 : old.LastReward) &&
+                now.PreviousClearWaves == (clear ? 25 : prior), "v6 phase and one-time passage reward: " + name);
+            Check(now.RandomState == old.RandomState && now.NextMemberNumber == old.NextMemberNumber &&
+                now.LastSummonedFamily == old.LastSummonedFamily && now.FamilyStreak == old.FamilyStreak &&
+                now.Victories == old.Victories && now.RewardedWave == old.RewardedWave &&
+                now.Lantern == old.Lantern && string.Join(",", now.DeployedIds) == string.Join(",", old.DeployedIds) &&
+                Encode(now.Roster) == Encode(old.Roster) && now.UndoHistory.Length == old.UndoHistory.Length,
+                "v6 migration preserves roster, RNG, economy history and deployment: " + name);
+            Check(Encode(old) == original, "Migration leaves supplied v6 snapshot unchanged: " + name);
+            var reloaded = ExpeditionRun.Restore(catalog, Decode(Encode(now)));
+            Check(Encode(reloaded.Capture()) == Encode(now), "v7 JSON is idempotent: " + name);
+            var progress = ExpeditionProgress.New(); progress.Observe(reloaded);
+            Check(progress.CompletedWaves == (clear ? 25 : prior) && progress.BestWave == old.Victories &&
+                !progress.HardUnlocked && !progress.Observe(reloaded), "Historical clear remains distinct from Normal30.");
+            if (name == "result-win")
+                Check(reloaded.Continue() && reloaded.Wave == 26 && reloaded.Gold == now.Gold,
+                    "Winning result continues to 26 without a second grant.");
+            if (name == "preparation")
+                Check(reloaded.CanUndo && reloaded.Undo() && reloaded.Roster.Find("ally-01").X == -1.3f,
+                    "v6 undo remains usable.");
+            if (name == "battle") Check(reloaded.ResumeBattle() != null, "v6 interrupted battle resumes.");
+            old.Gold++;
+            RejectSave(catalog, old, "Invalid old economy is rejected before bonus.");
+        }
+        var invalid = Decode(File.ReadAllText(Path.Combine(directory, "v6-completed.json")));
+        invalid.ContentWaves = 30; RejectSave(catalog, invalid, "v6 cannot claim new content length.");
+        invalid.ContentWaves = 25; invalid.PreviousClearWaves = 25;
+        RejectSave(catalog, invalid, "v6 cannot inject an unrecorded prior twenty clear.");
+        invalid.PreviousClearWaves = 0; invalid.Difficulty = ExpeditionDifficulty.Hard;
+        RejectSave(catalog, invalid, "Old Hard content stays unavailable.");
+        var early = ExpeditionRun.New(catalog, 62); early.Summon(); early.Move("ally-01", -2f, 0);
+        var earlySave = early.Capture(); earlySave.Version = 6; earlySave.ContentWaves = 25;
+        var earlyReload = ExpeditionRun.Restore(catalog, earlySave);
+        Check(earlyReload.Wave == 1 && earlyReload.Gold == 20 && earlyReload.CanUndo &&
+            earlyReload.PreviousClearWaves == 0, "An early v6 save receives no completion bonus.");
+        var invented = earlyReload.Capture(); invented.PreviousClearWaves = 25;
         RejectSave(catalog, invented, "A prior clear cannot exceed victories.");
     }
 
@@ -256,8 +312,11 @@ internal static class ExpeditionProgressTests
                     progress.CompletedWaves == 0 && !progress.HardUnlocked,
                     "Current wave twenty records passage, not completion.");
             if (wave == 25)
-                Check(progress.Observe(complete) && progress.CompletedWaves == 25 &&
-                    !progress.HardUnlocked, "Twenty-five-wave Result records the current clear.");
+                Check(progress.Observe(complete) && progress.BestWave == 25 && progress.CompletedWaves == 0 &&
+                    !progress.HardUnlocked, "Wave25 is passage, not Normal30 completion.");
+            if (wave == 30)
+                Check(progress.Observe(complete) && progress.CompletedWaves == 30 &&
+                    progress.HardUnlocked, "Normal30 Result records completion and future Hard entitlement.");
             complete.Continue();
         }
         Check(complete.Phase == ExpeditionPhase.Completed && !progress.Observe(complete),
@@ -265,8 +324,8 @@ internal static class ExpeditionProgressTests
         ExpeditionProgressSave saved = progress.Capture();
         var reloaded = ExpeditionProgress.Restore(saved);
         saved.BestWave = saved.CompletedWaves = 0;
-        Check(reloaded.BestWave == 25 && reloaded.CompletedWaves == 25 &&
-            reloaded.Capture().BestWave == 25,
+        Check(reloaded.BestWave == 30 && reloaded.CompletedWaves == 30 &&
+            reloaded.Capture().BestWave == 30,
             "Captured progress reloads independently of supplied data.");
     }
 
@@ -301,7 +360,7 @@ internal static class ExpeditionProgressTests
         try
         {
             catalog = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
-            DifficultyAndSave(); OldSaveMigration(args[1]); TwentyWaveMigration(args[1]); ProgressRules(); ProgressValidation();
+            DifficultyAndSave(); OldSaveMigration(args[1]); TwentyWaveMigration(args[1]); TwentyFiveWaveMigration(args[1]); ProgressRules(); ProgressValidation();
             Console.WriteLine("Expedition progress: " + checks + " checks passed.");
         }
         catch (Exception e)

@@ -45,6 +45,7 @@ namespace Expedition.Presentation
             LoadManifest(MineEnemyArt.ManifestPath);
             LoadManifest(FrostEnemyArt.ManifestPath);
             LoadManifest(GardenEnemyArt.ManifestPath);
+            LoadManifest(PalaceEnemyArt.ManifestPath);
             Shader clipShader = Shader.Find("Expedition/CatalogSpriteClip");
             if (clipShader != null && clipShader.isSupported)
             {
@@ -69,7 +70,8 @@ namespace Expedition.Presentation
             if (unit.Id.StartsWith("mine-", StringComparison.Ordinal) ||
                 unit.Id == "furnace-boss" ||
                 unit.Id.StartsWith("frost-", StringComparison.Ordinal) ||
-                unit.Id.StartsWith("garden-", StringComparison.Ordinal)) return null;
+                unit.Id.StartsWith("garden-", StringComparison.Ordinal) ||
+                unit.Id.StartsWith("palace-", StringComparison.Ordinal)) return null;
             if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? Species[3] : null;
             if (unit.Id.StartsWith("stone-", StringComparison.Ordinal) ||
                 unit.Id.StartsWith("crossbow-", StringComparison.Ordinal)) return null;
@@ -85,7 +87,8 @@ namespace Expedition.Presentation
                 CastleEnemyArt.SilhouetteHeight(id) > 0f ? CastleEnemyArt.SilhouetteHeight(id) :
                 MineEnemyArt.SilhouetteHeight(id) > 0f ? MineEnemyArt.SilhouetteHeight(id) :
                 FrostEnemyArt.SilhouetteHeight(id) > 0f ? FrostEnemyArt.SilhouetteHeight(id) :
-                GardenEnemyArt.SilhouetteHeight(id);
+                GardenEnemyArt.SilhouetteHeight(id) > 0f ? GardenEnemyArt.SilhouetteHeight(id) :
+                PalaceEnemyArt.SilhouetteHeight(id);
         }
 
         // Returns an absolute index in the 6 by 4 sheet. Attack release begins on

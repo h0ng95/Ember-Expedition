@@ -42,13 +42,14 @@ namespace Expedition.Core
 
     public sealed class ExpeditionRun
     {
-        public const int TotalWaves = 25;
+        public const int TotalWaves = 30;
         public const int ReleaseWaves = 30;
         public const int SummonCost = 20;
         const int MaxDeployed = 5;
         const int MaxBench = 7;
         static readonly int[] VictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
-            30, 30, 35, 40, 50, 35, 35, 40, 45, 50, 40, 40, 45, 50, 0 };
+            30, 30, 35, 40, 50, 35, 35, 40, 45, 50, 40, 40, 45, 50, 50,
+            45, 50, 50, 55, 0 };
         static readonly int[] LegacyVictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 0 };
         static readonly string[] Families = { "KN", "AR", "FI", "PR", "IC", "BA" };
         static readonly string[] Encounters =
@@ -57,7 +58,8 @@ namespace Expedition.Core
             "무너진 성채", "성채 수비선", "성채의 무리", "갑주 석상", "성문 골렘",
             "폐광 입구", "잿가루 통로", "광차 갈림길", "철쇄 감독관", "용광로 수호자",
             "서리 성당 입구", "얼어붙은 회랑", "서리 제단", "찬송의 감시자", "서리의 파수꾼",
-            "황혼 정원 입구", "독가시 산책로", "시든 온실", "황혼 정원사", "가시의 군주"
+            "황혼 정원 입구", "독가시 산책로", "시든 온실", "황혼 정원사", "가시의 군주",
+            "잿빛 왕궁 입구", "왕궁의 회랑", "검은 왕좌 길", "왕궁 집행관", "왕관의 수호룡"
         };
         static readonly string[] EncounterDescriptions =
         {
@@ -74,7 +76,10 @@ namespace Expedition.Core
             "서리의 파수꾼 1 · 서리 시종 2",
             "가시 근위병 2 · 독침 사냥꾼 2", "가시 근위병 3 · 독침 사냥꾼 2",
             "가시 근위병 3 · 독침 사냥꾼 3", "황혼 정원사 1 · 가시 근위병 2 · 독침 사냥꾼 2",
-            "가시의 군주 1 · 독침 사냥꾼 2"
+            "가시의 군주 1 · 독침 사냥꾼 2",
+            "왕궁 근위병 2 · 왕궁 석궁병 2", "왕궁 근위병 3 · 왕궁 석궁병 2",
+            "왕궁 근위병 3 · 왕궁 석궁병 3", "왕궁 집행관 1 · 왕궁 근위병 2 · 왕궁 석궁병 2",
+            "왕관의 수호룡 1 · 왕궁 석궁병 2"
         };
 
         readonly CatalogDatabase catalog;
@@ -466,6 +471,24 @@ namespace Expedition.Core
                     result.AddEnemy("garden-boss", 7000f, 100f, 32f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.GardenLord, true);
                     AddGardenSpitters(result, 2, 340f, 45f, true); break;
+                case 26:
+                    AddPalaceGuards(result, 2, 1050f, 80f, 24f);
+                    AddRanged(result, "palace-arbalist", 2, 620f, 64f); break;
+                case 27:
+                    AddPalaceGuards(result, 3, 1150f, 85f, 24f);
+                    AddRanged(result, "palace-arbalist", 2, 680f, 70f); break;
+                case 28:
+                    AddPalaceGuards(result, 3, 1250f, 90f, 26f);
+                    AddRanged(result, "palace-arbalist", 3, 740f, 74f); break;
+                case 29:
+                    result.AddEnemy("palace-sentinel", 1900f, 98f, 34f, 1.8f, 1f, .57f,
+                        false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
+                    AddPalaceGuards(result, 2, 1320f, 94f, 26f);
+                    AddRanged(result, "palace-arbalist", 2, 770f, 78f); break;
+                case 30:
+                    result.AddEnemy("palace-boss", 9000f, 112f, 36f, 1.8f, 1.1f, .48f,
+                        true, 4.1f, 0f, CatalogEnemyRole.CrownDrake, true);
+                    AddRanged(result, "palace-arbalist", 2, 460f, 60f, true); break;
             }
             return result;
         }
@@ -514,6 +537,14 @@ namespace Expedition.Core
         {
             for (int i = 0; i < count; i++)
                 battle.AddEnemy("garden-guard-" + (i + 1), hp, power, defense, 1.8f, 1f, .65f,
+                    false, 2.1f + (i % 2) * .55f, (i - (count - 1) * .5f) * 1.15f,
+                    CatalogEnemyRole.MineWorker);
+        }
+
+        static void AddPalaceGuards(CatalogBattle battle, int count, float hp, float power, float defense)
+        {
+            for (int i = 0; i < count; i++)
+                battle.AddEnemy("palace-guard-" + (i + 1), hp, power, defense, 1.8f, 1f, .65f,
                     false, 2.1f + (i % 2) * .55f, (i - (count - 1) * .5f) * 1.15f,
                     CatalogEnemyRole.MineWorker);
         }
@@ -579,7 +610,7 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 6, Difficulty = Difficulty,
+            return new ExpeditionRunSave { Version = 7, Difficulty = Difficulty,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
                 Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
@@ -597,24 +628,31 @@ namespace Expedition.Core
             bool legacy = save != null && save.Version == 2;
             bool normalSave = save != null && save.Version >= 4;
             bool twenty = save != null && save.Version == 5;
-            bool current = save != null && save.Version == 6;
-            int saveWaves = legacy ? 10 : current ? TotalWaves : twenty ? 20 : 15;
+            bool twentyFive = save != null && save.Version == 6;
+            bool current = save != null && save.Version == 7;
+            int saveWaves = legacy ? 10 : current ? TotalWaves : twentyFive ? 25 : twenty ? 20 : 15;
             // Validate old files against their original economy before granting expansion rewards.
             int[] fifteenRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
                 30, 30, 35, 40, 0 };
             int[] twentyRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
                 30, 30, 35, 40, 50, 35, 35, 40, 45, 0 };
+            int[] twentyFiveRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
+                30, 30, 35, 40, 50, 35, 35, 40, 45, 50, 40, 40, 45, 50, 0 };
             int[] rewards = legacy ? LegacyVictoryRewards : current ? VictoryRewards :
-                twenty ? twentyRewards : fifteenRewards;
-            if (save == null || save.Version < 2 || save.Version > 6 ||
+                twentyFive ? twentyFiveRewards : twenty ? twentyRewards : fifteenRewards;
+            if (save == null || save.Version < 2 || save.Version > 7 ||
                 normalSave && save.Difficulty != ExpeditionDifficulty.Normal ||
                 save.Version == 4 && save.ContentWaves != 15 ||
                 twenty && (save.ContentWaves != 20 ||
                     save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 ||
                     save.PreviousClearWaves > save.Victories) ||
-                current && (save.ContentWaves != TotalWaves ||
+                twentyFive && (save.ContentWaves != 25 ||
                     save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 &&
                     save.PreviousClearWaves != 20 ||
+                    save.PreviousClearWaves > save.Victories) ||
+                current && (save.ContentWaves != TotalWaves ||
+                    save.PreviousClearWaves != 0 && save.PreviousClearWaves != 15 &&
+                    save.PreviousClearWaves != 20 && save.PreviousClearWaves != 25 ||
                     save.PreviousClearWaves > save.Victories) ||
                 save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
@@ -631,7 +669,7 @@ namespace Expedition.Core
             var run = new ExpeditionRun(catalog);
             run.Difficulty = normalSave ? save.Difficulty : ExpeditionDifficulty.Normal;
             run.ContentWaves = TotalWaves;
-            run.PreviousClearWaves = current || twenty ? save.PreviousClearWaves : 0;
+            run.PreviousClearWaves = save.Version >= 5 ? save.PreviousClearWaves : 0;
             run.Roster = CatalogRoster.Restore(catalog, save.Roster);
             run.Wave = save.Wave; run.Lantern = save.Lantern;
             run.Gold = save.Gold; run.LastReward = save.LastReward;
@@ -676,7 +714,7 @@ namespace Expedition.Core
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             }
             // Convert only after the complete old save has passed its original rules.
-            // Version 6 captures include the grant, preventing duplicate rewards on reload.
+            // Version 7 captures include the grant, preventing duplicate rewards on reload.
             if (!current && save.Wave == saveWaves && save.LastVictory &&
                 (save.Phase == ExpeditionPhase.Result || save.Phase == ExpeditionPhase.Completed))
             {

@@ -8,13 +8,14 @@ namespace Expedition.Presentation
     // Bounded, code-drawn effects: no particle objects or additional sprite sheets per hit.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst }
+        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, BombBurst }
         sealed class Effect
         {
             public Vector2 Point;
+            public Vector2 EndPoint;
             public Color Color;
             public EffectKind Kind;
-            public float Age, Duration, Size;
+            public float Age, Duration, Size, BodyOffset, HalfWidth;
             public int Direction;
         }
 
@@ -47,6 +48,8 @@ namespace Expedition.Presentation
             string id = unit == null ? "" : unit.FormId;
             if (unit != null && unit.EnemyRole == CatalogEnemyRole.Furnace)
                 return new Color(1f, .38f, .11f);
+            if (unit != null && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
+                return new Color(1f, .47f, .15f);
             if (unit != null && unit.EnemyRole == CatalogEnemyRole.FrostWarden)
                 return new Color(.36f, .78f, 1f);
             if (unit != null && unit.Id.StartsWith("garden-", StringComparison.Ordinal))
@@ -72,7 +75,9 @@ namespace Expedition.Presentation
             if (unit == null) return;
             if (effects.Count == 24) effects.RemoveAt(0);
             effects.Add(new Effect { Point = new Vector2(unit.X, unit.Y), Color = color,
-                Kind = kind, Size = size, Duration = duration, Direction = direction });
+                Kind = kind, Size = size, Duration = duration, Direction = direction,
+                BodyOffset = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
+                    150f + unit.FlightLift * 60f : 57f });
         }
 
         public void Observe(CatalogBattleEvent e, CatalogBattle battle)
@@ -85,18 +90,26 @@ namespace Expedition.Presentation
                 if (effects.Count == 24) effects.RemoveAt(0);
                 bool charge = e.AbilityId == "BOSS_CHARGE";
                 bool roots = e.AbilityId == "GARDEN_BRIARS";
-                effects.Add(new Effect { Kind = roots ? EffectKind.RootBurst : EffectKind.GroundImpact,
-                    Point = charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
+                bool breath = e.AbilityId == "DRACONIC_BREATH";
+                bool bomb = e.AbilityId == "DRACONIC_BOMB";
+                effects.Add(new Effect { Kind = breath ? EffectKind.Breath : bomb ?
+                    EffectKind.BombBurst : roots ? EffectKind.RootBurst : EffectKind.GroundImpact,
+                    Point = breath ? new Vector2(source.BreathOriginX, source.BreathOriginY) :
+                        charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
+                    EndPoint = breath ? new Vector2(source.BreathTargetX, source.BreathTargetY) : Vector2.zero,
                     Color = source.EnemyRole == CatalogEnemyRole.GardenLord ?
                         new Color(.55f, .86f, .27f) :
+                        source.EnemyRole == CatalogEnemyRole.CrownDrake ?
+                        new Color(1f, .43f, .12f) :
                         source.EnemyRole == CatalogEnemyRole.Furnace ?
                         new Color(1f, .37f, .1f) :
                         source.EnemyRole == CatalogEnemyRole.FrostWarden ?
                         new Color(.32f, .76f, 1f) : source.BossEnraged ?
                         new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
-                    Size = charge ? source.ChargeWidth : source.SlamRadius,
-                    Duration = roots ? .6f : .45f });
+                    Size = breath ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
+                    HalfWidth = breath ? source.BreathHalfWidth : 0f,
+                    Duration = roots ? .6f : breath ? .4f : .45f });
                 Play(hit, 1f);
             }
             if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
@@ -162,10 +175,46 @@ namespace Expedition.Presentation
             foreach (CatalogBattleUnit unit in battle.Units)
             {
                 if (!unit.IsAlive) continue;
+                if (unit.EnemyRole == CatalogEnemyRole.CrownDrake)
+                {
+                    Vector2 ground = project(new Vector2(unit.X, unit.Y));
+                    float lift = unit.FlightLift;
+                    if (lift > 0f)
+                    {
+                        Ring(ground + new Vector2(0, -4), 65 + lift * 19, 11 + lift * 4,
+                            new Color(.08f, .045f, .055f, .65f - lift * .2f), 7);
+                        Line(ground + new Vector2(-30, -3), ground + new Vector2(30, -3), 3,
+                            new Color(.17f, .09f, .07f, .45f));
+                    }
+                    if (unit.BreathWarningRemaining > 0f)
+                    {
+                        Vector2 origin = new Vector2(unit.BreathOriginX, unit.BreathOriginY);
+                        Vector2 end = new Vector2(unit.BreathTargetX, unit.BreathTargetY);
+                        Vector2 axis = (end - origin).normalized;
+                        Vector2 side = new Vector2(-axis.y, axis.x) * unit.BreathHalfWidth;
+                        Vector2 a = project(origin + side), b = project(end + side);
+                        Vector2 c = project(end - side), d = project(origin - side);
+                        Color fireLine = new Color(1f, .48f, .16f, .9f);
+                        Line(a, b, 4, fireLine); Line(b, c, 4, fireLine);
+                        Line(c, d, 4, fireLine); Line(d, a, 4, fireLine);
+                        // Core tests a capsule around the segment, including both rounded ends.
+                        Ring(project(origin), unit.BreathHalfWidth * 83f,
+                            unit.BreathHalfWidth * 48f, fireLine, 3f);
+                        Ring(project(end), unit.BreathHalfWidth * 83f,
+                            unit.BreathHalfWidth * 48f, fireLine, 3f);
+                        for (int i = 0; i < 7; i++)
+                            Line(Vector2.Lerp(project(origin), project(end), i / 7f),
+                                Vector2.Lerp(project(origin), project(end), (i + .45f) / 7f),
+                                3, new Color(1f, .76f, .3f, .8f));
+                    }
+                }
                 if (unit.SlamWarningRemaining > 0)
                 {
                     Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                    Color warning = unit.EnemyRole == CatalogEnemyRole.GardenLord ?
+                    Color warning = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
+                        unit.DrakePhase == CrownDrakePhase.AirWarning ?
+                        new Color(1f, .37f, .16f, .95f) : new Color(1f, .68f, .28f, .95f) :
+                        unit.EnemyRole == CatalogEnemyRole.GardenLord ?
                         new Color(.64f, .92f, .35f, .95f) :
                         unit.EnemyRole == CatalogEnemyRole.FrostWarden ?
                         new Color(.35f, .83f, 1f, .95f) :
@@ -208,6 +257,18 @@ namespace Expedition.Presentation
         {
             foreach (CatalogBattleUnit unit in battle.Units)
             {
+                if (!unit.IsAlive || unit.EnemyRole != CatalogEnemyRole.CrownDrake ||
+                    unit.DrakePhase != CrownDrakePhase.AirWarning || unit.SlamWarningRemaining <= 0f)
+                    continue;
+                Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
+                float fall = Mathf.Clamp01(1f - unit.SlamWarningRemaining / 1.1f);
+                Vector2 fireball = center + new Vector2(0, -150f * (1f - fall));
+                Ring(fireball, 11, 11, new Color(1f, .72f, .22f, .96f), 6);
+                Line(fireball + new Vector2(0, -27), fireball + new Vector2(0, -12),
+                    7, new Color(1f, .31f, .1f, .8f));
+            }
+            foreach (CatalogBattleUnit unit in battle.Units)
+            {
                 if (!unit.IsAlive) continue;
                 Vector2 foot = project(new Vector2(unit.X, unit.Y));
                 if (unit.FrozenRemaining > 0f)
@@ -241,7 +302,10 @@ namespace Expedition.Presentation
                 CatalogBattleUnit target = battle.Get(unit.AttackTargetId);
                 if (target == null || !target.IsAlive) continue;
                 Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(unit.Team == CatalogTeam.Ally ? 20 : -20, -65);
-                Vector2 to = project(new Vector2(target.X, target.Y)) + new Vector2(0, -58);
+                float targetBodyOffset = target.EnemyRole == CatalogEnemyRole.CrownDrake ?
+                    150f + target.FlightLift * 60f : 58f;
+                Vector2 to = project(new Vector2(target.X, target.Y)) +
+                    new Vector2(0, -targetBodyOffset);
                 float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);
                 Vector2 point = Vector2.Lerp(from, to, progress);
                 Vector2 direction = (to - from).normalized;
@@ -275,7 +339,17 @@ namespace Expedition.Presentation
                     DrawRootBurst(project(effect.Point), t);
                     continue;
                 }
-                Vector2 point = project(effect.Point) + new Vector2(0, -57);
+                if (effect.Kind == EffectKind.Breath)
+                {
+                    DrawBreath(project, effect, t);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.BombBurst)
+                {
+                    DrawBombBurst(project(effect.Point), t);
+                    continue;
+                }
+                Vector2 point = project(effect.Point) + new Vector2(0, -effect.BodyOffset);
                 Color color = effect.Color;
                 color.a = 1 - t;
                 float radius = effect.Size * (.3f + t);
@@ -331,6 +405,40 @@ namespace Expedition.Presentation
                 Vector2 fork = Vector2.Lerp(basePoint, tip, .52f);
                 Line(fork, fork + new Vector2(spread <= 0 ? -10f : 10f, -14f * rise), 3f,
                     new Color(.62f, .35f, .73f, .9f * fade));
+            }
+        }
+
+        static void DrawBreath(Func<Vector2, Vector2> project, Effect effect, float progress)
+        {
+            Vector2 axis = (effect.EndPoint - effect.Point).normalized;
+            Vector2 side = new Vector2(-axis.y, axis.x);
+            float reach = Mathf.Lerp(.32f, 1f, Mathf.Clamp01(progress / .3f));
+            float fade = 1f - Mathf.Clamp01((progress - .45f) / .55f);
+            for (int i = -3; i <= 3; i++)
+            {
+                float offset = i / 3f * effect.HalfWidth * .88f;
+                Vector2 start = effect.Point + axis * .35f + side * offset;
+                Vector2 end = Vector2.Lerp(effect.Point, effect.EndPoint, reach) + side * offset;
+                Color flame = i == 0 ? new Color(1f, .88f, .32f, .95f * fade) :
+                    i % 2 == 0 ? new Color(1f, .32f, .1f, .82f * fade) :
+                    new Color(1f, .58f, .17f, .9f * fade);
+                Line(project(start), project(end), i == 0 ? 12f : 7f, flame);
+                Vector2 ember = project(Vector2.Lerp(start, end, .45f + (i + 3) * .05f));
+                Fill(new Rect(ember.x - 4, ember.y - 4, 8, 8), flame);
+            }
+        }
+
+        static void DrawBombBurst(Vector2 center, float progress)
+        {
+            float fade = 1f - progress;
+            Ring(center, 48f * (.55f + progress), 22f * (.55f + progress),
+                new Color(1f, .44f, .13f, fade), 6f * fade + 1f);
+            for (int i = -2; i <= 2; i++)
+            {
+                Vector2 basePoint = center + new Vector2(i * 15f, -5f);
+                Vector2 tip = basePoint + new Vector2(i * 3f, -(35f - Mathf.Abs(i) * 5f) * fade);
+                Line(basePoint, tip, 6f * fade + 1f,
+                    new Color(1f, i == 0 ? .8f : .42f, .14f, fade));
             }
         }
 

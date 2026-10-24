@@ -5,7 +5,8 @@ namespace Expedition.Core
 {
     public enum CatalogTeam { Ally, Enemy }
     public enum CatalogEnemyRole { None, Beast, Raider, Golem, MineWorker, Supervisor, Furnace,
-        FrostWarden, GardenSpitter, GardenLord }
+        FrostWarden, GardenSpitter, GardenLord, CrownDrake }
+    public enum CrownDrakePhase { Grounded, BreathWarning, GroundWindow, Rising, AirWarning, LandingWarning }
     public enum CatalogAttackPhase { Ready, WindingBasic, WindingSkill }
     public enum CatalogEventKind { SkillUsed, BasicHit, Damage, Shield, ShieldBlocked, Heal, Burn, Slow, Mark,
         Buff, TraitTriggered, Defeated, Ended, ChargeTelegraph, ChargeHit,
@@ -48,6 +49,13 @@ namespace Expedition.Core
         public bool IsBoss { get; internal set; }
         public bool BossPatternsEnabled { get; internal set; }
         public bool BossEnraged { get; internal set; }
+        public CrownDrakePhase DrakePhase { get; internal set; }
+        public float FlightLift { get { return !IsAlive || Clock.Ended ? 0f :
+            DrakePhase == CrownDrakePhase.Rising ? Math.Min(1f, Math.Max(0f, (Clock.Time - DrakePhaseStartAt) / .7f)) :
+            DrakePhase == CrownDrakePhase.AirWarning ? 1f :
+            DrakePhase == CrownDrakePhase.LandingWarning ?
+                Math.Min(1f, Math.Max(0f, (ReleaseAt - Clock.Time) / (ReleaseAt - DrakePhaseStartAt))) : 0f; } }
+        public bool IsAirborne { get { return FlightLift > 0f; } }
         public CatalogEnemyRole EnemyRole { get; internal set; }
         public bool IsAlive { get { return Hp > 0f; } }
         public CatalogAttackPhase AttackPhase { get; internal set; }
@@ -63,10 +71,19 @@ namespace Expedition.Core
         public float ChargeImpactX { get { return ChargeWarningRemaining > 0f ? PredictedChargeEnd(true) : ChargeEndX; } }
         public float ChargeImpactY { get { return ChargeWarningRemaining > 0f ? PredictedChargeEnd(false) : ChargeEndY; } }
         public float ChargeWidth { get { return BossPatternsEnabled && EnemyRole == CatalogEnemyRole.Beast ? .7f : .95f; } }
+        public float BreathWarningRemaining { get { return IsAlive && PendingSkillId == "DRACONIC_BREATH" &&
+            AttackPhase == CatalogAttackPhase.WindingSkill ? AttackWindupRemaining : 0f; } }
+        public float BreathOriginX { get { return DrakeBreathOriginX; } }
+        public float BreathOriginY { get { return DrakeBreathOriginY; } }
+        public float BreathTargetX { get { return DrakeBreathEndX; } }
+        public float BreathTargetY { get { return DrakeBreathEndY; } }
+        public float BreathLength { get { return 5.5f; } }
+        public float BreathHalfWidth { get { return .65f; } }
         public float SlamWarningRemaining { get { return IsAlive &&
             (PendingSkillId == "GOLEM_SLAM" || PendingSkillId == "GOLEM_AFTERSHOCK" ||
              PendingSkillId == "FURNACE_BLAST" || PendingSkillId == "FURNACE_EMBER" ||
-             PendingSkillId == "FROST_NOVA" || PendingSkillId == "GARDEN_BRIARS") &&
+             PendingSkillId == "FROST_NOVA" || PendingSkillId == "GARDEN_BRIARS" ||
+             PendingSkillId == "DRACONIC_BOMB" || PendingSkillId == "DRACONIC_LAND") &&
             AttackPhase == CatalogAttackPhase.WindingSkill ? AttackWindupRemaining : 0f; } }
         public float SlamTargetX { get { return SlamAimX; } }
         public float SlamTargetY { get { return SlamAimY; } }
@@ -98,6 +115,9 @@ namespace Expedition.Core
         internal float[] GardenAimXs, GardenAimYs;
         internal string[] GardenTargetIds;
         internal float NextGuardAt;
+        internal float DrakePhaseStartAt, DrakeBreathOriginX, DrakeBreathOriginY,
+            DrakeBreathEndX, DrakeBreathEndY, DrakeBombX, DrakeBombY;
+        internal string DrakeBombTargetId;
         internal bool FirstHitUsed, CrisisUsed;
         internal readonly List<CatalogBuff> Buffs = new List<CatalogBuff>();
         internal float ZoneX, ZoneY, ZoneNextAt;
@@ -165,10 +185,11 @@ namespace Expedition.Core
                 throw new ArgumentException("Invalid enemy stats.");
             if (!Enum.IsDefined(typeof(CatalogEnemyRole), role) ||
                 (role == CatalogEnemyRole.Golem || role == CatalogEnemyRole.Furnace ||
-                 role == CatalogEnemyRole.FrostWarden || role == CatalogEnemyRole.GardenLord) && !boss ||
+                 role == CatalogEnemyRole.FrostWarden || role == CatalogEnemyRole.GardenLord ||
+                 role == CatalogEnemyRole.CrownDrake) && !boss ||
                 boss && role != CatalogEnemyRole.Golem && role != CatalogEnemyRole.Beast &&
                     role != CatalogEnemyRole.Furnace && role != CatalogEnemyRole.FrostWarden &&
-                    role != CatalogEnemyRole.GardenLord ||
+                    role != CatalogEnemyRole.GardenLord && role != CatalogEnemyRole.CrownDrake ||
                 bossPatterns && !boss)
                 throw new ArgumentException("Invalid enemy role.");
             CatalogBattleUnit enemy = Add(id, CatalogTeam.Enemy, boss ? "EN-BOSS" : "EN-MOB", null, null, x, y,
@@ -181,6 +202,7 @@ namespace Expedition.Core
             if (bossPatterns && role == CatalogEnemyRole.Furnace) enemy.NextSlamAt = 2f;
             if (bossPatterns && role == CatalogEnemyRole.FrostWarden) enemy.NextSlamAt = 2f;
             if (bossPatterns && role == CatalogEnemyRole.GardenLord) enemy.NextSlamAt = 2f;
+            if (bossPatterns && role == CatalogEnemyRole.CrownDrake) enemy.NextSlamAt = 2f;
             if (role == CatalogEnemyRole.GardenLord)
             {
                 enemy.GardenAimXs = new float[3]; enemy.GardenAimYs = new float[3];
@@ -288,12 +310,19 @@ namespace Expedition.Core
                         ReleaseSlam(unit);
                         continue;
                     }
+                    else if (unit.PendingSkillId == "DRACONIC_BREATH" ||
+                        unit.PendingSkillId == "DRACONIC_BOMB" || unit.PendingSkillId == "DRACONIC_LAND")
+                    {
+                        ReleaseDrake(unit);
+                        continue;
+                    }
                     else ReleaseSkill(unit);
                     unit.AttackPhase = CatalogAttackPhase.Ready;
                 }
                 if (unit.VolleyShotsLeft > 0) continue; // One tracking cast finishes before basic/final actions resume.
                 if (!unit.IsAlive || unit.AttackPhase != CatalogAttackPhase.Ready) continue;
                 if (unit.GardenStrikeCount > 0 && Time < unit.GardenNextWarningAt) continue;
+                if (TryAdvanceDrake(unit)) continue;
                 if (TryStartSlam(unit)) continue;
                 if (TryStartCharge(unit)) continue;
                 if (TryStartSkill(unit)) continue;
@@ -424,6 +453,114 @@ namespace Expedition.Core
             if (left.IsBoss != right.IsBoss) return left.IsBoss ? -1 : 1;
             int health = (left.Hp / left.MaxHp).CompareTo(right.Hp / right.MaxHp);
             return health != 0 ? health : string.CompareOrdinal(left.Id, right.Id);
+        }
+
+        bool TryAdvanceDrake(CatalogBattleUnit actor)
+        {
+            if (!actor.BossPatternsEnabled || actor.EnemyRole != CatalogEnemyRole.CrownDrake)
+                return false;
+            if (actor.DrakePhase == CrownDrakePhase.Rising)
+            {
+                if (Time < actor.NextSlamAt) return true;
+                actor.DrakePhase = CrownDrakePhase.AirWarning;
+                actor.PendingTargetId = actor.DrakeBombTargetId;
+                actor.PendingSkillId = "DRACONIC_BOMB";
+                actor.SlamAimX = actor.DrakeBombX; actor.SlamAimY = actor.DrakeBombY;
+                actor.SlamRadiusValue = 1.2f;
+                actor.AttackPhase = CatalogAttackPhase.WindingSkill;
+                actor.ReleaseAt = Time + (actor.BossEnraged ? .9f : 1.1f);
+                Emit(CatalogEventKind.BossTelegraph, actor, Get(actor.PendingTargetId),
+                    "DRACONIC_BOMB", actor.SlamRadiusValue);
+                return true;
+            }
+            if (Time < actor.NextSlamAt) return false;
+            CatalogBattleUnit target = null;
+            float chosenDistance = actor.DrakePhase == CrownDrakePhase.GroundWindow ? -1f : float.PositiveInfinity;
+            foreach (CatalogBattleUnit candidate in units)
+            {
+                if (!candidate.IsAlive || candidate.Team == actor.Team) continue;
+                float distance = Distance(actor, candidate);
+                bool better = actor.DrakePhase == CrownDrakePhase.GroundWindow ?
+                    distance > chosenDistance + .00001f : distance < chosenDistance - .00001f;
+                if (better || Math.Abs(distance - chosenDistance) <= .00001f && target != null &&
+                    string.CompareOrdinal(candidate.Id, target.Id) < 0)
+                { target = candidate; chosenDistance = distance; }
+            }
+            if (target == null) return false;
+            if (actor.DrakePhase == CrownDrakePhase.GroundWindow)
+            {
+                // Core position stays grounded and targetable; FlightLift is presentation only.
+                actor.DrakePhase = CrownDrakePhase.Rising;
+                actor.DrakePhaseStartAt = Time;
+                actor.NextSlamAt = Time + .7f;
+                actor.DrakeBombX = target.X; actor.DrakeBombY = target.Y;
+                actor.DrakeBombTargetId = target.Id;
+                return true;
+            }
+            actor.DrakePhase = CrownDrakePhase.BreathWarning;
+            actor.PendingTargetId = target.Id;
+            actor.PendingSkillId = "DRACONIC_BREATH";
+            actor.DrakeBreathOriginX = actor.X; actor.DrakeBreathOriginY = actor.Y;
+            float dx = target.X - actor.X, dy = target.Y - actor.Y;
+            float distanceToTarget = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (distanceToTarget < .0001f) { dx = -1f; dy = 0f; distanceToTarget = 1f; }
+            actor.DrakeBreathEndX = actor.X + dx / distanceToTarget * actor.BreathLength;
+            actor.DrakeBreathEndY = actor.Y + dy / distanceToTarget * actor.BreathLength;
+            actor.AttackPhase = CatalogAttackPhase.WindingSkill;
+            actor.ReleaseAt = Time + (actor.BossEnraged ? .9f : 1.1f);
+            Emit(CatalogEventKind.BossTelegraph, actor, target, "DRACONIC_BREATH", actor.BreathHalfWidth);
+            return true;
+        }
+
+        void ReleaseDrake(CatalogBattleUnit actor)
+        {
+            string ability = actor.PendingSkillId;
+            Emit(CatalogEventKind.BossImpact, actor, null, ability,
+                ability == "DRACONIC_BREATH" ? actor.BreathHalfWidth : actor.SlamRadiusValue);
+            foreach (CatalogBattleUnit candidate in units)
+            {
+                if (!actor.IsAlive || !candidate.IsAlive || candidate.Team == actor.Team) continue;
+                bool hit = ability == "DRACONIC_BREATH" ?
+                    DistanceToSegment(candidate.X, candidate.Y, actor.DrakeBreathOriginX,
+                        actor.DrakeBreathOriginY, actor.DrakeBreathEndX, actor.DrakeBreathEndY) <= actor.BreathHalfWidth :
+                    DistanceToPoint(candidate.X, candidate.Y, actor.SlamAimX, actor.SlamAimY) <= actor.SlamRadiusValue;
+                if (!hit) continue;
+                float coefficient = ability == "DRACONIC_BREATH" ? 1.15f :
+                    ability == "DRACONIC_BOMB" ? 1.25f : 1.15f;
+                Damage(actor, candidate, EffectivePower(actor) * coefficient, ability, false, false);
+                if (candidate.IsAlive && ability == "DRACONIC_BREATH") Burn(actor, candidate, 8f);
+            }
+            actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
+            if (!actor.IsAlive) return;
+            if (ability == "DRACONIC_BREATH")
+            {
+                actor.DrakePhase = CrownDrakePhase.GroundWindow;
+                actor.NextSlamAt = Time + 4f;
+            }
+            else if (ability == "DRACONIC_BOMB")
+            {
+                actor.DrakePhase = CrownDrakePhase.LandingWarning;
+                actor.DrakePhaseStartAt = Time;
+                actor.PendingSkillId = "DRACONIC_LAND";
+                actor.SlamAimX = actor.X; actor.SlamAimY = actor.Y;
+                actor.SlamRadiusValue = 1.55f;
+                actor.ReleaseAt = Time + (actor.BossEnraged ? .7f : .9f);
+                Emit(CatalogEventKind.BossTelegraph, actor, null, "DRACONIC_LAND", actor.SlamRadiusValue);
+                return;
+            }
+            else
+            {
+                actor.DrakePhase = CrownDrakePhase.Grounded;
+                actor.NextSlamAt = Time + (actor.BossEnraged ? 4f : 6f);
+            }
+            actor.PendingSkillId = null;
+            actor.AttackPhase = CatalogAttackPhase.Ready;
+        }
+
+        static float DistanceToPoint(float x, float y, float targetX, float targetY)
+        {
+            float dx = x - targetX, dy = y - targetY;
+            return (float)Math.Sqrt(dx * dx + dy * dy);
         }
 
         bool TryStartSlam(CatalogBattleUnit actor)
@@ -721,7 +858,8 @@ namespace Expedition.Core
                  target.EnemyRole == CatalogEnemyRole.Golem && target.Hp <= target.MaxHp * .4f ||
                  target.EnemyRole == CatalogEnemyRole.Furnace && target.Hp <= target.MaxHp * .45f ||
                  target.EnemyRole == CatalogEnemyRole.FrostWarden && target.Hp <= target.MaxHp * .4f ||
-                 target.EnemyRole == CatalogEnemyRole.GardenLord && target.Hp <= target.MaxHp * .4f))
+                 target.EnemyRole == CatalogEnemyRole.GardenLord && target.Hp <= target.MaxHp * .4f ||
+                 target.EnemyRole == CatalogEnemyRole.CrownDrake && target.Hp <= target.MaxHp * .4f))
             {
                 target.BossEnraged = true;
                 Emit(CatalogEventKind.BossEnraged, target, null, "BOSS_ENRAGED", 1f);
@@ -736,6 +874,7 @@ namespace Expedition.Core
                 target.ZoneTicksLeft = 0;
                 target.GardenStrikeCount = target.GardenStrikeIndex = 0;
                 target.GardenNextWarningAt = 0f;
+                target.DrakePhase = CrownDrakePhase.Grounded;
                 target.BurnTicksLeft = target.PoisonTicksLeft = 0;
                 target.BurnUntil = target.PoisonUntil = 0f;
                 Emit(CatalogEventKind.Defeated, source, target, ability, 0);

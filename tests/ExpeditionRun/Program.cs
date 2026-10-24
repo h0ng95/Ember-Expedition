@@ -30,6 +30,7 @@ internal static class Program
             FrostWardenPattern();
             FrozenCounterBoundary();
             GardenPoisonAndBossPattern();
+        CrownDrakePattern();
             LegacyTenWaveMigration();
             BossStepPartition();
             OpeningWavesPlayable();
@@ -67,9 +68,9 @@ internal static class Program
                 "Encounter name is ready for Korean UI.");
             Check(run.BeginBattle() != null && run.ResolveBattle(true) && run.Continue(), "Wave advances once.");
         }
-        Check(run.Gold == 905 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
-            run.Victories == 25 && run.LastReward == 0,
-            "Twenty-five-wave unspent economy earns 865 gold and final clear grants zero.");
+        Check(run.Gold == 1155 && run.Roster.SupplyUsed == 3 && run.Phase == ExpeditionPhase.Completed &&
+            run.Victories == 30 && run.LastReward == 0,
+            "Thirty-wave unspent economy grants prior boss rewards once and final clear grants zero.");
         Check(run.Summon() == null && run.BeginBattle() == null && !run.Continue(), "Completed run is closed.");
     }
 
@@ -132,9 +133,9 @@ internal static class Program
     static void GoldBudgetPath()
     {
         int[] supplied = { 5, 6, 7, 8, 9, 12, 13, 14, 15, 17, 20, 21, 23, 24, 26,
-            29, 31, 32, 34, 37, 37, 37, 37, 37, 37 };
+            29, 31, 32, 34, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37 };
         int[] remaining = { 0, 0, 0, 0, 10, 0, 5, 10, 15, 10, 0, 10, 0, 15, 15,
-            5, 0, 15, 15, 0, 50, 90, 130, 175, 225 };
+            5, 0, 15, 15, 0, 50, 90, 130, 175, 225, 275, 320, 370, 420, 475 };
         var run = ExpeditionRun.New(catalog, 555);
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
@@ -146,13 +147,13 @@ internal static class Program
                 if (wave == 1) Check(run.SetDeployed(id, true), "Opening two summons join the active five.");
             }
             Check(run.Roster.SupplyUsed == supplied[wave - 1] && run.Gold == remaining[wave - 1],
-                "Gold budget and cumulative supply match the twenty-five-wave plan at wave " + wave + ".");
+                "Gold budget and cumulative supply match the thirty-wave plan at wave " + wave + ".");
             var restored = ExpeditionRun.Restore(catalog, run.Capture());
             Check(restored.Gold == run.Gold && restored.Roster.SupplyUsed == run.Roster.SupplyUsed,
                 "Saved economy retains gold and cumulative summons.");
             run.BeginBattle(); run.ResolveBattle(true); run.Continue();
         }
-        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 37 && run.Gold == 225,
+        Check(run.Phase == ExpeditionPhase.Completed && run.Roster.SupplyUsed == 37 && run.Gold == 475,
             "New region rewards remain available after the historical maximum-summon path.");
     }
 
@@ -357,7 +358,7 @@ internal static class Program
     {
         var run = ExpeditionRun.New(catalog, 31);
         int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4, 4, 5, 6, 5, 3,
-            4, 5, 6, 5, 3 };
+            4, 5, 6, 5, 3, 4, 5, 6, 5, 3 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {
             Check(!string.IsNullOrEmpty(run.EncounterDescription), "Preparation describes the upcoming enemy group.");
@@ -389,7 +390,7 @@ internal static class Program
                 if (wave == 20) Check(enemies.Single(u => u.Id == "frost-boss").EnemyRole ==
                     CatalogEnemyRole.FrostWarden, "Final boss has its own frost role.");
             }
-            if (wave >= 21)
+            if (wave >= 21 && wave <= 25)
             {
                 Check(enemies.All(u => u.Id.StartsWith("garden-", StringComparison.Ordinal)),
                     "Garden region uses distinct enemy IDs.");
@@ -402,6 +403,21 @@ internal static class Program
                     CatalogEnemyRole.Supervisor, "Garden keeper reuses one guarded elite role.");
                 if (wave == 25) Check(enemies.Single(u => u.Id == "garden-boss").EnemyRole ==
                     CatalogEnemyRole.GardenLord, "Garden boss owns its distinct pattern role.");
+            }
+            if (wave >= 26)
+            {
+                Check(enemies.All(u => u.Id.StartsWith("palace-", StringComparison.Ordinal)),
+                    "Palace region uses distinct enemy IDs.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.MineWorker) ==
+                    (wave == 30 ? 0 : wave == 27 || wave == 28 ? 3 : 2),
+                    "Palace guards reuse nondashing melee behavior.");
+                Check(enemies.Count(u => u.EnemyRole == CatalogEnemyRole.Raider) ==
+                    (wave == 28 ? 3 : 2), "Palace arbalists use ranged behavior.");
+                if (wave == 29) Check(enemies.Single(u => u.Id == "palace-sentinel").EnemyRole ==
+                    CatalogEnemyRole.Supervisor, "Palace sentinel grants the existing guard shield.");
+                if (wave == 30) Check(enemies.Single(u => u.Id == "palace-boss").EnemyRole ==
+                    CatalogEnemyRole.CrownDrake && enemies.Single(u => u.Id == "palace-boss").BossPatternsEnabled,
+                    "Crown Drake owns its three-stage boss role.");
             }
             CatalogBattle replay = ExpeditionRun.Restore(catalog, run.Capture()).ResumeBattle();
             var replayEnemies = replay.Units.Where(u => u.Team == CatalogTeam.Enemy).ToArray();
@@ -1081,6 +1097,118 @@ internal static class Program
         Check(rejected, "Garden Lord role cannot be assigned to a nonboss.");
     }
 
+    static void CrownDrakePattern()
+    {
+        var battle = new CatalogBattle(catalog);
+        CatalogBattleUnit rear = battle.AddUnit("rear", CatalogTeam.Ally, "B-KN", null, null, -4f, 0f);
+        CatalogBattleUnit near = battle.AddUnit("near", CatalogTeam.Ally, "B-AR", null, null, 0f, 0f);
+        CatalogBattleUnit side = battle.AddUnit("side", CatalogTeam.Ally, "B-PR", null, null, -2f, 2f);
+        foreach (CatalogBattleUnit ally in battle.Units)
+        { ally.MoveSpeed = 0f; ally.Hp = ally.MaxHp = 5000f; ally.Power = 2f; }
+        CatalogBattleUnit drake = battle.AddEnemy("palace-boss", 10000f, 30f, 20f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.CrownDrake, true);
+        var events = new List<CatalogBattleEvent>();
+        battle.Event += events.Add;
+        StepUntil(battle, () => drake.BreathWarningRemaining > 0f, 180,
+            "Drake opens with a visible breath line at two seconds.");
+        Check(drake.DrakePhase == CrownDrakePhase.BreathWarning && drake.AttackTargetId == near.Id &&
+            Math.Abs(drake.BreathLength - 5.5f) < .001f && drake.BreathHalfWidth == .65f &&
+            drake.BreathWarningRemaining > 1f && !drake.IsAirborne &&
+            events.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+                e.AbilityId == "DRACONIC_BREATH") == 1,
+            "Breath chooses the nearest living ally and exposes its line before impact.");
+        float originX = drake.BreathOriginX, endX = drake.BreathTargetX;
+        near.Y = 2.2f;
+        side.X = -1f; side.Y = 0f;
+        StepUntil(battle, () => events.Any(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "DRACONIC_BREATH"), 90, "Breath releases after warning.");
+        Check(drake.DrakePhase == CrownDrakePhase.GroundWindow &&
+            drake.BreathOriginX == originX && drake.BreathTargetX == endX &&
+            side.BurnRemaining > 2.9f && near.BurnRemaining == 0f && rear.BurnRemaining == 0f &&
+            events.Any(e => e.Kind == CatalogEventKind.Damage && e.AbilityId == "DRACONIC_BREATH" &&
+                e.TargetId == side.Id),
+            "Locked finite breath line hits its current occupant and applies three burn ticks.");
+        near.X = drake.X - .5f; near.Y = drake.Y;
+        int basicBefore = events.Count(e => e.Kind == CatalogEventKind.BasicHit && e.SourceId == drake.Id);
+        battle.Step(2.5f);
+        Check(drake.DrakePhase == CrownDrakePhase.GroundWindow &&
+            events.Count(e => e.Kind == CatalogEventKind.BasicHit && e.SourceId == drake.Id) > basicBefore,
+            "Four-second ground window allows ordinary boss attacks.");
+        near.X = 0f; near.Y = 2.2f;
+        StepUntil(battle, () => drake.DrakePhase == CrownDrakePhase.Rising, 150,
+            "Drake rises after its ground attack window.");
+        float groundX = drake.X, groundY = drake.Y;
+        Check(drake.DrakeBombTargetId == rear.Id && drake.DrakeBombX == rear.X &&
+            !drake.IsAirborne, "Rise locks the farthest ally position before the bombing warning.");
+        battle.Step(.35f);
+        Check(drake.IsAirborne && drake.FlightLift > .4f && drake.FlightLift < .6f &&
+            drake.X == groundX && drake.Y == groundY,
+            "Visual ascent never shifts or protects the boss's ground combat position.");
+        StepUntil(battle, () => drake.DrakePhase == CrownDrakePhase.AirWarning, 30,
+            "Air bombing warns after the ascent.");
+        Check(drake.SlamWarningRemaining > 1f && drake.SlamRadius == 1.2f &&
+            drake.SlamTargetX == -4f && drake.SlamTargetY == 0f && drake.FlightLift == 1f &&
+            events.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+                e.AbilityId == "DRACONIC_BOMB") == 1,
+            "Bomb retains the farthest ally's fixed original position.");
+        rear.Y = 2f;
+        side.X = -4f; side.Y = 0f;
+        var damage = typeof(CatalogBattle).GetMethod("Damage",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        drake.Hp = 4001f;
+        damage.Invoke(battle, new object[] { near, drake, 10f, "TEST_RAGE", false, false });
+        float bombRelease = drake.ReleaseAt;
+        Check(drake.BossEnraged && drake.SlamWarningRemaining > .8f,
+            "Entering rage does not shorten an already announced bomb warning.");
+        near.X = drake.X - .5f; near.Y = drake.Y;
+        int airborneMeleeBefore = events.Count(e => e.Kind == CatalogEventKind.BasicHit &&
+            e.SourceId == near.Id && e.TargetId == drake.Id);
+        StepUntil(battle, () => events.Any(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "DRACONIC_BOMB"), 90, "Bomb lands at its announced coordinate.");
+        Check(battle.Time + .02f >= bombRelease && side.Hp < side.MaxHp && rear.Hp == rear.MaxHp &&
+            drake.X == groundX && drake.Y == groundY &&
+            events.Count(e => e.Kind == CatalogEventKind.BasicHit &&
+                e.SourceId == near.Id && e.TargetId == drake.Id) > airborneMeleeBefore,
+            "Bomb hits a moved-in ally at the locked point while the airborne boss remains melee targetable.");
+        Check(drake.DrakePhase == CrownDrakePhase.LandingWarning &&
+            drake.SlamRadius == 1.55f && drake.SlamTargetX == groundX &&
+            drake.SlamTargetY == groundY && drake.SlamWarningRemaining > .6f &&
+            drake.SlamWarningRemaining <= .701f,
+            "Landing separately warns at the boss's fixed position with enraged .7-second timing.");
+        StepUntil(battle, () => events.Any(e => e.Kind == CatalogEventKind.BossImpact &&
+            e.AbilityId == "DRACONIC_LAND"), 60, "Landing impacts after its own warning.");
+        Check(drake.DrakePhase == CrownDrakePhase.Grounded && !drake.IsAirborne &&
+            drake.SlamWarningRemaining == 0f && near.Hp < near.MaxHp &&
+            Math.Abs(drake.NextSlamAt - battle.Time - 4f) < .05f,
+            "Landing damages nearby allies, then grants an enraged four-second ground window.");
+        StepUntil(battle, () => events.Count(e => e.Kind == CatalogEventKind.BossTelegraph &&
+            e.AbilityId == "DRACONIC_BREATH") == 2, 300,
+            "After landing, a fresh breath begins instead of an immediate loop.");
+        Check(drake.BreathWarningRemaining > .8f && drake.BreathWarningRemaining <= .901f,
+            "Enraged future breath warning is shorter without changing prior releases.");
+
+        var cancelled = new CatalogBattle(catalog);
+        CatalogBattleUnit survivor = cancelled.AddUnit("survivor", CatalogTeam.Ally,
+            "B-KN", null, null, -1f, 0f);
+        survivor.MoveSpeed = 0f; survivor.Hp = survivor.MaxHp = 5000f;
+        CatalogBattleUnit doomed = cancelled.AddEnemy("palace-boss", 10000f, 10f, 0f,
+            1.8f, 1.1f, .01f, true, 3f, 0f, CatalogEnemyRole.CrownDrake, true);
+        int cancelledImpacts = 0;
+        cancelled.Event += e => { if (e.Kind == CatalogEventKind.BossImpact) cancelledImpacts++; };
+        StepUntil(cancelled, () => doomed.BreathWarningRemaining > 0f, 180,
+            "Cancellation fixture starts a boss warning.");
+        damage.Invoke(cancelled, new object[] { survivor, doomed, 50000f, "TEST_KILL", false, false });
+        cancelled.Step(4f);
+        Check(!doomed.IsAlive && doomed.DrakePhase == CrownDrakePhase.Grounded &&
+            !doomed.IsAirborne && cancelledImpacts == 0 && cancelled.Ended,
+            "Boss death cancels pending warning, impact and flight.");
+        bool rejected = false;
+        try { cancelled.AddEnemy("false-drake", 100f, 5f, 0f, 2f, 1f, .5f,
+            false, 2f, 0f, CatalogEnemyRole.CrownDrake, true); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected, "Crown Drake role cannot be assigned to a nonboss.");
+    }
+
     static void LegacyTenWaveMigration()
     {
         var run = ExpeditionRun.New(catalog, 73);
@@ -1092,7 +1220,7 @@ internal static class Program
                 ExpeditionRunSave prior = run.Capture(); prior.Version = 2;
                 var unchanged = ExpeditionRun.Restore(catalog, prior);
                 Check(unchanged.Wave == 5 && unchanged.Gold == 130 &&
-                    unchanged.Capture().Version == 6 && prior.Version == 2,
+                    unchanged.Capture().Version == 7 && prior.Version == 2,
                     "Earlier valid v2 preparation migrates without reward or mutating its input.");
                 unchanged.BeginBattle();
                 ExpeditionRunSave earlyBattle = unchanged.Capture(); earlyBattle.Version = 2;

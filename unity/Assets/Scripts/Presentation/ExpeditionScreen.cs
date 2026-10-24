@@ -40,7 +40,7 @@ namespace Expedition.Presentation
         ExpeditionJournal journal;
         ExpeditionProgress progress;
         CatalogArtView art;
-        Texture2D battlefield, outpost, furnace, frost, garden;
+        Texture2D battlefield, outpost, furnace, frost, garden, palace;
         Camera backgroundCamera;
         GUIStyle title, heading, body, small, centered, button, primary, hint, bossChecklist;
         GUIStyle journalTitle, journalBody, journalStatus, dialogBody;
@@ -75,6 +75,7 @@ namespace Expedition.Presentation
                 furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
                 frost = Resources.Load<Texture2D>("Art/Environments/v029/frost-battlefield");
                 garden = Resources.Load<Texture2D>("Art/Environments/v030/garden-battlefield");
+                palace = Resources.Load<Texture2D>("Art/Environments/v031/palace-battlefield");
                 LoadJournal();
                 LoadProgress();
                 LoadSave();
@@ -343,7 +344,8 @@ namespace Expedition.Presentation
             DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
             Rect field = new Rect(17, 93, 1246, 449);
             Texture2D region = run.Wave <= 5 ? battlefield : run.Wave <= 10 ? outpost :
-                run.Wave <= 15 ? furnace : run.Wave <= 20 ? frost : garden;
+                run.Wave <= 15 ? furnace : run.Wave <= 20 ? frost :
+                run.Wave <= 25 ? garden : palace;
             ExpeditionUiTheme.DrawBackdrop(field, region, false);
             Fill(new Rect(32, 143, 687, 363), new Color(.045f, .05f, .065f, .28f));
             ExpeditionUiTheme.PanelBox(new Rect(724, 94, 523, 430));
@@ -356,7 +358,8 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
                 showHelp = !showHelp;
             string regionLabel = run.Wave <= 5 ? "숲길" : run.Wave <= 10 ? "성문" :
-                run.Wave <= 15 ? "폐광" : run.Wave <= 20 ? "서리 성당" : "황혼정원";
+                run.Wave <= 15 ? "폐광" : run.Wave <= 20 ? "서리 성당" :
+                run.Wave <= 25 ? "황혼정원" : "잿빛왕궁";
             if (GUI.Button(new Rect(990, 273, 240, 42), "지역 이야기 · " + regionLabel, button))
             {
                 StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
@@ -434,6 +437,11 @@ namespace Expedition.Presentation
                 case 23: return "사냥꾼의 독과 근위병의 전열 압박이 겹칩니다.\n해로운 상태가 걸린 동료의 체력을 살피세요.";
                 case 24: return "황혼정원사는 가까운 적 둘에게 보호막을 줍니다.\n보호막이 없는 적부터 집중할 수도 있습니다.";
                 case 25: return "먼 동료 최대 셋 발밑에 가시가 차례로 솟습니다.\n후열을 분산 배치하세요 · 중독 중 회복량 −35%.";
+                case 26: return "왕궁 근위병이 전열을 지킵니다.\n뒤의 석궁병에게 약한 동료가 노출되지 않게 하세요.";
+                case 27: return "왕궁 석궁병은 약해진 동료를 노립니다.\n전열과 후열의 거리를 다시 점검하세요.";
+                case 28: return "근위병과 석궁병이 함께 압박합니다.\n성장한 동료의 전승과 배치를 살펴보세요.";
+                case 29: return "왕궁 집행관은 가까운 적에게 보호막을 줍니다.\n위험한 석궁병부터 노릴 수도 있습니다.";
+                case 30: return "직선 브레스 뒤 먼 동료를 노린 비행 폭격이 옵니다.\n착지 충격파는 용의 발밑에서 퍼집니다.";
                 default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
             }
         }
@@ -526,7 +534,7 @@ namespace Expedition.Presentation
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
                 "등불을 모두 소진했습니다." : victory ?
-                (run.Wave == ExpeditionRun.TotalWaves ? "황혼정원 너머 왕궁으로 난 길을 찾았습니다." :
+                (run.Wave == ExpeditionRun.TotalWaves ? "이그니스의 불이 왕궁 결계에 돌아왔습니다." :
                 "다음 길을 준비하세요.") :
                 "등불 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
             GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
@@ -665,6 +673,8 @@ namespace Expedition.Presentation
                 case "frost-clear": return "서리의 파수꾼을 쓰러뜨리면 열립니다.";
                 case "garden": return "전투 21에 도달하면 열립니다.";
                 case "garden-clear": return "가시의 군주를 쓰러뜨리면 열립니다.";
+                case "palace": return "전투 26에 도달하면 열립니다.";
+                case "palace-clear": return "왕관의 수호룡을 쓰러뜨리면 열립니다.";
                 default: return "원정을 진행하면 열립니다.";
             }
         }

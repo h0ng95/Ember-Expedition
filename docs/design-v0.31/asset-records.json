@@ -1,0 +1,44 @@
+{
+  "tool": "built-in imagegen",
+  "externalImageReferences": false,
+  "pixelEditing": false,
+  "guardRepair": "Imagegen edit of the initial original guard; compact sword poses resolve cross-frame overlap.",
+  "prompts": "ASSET-PROMPTS.md",
+  "assets": [
+    {
+      "id": "palace-guard",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-91896abe-66e8-40f0-a2f7-306b39c0dd09.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v031/palace-guard.png",
+      "sha256": "B349A9B5707DB43F80E97D16D3D7B1F925D94840FA685A04E3A2ADFBA678F526",
+      "byteExactCopy": true
+    },
+    {
+      "id": "palace-arbalist",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-0d3ecdca-3d02-47a8-99f2-96858043e423.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v031/palace-arbalist.png",
+      "sha256": "40C80A51DE494470FE660A08399727729EB71D215A66C1F6917BC0890AE51738",
+      "byteExactCopy": true
+    },
+    {
+      "id": "palace-sentinel",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-bcc981cb-ecdc-4390-9e3a-a59fa46a20c8.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v031/palace-sentinel.png",
+      "sha256": "2C3BA31103C4E844FBA01F42AB99FFD510479DCB98BE59F6D807CD61AD14DE83",
+      "byteExactCopy": true
+    },
+    {
+      "id": "palace-boss",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-3c63e6af-0310-4c8c-a00b-b8151b91d61d.png",
+      "path": "unity/Assets/Resources/Art/Enemies/v031/palace-boss.png",
+      "sha256": "7584D4CBF309D423F1DC3BA61F514BBBD52634B8D8DDAE7CCDD9112CB0D66F25",
+      "byteExactCopy": true
+    },
+    {
+      "id": "palace-battlefield",
+      "source": "C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-a90469ea-adf7-4349-87a7-e08bdda9e7d9.png",
+      "path": "unity/Assets/Resources/Art/Environments/v031/palace-battlefield.png",
+      "sha256": "2ABC24527D0583C626C70B7EA4273173D13F3D2FE1BECB3E21F4045B2D5F1755",
+      "byteExactCopy": true
+    }
+  ]
+}

@@ -560,11 +560,15 @@ namespace Expedition.Presentation
                 "공격 간격 " + form.AttackInterval.ToString("0.0") + "초   사거리 " + form.Range.ToString("0.0"), body);
             int target = member.FormId.StartsWith("B-", StringComparison.Ordinal) ? 2 :
                 member.FormId.StartsWith("E-", StringComparison.Ordinal) ? 6 : 0;
-            GUI.Label(new Rect(468, 259, 510, 58), target > 0 ?
-                "진화 진행  " + member.Growth + " / " + target : "최종 형태", hint);
+            HybridGuidance guidance = HybridGuide(member.FormId);
+            GUI.Label(new Rect(468, 259, 510, 58), guidance != null ? "기술: " + guidance.Skill :
+                target > 0 ? "진화 진행  " + member.Growth + " / " + target : "최종 형태", hint);
             GUI.Label(new Rect(468, 309, 510, 34), "고유 특성: " + TraitName(form.InnateTrait) +
                 "    전승 특성: " + TraitName(member.InheritedTraitId), small);
-            GUI.Label(new Rect(285, 347, 700, 40), "성장과 편성", heading);
+            if (guidance != null)
+                GUI.Label(new Rect(277, 347, 726, 49), guidance.Tactic, hint);
+            else
+                GUI.Label(new Rect(285, 347, 700, 40), "성장과 편성", heading);
             if (GUI.Button(new Rect(277, 407, 225, 62), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
             {
                 if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save(); modal = Modal.None; }
@@ -814,6 +818,7 @@ namespace Expedition.Presentation
                 return;
             }
             CatalogForm result = database.Get(pendingFormId);
+            HybridGuidance guidance = HybridGuide(pendingFormId);
             Rect panel = new Rect(245, 72, 790, 576);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
@@ -826,11 +831,13 @@ namespace Expedition.Presentation
             if (art != null) art.Draw(pendingFormId, new Rect(content.x + 5, 205, 170, 184),
                 (int)(Time.unscaledTime * 5f) % 4);
             GUI.Label(new Rect(468, 205, content.xMax - 468, 43), result.Name, heading);
-            GUI.Label(new Rect(468, 251, content.xMax - 468, 56),
+            GUI.Label(new Rect(468, 251, content.xMax - 468, 49),
                 "체력 " + result.Hp.ToString("0") + "   공격 " + result.Power.ToString("0") +
                 "   방어 " + result.Defense.ToString("0"), body);
-            GUI.Label(new Rect(468, 306, content.xMax - 468, 50),
-                "기술: " + CombinationSkill(pendingFormId), body);
+            GUI.Label(new Rect(468, 304, content.xMax - 468, 33),
+                "기술: " + (guidance == null ? "고유 특성 " + pendingFormId : guidance.Skill), body);
+            if (guidance != null)
+                GUI.Label(new Rect(468, 344, content.xMax - 468, 46), guidance.Tactic, hint);
             GUI.Label(new Rect(content.x, 398, content.width, 36),
                 "결과를 유지하는 동료: " + MemberPositionLabel(recipient.Id) + " " +
                 database.Get(recipient.FormId).Name +
@@ -847,18 +854,37 @@ namespace Expedition.Presentation
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "결합하기", primary)) ExecuteGrowth();
         }
 
-        static string CombinationSkill(string resultId)
+        sealed class HybridGuidance
         {
-            // Summaries correspond to the H-01..06 execution cases in CatalogSkills.cs.
-            switch (resultId)
+            public readonly string Skill;
+            public readonly string Tactic;
+
+            public HybridGuidance(string skill, string role, string placement)
             {
-                case "H-01": return "전방 범위 공격과 화상";
-                case "H-02": return "적 공격 후 가까운 아군 둘 회복";
-                case "H-03": return "직선 공격과 둔화";
-                case "H-04": return "범위 내 적에게 화상·둔화·피해";
-                case "H-05": return "자신과 가까운 아군 회복·공격력 강화";
-                case "H-06": return "적 표식과 가까운 아군의 추가 기본 공격";
-                default: return "고유 특성 " + resultId;
+                Skill = skill;
+                Tactic = "역할: " + role + "\n배치: " + placement;
+            }
+        }
+
+        static readonly HybridGuidance H01Guide = new HybridGuidance("전방 범위 공격과 화상", "전열 범위 공격", "적이 모이는 앞줄");
+        static readonly HybridGuidance H02Guide = new HybridGuidance("근접 타격·주변 최대 2명 회복(자신 가능)", "전열 근접 회복", "전열 곁 · 먼 후열은 회복 불가");
+        static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 둔화", "후열 관통·둔화", "적의 진로가 겹치는 뒤쪽");
+        static readonly HybridGuidance H04Guide = new HybridGuidance("범위 내 적에게 화상·둔화·피해", "후열 범위 견제", "뭉친 적을 겨냥하는 뒤쪽");
+        static readonly HybridGuidance H05Guide = new HybridGuidance("자신과 가까운 아군 회복·공격력 강화", "전열 근처 회복·지원", "앞줄 곁, 아군과 너무 멀지 않게");
+        static readonly HybridGuidance H06Guide = new HybridGuidance("표식 + 자신·주변 아군 추가 기본 공격", "후열 사격 지원", "뒷줄, 아군과 너무 멀지 않게");
+
+        static HybridGuidance HybridGuide(string formId)
+        {
+            // Match CatalogSkills' H-01..06 effects and the forms' attack ranges.
+            switch (formId)
+            {
+                case "H-01": return H01Guide;
+                case "H-02": return H02Guide;
+                case "H-03": return H03Guide;
+                case "H-04": return H04Guide;
+                case "H-05": return H05Guide;
+                case "H-06": return H06Guide;
+                default: return null;
             }
         }
 

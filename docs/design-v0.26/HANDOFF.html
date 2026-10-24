@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.26 · 결합별 비교와 배치 안내</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.26 · 결합별 비교와 배치 안내</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 플레이 화면의 변경</a>
+<a href="#section-2">2. 측정 방법</a>
+<a href="#section-3">3. 별도 100개 시드의 결과</a>
+<a href="#section-4">4. 구현과 기기 검증</a>
+<a href="#section-5">5. 이어서 할 일</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · IGNIS: ASHEN OATH</p>
+<p><strong>6종 결합을 실제 소환·성장 경로로 비교하는 도구를 추가하고, 결합 결과창과 동료 상세창에 기술·역할·배치 요령을 표시했다.</strong> 현재 원정은 15전투다. 이번에는 전투 능력치·성장 비용·소환 확률을 변경하지 않았다.</p>
+<p>사용자가 제안한 Easy와 완주 해금 구조는 <a href="difficulty-progression-review.md">다른 게임 비교·추천안</a>에 별도로 정리했다. 난도 선택과 영구 해금은 아직 미구현이다.</p>
+<h2 id="section-1">1. 플레이 화면의 변경</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>결합</th>
+<th>역할</th>
+<th>안내하는 배치 요령</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H-01 잿불 검위</td>
+<td>전열 범위 공격</td>
+<td>적이 모이는 앞줄</td>
+</tr>
+<tr>
+<td>H-02 등불 성기사</td>
+<td>전열 근접 회복</td>
+<td>전열 곁, 먼 후열은 회복 범위 밖</td>
+</tr>
+<tr>
+<td>H-03 빙결 추적자</td>
+<td>후열 관통·둔화</td>
+<td>적의 진로가 겹치는 뒤쪽</td>
+</tr>
+<tr>
+<td>H-04 융해술사</td>
+<td>후열 범위 견제</td>
+<td>뭉친 적을 겨냥하는 뒤쪽</td>
+</tr>
+<tr>
+<td>H-05 성가 기수</td>
+<td>전열 근처 회복·지원</td>
+<td>앞줄 곁, 동료와 너무 멀지 않게</td>
+</tr>
+<tr>
+<td>H-06 원정 유격대장</td>
+<td>후열 사격 지원</td>
+<td>뒷줄, 동료와 너무 멀지 않게</td>
+</tr>
+</tbody></table></div>
+<p>H-02는 근접 타격 뒤 가까운 아군 최대 2명을 회복하며 자신도 후보에 포함된다. 결합으로 사제 재료가 사라지므로 멀리 떨어진 후열의 회복까지 자동으로 보장하지 않는다. 안내 데이터는 한 곳에서 정의해 상세창과 확인창에 함께 쓴다.</p>
+<p>기존의 남는 동료·소모되는 동료·전승 특성·출전 인원 변화는 계속 표시한다. 새로운 창이나 확인 단계를 추가하지 않았다. 확인창은 32px 안쪽 여백, 16px 버튼 간격, 64px 버튼 높이를 유지한다.</p>
+<p><img src="device-evidence/h02-confirmation.png" alt="Buddy2 결합 결과창"></p>
+<p><img src="device-evidence/h02-detail.png" alt="Buddy2 결합형 동료 상세"></p>
+<h2 id="section-2">2. 측정 방법</h2>
+<ul>
+<li>SOL이 비교 코드를 구현하고 시드 <strong>1~40</strong>을 측정했다. 상위 ASTRA 작업에서 코드를 검토하고 별도 시드 <strong>1001~1100</strong>을 실행했다. 별도 결과를 보고 생산 수치를 조정하지 않았다.</li>
+<li>기사 최종 진화 우선 1종과 각 결합 목표 6종, 총 7개 고정 성장 정책을 비교한다. 각각 분산·밀집의 두 배치로 실행한다.</li>
+<li>같은 시드의 실제 <code>Summon</code>, <code>Transfer</code>, <code>Evolve</code>, <code>Combine</code> 명령과 현재 승리 보상만 사용한다. 대상 직업의 첫 후보를 보존하고 분기 진화 2명을 만든 뒤 결합한다.</li>
+<li>H-02·H-05 정책은 유일한 사제를 소모한 효과와 결합체 자체의 성능을 혼동하지 않도록 예비 사제를 확보한 뒤 결합한다. 이것은 <strong>검증 정책의 선택</strong>이며 게임의 결합 조건을 바꾼 것이 아니다.</li>
+<li>결합 후 비는 출전 자리를 채운다. 나머지 성장은 사제·기사 등을 우선한다. 정책의 자세한 우선순위는 <a href="../../tests/ExpeditionRun/README-hybrid-balance.md">측정 도구 설명</a>에 있다.</li>
+<li>이전 전투에서 패배했어도 후반 전투를 비교하기 위해 승리 보상을 받았다고 가정하며 진행한다. <strong>전투별 승리, 무패 누적 통과, 결합 획득을 구분해서 해석해야 한다.</strong> 획득률도 이 가상 후속 진행을 포함하며, 실제 무패 진행 중 획득률이 아니다.</li>
+<li>모든 정책은 15전투 준비까지 소환 <strong>23회·460G</strong>를 썼다. 서로 다른 편성과 성장 시점을 비교하므로 결합체 하나의 순수 성능이나 사람의 승률을 뜻하지 않는다.</li>
+<li>매 준비 단계의 Capture→Restore, 위치 범위·중복 좌표, 정상 명령 성공 여부를 확인한다. 각 정책·배치의 첫 시드는 재실행해 동일 결과를 확인한다. 승리 시간과 패배 시간도 분리한다.</li>
+</ul>
+<h2 id="section-3">3. 별도 100개 시드의 결과</h2>
+<p>아래 ‘10전투 승리’는 이전 승리 보상을 가정한 개별 전투 결과다. ‘15전투 무패 완주’는 1~15전투를 모두 연속으로 이긴 수다. 표의 결합 이름은 <strong>그 결합을 목표로 하는 정책</strong>을 뜻하며, 모든 시드에서 그 결합을 실제로 획득한 것은 아니다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>목표 정책</th>
+<th align="right">10전투 승리: 분산 / 밀집</th>
+<th align="right">15전투 무패 완주: 분산 / 밀집</th>
+<th align="right">15전투까지 결합 획득</th>
+<th align="right">획득 시 평균 전투</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기사 최종 우선</td>
+<td align="right">100 / 100</td>
+<td align="right">100 / 100</td>
+<td align="right">해당 없음</td>
+<td align="right">해당 없음</td>
+</tr>
+<tr>
+<td>H-01 잿불 검위</td>
+<td align="right">90 / 100</td>
+<td align="right">89 / 100</td>
+<td align="right">96 / 100</td>
+<td align="right">7.10</td>
+</tr>
+<tr>
+<td>H-02 등불 성기사</td>
+<td align="right">93 / 94</td>
+<td align="right">90 / 94</td>
+<td align="right">97 / 100</td>
+<td align="right">6.68</td>
+</tr>
+<tr>
+<td>H-03 빙결 추적자</td>
+<td align="right">48 / 73</td>
+<td align="right">44 / 62</td>
+<td align="right">100 / 100</td>
+<td align="right">6.83</td>
+</tr>
+<tr>
+<td>H-04 융해술사</td>
+<td align="right">49 / 52</td>
+<td align="right">40 / 35</td>
+<td align="right">96 / 100</td>
+<td align="right">7.94</td>
+</tr>
+<tr>
+<td>H-05 성가 기수</td>
+<td align="right">89 / 89</td>
+<td align="right">71 / 68</td>
+<td align="right">96 / 100</td>
+<td align="right">7.72</td>
+</tr>
+<tr>
+<td>H-06 원정 유격대장</td>
+<td align="right">41 / 48</td>
+<td align="right">37 / 40</td>
+<td align="right">99 / 100</td>
+<td align="right">7.02</td>
+</tr>
+</tbody></table></div>
+<p>각 수치의 분모는 100이다. 획득 시점은 분산·밀집이 같았고, 미획득 시드를 평균 획득 시점에서 제외했다. 15전투 개별 승리는 대부분 97~100회로 높았지만 위 무패 완주 수와 다르다. 후반에 가상 보상을 받은 강한 편성만 보고 원정 전체가 쉽다고 결론 내리면 안 된다.</p>
+<h3>해석과 다음 조정 지점</h3>
+<ol>
+<li><strong>H-02의 낮은 기존 결과는 편성 정책의 영향도 크다.</strong> 기존 v0.24 정책은 사제를 결합한 뒤 대체 회복 역할을 보장하지 않았다. 이번 정책은 성장 우선순위·배치도 함께 달라졌으므로 개선을 ‘예비 사제 하나의 효과’로 단정할 수는 없다. H-02를 일괄 상향할 근거로 기존 수치만 쓰지 않는다.</li>
+<li><strong>원거리 결합을 서두르는 경로에서 10보스 전후 병목이 남는다.</strong> H-03·H-04·H-06은 재료 확보·성장에 투자하면서 전열 성장 시점이 늦어진다. 코드의 우선순위와 표본 경로를 바탕으로 한 원인 가설이며, 결합체 자체가 약하다는 증명은 아니다.</li>
+<li><strong>밀집이 항상 정답은 아니다.</strong> H-01·H-03 등에는 도움이 됐지만 H-04·H-05의 전체 무패 결과는 더 낮았다. 근처 지원 이점과 범위 공격 위험을 함께 봐야 한다. 이번 두 고정 진형이 최적 배치라는 뜻도 아니다.</li>
+<li>다음 측정에서는 <strong>먼저 전열을 분기 진화시키고 결합하는 정책</strong>을 같은 시드로 비교한다. 정책을 개선해도 남는 격차를 확인한 뒤 개별 스킬·수치 조정 여부를 정한다.</li>
+</ol>
+<p><a href="hybrid-training-before.json">구현·탐색 시드 40개</a> · <a href="hybrid-holdout.json">별도 검증 시드 100개</a></p>
+<h2 id="section-4">4. 구현과 기기 검증</h2>
+<ul>
+<li><code>tests/ExpeditionRun/HybridBalanceProbe.cs</code>: 6종 결합의 획득 시점, 고정 성장 정책, 두 배치, 전투 결과·실제 회복·피해 기여 기록.</li>
+<li><code>tests/ExpeditionRun/run-hybrid-balance.ps1</code>: 시드 범위와 출력 경로를 지정하는 실행기.</li>
+<li><code>unity/Assets/Scripts/Presentation/ExpeditionScreen.cs</code>: 기술·역할·배치 안내의 공통 데이터와 화면 연결.</li>
+<li>Core+Presentation 정적 컴파일 통과. Unity Android 빌드 종료 코드 0.</li>
+<li>기존 Unity 검증: 기록 저장·소급 관찰, 아군 크기 460개, 폐광 283개, 성채 264개, 숲 258개, 표시 순서 12개, 드래그·JSON 17개 및 전투 결과·보스 피격 검증 통과.</li>
+<li>Buddy2 설치 성공. 정상 원정 명령과 실제 1~5전투 승리로 생성한 6전투 체크포인트를 사용했다. H-02 결합 목록→확인→실행→상세→되돌리기 동작을 확인했다. 기술·역할 두 줄·재료 정보·하단 버튼에 잘림이나 겹침이 없었다.</li>
+<li>검사 시 Unity·AndroidRuntime 오류 로그 출력 없음. 테스트 전에 새로 백업한 사용자의 <strong>1전투·40G·기본 3명</strong> 저장을 복구하고 바이트 일치를 확인했다.</li>
+<li>APK SHA-256: <code>11BED2840F352AB1742EEF0CB6129F651B86D83DE62AA8FDD0FB758B6F2B5517</code>.</li>
+</ul>
+<p>전투 수치는 기존 v0.24와 같고, 30전투 전체·사람의 난도 체감·장시간 성능을 검증한 결과는 아니다. 여섯 안내의 문구는 코드와 대조했고 실기기 화면 검사는 가장 긴 H-02 문구를 대표로 사용했다.</p>
+<h2 id="section-5">5. 이어서 할 일</h2>
+<ol>
+<li>전열 우선 성장과 결합 우선 성장을 비교해 5·10보스 병목을 분리한다.</li>
+<li><a href="difficulty-progression-review.md">Easy·Normal·Veteran 추천안</a>에 따라 난도 설정과 별도 완주 기록을 설계·구현한다. 현재 15전투 완료와 출시 30전투 완주를 구분한다.</li>
+<li>16~20전투의 지역·적·보스·이그니스 이야기 조각을 확장한다.</li>
+<li>한영 문자열 리소스·언어 전환, 21~30전투와 원정 결말을 연결한다.</li>
+</ol>
+<p>이전 UI·스토리·여백 변경은 <code>d3c5185</code>에 커밋했다. 이전 기록: <a href="../design-v0.25/HANDOFF.html">v0.25 이야기와 UI</a>.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

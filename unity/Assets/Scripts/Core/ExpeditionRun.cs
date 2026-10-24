@@ -515,7 +515,7 @@ namespace Expedition.Core
                     AddPalaceGuards(result, 3, 1437.5f, 99f, 26f);
                     AddRanged(result, "palace-arbalist", 3, 851f, 81.4f); break;
                 case 29:
-                    result.AddEnemy("palace-sentinel", 2185f, 107.8f, 34f, 1.8f, 1f, .57f,
+                    result.AddEnemy("palace-sentinel", 2185f, 90f, 34f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
                     AddPalaceGuards(result, 2, 1518f, 103.4f, 26f);
                     AddRanged(result, "palace-arbalist", 2, 885.5f, 85.8f); break;

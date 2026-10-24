@@ -12,7 +12,14 @@ internal static class HybridBalanceProbe
 {
     static bool FrontFirst;
     static bool Balanced;
-    sealed class Policy
+    internal static void ConfigureGrowthOrder(string order)
+    {
+        if (order != "TargetFirst" && order != "FrontFirst" && order != "Balanced")
+            throw new ArgumentException("Unsupported growth order.", "order");
+        FrontFirst = order != "TargetFirst";
+        Balanced = order == "Balanced";
+    }
+    internal sealed class Policy
     {
         public string Id, First, Second;
         public bool NeedsBackupPriest;
@@ -20,7 +27,7 @@ internal static class HybridBalanceProbe
         { Id = id; First = first; Second = second; NeedsBackupPriest = backup; }
     }
 
-    static readonly Policy[] Policies = {
+    internal static readonly Policy[] Policies = {
         new Policy("final", null, null),
         new Policy("H-01", "KN", "FI"), new Policy("H-02", "KN", "PR", true),
         new Policy("H-03", "AR", "IC"), new Policy("H-04", "FI", "IC"),
@@ -28,7 +35,7 @@ internal static class HybridBalanceProbe
     };
     static readonly string[] Formations = { "spread", "compact" };
 
-    sealed class Progress
+    internal sealed class Progress
     {
         public string FirstId, SecondId, BackupPriestId, HybridUnitId;
         public int FirstSeenWave, SecondSeenWave, BackupPriestWave, AcquiredWave;
@@ -271,7 +278,7 @@ internal static class HybridBalanceProbe
         }
     }
 
-    static void Prepare(ExpeditionRun run, Policy policy, Progress p, string formation,
+    internal static void Prepare(ExpeditionRun run, Policy policy, Progress p, string formation,
         List<string> actions)
     {
         foreach (CatalogMember member in run.Roster.Members) Discover(run, policy, p, member.Id);
@@ -341,7 +348,7 @@ internal static class HybridBalanceProbe
                     throw new InvalidOperationException("Formation stacked two deployed units.");
     }
 
-    static string Party(ExpeditionRun run)
+    internal static string Party(ExpeditionRun run)
     {
         return string.Join(" | ", run.DeployedIds.Select(id => {
             CatalogMember member = run.Roster.Find(id);
@@ -428,8 +435,7 @@ internal static class HybridBalanceProbe
         {
             if (args[4] != "TargetFirst" && args[4] != "FrontFirst" && args[4] != "Balanced")
                 throw new ArgumentException("Unsupported growth order");
-            FrontFirst = args[4] != "TargetFirst";
-            Balanced = args[4] == "Balanced";
+            ConfigureGrowthOrder(args[4]);
         }
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
         if (first < 1 || count < 1 || count > 1000 || (long)first + count > int.MaxValue)

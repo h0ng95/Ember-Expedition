@@ -42,7 +42,7 @@ namespace Expedition.Presentation
         CatalogArtView art;
         Texture2D battlefield, outpost, furnace;
         Camera backgroundCamera;
-        GUIStyle title, heading, body, small, centered, button, primary, hint;
+        GUIStyle title, heading, body, small, centered, button, primary, hint, bossChecklist;
         GUIStyle journalTitle, journalBody, journalStatus, dialogBody;
         Font font;
         Rect viewport;
@@ -226,6 +226,7 @@ namespace Expedition.Presentation
             small = Style(15, Muted, false, TextAnchor.MiddleLeft);
             centered = Style(17, Cream, true, TextAnchor.MiddleCenter);
             hint = Style(17, Gold, false, TextAnchor.MiddleLeft);
+            bossChecklist = Style(17, Cream, false, TextAnchor.MiddleLeft);
             journalTitle = Style(26, ExpeditionUiTheme.Ink, true, TextAnchor.MiddleLeft);
             journalBody = Style(21, ExpeditionUiTheme.Ink, false, TextAnchor.UpperLeft);
             journalStatus = Style(17, ExpeditionUiTheme.FadedInk, false, TextAnchor.MiddleLeft);
@@ -356,9 +357,17 @@ namespace Expedition.Presentation
                 StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
                 if (regionStory != null) OpenJournal(regionStory.Id);
             }
-            GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
-                "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
-                "동료를 겹쳐 놓으면 성장 +1\n결합은 가능한 조합 목록에서 선택\n남은 골드는 다음 전투에도 유지됩니다.", body);
+            if (run.IsBossWave && !showHelp)
+            {
+                GUI.Label(new Rect(735, 326, 490, 28), "보스 준비 점검", hint);
+                string[] checks = ExpeditionPreparationHints.ForBoss(run, database);
+                for (int i = 0; i < checks.Length && i < 3; i++)
+                    GUI.Label(new Rect(735, 358 + i * 30, 495, 29), checks[i], bossChecklist);
+            }
+            else
+                GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
+                    "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
+                    "동료를 겹쳐 놓으면 성장 +1\n결합은 가능한 조합 목록에서 선택\n남은 골드는 다음 전투에도 유지됩니다.", body);
             List<CatalogCombinationOption> combinations = run.GetCombinationOptions();
             if (combinations.Count > 0 && GUI.Button(new Rect(735, 468, 315, 52),
                 combinations.Count == 1 ? database.Get(combinations[0].ResultId).Name + " 결합 가능" :
@@ -974,10 +983,10 @@ namespace Expedition.Presentation
 
         static readonly HybridGuidance H01Guide = new HybridGuidance("전방 범위 공격과 화상", "전열 범위 공격", "적이 모이는 앞줄");
         static readonly HybridGuidance H02Guide = new HybridGuidance("근접 타격·주변 최대 2명 회복(자신 가능)", "전열 근접 회복", "전열 곁 · 먼 후열은 회복 불가");
-        static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 둔화", "후열 관통·둔화", "적의 진로가 겹치는 뒤쪽");
+        static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 이동 둔화", "후열 관통·이동 둔화", "적의 진로가 겹치는 뒤쪽");
         static readonly HybridGuidance H04Guide = new HybridGuidance("범위 내 적에게 화상·둔화·피해", "후열 범위 견제", "뭉친 적을 겨냥하는 뒤쪽");
         static readonly HybridGuidance H05Guide = new HybridGuidance("자신과 가까운 아군 회복·공격력 강화", "전열 근처 회복·지원", "앞줄 곁, 아군과 너무 멀지 않게");
-        static readonly HybridGuidance H06Guide = new HybridGuidance("표식 + 자신·주변 아군 추가 기본 공격", "후열 사격 지원", "뒷줄, 아군과 너무 멀지 않게");
+        static readonly HybridGuidance H06Guide = new HybridGuidance("표식·5초 안 다음 기본공격 1회 +60%", "후열 단발 공격 지원", "본인 + 거리 3 내 가까운 아군 2명");
 
         static HybridGuidance HybridGuide(string formId)
         {

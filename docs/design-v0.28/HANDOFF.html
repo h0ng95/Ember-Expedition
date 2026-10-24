@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.28 · 일반전 압박과 보스 준비 안내</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.28 · 일반전 압박과 보스 준비 안내</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 일반전이 쉬웠던 부분</a>
+<a href="#section-2">2. 보스 준비 화면</a>
+<a href="#section-3">3. 빙결 추적자·유격대장 점검</a>
+<a href="#section-4">4. 검증과 다음 순서</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · IGNIS: ASHEN OATH</p>
+<p><strong>일반전에서 성장 없이도 지나가던 구간의 적 체력·공격력을 조정하고, 보스 준비 화면에 현재 편성에 맞는 안내를 추가했다.</strong> 현재는 Normal 15전투이며 Hard는 준비 중이다. 이전 v0.27은 <code>c4508de</code>로 커밋했다.</p>
+<h2 id="section-1">1. 일반전이 쉬웠던 부분</h2>
+<p>기본 3명 유지, 기본 5명으로 인원만 확장, 분기 성장, 기사 최종 우선, H-02 결합의 다섯 고정 정책으로 1~15전투를 비교했다. 성장한 편성은 기존 성채·폐광 일반전에서 매우 높은 체력으로 승리했고, 기본 3명조차 4전투까지 통과했다. 따라서 초반부터 성장과 소환이 필요해지는 구간을 더 분명히 했다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>구간</th>
+<th>반영</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1~2</td>
+<td>조작·소환 학습 구간으로 유지</td>
+</tr>
+<tr>
+<td>3~4</td>
+<td>졸개·정예의 체력과 공격력 상승. 인원 확장·첫 진화의 가치 강화</td>
+</tr>
+<tr>
+<td>6~8</td>
+<td>성채 보병·석궁병의 교전 압박 강화</td>
+</tr>
+<tr>
+<td>9</td>
+<td>이미 성장하지 않은 편성을 막는 정예전이라 유지</td>
+</tr>
+<tr>
+<td>11~14</td>
+<td>폐광 졸개·투척병·감독관 강화. 체력만 늘리지 않고 공격력도 함께 조정</td>
+</tr>
+<tr>
+<td>5·10·15</td>
+<td>보스와 호위의 기존 수치 유지</td>
+</tr>
+</tbody></table></div>
+<p>적 수·배치·공격 역할, 소환 비용·확률, 승리 보상, 아군 능력치·기술은 그대로다.</p>
+<h3>변경한 적 수치</h3>
+<p>아래 숫자는 <strong>체력 / 공격력</strong>, 화살표는 기존→현재다. 방어력·공격 주기·이동 속도는 바꾸지 않았다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>전투</th>
+<th>근접 졸개</th>
+<th>원거리 졸개</th>
+<th>정예</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3</td>
+<td>150/17 → 175/20</td>
+<td>125/19 → 150/23</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>145/22 → 165/26</td>
+<td>100/25 → 120/28</td>
+<td>340/38 → 400/42</td>
+</tr>
+<tr>
+<td>6</td>
+<td>240/20 → 320/27</td>
+<td>150/16 → 190/22</td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td>260/25 → 320/33</td>
+<td>160/24 → 200/30</td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td>260/28 → 300/34</td>
+<td>180/25 → 215/31</td>
+<td>—</td>
+</tr>
+<tr>
+<td>11</td>
+<td>300/26 → 420/36</td>
+<td>200/22 → 270/30</td>
+<td>—</td>
+</tr>
+<tr>
+<td>12</td>
+<td>360/30 → 480/40</td>
+<td>230/25 → 300/34</td>
+<td>—</td>
+</tr>
+<tr>
+<td>13</td>
+<td>400/33 → 520/44</td>
+<td>260/28 → 330/38</td>
+<td>—</td>
+</tr>
+<tr>
+<td>14</td>
+<td>420/35 → 500/44</td>
+<td>270/31 → 330/38</td>
+<td>850/45 → 950/50</td>
+</tr>
+</tbody></table></div>
+<h3>같은 시드 1~40의 전후 비교</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>편성</th>
+<th align="right">전투</th>
+<th align="right">승리 수: 전 → 후</th>
+<th align="right">종료 시 아군 체력 비율: 전 → 후</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기본 3명 유지</td>
+<td align="right">3</td>
+<td align="right">모두 승리 → 모두 승리</td>
+<td align="right">81% → 64%</td>
+</tr>
+<tr>
+<td>기본 3명 유지</td>
+<td align="right">4</td>
+<td align="right">모두 승리 → 모두 패배</td>
+<td align="right">5% → 0%</td>
+</tr>
+<tr>
+<td>기본 5명 유지</td>
+<td align="right">4</td>
+<td align="right">40 → 40</td>
+<td align="right">76% → 66%</td>
+</tr>
+<tr>
+<td>기본 5명 유지</td>
+<td align="right">8</td>
+<td align="right">40 → 25</td>
+<td align="right">48% → 22%</td>
+</tr>
+<tr>
+<td>기본 5명 유지</td>
+<td align="right">12</td>
+<td align="right">40 → 25</td>
+<td align="right">60% → 18%</td>
+</tr>
+<tr>
+<td>기본 5명 유지</td>
+<td align="right">13</td>
+<td align="right">25 → 0</td>
+<td align="right">22% → 0%</td>
+</tr>
+<tr>
+<td>분기 성장</td>
+<td align="right">8</td>
+<td align="right">40 → 40</td>
+<td align="right">96% → 87%</td>
+</tr>
+<tr>
+<td>H-02 결합 정책</td>
+<td align="right">13</td>
+<td align="right">40 → 40</td>
+<td align="right">95% → 89%</td>
+</tr>
+<tr>
+<td>H-02 결합 정책</td>
+<td align="right">14</td>
+<td align="right">40 → 40</td>
+<td align="right">93% → 87%</td>
+</tr>
+</tbody></table></div>
+<p>기본 3명 정책은 소환을 하지 않아 시드가 바뀌어도 동일한 전투다. 이 행을 40개의 서로 다른 편성으로 해석하면 안 된다. 기본 5명 정책은 같은 시드의 실제 무작위 소환 결과를 사용한다.</p>
+<p>별도 시드 <strong>4001~4040</strong>에서는 기본 3명이 4전투에서 모두 패배했고, 기본 5명은 8전투 30/40, 13전투 0/40이었다. 분기·기사 최종·H-02 성장 정책은 모든 일반전에서 40/40 승리했다. 이 성장 편성들의 3<del>4·6</del>9·11<del>14전투는 평균 약 **8.4</del>17.4초**였다.</p>
+<p><strong>한계:</strong> 성장한 편성에는 여전히 여유가 있다. 특히 최종 사제가 있는 폐광 편성은 전투 종료 전에 회복해 95~100% 체력으로 끝나는 경우가 많다. 종료 체력만으로 전투 중 압박을 판단하거나 ‘난도 완성’이라고 결론 내리지 않는다. 이번은 성장하지 않아도 통과하던 구간과 성장한 부대의 차이를 만드는 첫 조정이다. 더 긴 전투나 체력만 큰 적으로 난도를 맞추지는 않았다.</p>
+<p>측정은 고정 자동 정책이며 사람의 승률이 아니다. 패배 후에도 가상 승리 보상을 주어 후반 전투를 비교한다. <code>wins</code>는 해당 전투의 승리, <code>reachWins</code>는 처음부터 무패로 도달한 수다. 표의 종료 체력은 패배의 0도 포함한다. JSON의 <code>meanSeconds</code>는 승패 전체 평균이므로 패배가 늘며 짧아지는 값을 속도 개선으로 해석하지 않는다.</p>
+<p><a href="regular-before.json">전 수치·1~40</a> · <a href="regular-candidate.json">반영 수치·1~40</a> · <a href="regular-holdout.json">반영 수치·별도 4001~4040</a></p>
+<h2 id="section-2">2. 보스 준비 화면</h2>
+<p>오른쪽 패널의 반복 조작 설명을, 보스전에서는 <strong>현재 편성을 읽는 세 줄 안내</strong>로 바꿨다. 기존 패턴 설명과 도움말 버튼은 유지한다.</p>
+<ul>
+<li>출전 자리가 비고 대기 동료가 있으면 실제 인원을 알려준다.</li>
+<li>출전 동료가 성장 조건을 충족했으면 분기·최종 진화 가능을 알려준다.</li>
+<li>10전투 이후 기사가 아직 성장 중이면 다음 진화에 필요한 성장을 표시한다.</li>
+<li>출전한 유격대장의 지휘 대상과 기본공격 강화도 안내한다.</li>
+<li>성장·출전 변경·되돌리기 뒤 바로 갱신한다. 새로운 확인창이나 전투 시작 제한은 없다.</li>
+</ul>
+<p>대기석의 동료를 출전자로 계산하거나 결합형에게 없는 최종 진화를 요구하지 않는다. 권장 편성을 강제하는 점수표도 아니다.</p>
+<p><img src="device-evidence/boss-preparation.png" alt="Buddy2 보스 준비 점검"></p>
+<h2 id="section-3">3. 빙결 추적자·유격대장 점검</h2>
+<p>기술이 발동하지 않는 결함은 확인되지 않았다. 빙결 추적자의 둔화는 <strong>이동 감속</strong>이며 골렘의 공격 주기를 늦추지 않는다. 유격대장 지휘는 지속 오라나 화살 추가 발사가 아니라 <strong>본인과 거리 3 안의 가까운 아군 최대 2명이 5초 이내 사용하는 다음 기본공격 1회를 60% 강화</strong>하는 효과다. 실제로 전열이 전진하면 후열 동료가 지휘를 받는 경우가 많았다. 게임 설명을 이에 맞췄다.</p>
+<p><img src="device-evidence/h06-detail.png" alt="Buddy2 유격대장 기술 안내"></p>
+<p>같은 소환 예산에서 다음 두 성장 순서를 비교했다.</p>
+<ul>
+<li><code>FrontFirst</code>: 시작 기사 분기 → 결합 재료 → 기존 사제 우선 성장.</li>
+<li><code>Balanced</code>: 시작 기사 분기 → 결합 재료 → 출전 기본 사제를 분기 → 시작 기사 최종 → 나머지 기존 성장. 실험 정책 이름이며 모든 조합의 정답이라는 뜻은 아니다.</li>
+</ul>
+<h3>별도 시드 3001~3040, 10보스 승리 수</h3>
+<p>각 칸은 <strong>분산 / 밀집</strong>, 분모는 각각 40이다. 먼저 v0.27 일반전 수치에서 성장 순서만 비교했다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>목표 정책</th>
+<th align="right">FrontFirst</th>
+<th align="right">Balanced</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기사 최종 우선 대조군</td>
+<td align="right">40 / 40</td>
+<td align="right">40 / 40</td>
+</tr>
+<tr>
+<td>H-01 잿불 검위</td>
+<td align="right">37 / 40</td>
+<td align="right">25 / 27</td>
+</tr>
+<tr>
+<td>H-02 등불 성기사</td>
+<td align="right">36 / 36</td>
+<td align="right">36 / 36</td>
+</tr>
+<tr>
+<td>H-03 빙결 추적자</td>
+<td align="right">28 / 30</td>
+<td align="right">34 / 32</td>
+</tr>
+<tr>
+<td>H-04 융해술사</td>
+<td align="right">39 / 39</td>
+<td align="right">40 / 40</td>
+</tr>
+<tr>
+<td>H-05 성가 기수</td>
+<td align="right">39 / 39</td>
+<td align="right">38 / 38</td>
+</tr>
+<tr>
+<td>H-06 원정 유격대장</td>
+<td align="right">13 / 18</td>
+<td align="right">21 / 29</td>
+</tr>
+</tbody></table></div>
+<p>H-03·H-06은 성장 배분 변경으로 나아졌지만 H-01은 나빠졌다. <strong>모든 조합에 같은 성장 순서를 강요하지 않는다.</strong> 아군 스킬·능력치를 일괄 상향하지 않고, 실제 선택에 필요한 설명을 먼저 보완했다. H-06의 경로 차이와 낮은 통과 수는 후속 공략·밸런스 과제로 남는다.</p>
+<p>일반전 변경 후에도 같은 Balanced 시드의 10보스 승리와 15전투 무패 결과는 이전과 같았다. 즉 이번 표본에서는 강화한 일반전이 추가 병목을 만들지 않았다. 이는 임의 편성 모두가 안전하다는 보장은 아니다. 모든 정책은 15전투 준비까지 소환 23회·460G를 사용했다. 결합 획득·개별 전투 결과는 패배 후 가상 진행을 포함한다.</p>
+<p><a href="balance-normal-balanced.json">탐색 1~40 Balanced</a> · <a href="holdout-frontfirst.json">별도 FrontFirst</a> · <a href="holdout-balanced.json">별도 Balanced</a> · <a href="holdout-balanced-adjusted.json">일반전 변경 후 같은 Balanced</a> · <a href="../../tests/ExpeditionRun/README-hybrid-balance.md">도구 설명</a></p>
+<h2 id="section-4">4. 검증과 다음 순서</h2>
+<ul>
+<li>SOL이 보스 안내·UI·일반전 후보값을 구현하고 ASTRA 작업에서 코드·고정 정책 비교·후속 검증을 진행했다.</li>
+<li>보스 안내의 원정 비변경, 대기/출전 구분, 진화 조건, 성장·되돌리기·저장 복원 검사 <strong>62개</strong> 통과.</li>
+<li>기존 원정 검사 <strong>1,753개</strong> 통과. 보스전·소환·보상 규칙을 바꾸지 않았다.</li>
+<li>Unity의 Normal 저장·v3 마이그레이션 26개, 이야기 기록, 아군 크기 460개, 폐광 283개, 성채 264개, 숲 258개, 표시 순서 12개, 드래그·JSON 17개 및 결과·보스 피격 검사 통과.</li>
+<li>Unity Android 빌드 종료 코드 0. Buddy2 업데이트 설치 성공. 실제 1~9전투 승리와 정상 성장 명령으로 생성한 H-06 체크포인트에서 보스 준비 안내·상세 설명을 확인했다. 줄 잘림이나 버튼 겹침이 없었다.</li>
+<li>H-06을 대기석으로 이동하면 출전 부족 안내가 나타나고 지휘 안내가 사라졌다. 되돌리기로 출전과 원래 안내가 복구됐다.</li>
+<li>Buddy2에서 성장한 편성으로 4전투를 직접 실행해 승리와 30G 보상 반영을 확인했다. <a href="device-evidence/wave4-result.png">4전투 결과 화면</a>.</li>
+<li>이번 실행에서 수집한 Android 로그에는 Exception·Fatal·Unity/AndroidRuntime 오류가 없었다.</li>
+<li>테스트 직전에 새로 백업한 사용자 저장을 복원했고, PlayerPrefs 파일 전체가 백업과 바이트 단위로 일치함을 확인했다. 원래 1전투·40G·기본 동료 3명의 진행 상태를 보존했다.</li>
+<li>APK SHA-256: <code>8ABA1696FA58321D2E6B8EEDFE565C33FEB16F8B3FC549731F4CEFAC961CE2C1</code>.</li>
+</ul>
+<p>다음 콘텐츠 개발은 <strong>Normal 16~20전투의 새 지역·적·보스·이야기</strong>다. 기존 15전투 저장을 새 구간으로 연결하는 보상·성과 마이그레이션도 함께 다룬다. 최종 사제 이후의 일반전 여유, 결합별 성장 경로 차이는 30전투 전체 흐름과 함께 계속 점검한다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

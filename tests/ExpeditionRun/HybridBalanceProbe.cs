@@ -11,6 +11,7 @@ using Expedition.Core;
 internal static class HybridBalanceProbe
 {
     static bool FrontFirst;
+    static bool Balanced;
     sealed class Policy
     {
         public string Id, First, Second;
@@ -38,6 +39,7 @@ internal static class HybridBalanceProbe
     {
         public int wave, gold, supply, summons, deployedCount;
         public string[] party, actions;
+        public string deployment;
         public bool win, reached, timedOut;
         public double seconds, healthFraction, hybridDamage, hybridHeal;
         public int survivors, hybridSkills;
@@ -145,6 +147,16 @@ internal static class HybridBalanceProbe
             ordered.Add(starter.Id);
         if (policy.First != null && p.AcquiredWave == 0)
         { ordered.Add(p.FirstId); ordered.Add(p.SecondId); }
+        // After the recipe, establish branch healing and then finish the frontline
+        // before spending every spare recruit on the final priest. The final-only
+        // control keeps its original priorities.
+        if (Balanced && policy.Id != "final")
+        {
+            foreach (string id in run.DeployedIds)
+                if (run.Roster.Find(id).FormId == "B-PR" && !ordered.Contains(id))
+                    ordered.Add(id);
+            if (!ordered.Contains("ally-01")) ordered.Add("ally-01");
+        }
         if (policy.NeedsBackupPriest) ordered.Add(p.BackupPriestId);
         if (policy.Id == "final") ordered.Add("ally-01");
         foreach (string id in run.DeployedIds)
@@ -359,6 +371,7 @@ internal static class HybridBalanceProbe
             run = restored;
             var trace = new WaveTrace { wave = run.Wave, gold = run.Gold,
                 supply = run.Roster.SupplyUsed, summons = p.Summons,
+                deployment = Party(run),
                 deployedCount = run.DeployedIds.Count, party = run.DeployedIds.Select(id =>
                     run.Roster.Find(id).FormId).ToArray(), actions = actions.ToArray() };
             string hybridActor = p.HybridUnitId;
@@ -410,19 +423,20 @@ internal static class HybridBalanceProbe
     static void Main(string[] args)
     {
         if (args.Length != 4 && args.Length != 5)
-            throw new ArgumentException("catalog report firstSeed count [TargetFirst|FrontFirst] required");
+            throw new ArgumentException("catalog report firstSeed count [TargetFirst|FrontFirst|Balanced] required");
         if (args.Length == 5)
         {
-            if (args[4] != "TargetFirst" && args[4] != "FrontFirst")
+            if (args[4] != "TargetFirst" && args[4] != "FrontFirst" && args[4] != "Balanced")
                 throw new ArgumentException("Unsupported growth order");
-            FrontFirst = args[4] == "FrontFirst";
+            FrontFirst = args[4] != "TargetFirst";
+            Balanced = args[4] == "Balanced";
         }
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
         if (first < 1 || count < 1 || count > 1000 || (long)first + count > int.MaxValue)
             throw new ArgumentOutOfRangeException("seed range");
         CatalogDatabase db = CatalogDatabase.FromJson(File.ReadAllText(args[0]));
         var report = new Report { firstSeed = first, count = count,
-            difficulty = "Normal", growthOrder = FrontFirst ? "FrontFirst" : "TargetFirst",
+            difficulty = "Normal", growthOrder = Balanced ? "Balanced" : FrontFirst ? "FrontFirst" : "TargetFirst",
             note = "Fixed legal policies with the same seed and summon economy. A later wave assumes preceding rewards after losses; reachWins counts only uninterrupted victories. meanWinSeconds and meanLossSeconds are separate. These are not human win rates. H-02/H-05 wait for a replacement priest before consuming one. Ability damage includes shields blocked; heal is actual restored HP." };
         var summaries = new List<Summary>();
         var policySummaries = new List<PolicySummary>();

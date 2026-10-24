@@ -371,26 +371,26 @@ namespace Expedition.Core
                     AddMelee(result, "beast", 2, 84f, 9f, 6f);
                     AddRanged(result, "spine-raider", 1, 65f, 7f); break;
                 case 3:
-                    AddMelee(result, "beast", 1, 150f, 17f, 7f);
-                    AddRanged(result, "spine-raider", 3, 125f, 19f, false, true); break;
+                    AddMelee(result, "beast", 1, 175f, 20f, 7f);
+                    AddRanged(result, "spine-raider", 3, 150f, 23f, false, true); break;
                 case 4:
-                    result.AddEnemy("elite-beast", 340f, 38f, 12f, 1.8f, 1f, .7f,
+                    result.AddEnemy("elite-beast", 400f, 42f, 12f, 1.8f, 1f, .7f,
                         false, 3.25f, 0f, CatalogEnemyRole.Beast);
-                    AddMelee(result, "beast", 2, 145f, 22f, 7f);
-                    AddRanged(result, "spine-raider", 1, 100f, 25f); break;
+                    AddMelee(result, "beast", 2, 165f, 26f, 7f);
+                    AddRanged(result, "spine-raider", 1, 120f, 28f); break;
                 case 5:
                     result.AddEnemy("beast-boss", 2500f, 46f, 20f, 1.65f, 1.1f, .65f,
                         true, 3.7f, 0f, CatalogEnemyRole.Beast, true);
                     AddMelee(result, "beast", 2, 90f, 9f, 7f); break;
                 case 6:
-                    AddMelee(result, "stone-infantry", 2, 240f, 20f, 14f);
-                    AddRanged(result, "crossbow-raider", 1, 150f, 16f); break;
+                    AddMelee(result, "stone-infantry", 2, 320f, 27f, 14f);
+                    AddRanged(result, "crossbow-raider", 1, 190f, 22f); break;
                 case 7:
-                    AddMelee(result, "stone-infantry", 2, 260f, 25f, 14f);
-                    AddRanged(result, "crossbow-raider", 2, 160f, 24f); break;
+                    AddMelee(result, "stone-infantry", 2, 320f, 33f, 14f);
+                    AddRanged(result, "crossbow-raider", 2, 200f, 30f); break;
                 case 8:
-                    AddMelee(result, "stone-infantry", 3, 260f, 28f, 15f);
-                    AddRanged(result, "crossbow-raider", 2, 180f, 25f); break;
+                    AddMelee(result, "stone-infantry", 3, 300f, 34f, 15f);
+                    AddRanged(result, "crossbow-raider", 2, 215f, 31f); break;
                 case 9:
                     result.AddEnemy("stone-elite", 650f, 42f, 22f, 1.8f, 1f, .55f,
                         false, 3.45f, 0f, CatalogEnemyRole.Beast);
@@ -401,19 +401,19 @@ namespace Expedition.Core
                         true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
                     AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
                 case 11:
-                    AddMineWorkers(result, 2, 300f, 26f, 12f);
-                    AddMineSlingers(result, 1, 200f, 22f); break;
+                    AddMineWorkers(result, 2, 420f, 36f, 12f);
+                    AddMineSlingers(result, 1, 270f, 30f); break;
                 case 12:
-                    AddMineWorkers(result, 2, 360f, 30f, 15f);
-                    AddMineSlingers(result, 2, 230f, 25f); break;
+                    AddMineWorkers(result, 2, 480f, 40f, 15f);
+                    AddMineSlingers(result, 2, 300f, 34f); break;
                 case 13:
-                    AddMineWorkers(result, 3, 400f, 33f, 16f);
-                    AddMineSlingers(result, 2, 260f, 28f); break;
+                    AddMineWorkers(result, 3, 520f, 44f, 16f);
+                    AddMineSlingers(result, 2, 330f, 38f); break;
                 case 14:
-                    result.AddEnemy("mine-elite", 850f, 45f, 24f, 1.8f, 1f, .57f,
+                    result.AddEnemy("mine-elite", 950f, 50f, 24f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddMineWorkers(result, 2, 420f, 35f, 18f);
-                    AddMineSlingers(result, 2, 270f, 31f); break;
+                    AddMineWorkers(result, 2, 500f, 44f, 18f);
+                    AddMineSlingers(result, 2, 330f, 38f); break;
                 case 15:
                     result.AddEnemy("furnace-boss", 5200f, 78f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Furnace, true);

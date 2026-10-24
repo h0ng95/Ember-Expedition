@@ -1,10 +1,10 @@
-# Ember Expedition · 잔불 원정대
+# IGNIS: ASHEN OATH · 이그니스: 잿빛 서약
 
-가로 화면의 도트 그래픽, 전투 전 드래그 배치, 자동 전투와 랜덤 선택을 결합하는 Android 게임 시제품이다. **Ember Expedition / 잔불 원정대는 개발 가칭**이며, 출시명과 캐릭터 디자인은 별도 권리 검토 후 확정한다.
+가로 화면의 도트 그래픽, 전투 전 드래그 배치, 자동 전투와 랜덤 선택을 결합하는 Android 게임 시제품이다. **IGNIS: ASHEN OATH / 이그니스: 잿빛 서약은 개발 가칭**이며, 출시명과 캐릭터 디자인은 별도 권리 검토 후 확정한다.
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.24 폐광·용광로 11~15전투 확장**. 새 적 4종의 애니메이션, 감독관 보호막과 용광로 보스를 추가하고 기존 10전투 완료 저장을 11전투로 연결했다. [변경·검증 기록](docs/design-v0.24/HANDOFF.md). 성채 난도는 [v0.23](docs/design-v0.23/HANDOFF.md), 아군 몸 크기는 [v0.22](docs/design-v0.22/HANDOFF.md), 성채 적 동작은 [v0.21](docs/design-v0.21/HANDOFF.md), 부분 겹침·보스 표시는 [v0.20](docs/design-v0.20/HANDOFF.md), 숲 적 동작은 [v0.19](docs/design-v0.19/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다.
+- 최신 구현: **v0.25 원정 이야기·UI 개선**. 이그니스(Ignis)의 조각을 되찾는 이야기와 별도 저장되는 기록 7개, 숯색·황동 패널과 양피지 기록창을 추가했다. 영어판 용어·이야기 초안을 준비했으며 전체 언어 전환은 후속이다. [변경·검증 기록](docs/design-v0.25/HANDOFF.md). 현재 15전투와 폐광 적은 [v0.24](docs/design-v0.24/HANDOFF.md), 성채 난도는 [v0.23](docs/design-v0.23/HANDOFF.md), 아군 몸 크기는 [v0.22](docs/design-v0.22/HANDOFF.md), 부분 겹침·보스 표시는 [v0.20](docs/design-v0.20/HANDOFF.md), 성장·결합 조작은 [v0.16](docs/design-v0.16/HANDOFF.md)을 따른다.
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광 각각 4종, 총 12종은 **개별 애니메이션 첫 제작본**을 사용한다. [숲 전투 기록](docs/design-v0.19/HANDOFF.html) · [성채 전투 기록](docs/design-v0.21/HANDOFF.html) · [폐광 제작·전투 기록](docs/design-v0.24/HANDOFF.html).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 현재 15전투이며 20→30전투로 확장한다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).
@@ -29,6 +29,7 @@
 ./tests/ExpeditionRun/run.ps1
 ./tests/ExpeditionRun/run-balance.ps1
 ./tests/ExpeditionRun/run-early-balance.ps1
+./tests/ExpeditionStory/run.ps1
 ```
 
 ## 프로젝트 구성

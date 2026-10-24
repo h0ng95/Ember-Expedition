@@ -1,0 +1,67 @@
+{
+  "locale": "en",
+  "terminology": [
+    {
+      "ko": "이그니스: 잿빛 서약",
+      "en": "IGNIS: ASHEN OATH",
+      "note": "Proposed working title; replaces Ember Expedition."
+    },
+    {
+      "ko": "이그니스",
+      "en": "Ignis",
+      "note": "The magical fire that powered the kingdom's wards and guardians."
+    },
+    {
+      "ko": "이그니스의 파편 / 불씨 조각",
+      "en": "Ignis Shard",
+      "note": "Use one English term for every recovered fragment of the Ignis."
+    },
+    {
+      "ko": "원정 기록",
+      "en": "Field Journal",
+      "note": "The persistent record of discovered story entries."
+    },
+    {
+      "ko": "잿갈기",
+      "en": "Ashmane",
+      "note": "Name of the forest boss."
+    }
+  ],
+  "entries": [
+    {
+      "id": "intro",
+      "title": "The Shattering of Ignis",
+      "body": "Ignis, the magical flame that sustained the kingdom's wards and guardians, has shattered. The wards have fallen, and twisted guardians now attack the people they once protected.\n\nYou command an expedition from the last haven. Carry the last ember in your lantern, recover the Ignis Shards held by mighty foes, and rekindle the kingdom's fire."
+    },
+    {
+      "id": "forest",
+      "title": "The Twisted Woods",
+      "body": "An Ignis Shard stirs inside Ashmane, swelling the forest beasts to monstrous size.\nLantern in hand, the expedition crosses the wardless woods to reclaim it."
+    },
+    {
+      "id": "forest-clear",
+      "title": "The Forest's First Shard",
+      "body": "With Ashmane defeated, the swollen forest beasts grow calm.\nThe expedition carries the first Ignis Shard toward the castle."
+    },
+    {
+      "id": "castle",
+      "title": "The Twisted Gate",
+      "body": "After Ignis shattered, the gate golem was trapped in its last guard order.\nIt sees returning people as foes; the expedition seeks the Ignis Shard within the castle."
+    },
+    {
+      "id": "castle-clear",
+      "title": "The Silenced Gate Golem",
+      "body": "The twisted golem stops, and the gate's ward briefly returns.\nWith the second Ignis Shard in their lantern, they head for the smoke-choked mine."
+    },
+    {
+      "id": "mine",
+      "title": "The Furnace That Won't Stop",
+      "body": "Bound to an Ignis Shard, the furnace guardian smelts iron without end.\nThe expedition crosses the burning cartway to reclaim the fire it holds."
+    },
+    {
+      "id": "mine-clear",
+      "title": "A Clue to the Next Flame",
+      "body": "The furnace guardian stops, and a third Ignis Shard is reclaimed.\nThe shard points to the next destination; the journey goes on."
+    }
+  ]
+}

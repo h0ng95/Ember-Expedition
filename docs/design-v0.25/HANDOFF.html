@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.25 · 원정 이야기와 게임 UI</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.25 · 원정 이야기와 게임 UI</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 우리 게임에는 어떤 이야기가 있나</a>
+<a href="#section-2">2. 기록 7개와 개방 조건</a>
+<a href="#section-3">3. UI 변경</a>
+<a href="#section-4">4. 검증</a>
+<a href="#section-5">5. 다음 순서</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-24 · 15전투 확장 다음 작업</p>
+<p><strong>기존 세계관을 게임에서 읽을 수 있는 원정 기록으로 연결하고, 초록색 설명 판과 기본 버튼을 숯색·황동·금색의 게임 UI로 바꿨다.</strong> 현재 플레이 범위는 15전투다.</p>
+<p><strong>게임 가칭: IGNIS: ASHEN OATH / 이그니스: 잿빛 서약.</strong> 사용자가 제목 변경과 강렬하고 신비로운 분위기를 요청했고, 구체적인 제목은 작업용 제안으로 적용했다. 전투 화면에서는 잿빛 서약으로 줄여 쓴다. 이전 Ember Expedition 문서와 저장소 경로는 개발 이력이다.</p>
+<p>이전 15전투 확장분은 <code>fe126bc</code>로 커밋했다. 이번 문서는 그 다음 개발분을 기록한다.</p>
+<h2 id="section-1">1. 우리 게임에는 어떤 이야기가 있나</h2>
+<p>왕국의 결계와 수호자에게 힘을 주던 마법의 불꽃 <strong>Ignis / 이그니스</strong>가 산산이 흩어졌다. 결계가 무너지고 수호자들은 뒤틀렸다. 불씨 조각을 품은 짐승은 거대해지고, 성문의 골렘은 돌아온 사람마저 공격한다.</p>
+<p>플레이어는 마지막 거점의 원정대장이다. 남은 불씨를 등불에 담고 길을 나서 <strong>각 지역의 보스가 품은 Ignis Shard / 불씨 조각을 되찾아 왕국의 불을 되살린다.</strong> 숲의 짐승, 성채의 병사와 골렘, 끝없이 가동되는 폐광의 화로가 그 길을 막는다.</p>
+<p>이전 <a href="../design-v0.8/ember-expedition-replan.md#10-%EC%84%B8%EA%B3%84%EA%B4%80%EA%B3%BC-%EC%9D%B4%EC%95%BC%EA%B8%B0">v0.8 세계관</a>의 봉화망 설정을 수정했다. 사용자가 지적했듯 통신용 봉화가 꺼지는 사건만으로 마법 세계의 결계와 수호자 붕괴를 설명하기는 약했다. 현재 기준은 마법의 동력인 이그니스와 그 조각을 되찾는 이야기다. 홈·지역 이야기·보스 격파 기록에 반영했다.</p>
+<h3>로그라이트와 스토리</h3>
+<p>로그라이트라는 장르가 스토리 유무를 결정하지는 않는다. 하데스는 반복 도전과 진행되는 이야기를 함께 사용하는 예다. <a href="https://www.supergiantgames.com/games/hades/">개발사 공식 소개</a></p>
+<p>우리 게임에는 빠른 영입·성장·배치·전투 사이에 짧은 이야기를 전달하는 방식이 맞는다. 당장은 긴 컷신이나 매 전투 강제 대화를 추가하지 않는다. 보스 결과 화면에서는 짧은 후일담을 읽고 기존 다음 버튼으로 진행하며, 자세한 기록은 원할 때 연다.</p>
+<h3>시스템의 세계관상 의미</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>행동</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>무작위 동료 영입</td>
+<td>길목에서 만난 생존자와 정찰대 합류</td>
+</tr>
+<tr>
+<td>전승·성장</td>
+<td>동료가 경험을 남기고 부대가 재편됨</td>
+</tr>
+<tr>
+<td>진화</td>
+<td>역할과 기술이 숙련되어 새로운 전투 방식 획득</td>
+</tr>
+<tr>
+<td>특수 결합</td>
+<td>두 계열의 기술을 함께 익힌 역할로 재편</td>
+</tr>
+<tr>
+<td>전투 뒤 회복</td>
+<td>등불 아래 부상자를 구조하고 재정비</td>
+</tr>
+<tr>
+<td>전투 패배·등불 소모</td>
+<td>부대를 구출하고 같은 구간을 다시 공략</td>
+</tr>
+<tr>
+<td>등불 소진</td>
+<td>더 나아가지 못하고 거점으로 철수</td>
+</tr>
+<tr>
+<td>새 원정</td>
+<td>새로운 부대를 꾸려 길을 다시 확보</td>
+</tr>
+</tbody></table></div>
+<p>이 표는 시스템을 설명하는 설정이다. 별도의 구조 애니메이션이나 동료 귀환 장면을 이번에 추가한 것은 아니다.</p>
+<h2 id="section-2">2. 기록 7개와 개방 조건</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>기록</th>
+<th>열리는 시점</th>
+<th>이야기 역할</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>흩어진 이그니스</td>
+<td>처음부터</td>
+<td>결계 붕괴와 조각 회수라는 원정 목적</td>
+</tr>
+<tr>
+<td>뒤틀린 숲길</td>
+<td>원정 시작</td>
+<td>조각의 영향으로 거대해진 짐승</td>
+</tr>
+<tr>
+<td>숲의 첫 조각</td>
+<td>5보스 승리</td>
+<td>잿갈기에게서 첫 조각 회수</td>
+</tr>
+<tr>
+<td>뒤틀린 성문</td>
+<td>6전투 진입</td>
+<td>사람을 오인하는 수호자들</td>
+</tr>
+<tr>
+<td>멈춘 성문 골렘</td>
+<td>10보스 승리</td>
+<td>두 번째 조각 회수, 폐광으로 이동</td>
+</tr>
+<tr>
+<td>멈추지 않는 용광로</td>
+<td>11전투 진입</td>
+<td>조각에 매여 끝없이 쇠를 녹이는 수호자</td>
+</tr>
+<tr>
+<td>다음 불꽃의 단서</td>
+<td>15보스 승리</td>
+<td>세 번째 조각 회수와 다음 행선지의 단서</td>
+</tr>
+</tbody></table></div>
+<p>15전투 완료는 현재 공개된 구간의 완료다. 이그니스를 되살리는 전체 이야기의 결말과 구분한다. 출시 목표 30전투의 후반 지역·결말은 후속 설계 대상이다. 조각 회수는 이번에는 이야기로 전달하며 별도 조각 재화나 능력치 보너스는 추가하지 않았다.</p>
+<h3>게임에서 읽는 곳</h3>
+<ul>
+<li><strong>홈:</strong> 시작 목적 두 줄과 <code>원정 기록 N/7</code> 버튼.</li>
+<li><strong>준비 화면:</strong> 기존 전투 조언 옆의 <code>지역 이야기</code> 버튼.</li>
+<li><strong>보스 결과:</strong> 격파한 지역의 짧은 후일담 두 줄.</li>
+<li><strong>원정 기록 창:</strong> 왼쪽 목록에서 고르고 오른쪽에서 읽는다. 잠긴 기록은 개방 조건만 보여준다.</li>
+</ul>
+<p>기록은 원정 저장과 별도 키 <code>ember.expedition.story.v025</code>에 저장한다. 새 원정을 시작해도 이미 열린 기록은 남는다. 기존 원정 저장을 읽으면 도달한 지역·승리한 보스 기록을 소급해 연다. 패배를 보스 승리로 계산하지 않으며, 기록 개방으로 골드·부대·소환 난수는 바뀌지 않는다.</p>
+<h2 id="section-3">3. UI 변경</h2>
+<h3>시각 기준</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>요소</th>
+<th>적용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>바탕</td>
+<td>짙은 숯색 <code>#0D1015</code></td>
+</tr>
+<tr>
+<td>패널</td>
+<td>어두운 회색 <code>#21232B</code>, 미세한 표면 질감</td>
+</tr>
+<tr>
+<td>프레임</td>
+<td>황동 <code>#86704C</code>, 큰 창의 금속 모서리·불씨 장식·아래 그림자</td>
+</tr>
+<tr>
+<td>주요 버튼</td>
+<td>따뜻한 금색 <code>#D6AA62</code>, 어두운 글자로 대비</td>
+</tr>
+<tr>
+<td>보조 버튼</td>
+<td>회색 표면과 황동 테두리</td>
+</tr>
+<tr>
+<td>본문</td>
+<td>밝은 미색 <code>#F4E9D4</code></td>
+</tr>
+<tr>
+<td>표식</td>
+<td>작은 도트 불씨 문양과 중앙 장식</td>
+</tr>
+<tr>
+<td>원정 기록 본문</td>
+<td>양피지색 <code>#E1CCA1</code>, 짙은 갈색 글자, 붉은 책갈피</td>
+</tr>
+</tbody></table></div>
+<p>홈에는 기존 배경 원화를 활용했다. 홈·헤더·준비 설명·대기석·결과·재개 안내·동료 상세·성장·결합·새 원정 확인·기록 창에 같은 테마를 사용한다. 버튼은 기본 Unity 스킨 대신 일반·강조·눌림 상태를 가진 전용 9분할 배경을 쓴다.</p>
+<p>유닛과 전투 배경 원본, 전투 계산은 변경하지 않았다. 새 UI 질감과 프레임은 코드에서 작게 생성해 재사용한다. 새 외부 아트나 폰트 파일은 추가하지 않았다.</p>
+<h3>화면</h3>
+<p><img src="layout-evidence/home.png" alt="하단 버튼과 여백을 정리한 홈"></p>
+<p><img src="layout-evidence/new-run-dialog.png" alt="본문에 맞게 줄인 새 원정 확인창"></p>
+<p><img src="device-evidence/journal-intro.png" alt="이그니스 이야기와 양피지 기록창"></p>
+<p><img src="device-evidence/preparation-final.png" alt="잿빛 서약의 준비 설명과 금색 주요 버튼"></p>
+<p>기록창의 금속 외곽선과 양피지 본문을 구분했고, 주요 행동은 금색 버튼으로 강조했다. 준비·확인창·잠긴 기록·보스 결과의 동작 검증 캡처는 같은 <code>device-evidence/</code> 폴더에 있으며 일부는 제목 변경 전 화면이다.</p>
+<h3>다이얼로그 여백 보정</h3>
+<p>사용자의 후속 피드백에 따라 본문과 버튼 영역을 분리했다. 아래 값은 물리 픽셀이 아닌 1280×720 UI 기준 좌표다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>기존</th>
+<th>보정</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>홈 버튼 좌우 여백</td>
+<td>75</td>
+<td>32, 본문 시작선과 일치</td>
+</tr>
+<tr>
+<td>홈 버튼 아래 여백</td>
+<td>114</td>
+<td>32</td>
+</tr>
+<tr>
+<td>새 원정 확인 버튼 아래 여백</td>
+<td>18</td>
+<td>32</td>
+</tr>
+<tr>
+<td>두 버튼 사이</td>
+<td>홈 50 / 확인 36</td>
+<td>16</td>
+</tr>
+<tr>
+<td>기본 하단 버튼 높이</td>
+<td>홈 76 / 확인 60</td>
+<td>64</td>
+</tr>
+<tr>
+<td>패널 높이</td>
+<td>홈 425 / 새 원정 확인 385</td>
+<td>홈 368 / 확인 300</td>
+</tr>
+</tbody></table></div>
+<p>하단 버튼은 창의 바닥에서 계산하므로 본문 좌표가 바뀌어도 여백이 유지된다. 홈에서 저장 오류나 이전 저장 안내가 있으면 패널 높이를 432로 늘리고, 메시지는 버튼 위에 별도로 둔다. 시작 안내와 성장 확인의 본문은 위쪽에 정렬한다.</p>
+<p>결과·전투 재개·진화·결합 확인에도 같은 하단 기준을 적용했다. 긴 선택 목록은 전승 후보 10개, 결합 목록 4개씩 표시해 하단 페이지 버튼 자리를 확보했다. 목록의 전체 후보와 결합 규칙은 바꾸지 않았다. 상세·기록창의 닫기 버튼과 좌우 정렬도 정리했다.</p>
+<p>구현 기준은 <code>ExpeditionUiTheme.WindowPadding</code>, <code>ActionGap</code>, <code>ActionHeight</code> 세 값과 공통 내용·하단 버튼 좌표 함수다. <a href="device-evidence/home.png">보정 전 홈</a>과 <a href="layout-evidence/home.png">보정 후 홈</a>을 비교할 수 있다.</p>
+<h3>한국어·영어 출시 기준</h3>
+<p>영어판도 출시할 계획이다. 한국어판에서 게임명과 짧은 표제에는 영어를 함께 쓸 수 있다. 조작 버튼과 긴 설명은 선택한 언어로 명확하게 읽히는 것을 우선한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>한국어</th>
+<th>영어</th>
+<th>용도</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>이그니스: 잿빛 서약</td>
+<td>IGNIS: ASHEN OATH</td>
+<td>새 작업용 가칭</td>
+</tr>
+<tr>
+<td>이그니스</td>
+<td>Ignis</td>
+<td>왕국의 결계와 수호자를 지탱하던 마법의 불꽃</td>
+</tr>
+<tr>
+<td>이그니스의 파편</td>
+<td>Ignis Shard</td>
+<td>흩어진 이그니스의 조각. 불씨·불꽃 조각도 같은 의미</td>
+</tr>
+<tr>
+<td>원정 기록</td>
+<td>Field Journal</td>
+<td>지역·보스 이야기 기록</td>
+</tr>
+<tr>
+<td>잿갈기</td>
+<td>Ashmane</td>
+<td>숲 보스 이름 초안</td>
+</tr>
+</tbody></table></div>
+<p>홈의 <code>IGNIS: ASHEN OATH</code>, <code>IGNIS</code>, 기록 창의 <code>FIELD JOURNAL</code> 표제를 반영했다. 7개 기록의 <a href="localization-en.json">영문 번역 데이터</a>를 준비했다. <strong>영문 JSON은 번역 초안이며 앱에서 아직 로드하지 않는다. 전체 UI 언어 전환도 미구현이다.</strong></p>
+<p>영어판 구현 시에는 UI·직업·스킬·오류 문구를 문자열 키로 분리하고 언어 설정을 저장한다. 영어의 문장 길이에 맞춰 줄바꿈·동적 높이·스크롤을 확인한다. 현재 한국어 기준의 고정 높이 다이얼로그가 영어에도 맞는다고 가정하지 않는다. 세계관의 수집 조각과 실제 소환 재화 골드는 서로 다른 용어로 유지한다.</p>
+<h2 id="section-4">4. 검증</h2>
+<ul>
+<li>원정 기록의 개방·패배·기존 저장 소급·새 원정 유지·잘못된 기록 데이터·복사 분리 검사 23개 통과.</li>
+<li>Unity JsonUtility의 별도 기록 저장 왕복과 기존 v2 저장 관측 검사 통과.</li>
+<li>기존 아군·적 표시, 결과 처리, 보스 피격, 드래그·JSON 검증을 같은 Android 빌드 과정에서 실행했다.</li>
+</ul>
+<h3>Galaxy Buddy2 동작 확인</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>확인 항목</th>
+<th>결과</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>기존 v2 10전투 완료 저장</td>
+<td>기록 6/7 소급 개방, 15보스 기록은 잠김</td>
+</tr>
+<tr>
+<td>새 원정 시작</td>
+<td>1전투·40G로 시작, 기존 기록 6개 유지</td>
+</tr>
+<tr>
+<td>잠긴 기록</td>
+<td>이야기 본문 대신 개방 조건 표시</td>
+</tr>
+<tr>
+<td>15보스 전투</td>
+<td>v0.24의 정상 진행에서 만든 15전투 준비 체크포인트로 실제 전투 승리</td>
+</tr>
+<tr>
+<td>승리 직후</td>
+<td>결과 화면에 두 줄 후일담, 기록 7/7 개방</td>
+</tr>
+<tr>
+<td>앱 강제 종료·재실행</td>
+<td>15전투 완료와 기록 7개 유지</td>
+</tr>
+<tr>
+<td>실행 오류</td>
+<td>해당 점검 구간의 Unity 오류·AndroidRuntime 오류 로그 없음</td>
+</tr>
+<tr>
+<td>테스트 저장 복구</td>
+<td>테스트 직전 원본 PlayerPrefs를 복구하고 바이트 일치 확인</td>
+</tr>
+</tbody></table></div>
+<p>위 동작 검증 APK의 SHA-256은 <code>95D150595D98563740FC280BDC24CC4C39DB7721FD1F7A497D156EEBE7368A0E</code>다. 이후 세계관 명칭·소개 문구·게임 가칭을 다듬는 작업은 UI 문구 수정이며, 검증 캡처에 이전 가칭이 남아 있을 수 있다. 이번 검사는 새 저장 기능과 화면 확인이며 장시간 성능 측정이나 1~15전투 전체 재밸런싱은 아니다.</p>
+<p>이그니스 가칭 변경 시점 APK: <strong>Unity 빌드 종료 코드 0, Buddy2 설치 성공</strong>. SHA-256: <code>2F94ECAA3CD9E2A8440255548BFE621B58E43788776FF736230B9FFC1D9DDD40</code>. 이 설치본에서 홈·한영 표제·기록 본문·11전투 준비 화면을 확인했다. 문구 수정 뒤 순수 C# 23개 검사와 전체 기존 빌드 검증도 통과했다. 전체 영어 화면은 아직 구현·검증하지 않았다.</p>
+<h3>후속 패딩 보정 검증</h3>
+<ul>
+<li>현재 설치본 SHA-256: <code>757E3FE102E14E4DF58576AD9A7AC189B8669CB4C3691DE134BD620D9F03393A</code>.</li>
+<li>Unity Android 빌드 종료 코드 0, 기존 빌드 검증 통과, Buddy2 설치 성공.</li>
+<li>실기기에서 홈·새 원정 확인·동료 상세·전승 확인·분기 진화 확인의 여백과 글자 표시를 확인했다. 새 원정 취소와 이어하기 조작도 확인했다.</li>
+<li>정상 Core 명령으로 12명 부대와 성장 2 동료의 UI 확인용 저장을 만들고 Restore 검증을 거쳐 사용했다. 전승 후보 11개가 10개+1개의 두 페이지로 모두 표시되며, 마지막 페이지와 하단 버튼이 겹치지 않는다.</li>
+<li>점검 구간의 Unity·AndroidRuntime 오류 로그 없음. 이번 점검 시작 시 새로 백업한 사용자의 1전투 저장을 복구하고 바이트 일치를 확인했다.</li>
+<li>후속 캡처: <a href="layout-evidence/home.png">홈</a>, <a href="layout-evidence/new-run-dialog.png">새 원정 확인</a>, <a href="layout-evidence/transfer-page1.png">전승 1페이지</a>, <a href="layout-evidence/transfer-page2.png">전승 2페이지</a>, <a href="layout-evidence/transfer-confirm.png">전승 확인</a>, <a href="layout-evidence/evolution-confirm.png">진화 확인</a>.</li>
+</ul>
+<h3>확인 범위</h3>
+<p>이 변경은 원정 목적과 지역 이야기를 전달하는 첫 구현이다. NPC 대화, 음성, 컷신, 선택에 따른 이야기 분기, 16~30전투는 포함하지 않는다. 전투 수치가 바뀌지 않아 기존 v0.24 밸런스 결과를 유지한다.</p>
+<h2 id="section-5">5. 다음 순서</h2>
+<ol>
+<li>H-02 외 결합과 배치를 비교하며 후반 성장 속도를 점검.</li>
+<li>16~20전투를 확장하며 다음 조각이 있는 지역·적·보스를 연결.</li>
+<li>한국어·영어 문자열 리소스와 언어 설정을 연결하고 양쪽 화면을 확인.</li>
+<li>21~30전투와 이그니스의 결말, 전체 원정 길이를 함께 설계.</li>
+</ol>
+<h3>주요 파일</h3>
+<ul>
+<li><code>unity/Assets/Scripts/Core/ExpeditionStory.cs</code>: 이야기 본문과 별도 기록 저장.</li>
+<li><code>unity/Assets/Scripts/Presentation/ExpeditionUiTheme.cs</code>: 색·패널·버튼·불씨 문양.</li>
+<li><code>unity/Assets/Scripts/Presentation/ExpeditionScreen.cs</code>: 홈·준비·결과·다이얼로그 연결.</li>
+<li><code>unity/Assets/Editor/ExpeditionStoryValidation.cs</code>: Unity 저장 검사와 빌드 진입점.</li>
+<li><code>tests/ExpeditionStory/</code>: 순수 C# 기록 검사.</li>
+</ul>
+<p>Android 검증 빌드 진입점: <code>-executeMethod Expedition.EditorTools.ExpeditionStoryValidation.BuildAndroid</code>.</p>
+<p>이전 기록: <a href="../design-v0.24/HANDOFF.html">v0.24 폐광·용광로와 15전투</a>.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

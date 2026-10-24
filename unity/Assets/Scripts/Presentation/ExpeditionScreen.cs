@@ -10,14 +10,15 @@ namespace Expedition.Presentation
     {
         const string SaveKey = "ember.expedition.run.v013";
         const string LegacySaveKey = "ember.expedition.run.v011";
+        const string JournalSaveKey = "ember.expedition.story.v025";
         const float Width = 1280f, Height = 720f;
         const float GroundY = 380f, GroundYScale = 50f;
-        static readonly Color Background = new Color(.045f, .09f, .075f);
-        static readonly Color Panel = new Color(.075f, .16f, .135f);
-        static readonly Color PanelLight = new Color(.12f, .23f, .185f);
-        static readonly Color Cream = new Color(.97f, .94f, .82f);
-        static readonly Color Gold = new Color(.9f, .72f, .39f);
-        static readonly Color Muted = new Color(.68f, .77f, .69f);
+        static readonly Color Background = ExpeditionUiTheme.Background;
+        static readonly Color Panel = ExpeditionUiTheme.Panel;
+        static readonly Color PanelLight = ExpeditionUiTheme.PanelLight;
+        static readonly Color Cream = ExpeditionUiTheme.Cream;
+        static readonly Color Gold = ExpeditionUiTheme.Gold;
+        static readonly Color Muted = ExpeditionUiTheme.Muted;
         static readonly string[][] Branches = {
             new[] { "E-KN-G", "E-KN-C" }, new[] { "E-AR-P", "E-AR-T" },
             new[] { "E-FI-B", "E-FI-E" }, new[] { "E-PR-G", "E-PR-H" },
@@ -30,22 +31,25 @@ namespace Expedition.Presentation
         static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
             "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
 
-        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun }
+        enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun, Journal }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
         ExpeditionRun run;
+        ExpeditionJournal journal;
         CatalogArtView art;
         Texture2D battlefield, outpost, furnace;
         Camera backgroundCamera;
         GUIStyle title, heading, body, small, centered, button, primary, hint;
+        GUIStyle journalTitle, journalBody, journalStatus, dialogBody;
         Font font;
         Rect viewport;
         readonly List<CatalogMember> bench = new List<CatalogMember>();
         readonly List<CatalogMember> fieldMembers = new List<CatalogMember>(5);
         bool home = true, savePresent, badSave, inheritTrait, pointerDragging, legacySave, showHelp;
+        bool journalDirty;
         bool pointerTouch, hoverArmed, evolutionFromDrag, combinationFromList;
-        string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId;
+        string error, selectedId, pendingOtherId, pendingFormId, toast, pointerId, selectedStoryId;
         string hoverRecipientId, growthPulseId;
         float toastUntil, hoverStartTime = -1f, growthPulseUntil;
         Vector2 pointerStart, pointerCurrent, pointerGrabOffset;
@@ -66,6 +70,7 @@ namespace Expedition.Presentation
                 battlefield = Resources.Load<Texture2D>("Art/forest-battlefield");
                 outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
                 furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
+                LoadJournal();
                 LoadSave();
             }
             catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
@@ -79,7 +84,11 @@ namespace Expedition.Presentation
 
         void OnEnable() { if (art == null) art = new CatalogArtView(); }
         void OnDisable() { CancelPointer(); if (art != null) { art.Dispose(); art = null; } }
-        void OnDestroy() { if (font != null) Destroy(font); }
+        void OnDestroy()
+        {
+            if (font != null) Destroy(font);
+            ExpeditionUiTheme.Release();
+        }
         void OnApplicationPause(bool paused) { if (paused) { CancelPointer(); Save(); } }
         void OnApplicationFocus(bool focused) { if (!focused) CancelPointer(); }
 
@@ -95,6 +104,7 @@ namespace Expedition.Presentation
                 ExpeditionRunSave state = JsonUtility.FromJson<ExpeditionRunSave>(json);
                 if (state == null) throw new InvalidOperationException("저장 형식을 읽을 수 없음");
                 run = ExpeditionRun.Restore(database, state);
+                ObserveJournal();
             }
             catch (Exception exception)
             {
@@ -113,8 +123,36 @@ namespace Expedition.Presentation
                 PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(run.Capture()));
                 PlayerPrefs.Save();
                 savePresent = true;
+                ObserveJournal();
             }
             catch (Exception exception) { Notice("저장하지 못했습니다: " + exception.Message); }
+        }
+
+        void LoadJournal()
+        {
+            journal = ExpeditionJournal.New();
+            try
+            {
+                if (!PlayerPrefs.HasKey(JournalSaveKey)) return;
+                string json = PlayerPrefs.GetString(JournalSaveKey, "");
+                if (!string.IsNullOrEmpty(json))
+                    journal = ExpeditionJournal.Restore(JsonUtility.FromJson<ExpeditionJournalSave>(json));
+            }
+            catch (Exception) { journal = ExpeditionJournal.New(); }
+        }
+
+        void ObserveJournal()
+        {
+            if (run == null || journal == null) return;
+            try
+            {
+                if (journal.Observe(run)) journalDirty = true;
+                if (!journalDirty) return;
+                PlayerPrefs.SetString(JournalSaveKey, JsonUtility.ToJson(journal.Capture()));
+                PlayerPrefs.Save();
+                journalDirty = false;
+            }
+            catch (Exception exception) { Notice("원정 기록을 저장하지 못했습니다: " + exception.Message); }
         }
 
         void NewRun()
@@ -145,17 +183,15 @@ namespace Expedition.Presentation
             title = Style(38, Gold, true, TextAnchor.MiddleLeft);
             heading = Style(26, Cream, true, TextAnchor.MiddleLeft);
             body = Style(19, Cream, false, TextAnchor.MiddleLeft);
+            dialogBody = Style(19, Cream, false, TextAnchor.UpperLeft);
             small = Style(15, Muted, false, TextAnchor.MiddleLeft);
             centered = Style(17, Cream, true, TextAnchor.MiddleCenter);
             hint = Style(17, Gold, false, TextAnchor.MiddleLeft);
-            button = new GUIStyle(GUI.skin.button) { fontSize = 18, fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter, wordWrap = true };
-            primary = new GUIStyle(button);
-            if (font != null) { button.font = font; primary.font = font; }
-            button.normal.textColor = Cream;
-            button.hover.textColor = Color.white;
-            primary.normal.textColor = Gold;
-            primary.hover.textColor = Gold;
+            journalTitle = Style(26, ExpeditionUiTheme.Ink, true, TextAnchor.MiddleLeft);
+            journalBody = Style(21, ExpeditionUiTheme.Ink, false, TextAnchor.UpperLeft);
+            journalStatus = Style(17, ExpeditionUiTheme.FadedInk, false, TextAnchor.MiddleLeft);
+            button = ExpeditionUiTheme.CreateButtonStyle(font, 18);
+            primary = ExpeditionUiTheme.CreateButtonStyle(font, 18, true);
         }
 
         GUIStyle Style(int size, Color color, bool bold, TextAnchor align)
@@ -188,7 +224,7 @@ namespace Expedition.Presentation
             if (modal != Modal.None) DrawModal();
             if (toast != null && Time.unscaledTime < toastUntil)
             {
-                Fill(new Rect(340, 660, 600, 48), new Color(.14f, .27f, .21f, .97f));
+                ExpeditionUiTheme.PanelBox(new Rect(340, 660, 600, 48), true);
                 GUI.Label(new Rect(350, 667, 580, 34), toast, centered);
             }
             GUI.matrix = Matrix4x4.identity;
@@ -196,34 +232,51 @@ namespace Expedition.Presentation
 
         void DrawHome()
         {
-            Fill(new Rect(0, 0, Width, 90), Panel);
-            GUI.Label(new Rect(42, 17, 920, 60), "잔불 원정대", title);
-            Fill(new Rect(155, 150, 970, 425), Panel);
-            GUI.Label(new Rect(220, 192, 840, 70), "꺼진 길에 다시 불을 밝히다", heading);
-            GUI.Label(new Rect(220, 265, 840, 70), "승리로 얻은 골드로 동료를 소환하고 성장시키세요.\n열다섯 번의 전투, 세 명의 보스가 기다립니다.", body);
-            if (GUI.Button(new Rect(230, 385, 385, 76), "새 원정", primary))
+            ExpeditionUiTheme.DrawBackdrop(new Rect(0, 90, Width, 630), battlefield);
+            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 90));
+            ExpeditionUiTheme.DrawEmber(new Vector2(53, 46), 30);
+            GUI.Label(new Rect(84, 6, 875, 60), "이그니스: 잿빛 서약", title);
+            GUI.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
+            if (GUI.Button(new Rect(995, 20, 260, 49),
+                "원정 기록  " + (journal == null ? 1 : journal.UnlockedCount) + "/7", button))
+                OpenJournal(null);
+            bool hasNotice = error != null || legacySave;
+            Rect panel = new Rect(155, hasNotice ? 144 : 176, 970, hasNotice ? 432 : 368);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
+            GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
+                "꺼진 왕국에 다시 불을 밝히다", heading);
+            ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
+            GUI.Label(new Rect(content.x, content.y + 104, content.width, 64),
+                "이그니스가 흩어진 밤, 왕국의 결계가 무너지고 수호자들이 뒤틀렸습니다.\n" +
+                "마지막 불씨를 등불에 담아, 빼앗긴 불씨 조각을 되찾으세요.", dialogBody);
+            if (hasNotice)
+                GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
+                    error ?? "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
+            ExpeditionUiTheme.FooterRule(panel);
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
             {
                 if (savePresent || legacySave) modal = Modal.NewRun; else NewRun();
             }
             GUI.enabled = modal == Modal.None && run != null;
-            if (GUI.Button(new Rect(665, 385, 385, 76), "이어하기", button))
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "이어하기", button))
             { home = false; modal = Modal.None; }
             GUI.enabled = modal == Modal.None;
-            if (error != null) GUI.Label(new Rect(220, 475, 840, 75), error, hint);
-            else if (legacySave) GUI.Label(new Rect(220, 475, 840, 75),
-                "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
             if (GUI.Button(new Rect(1020, 650, 225, 48), "개발용 전투 시험실", button)) OpenLab();
         }
 
         void DrawHeader(string phase)
         {
-            Fill(new Rect(0, 0, Width, 80), Panel);
+            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save(); }
-            GUI.Label(new Rect(130, 10, 350, 58), "잔불 원정대", title);
+            ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
+            GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
             GUI.Label(new Rect(530, 18, 320, 43), "전투 " + run.Wave + " / " + ExpeditionRun.TotalWaves +
                 "     등불 " + run.Lantern, body);
             GUI.Label(new Rect(880, 18, 170, 43), run.Gold + " G", heading);
-            Fill(new Rect(1070, 17, 188, 43), PanelLight);
+            ExpeditionUiTheme.PanelBox(new Rect(1070, 17, 188, 43));
             GUI.Label(new Rect(1080, 21, 168, 33), phase, centered);
         }
 
@@ -232,19 +285,23 @@ namespace Expedition.Presentation
             DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
             Rect field = new Rect(17, 93, 1246, 449);
             Texture2D region = run.Wave <= 5 ? battlefield : run.Wave <= 10 ? outpost : furnace;
-            if (region != null) GUI.DrawTexture(field, region, ScaleMode.ScaleAndCrop);
-            else Fill(field, new Color(.075f, .15f, .12f));
-            Fill(field, new Color(.015f, .045f, .03f, .23f));
-            Fill(new Rect(32, 143, 687, 363), new Color(.04f, .12f, .075f, .26f));
-            Fill(new Rect(724, 94, 523, 430), new Color(.025f, .075f, .06f, .86f));
-            Fill(new Rect(48, 185, 615, 1), new Color(.57f, .62f, .41f, .32f));
-            Fill(new Rect(48, 350, 615, 1), new Color(.57f, .62f, .41f, .32f));
+            ExpeditionUiTheme.DrawBackdrop(field, region, false);
+            Fill(new Rect(32, 143, 687, 363), new Color(.045f, .05f, .065f, .28f));
+            ExpeditionUiTheme.PanelBox(new Rect(724, 94, 523, 430));
+            ExpeditionUiTheme.Rule(new Rect(48, 185, 615, 1));
+            ExpeditionUiTheme.Rule(new Rect(48, 350, 615, 1));
             GUI.Label(new Rect(46, 100, 630, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
             GUI.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
             if (GUI.Button(new Rect(735, 273, 240, 42), showHelp ? "도움말 접기  −" : "배치 · 성장 도움말  +", button))
                 showHelp = !showHelp;
+            string regionLabel = run.Wave <= 5 ? "숲길" : run.Wave <= 10 ? "성문" : "폐광";
+            if (GUI.Button(new Rect(990, 273, 240, 42), "지역 이야기 · " + regionLabel, button))
+            {
+                StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
+                if (regionStory != null) OpenJournal(regionStory.Id);
+            }
             GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
                 "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
                 "동료를 겹쳐 놓으면 성장 +1\n결합은 가능한 조합 목록에서 선택\n남은 골드는 다음 전투에도 유지됩니다.", body);
@@ -305,7 +362,7 @@ namespace Expedition.Presentation
 
         void DrawDock()
         {
-            Fill(new Rect(0, 550, Width, 170), Panel);
+            ExpeditionUiTheme.PanelBox(new Rect(0, 548, Width, 172));
             bench.Clear();
             foreach (CatalogMember member in run.Roster.Members)
                 if (!IsDeployed(member.Id)) bench.Add(member);
@@ -318,7 +375,7 @@ namespace Expedition.Presentation
             for (int i = 0; i < 5; i++)
             {
                 Rect card = BenchRect(i);
-                Fill(card, PanelLight);
+                ExpeditionUiTheme.PanelBox(card);
                 int index = benchPage * 5 + i;
                 if (index < bench.Count)
                 {
@@ -350,13 +407,13 @@ namespace Expedition.Presentation
             if (Time.unscaledTime < growthPulseUntil && member.Id == growthPulseId)
                 Fill(new Rect(sprite.x - 5, sprite.y - 5, sprite.width + 10, sprite.height + 10),
                     new Color(.95f, .74f, .30f, .36f));
-            Fill(new Rect(sprite.center.x - 28, sprite.yMax - 10, 56, 7), new Color(.02f, .06f, .04f, .7f));
+            Fill(new Rect(sprite.center.x - 28, sprite.yMax - 10, 56, 7), new Color(.02f, .025f, .035f, .75f));
             if (art != null) art.Draw(member.FormId, sprite, (int)(Time.unscaledTime * 5f) % 4);
             string label = database.Get(member.FormId).Name;
             GUI.Label(name, label, centered);
             if (member.MaterialLocked)
             {
-                Fill(new Rect(sprite.x, sprite.y + 2, 54, 24), new Color(.09f, .18f, .15f, .9f));
+                Fill(new Rect(sprite.x, sprite.y + 2, 54, 24), new Color(.13f, .14f, .17f, .94f));
                 GUI.Label(new Rect(sprite.x, sprite.y, 54, 25), "보호", small);
             }
         }
@@ -364,53 +421,127 @@ namespace Expedition.Presentation
         void DrawBattleResume()
         {
             DrawHeader("전투 대기");
-            Fill(new Rect(185, 170, 910, 380), Panel);
-            GUI.Label(new Rect(245, 218, 790, 62), run.EncounterName, heading);
-            GUI.Label(new Rect(245, 285, 790, 92), "이전 전투가 중단되었습니다. 같은 편성과 전투 시작 상태로 이어갑니다.", body);
-            if (GUI.Button(new Rect(285, 418, 710, 72), "전투 재개", primary)) StartBattle(true);
+            Rect panel = new Rect(185, 170, 910, 380);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 218, content.width, 62), run.EncounterName, heading);
+            GUI.Label(new Rect(content.x, 285, content.width, 92),
+                "이전 전투가 중단되었습니다. 같은 편성과 전투 시작 상태로 이어갑니다.", body);
+            ExpeditionUiTheme.FooterRule(panel);
+            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "전투 재개", primary)) StartBattle(true);
         }
 
         void DrawResult()
         {
             bool victory = run.Phase == ExpeditionPhase.Completed ||
                 (run.Phase == ExpeditionPhase.Result && run.LastVictory);
+            StoryEntry clearStory = run.LastVictory ? ExpeditionStory.BossClear(run.Wave) : null;
             DrawHeader(run.Phase == ExpeditionPhase.Result ? "전투 결과" : "원정 결과");
-            Fill(new Rect(175, 140, 930, 430), Panel);
-            GUI.Label(new Rect(225, 180, 830, 72),
+            Rect panel = new Rect(175, 140, 930, 430);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(clearStory == null ? new Rect(content.x, 180, content.width, 72) :
+                new Rect(content.x, 164, content.width, 60),
                 run.Phase == ExpeditionPhase.Completed ? "원정 완료" :
                 run.Phase == ExpeditionPhase.Defeated ? "원정 종료" : victory ? "승리" : "패배", title);
-            string outcome = run.Phase == ExpeditionPhase.Completed ? "모든 길을 돌파했습니다." :
+            string outcome = run.Phase == ExpeditionPhase.Completed ? "이번 원정의 길을 돌파했습니다." :
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
                 "등불을 모두 소진했습니다." : victory ?
-                (run.Wave == ExpeditionRun.TotalWaves ? "마지막 보스를 쓰러뜨렸습니다." : "다음 길을 준비하세요.") :
+                (run.Wave == ExpeditionRun.TotalWaves ? "용광로 너머의 다음 길을 찾았습니다." :
+                "다음 길을 준비하세요.") :
                 "등불 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
-            GUI.Label(new Rect(225, 275, 830, 92),
+            GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
+                new Rect(content.x, 232, content.width, 68),
                 "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     등불 " + run.Lantern +
                 "\n" + outcome, body);
+            if (clearStory != null)
+                GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Body, body);
             string reward = run.LastVictory && run.LastReward > 0 ?
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
                 run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                 ExpeditionRun.TotalWaves + "전투 돌파 · 원정 완료" :
                 "획득 골드 0 G   ·   보유 " + run.Gold + " G";
-            GUI.Label(new Rect(225, 370, 830, 43), reward, heading);
+            GUI.Label(new Rect(content.x, clearStory == null ? 370 : 376,
+                content.width, 43), reward, heading);
+            ExpeditionUiTheme.FooterRule(panel);
             if (run.Phase == ExpeditionPhase.Result)
             {
                 string next = run.Lantern <= 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                     "원정 결과" : run.LastVictory ? "다음 전투 준비  ›" : "같은 전투 재도전  ›";
-                if (GUI.Button(new Rect(260, 425, 760, 75), next, primary))
+                if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), next, primary))
                 { if (run.Continue()) { Save(); selectedId = null; } }
             }
-            else if (GUI.Button(new Rect(260, 425, 760, 75), "거점으로", primary)) home = true;
+            else if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "거점으로", primary)) home = true;
         }
 
         void DrawModal()
         {
-            Fill(new Rect(0, 0, Width, Height), new Color(0f, .015f, .01f, .82f));
+            Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
             if (modal == Modal.Detail) DrawDetail();
+            else if (modal == Modal.Journal) DrawJournal();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
+        }
+
+        void OpenJournal(string entryId)
+        {
+            CancelPointer();
+            if (entryId == null)
+            {
+                entryId = "intro";
+                foreach (StoryEntry entry in ExpeditionStory.Entries)
+                    if (journal != null && journal.IsUnlocked(entry.Id)) entryId = entry.Id;
+            }
+            selectedStoryId = entryId;
+            modal = Modal.Journal;
+        }
+
+        void DrawJournal()
+        {
+            Rect panel = new Rect(128, 66, 1024, 588);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 98, 700, 51),
+                "원정 기록  " + (journal == null ? 1 : journal.UnlockedCount) + "/7", heading);
+            GUI.Label(new Rect(content.x + 2, 137, 680, 21), "F I E L D   J O U R N A L", small);
+            if (GUI.Button(new Rect(content.xMax - 77, 98, 77, 50), "닫기", button))
+            { modal = Modal.None; return; }
+            ExpeditionUiTheme.PanelBox(new Rect(content.x, 163, 320, 459));
+            for (int i = 0; i < ExpeditionStory.Entries.Count; i++)
+            {
+                StoryEntry entry = ExpeditionStory.Entries[i];
+                bool unlocked = journal != null && journal.IsUnlocked(entry.Id);
+                Rect row = new Rect(content.x + 12, 179 + i * 62, 296, 54);
+                if (entry.Id == selectedStoryId)
+                    Fill(new Rect(row.x - 3, row.y - 3, row.width + 6, row.height + 6),
+                        new Color(.69f, .51f, .26f, .65f));
+                if (GUI.Button(row, (unlocked ? "열림  ·  " : "잠김  ·  ") + entry.Title, button))
+                    selectedStoryId = entry.Id;
+            }
+            ExpeditionUiTheme.ParchmentBox(new Rect(496, 163, 624, 459));
+            StoryEntry selectedStory = ExpeditionStory.Get(selectedStoryId) ?? ExpeditionStory.Get("intro");
+            bool selectedUnlocked = journal != null && journal.IsUnlocked(selectedStory.Id);
+            GUI.Label(new Rect(528, 190, 560, 53), selectedStory.Title, journalTitle);
+            GUI.Label(new Rect(529, 243, 559, 34), selectedUnlocked ? "원정대의 기록" : "아직 잠긴 기록", journalStatus);
+            ExpeditionUiTheme.Rule(new Rect(528, 285, 560, 2));
+            GUI.Label(new Rect(529, 310, 559, 272), selectedUnlocked ? selectedStory.Body :
+                StoryUnlockHint(selectedStory.Id), journalBody);
+        }
+
+        static string StoryUnlockHint(string id)
+        {
+            switch (id)
+            {
+                case "forest": return "새 원정을 시작하면 열립니다.";
+                case "forest-clear": return "숲길의 보스를 쓰러뜨리면 열립니다.";
+                case "castle": return "전투 6에 도달하면 열립니다.";
+                case "castle-clear": return "성문의 보스를 쓰러뜨리면 열립니다.";
+                case "mine": return "전투 11에 도달하면 열립니다.";
+                case "mine-clear": return "용광로 수호자를 쓰러뜨리면 열립니다.";
+                default: return "원정을 진행하면 열립니다.";
+            }
         }
 
         void DrawDetail()
@@ -418,10 +549,10 @@ namespace Expedition.Presentation
             CatalogMember member = run == null ? null : run.Roster.Find(selectedId);
             if (member == null) { modal = Modal.None; return; }
             Rect panel = new Rect(245, 76, 790, 570);
-            Fill(panel, Panel);
+            ExpeditionUiTheme.Window(panel);
             CatalogForm form = database.Get(member.FormId);
             GUI.Label(new Rect(277, 99, 560, 48), form.Name, heading);
-            if (GUI.Button(new Rect(956, 91, 60, 54), "×", button)) { modal = Modal.None; return; }
+            if (GUI.Button(new Rect(943, 108, 60, 54), "×", button)) { modal = Modal.None; return; }
             if (art != null) art.Draw(member.FormId, new Rect(290, 154, 155, 175), (int)(Time.unscaledTime * 5f) % 4);
             GUI.Label(new Rect(468, 157, 515, 91),
                 "체력 " + form.Hp.ToString("0") + "   공격 " + form.Power.ToString("0") +
@@ -459,12 +590,17 @@ namespace Expedition.Presentation
         void DrawChooseMember()
         {
             bool transfer = modal == Modal.ChooseDonor;
-            Fill(new Rect(215, 75, 850, 585), Panel);
-            GUI.Label(new Rect(245, 92, 760, 52), transfer ? "전승할 동료 선택" : "결합할 동료 선택", heading);
-            if (GUI.Button(new Rect(980, 92, 59, 50), "×", button)) { modal = Modal.Detail; return; }
+            Rect panel = new Rect(215, 75, 850, 585);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 107, content.width - 80, 52),
+                transfer ? "전승할 동료 선택" : "결합할 동료 선택", heading);
+            if (GUI.Button(new Rect(content.xMax - 59, 107, 59, 50), "×", button))
+            { modal = Modal.Detail; return; }
             if (transfer)
             {
-                if (GUI.Button(new Rect(250, 150, 750, 48),
+                if (GUI.Button(new Rect(content.x, 166, content.width, 48),
                     (inheritTrait ? "✓  " : "○  ") + "재료 동료의 고유 특성도 이어받기", button))
                     inheritTrait = !inheritTrait;
             }
@@ -479,15 +615,16 @@ namespace Expedition.Presentation
                     !transfer && !run.CanCombine(selected.Id, other.Id, result)) continue;
                 candidates.Add(other);
             }
-            int pages = Mathf.Max(1, (candidates.Count + 11) / 12);
+            const int pageSize = 10;
+            int pages = Mathf.Max(1, (candidates.Count + pageSize - 1) / pageSize);
             choosePage = Mathf.Clamp(choosePage, 0, pages - 1);
             int shown = 0;
-            for (int index = choosePage * 12; index < candidates.Count && shown < 12; index++)
+            for (int index = choosePage * pageSize; index < candidates.Count && shown < pageSize; index++)
             {
                 CatalogMember other = candidates[index];
                 string result = transfer ? null : run.Roster.HybridResult(selected.FormId, other.FormId);
                 int col = shown % 2, row = shown / 2;
-                Rect slot = new Rect(250 + col * 385, 211 + row * 65, 365, 58);
+                Rect slot = new Rect(content.x + col * 401, 224 + row * 62, 385, 54);
                 string label = (IsDeployed(other.Id) ? "출전 · " : "대기 · ") + database.Get(other.FormId).Name;
                 if (result != null) label += "  →  " + database.Get(result).Name;
                 else label += "  ·  " + TraitName(database.Get(other.FormId).InnateTrait);
@@ -501,13 +638,15 @@ namespace Expedition.Presentation
                 }
                 shown++;
             }
-            if (shown == 0) GUI.Label(new Rect(250, 248, 740, 95),
+            if (shown == 0) GUI.Label(new Rect(content.x, 248, content.width, 95),
                 transfer ? "전승할 다른 동료가 없습니다." : "지금 결합할 수 있는 동료가 없습니다.", body);
             if (pages > 1)
             {
-                if (GUI.Button(new Rect(254, 611, 112, 40), "이전", button)) choosePage--;
-                GUI.Label(new Rect(375, 616, 170, 31), (choosePage + 1) + " / " + pages, small);
-                if (GUI.Button(new Rect(545, 611, 112, 40), "다음", button)) choosePage++;
+                ExpeditionUiTheme.FooterRule(panel);
+                if (GUI.Button(new Rect(footer.x, footer.y, 112, 64), "이전", button)) choosePage--;
+                GUI.Label(new Rect(footer.center.x - 60, footer.y + 17, 120, 30),
+                    (choosePage + 1) + " / " + pages, centered);
+                if (GUI.Button(new Rect(footer.xMax - 112, footer.y, 112, 64), "다음", button)) choosePage++;
             }
         }
 
@@ -539,15 +678,22 @@ namespace Expedition.Presentation
         void DrawCombinationOptions()
         {
             List<CatalogCombinationOption> options = run.GetCombinationOptions();
-            Fill(new Rect(215, 75, 850, 585), Panel);
-            GUI.Label(new Rect(245, 92, 720, 52), "가능한 결합  " + options.Count + "쌍", heading);
-            if (GUI.Button(new Rect(980, 92, 59, 50), "×", button)) { modal = Modal.None; return; }
-            GUI.Label(new Rect(250, 146, 760, 46), "결합은 선택 사항입니다. 결과와 재료를 확인한 뒤 진행하세요.", small);
-            int pages = Mathf.Max(1, (options.Count + 4) / 5);
+            Rect panel = new Rect(215, 75, 850, 585);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 107, content.width - 80, 52),
+                "가능한 결합  " + options.Count + "쌍", heading);
+            if (GUI.Button(new Rect(content.xMax - 59, 107, 59, 50), "×", button))
+            { modal = Modal.None; return; }
+            GUI.Label(new Rect(content.x, 160, content.width, 34),
+                "결합은 선택 사항입니다. 결과와 재료를 확인한 뒤 진행하세요.", small);
+            const int pageSize = 4;
+            int pages = Mathf.Max(1, (options.Count + pageSize - 1) / pageSize);
             combinationPage = Mathf.Clamp(combinationPage, 0, pages - 1);
-            for (int row = 0; row < 5; row++)
+            for (int row = 0; row < pageSize; row++)
             {
-                int index = combinationPage * 5 + row;
+                int index = combinationPage * pageSize + row;
                 if (index >= options.Count) break;
                 CatalogCombinationOption option = options[index];
                 CatalogMember recipient = run.Roster.Find(option.RecipientId);
@@ -557,16 +703,21 @@ namespace Expedition.Presentation
                     "남는 동료 " + MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
                     "  +  재료 " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
                     " · 전승 " + TraitName(donor.InheritedTraitId);
-                if (GUI.Button(new Rect(250, 195 + row * 78, 750, 70), label, button)) ChooseCombinationOption(index);
+                if (GUI.Button(new Rect(content.x, 204 + row * 78, content.width, 70), label, button))
+                    ChooseCombinationOption(index);
             }
-            if (options.Count == 0) GUI.Label(new Rect(250, 240, 740, 80), "가능한 결합이 없습니다.", body);
+            if (options.Count == 0) GUI.Label(new Rect(content.x, 240, content.width, 80),
+                "가능한 결합이 없습니다.", body);
+            ExpeditionUiTheme.FooterRule(panel);
             if (pages > 1)
             {
-                if (GUI.Button(new Rect(250, 605, 112, 40), "이전", button)) combinationPage--;
-                GUI.Label(new Rect(375, 610, 170, 30), (combinationPage + 1) + " / " + pages, small);
-                if (GUI.Button(new Rect(545, 605, 112, 40), "다음", button)) combinationPage++;
+                if (GUI.Button(new Rect(footer.x, footer.y, 112, 64), "이전", button)) combinationPage--;
+                GUI.Label(new Rect(footer.x + 122, footer.y + 17, 120, 30),
+                    (combinationPage + 1) + " / " + pages, centered);
+                if (GUI.Button(new Rect(footer.x + 252, footer.y, 112, 64), "다음", button)) combinationPage++;
             }
-            if (GUI.Button(new Rect(806, 605, 193, 40), "나중에", button)) modal = Modal.None;
+            if (GUI.Button(new Rect(footer.xMax - 192, footer.y, 192, 64), "나중에", button))
+                modal = Modal.None;
         }
 
         void PrepareEvolution(CatalogMember member, bool fromDrag = false)
@@ -591,22 +742,33 @@ namespace Expedition.Presentation
         {
             if (modal == Modal.Confirm && pendingAction == GrowthAction.Combine)
             { DrawCombinationConfirmation(); return; }
-            Fill(new Rect(335, 155, 610, 385), Panel);
             if (modal == Modal.NewRun)
             {
-                GUI.Label(new Rect(375, 188, 530, 54), "새 원정을 시작할까요?", heading);
-                GUI.Label(new Rect(375, 255, 530, 115),
+                Rect panel = new Rect(335, 210, 610, 300);
+                Rect content = ExpeditionUiTheme.ContentRect(panel);
+                ExpeditionUiTheme.Window(panel);
+                GUI.Label(new Rect(content.x, panel.y + 32, content.width, 48),
+                    "새 원정을 시작할까요?", heading);
+                GUI.Label(new Rect(content.x, panel.y + 100, content.width, 76),
                     legacySave ? "이전 6전투 원정은 별도로 보관됩니다.\n골드 40G와 기본 동료 3명으로 새로 출발합니다." :
-                    "현재 저장된 원정을 새 출발로 바꿉니다.\n진행과 동료 편성은 되돌릴 수 없습니다.", body);
-                ConfirmationButtons("새 원정 시작", NewRun, () => modal = Modal.None);
+                    "현재 저장된 원정을 새 출발로 바꿉니다.\n진행과 동료 편성은 되돌릴 수 없습니다.", dialogBody);
+                ExpeditionUiTheme.FooterRule(panel);
+                ConfirmationButtons(ExpeditionUiTheme.FooterRect(panel),
+                    "새 원정 시작", NewRun, () => modal = Modal.None);
                 return;
             }
             CatalogMember selected = run.Roster.Find(selectedId);
             CatalogMember other = run.Roster.Find(pendingOtherId);
             if (selected == null) { modal = Modal.None; return; }
+            bool chooseBranch = pendingAction == GrowthAction.Evolve &&
+                selected.FormId.StartsWith("B-", StringComparison.Ordinal);
+            Rect growthPanel = new Rect(335, chooseBranch ? 136 : 180, 610, chooseBranch ? 448 : 360);
+            Rect growthContent = ExpeditionUiTheme.ContentRect(growthPanel);
+            ExpeditionUiTheme.Window(growthPanel);
             string headingText = pendingAction == GrowthAction.Transfer ? "전승 확인" :
                 pendingAction == GrowthAction.Combine ? "결합 확인" : "진화 확인";
-            GUI.Label(new Rect(375, 184, 530, 55), headingText, heading);
+            GUI.Label(new Rect(growthContent.x, growthPanel.y + 32, growthContent.width, 48),
+                headingText, heading);
             string selectedName = database.Get(selected.FormId).Name;
             string resultName = pendingAction == GrowthAction.Transfer ? selectedName :
                 pendingFormId == null ? "" : database.Get(pendingFormId).Name;
@@ -616,21 +778,28 @@ namespace Expedition.Presentation
                 "\n" + database.Get(other.FormId).Name + "은(는) 재료로 떠납니다.";
             if (pendingAction == GrowthAction.Transfer)
                 message += "\n진화 진행이 가능하면 1 증가" + (inheritTrait ? " · 고유 특성 전승" : "");
-            GUI.Label(new Rect(375, 248, 530, 134), message, body);
-            if (pendingAction == GrowthAction.Evolve && selected.FormId.StartsWith("B-", StringComparison.Ordinal))
+            GUI.Label(new Rect(growthContent.x, growthPanel.y + 100, growthContent.width,
+                chooseBranch ? 86 : 110), message, dialogBody);
+            if (chooseBranch)
             {
                 string family = CatalogRoster.FamilyCode(selected.FormId);
                 int familyIndex = Array.IndexOf(Families, family);
                 if (familyIndex >= 0)
                 {
-                    if (GUI.Button(new Rect(375, 370, 250, 48), database.Get(Branches[familyIndex][0]).Name, button))
+                    Rect branchRow = new Rect(growthContent.x, growthPanel.y + 200,
+                        growthContent.width, 56);
+                    if (GUI.Button(ExpeditionUiTheme.FooterButton(branchRow, 0, 2),
+                        database.Get(Branches[familyIndex][0]).Name, button))
                         pendingFormId = Branches[familyIndex][0];
-                    if (GUI.Button(new Rect(635, 370, 250, 48), database.Get(Branches[familyIndex][1]).Name, button))
+                    if (GUI.Button(ExpeditionUiTheme.FooterButton(branchRow, 1, 2),
+                        database.Get(Branches[familyIndex][1]).Name, button))
                         pendingFormId = Branches[familyIndex][1];
-                    GUI.Label(new Rect(375, 422, 500, 29), "선택: " + database.Get(pendingFormId).Name, small);
+                    GUI.Label(new Rect(growthContent.x, growthPanel.y + 270,
+                        growthContent.width, 30), "선택: " + database.Get(pendingFormId).Name, small);
                 }
             }
-            ConfirmationButtons("실행", ExecuteGrowth,
+            ExpeditionUiTheme.FooterRule(growthPanel);
+            ConfirmationButtons(ExpeditionUiTheme.FooterRect(growthPanel), "실행", ExecuteGrowth,
                 () => modal = pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail);
         }
 
@@ -645,32 +814,37 @@ namespace Expedition.Presentation
                 return;
             }
             CatalogForm result = database.Get(pendingFormId);
-            Fill(new Rect(245, 72, 790, 576), Panel);
-            GUI.Label(new Rect(277, 91, 720, 45), "결합 결과 확인", heading);
-            GUI.Label(new Rect(277, 140, 710, 40),
+            Rect panel = new Rect(245, 72, 790, 576);
+            Rect content = ExpeditionUiTheme.ContentRect(panel);
+            Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            ExpeditionUiTheme.Window(panel);
+            GUI.Label(new Rect(content.x, 104, content.width, 45), "결합 결과 확인", heading);
+            GUI.Label(new Rect(content.x, 155, content.width, 40),
                 MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
                 " + " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
                 "  →  " + result.Name, body);
-            if (art != null) art.Draw(pendingFormId, new Rect(282, 191, 170, 184),
+            if (art != null) art.Draw(pendingFormId, new Rect(content.x + 5, 205, 170, 184),
                 (int)(Time.unscaledTime * 5f) % 4);
-            GUI.Label(new Rect(468, 192, 510, 43), result.Name, heading);
-            GUI.Label(new Rect(468, 238, 520, 56),
+            GUI.Label(new Rect(468, 205, content.xMax - 468, 43), result.Name, heading);
+            GUI.Label(new Rect(468, 251, content.xMax - 468, 56),
                 "체력 " + result.Hp.ToString("0") + "   공격 " + result.Power.ToString("0") +
                 "   방어 " + result.Defense.ToString("0"), body);
-            GUI.Label(new Rect(468, 293, 510, 50), "기술: " + CombinationSkill(pendingFormId), body);
-            GUI.Label(new Rect(277, 386, 710, 36),
+            GUI.Label(new Rect(468, 306, content.xMax - 468, 50),
+                "기술: " + CombinationSkill(pendingFormId), body);
+            GUI.Label(new Rect(content.x, 398, content.width, 36),
                 "결과를 유지하는 동료: " + MemberPositionLabel(recipient.Id) + " " +
                 database.Get(recipient.FormId).Name +
                 " · 전승 특성 " + TraitName(recipient.InheritedTraitId) + " 유지", small);
             int deployedAfter = run.DeployedIds.Count -
                 (IsDeployed(donor.Id) && IsDeployed(recipient.Id) ? 1 : 0);
-            GUI.Label(new Rect(277, 423, 710, 85),
+            GUI.Label(new Rect(content.x, 437, content.width, 77),
                 "재료: " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
                 " · 전승 특성 " + TraitName(donor.InheritedTraitId) + "\n이 동료가 소모됩니다. 출전 " +
                 run.DeployedIds.Count + "명 → " + deployedAfter + "명 · 되돌리기 가능", body);
-            if (GUI.Button(new Rect(277, 545, 337, 65), "나중에", button))
+            ExpeditionUiTheme.FooterRule(panel);
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "나중에", button))
                 modal = combinationFromList ? Modal.CombinationOptions : Modal.Detail;
-            if (GUI.Button(new Rect(650, 545, 337, 65), "결합하기", primary)) ExecuteGrowth();
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "결합하기", primary)) ExecuteGrowth();
         }
 
         static string CombinationSkill(string resultId)
@@ -688,10 +862,10 @@ namespace Expedition.Presentation
             }
         }
 
-        void ConfirmationButtons(string confirm, Action yes, Action no)
+        void ConfirmationButtons(Rect footer, string confirm, Action yes, Action no)
         {
-            if (GUI.Button(new Rect(374, 462, 247, 60), "돌아가기", button)) no();
-            if (GUI.Button(new Rect(657, 462, 247, 60), confirm, primary)) yes();
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "돌아가기", button)) no();
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), confirm, primary)) yes();
         }
 
         void ExecuteGrowth()
@@ -793,7 +967,7 @@ namespace Expedition.Presentation
             bool quickSwap = !IsDeployed(pointerId) && IsDeployed(hoverRecipientId) && run.DeployedIds.Count >= 5;
             string action = growth ? "성장 +1" :
                 quickSwap ? "출전 교체" : donor != null && donor.MaterialLocked ? "보호된 재료" : "성장 불가";
-            Fill(new Rect(735, 323, 493, 165), new Color(.035f, .11f, .085f, .96f));
+            ExpeditionUiTheme.PanelBox(new Rect(735, 323, 493, 165), true);
             if (art != null) art.Draw(resultForm, new Rect(746, 334, 106, 112), 0);
             GUI.Label(new Rect(864, 337, 350, 37), action + "  →  " + database.Get(resultForm).Name, body);
             if (growth)

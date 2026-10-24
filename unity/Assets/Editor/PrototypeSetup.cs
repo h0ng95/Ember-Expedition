@@ -28,7 +28,7 @@ namespace Expedition.EditorTools
         {
             EditorSettings.serializationMode = SerializationMode.ForceText;
             PlayerSettings.companyName = "ExpeditionPrototype";
-            PlayerSettings.productName = "Ember Expedition Prototype";
+            PlayerSettings.productName = "IGNIS: ASHEN OATH";
             PlayerSettings.bundleVersion = "0.0.1";
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
             PlayerSettings.allowedAutorotateToPortrait = false;

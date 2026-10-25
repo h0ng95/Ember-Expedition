@@ -742,59 +742,9 @@ namespace Expedition.Presentation
             }
         }
 
-        void DrawDetail()
-        {
-            CatalogMember member = run == null ? null : run.Roster.Find(selectedId);
-            if (member == null) { modal = Modal.None; return; }
-            Rect panel = new Rect(245, 75, 790, 570);
-            ExpeditionUiTheme.Window(panel);
-            CatalogForm form = database.Get(member.FormId);
-            GUI.Label(new Rect(277, 99, 560, 48), form.Name, heading);
-            if (GUI.Button(new Rect(943, 108, 60, 54), "×", button)) { modal = Modal.None; return; }
-            if (art != null) art.Draw(member.FormId, new Rect(290, 154, 155, 175), (int)(Time.unscaledTime * 5f) % 4);
-            GUI.Label(new Rect(468, 157, 535, 72),
-                "체력 " + form.Hp.ToString("0") + "   공격 " + form.Power.ToString("0") +
-                "   방어 " + form.Defense.ToString("0") + "\n" +
-                "공격 간격 " + form.AttackInterval.ToString("0.0") + "초   사거리 " + form.Range.ToString("0.0"), body);
-            int target = member.FormId.StartsWith("B-", StringComparison.Ordinal) ? 2 :
-                member.FormId.StartsWith("E-", StringComparison.Ordinal) ? 6 : 0;
-            HybridGuidance guidance = HybridGuide(member.FormId);
-            EnsureRuneStyles();
-            GUI.Label(new Rect(468, 239, 535, 88), guidance != null ? "기술: " + HybridSkillText(form, guidance) :
-                target > 0 ? "진화 진행  " + member.Growth + " / " + target : "최종 형태", runeBody);
-            GUI.Label(new Rect(277, 334, 726, 30), "고유 특성: " + TraitName(form.InnateTrait) +
-                "    전승 특성: " + TraitName(member.InheritedTraitId), small);
-            if (guidance != null)
-                GUI.Label(new Rect(277, 368, 726, 49), guidance.Tactic, hint);
-            else
-                GUI.Label(new Rect(277, 368, 726, 40), "성장과 편성", heading);
-            Rect firstActions = new Rect(277, 430, 726, 58), secondActions = new Rect(277, 504, 726, 58);
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 0, 3), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
-            {
-                if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save("deployment", member.Id); modal = Modal.None; }
-                else Notice("출전 1~5명 · 대기석 최대 7명을 유지해야 합니다.");
-            }
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 1, 3), "전승", button))
-            { inheritTrait = false; choosePage = 0; modal = Modal.ChooseDonor; }
-            GUI.enabled = target > 0 && member.Growth >= target;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 2, 3), "진화", button)) PrepareEvolution(member);
-            GUI.enabled = true;
-            GUI.enabled = member.FormId.StartsWith("E-", StringComparison.Ordinal);
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 1, 3), "결합", button))
-            { choosePage = 0; modal = Modal.ChoosePartner; }
-            GUI.enabled = true;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 0, 3), member.MaterialLocked ? "재료 보호 해제" : "재료 보호", button))
-            {
-                if (run.SetMaterialLocked(member.Id, !member.MaterialLocked)) Save("material_lock", member.Id);
-                else Notice("재료 보호 상태를 바꾸지 못했습니다.");
-            }
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 2, 3), "적용 효과", button))
-                OpenMemberEffects(member);
-            GUI.Label(new Rect(277, 578, 726, 36), "끌어놓기로 성장합니다. 재료 보호 중인 동료는 전승·결합에 쓰이지 않습니다.", small);
-        }
-
         void DrawChooseMember()
         {
+            if (modal == Modal.ChoosePartner) { DrawPartnerChoices(); return; }
             bool transfer = modal == Modal.ChooseDonor;
             Rect panel = new Rect(215, 75, 850, 585);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
@@ -881,51 +831,6 @@ namespace Expedition.Presentation
             modal = Modal.Confirm;
         }
 
-        void DrawCombinationOptions()
-        {
-            List<CatalogCombinationOption> options = run.GetCombinationOptions();
-            Rect panel = new Rect(215, 75, 850, 585);
-            Rect content = ExpeditionUiTheme.ContentRect(panel);
-            Rect footer = ExpeditionUiTheme.FooterRect(panel);
-            ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 107, content.width - 80, 52),
-                "가능한 결합  " + options.Count + "쌍", heading);
-            if (GUI.Button(new Rect(content.xMax - 59, 107, 59, 50), "×", button))
-            { modal = Modal.None; return; }
-            GUI.Label(new Rect(content.x, 160, content.width, 34),
-                "결합은 선택 사항입니다. 결과와 재료를 확인한 뒤 진행하세요.", small);
-            const int pageSize = 4;
-            int pages = Mathf.Max(1, (options.Count + pageSize - 1) / pageSize);
-            combinationPage = Mathf.Clamp(combinationPage, 0, pages - 1);
-            for (int row = 0; row < pageSize; row++)
-            {
-                int index = combinationPage * pageSize + row;
-                if (index >= options.Count) break;
-                CatalogCombinationOption option = options[index];
-                CatalogMember recipient = run.Roster.Find(option.RecipientId);
-                CatalogMember donor = run.Roster.Find(option.DonorId);
-                if (recipient == null || donor == null) continue;
-                string label = database.Get(option.ResultId).Name + " 결합\n" +
-                    "남는 동료 " + MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
-                    "  +  재료 " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
-                    " · 전승 " + TraitName(donor.InheritedTraitId);
-                if (GUI.Button(new Rect(content.x, 204 + row * 78, content.width, 70), label, button))
-                    ChooseCombinationOption(index);
-            }
-            if (options.Count == 0) GUI.Label(new Rect(content.x, 240, content.width, 80),
-                "가능한 결합이 없습니다.", body);
-            ExpeditionUiTheme.FooterRule(panel);
-            if (pages > 1)
-            {
-                if (GUI.Button(new Rect(footer.x, footer.y, 112, 64), "이전", button)) combinationPage--;
-                GUI.Label(new Rect(footer.x + 122, footer.y + 17, 120, 30),
-                    (combinationPage + 1) + " / " + pages, centered);
-                if (GUI.Button(new Rect(footer.x + 252, footer.y, 112, 64), "다음", button)) combinationPage++;
-            }
-            if (GUI.Button(new Rect(footer.xMax - 192, footer.y, 192, 64), "나중에", button))
-                modal = Modal.None;
-        }
-
         void PrepareEvolution(CatalogMember member, bool fromDrag = false)
         {
             evolutionFromDrag = fromDrag;
@@ -946,6 +851,8 @@ namespace Expedition.Presentation
 
         void DrawConfirmation()
         {
+            if (modal == Modal.Confirm && pendingAction == GrowthAction.Evolve)
+            { DrawEvolutionConfirmation(); return; }
             if (modal == Modal.Confirm && pendingAction == GrowthAction.Combine)
             { DrawCombinationConfirmation(); return; }
             if (modal == Modal.NewRun)
@@ -1049,54 +956,6 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.FooterRule(growthPanel);
             ConfirmationButtons(ExpeditionUiTheme.FooterRect(growthPanel), "실행", ExecuteGrowth,
                 () => modal = pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail);
-        }
-
-        void DrawCombinationConfirmation()
-        {
-            CatalogMember recipient = run.Roster.Find(selectedId);
-            CatalogMember donor = run.Roster.Find(pendingOtherId);
-            if (recipient == null || donor == null || !run.CanCombine(selectedId, pendingOtherId, pendingFormId))
-            {
-                modal = combinationFromList ? Modal.CombinationOptions : Modal.Detail;
-                Notice("결합할 동료가 바뀌었습니다. 다시 선택해 주세요.");
-                return;
-            }
-            CatalogForm result = database.Get(pendingFormId);
-            HybridGuidance guidance = HybridGuide(pendingFormId);
-            Rect panel = new Rect(205, 35, 870, 650);
-            Rect content = ExpeditionUiTheme.ContentRect(panel);
-            Rect footer = ExpeditionUiTheme.FooterRect(panel);
-            ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 67, content.width, 45), "결합 결과 확인", heading);
-            GUI.Label(new Rect(content.x, 117, content.width, 52),
-                MemberPositionLabel(recipient.Id) + " " + database.Get(recipient.FormId).Name +
-                " + " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
-                "  →  " + result.Name, body);
-            if (art != null) art.Draw(pendingFormId, new Rect(content.x + 5, 176, 170, 184),
-                (int)(Time.unscaledTime * 5f) % 4);
-            GUI.Label(new Rect(440, 173, content.xMax - 440, 43), result.Name, heading);
-            GUI.Label(new Rect(440, 220, content.xMax - 440, 40),
-                "체력 " + result.Hp.ToString("0") + "   공격 " + result.Power.ToString("0") +
-                "   방어 " + result.Defense.ToString("0"), body);
-            EnsureRuneStyles();
-            GUI.Label(new Rect(440, 270, content.xMax - 440, 94),
-                "기술: " + (guidance == null ? "고유 특성 " + pendingFormId : HybridSkillText(result, guidance)), runeBody);
-            if (guidance != null)
-                GUI.Label(new Rect(content.x, 373, content.width, 46), guidance.Tactic, hint);
-            GUI.Label(new Rect(content.x, 429, content.width, 32),
-                "결과를 유지하는 동료: " + MemberPositionLabel(recipient.Id) + " " +
-                database.Get(recipient.FormId).Name +
-                " · 전승 특성 " + TraitName(recipient.InheritedTraitId) + " 유지", small);
-            int deployedAfter = run.DeployedIds.Count -
-                (IsDeployed(donor.Id) && IsDeployed(recipient.Id) ? 1 : 0);
-            GUI.Label(new Rect(content.x, 469, content.width, 65),
-                "재료: " + MemberPositionLabel(donor.Id) + " " + database.Get(donor.FormId).Name +
-                " · 전승 특성 " + TraitName(donor.InheritedTraitId) + "\n이 동료가 소모됩니다. 출전 " +
-                run.DeployedIds.Count + "명 → " + deployedAfter + "명 · 되돌리기 가능", body);
-            ExpeditionUiTheme.FooterRule(panel);
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "나중에", button))
-                modal = combinationFromList ? Modal.CombinationOptions : Modal.Detail;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "결합하기", primary)) ExecuteGrowth();
         }
 
         sealed class HybridGuidance

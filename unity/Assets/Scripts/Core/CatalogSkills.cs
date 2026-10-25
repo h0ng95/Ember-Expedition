@@ -5,7 +5,7 @@ namespace Expedition.Core
 {
     public sealed partial class CatalogBattle
     {
-        static float SkillCooldown(string id)
+        public static float SkillCooldown(string id)
         {
             switch (id)
             {

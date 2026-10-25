@@ -4,7 +4,9 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.39 전투 HUD·보스 6종 도트 공격 애니메이션·로컬 테스트 기록**. 고정 보스 정보, 피해·상태 구분, 지역 적 가독성과 고유 공격 연출을 보완했다. [변경·검증 기록](docs/design-v0.39/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.39/HANDOFF.html) · [공격 애니메이션 미리보기](docs/design-v0.39/boss-effects-preview.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [스플래시·기사 아이콘](docs/design-v0.38/HANDOFF.md) · [첫 조작 안내](docs/design-v0.36/HANDOFF.md) · [결합체·난도 검토](docs/design-v0.34/HANDOFF.md).
+- 최신 UI 구현: **v0.41 동료 30형태 정보·진화·결합 미리보기**. 도트 대기·공격, 실제 시작 스탯, 기술·특성·연구 조건, 소모 재료와 출전 인원 변화를 확인하고 선택한다. 계산 306사례·1,887조건, Unity 217조건 및 Buddy2 조작 확인. [변경·검증 기록](docs/design-v0.41/HANDOFF.md) · [실기기 화면 포함](docs/design-v0.41/HANDOFF.html).
+- 최신 검증: **v0.40 새 원정부터 종료까지 3,360개 시나리오·77,836회 전투**. 저장 경계 50,138개, 회귀 5,665개, 실제 Unity 직렬화 5,180개 검증 통과. Buddy2 신규 원정·강제 종료·패배 종료·연구 해금도 확인했다. [결과·개선 우선순위](docs/design-v0.40/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.40/HANDOFF.html). 자동 정책의 결과는 사람의 완주율과 다르다.
+- 전투 구현: **v0.39 전투 HUD·보스 6종 도트 공격 애니메이션·로컬 테스트 기록**. 고정 보스 정보, 피해·상태 구분, 지역 적 가독성과 고유 공격 연출을 보완했다. [변경·검증 기록](docs/design-v0.39/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.39/HANDOFF.html) · [공격 애니메이션 미리보기](docs/design-v0.39/boss-effects-preview.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [스플래시·기사 아이콘](docs/design-v0.38/HANDOFF.md) · [첫 조작 안내](docs/design-v0.36/HANDOFF.md) · [결합체·난도 검토](docs/design-v0.34/HANDOFF.md).
 - 출시 준비 실행 계획: **전투 가독성 → 첫 플레이테스트 → 밸런스·안내 → 저장·설정·영어·사운드 → 광고·출시 검증**. 1단계 구현 후 신규 플레이어 관찰과 기록 분석을 진행할 차례다. [순서·완료 기준·체크리스트·테스트 양식](docs/release-readiness-v0.38.md) · [읽기용 문서](docs/release-readiness-v0.38.html). [연구·전술 규칙](docs/design-v0.32/HANDOFF.md) · [연구 보드·전투 기여도](docs/design-v0.33/HANDOFF.md).
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광·서리 성당·황혼 정원·잿빛 왕궁 각각 4종, 총 24종은 **개별 애니메이션 첫 제작본**을 사용한다. [왕궁 제작·검증](docs/design-v0.31/HANDOFF.html).
@@ -34,6 +36,7 @@
 ./tests/ExpeditionProgress/run.ps1
 ./tests/ExpeditionResearch/run.ps1
 ./tests/CatalogBattleReport/run.ps1
+./tests/UnitPreview/run.ps1
 ./tests/HybridCombat/run.ps1
 ./tests/ExpeditionRun/run-end-to-end-balance.ps1 -FirstSeed 19001 -Count 40 -GrowthOrder Balanced -Spending all -ReportPath .local-tools/balance-holdout.json
 ./tests/ExpeditionPreparationHints/run.ps1

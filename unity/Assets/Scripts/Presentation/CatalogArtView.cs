@@ -41,6 +41,17 @@ namespace Expedition.Presentation
         }
 
         public void Draw(string id, Rect destination, int frame)
+        { DrawFrame(id, destination, Mathf.Clamp(frame, 0, 3)); }
+
+        public void DrawPreview(string id, Rect destination, float time)
+        {
+            float phase = time % 3.2f;
+            int frame = phase < 2.3f ? (int)(phase * 5f) % 4 :
+                12 + Mathf.Min(5, (int)((phase - 2.3f) / .15f));
+            DrawFrame(id, destination, frame);
+        }
+
+        void DrawFrame(string id, Rect destination, int frame)
         {
             if (string.IsNullOrEmpty(id)) return;
             Entry entry;
@@ -54,7 +65,7 @@ namespace Expedition.Presentation
                 GUI.color = old;
                 return;
             }
-            int index = Mathf.Clamp(frame, 0, 3);
+            int index = Mathf.Clamp(frame, 0, 21);
             Rect uv;
             float pivotX = .5f, pivotY = 0f, cropWidth, cropHeight;
             if (entry != null && entry.frames != null && entry.frames.Length > index &&
@@ -71,7 +82,7 @@ namespace Expedition.Presentation
             }
             else
             {
-                uv = new Rect(index / 6f, .75f, 1f / 6f, 1f / 4f);
+                uv = new Rect((index % 6) / 6f, .75f - (index / 6) * .25f, 1f / 6f, 1f / 4f);
                 cropWidth = sheet.width / 6f;
                 cropHeight = sheet.height / 4f;
             }

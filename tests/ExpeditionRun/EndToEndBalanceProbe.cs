@@ -10,6 +10,53 @@ using Expedition.Core;
 // and only Continue decides whether a run can retry or has ended.
 internal static class EndToEndBalanceProbe
 {
+    static string starter = "standard";
+    static bool interruptions;
+    static int boundaryChecks;
+    static string context;
+    static readonly JavaScriptSerializer serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue, RecursionLimit = 256 };
+
+    static void Verify(bool value, string message)
+    {
+        boundaryChecks++;
+        if (!value) throw new InvalidOperationException(message);
+    }
+
+    // Reflection/property enumeration order is not part of the save contract.
+    // Preserve array order and values, but compare JSON objects by sorted keys.
+    static object SortJson(object value)
+    {
+        var map = value as IDictionary<string, object>;
+        if (map != null) return new SortedDictionary<string, object>(
+            map.ToDictionary(pair => pair.Key, pair => SortJson(pair.Value)), StringComparer.Ordinal);
+        var items = value as object[];
+        return items == null ? value : items.Select(SortJson).ToArray();
+    }
+
+    static string StableJson(object value)
+    {
+        return serializer.Serialize(SortJson(serializer.DeserializeObject(serializer.Serialize(value))));
+    }
+
+    static ExpeditionRun JsonReload(CatalogDatabase db, ExpeditionRun run)
+    {
+        string json = StableJson(run.Capture());
+        var restored = ExpeditionRun.Restore(db, serializer.Deserialize<ExpeditionRunSave>(json));
+        string after = StableJson(restored.Capture());
+        int difference = 0;
+        while (difference < Math.Min(json.Length, after.Length) && json[difference] == after[difference]) difference++;
+        Verify(after == json, "JSON reload changed state at " + run.Phase + " offset=" + difference +
+            " before=" + json.Substring(difference, Math.Min(140, json.Length - difference)) +
+            " after=" + after.Substring(difference, Math.Min(140, after.Length - difference)));
+        return restored;
+    }
+
+    static string BattleFingerprint(CatalogBattle battle)
+    {
+        return battle.Ended + "/" + battle.Winner + "/" + battle.Time.ToString("R", CultureInfo.InvariantCulture) + "/" +
+            string.Join(";", battle.Units.Select(u => u.Id + ":" + u.Hp.ToString("R", CultureInfo.InvariantCulture) +
+                ":" + u.Shield.ToString("R", CultureInfo.InvariantCulture)).ToArray());
+    }
     sealed class Attempt
     {
         public int wave, lanternBefore, gold, supply, deployed, seconds;
@@ -52,7 +99,9 @@ internal static class EndToEndBalanceProbe
     sealed class Report
     {
         public int firstSeed, count;
-        public string note;
+        public string note, starter, growthOrder;
+        public bool interruptions;
+        public int boundaryChecks;
         public Row[] rows;
         public WaveRow[] waves;
         public SeedResult[] seedResults;
@@ -98,16 +147,20 @@ internal static class EndToEndBalanceProbe
     static SeedResult Simulate(CatalogDatabase db, int seed,
         HybridBalanceProbe.Policy policy, string spending, string account)
     {
-        // Same standard starter in both accounts isolates permanent research effects.
+        // Alternative starts require their real unlock; no runtime state is forged.
         string[] legacy = account == "researched" ?
-            CatalogLegacyResearch.Nodes.Select(n => n.Id).ToArray() : new string[0];
-        var run = ExpeditionRun.New(db, (uint)seed, ExpeditionDifficulty.Normal, legacy, "standard");
+            CatalogLegacyResearch.Nodes.Select(n => n.Id).ToArray() : account == "unlocked" ?
+            CatalogLegacyResearch.Nodes.Where(n => n.Tier == 1).Select(n => n.Id).ToArray() : new string[0];
+        var run = ExpeditionRun.New(db, (uint)seed, ExpeditionDifficulty.Normal, legacy, starter);
+        var accountProgress = ExpeditionProgress.New();
+        var journal = ExpeditionJournal.New();
         var progress = new HybridBalanceProbe.Progress();
         var attempts = new List<Attempt>();
         int firstHybridWave = 0, retryWins = 0;
         while (run.Phase == ExpeditionPhase.Preparation)
         {
             int wave = run.Wave, lantern = run.Lantern;
+            context = account + "/" + starter + "/" + policy.Id + "/" + spending + "/seed=" + seed + "/wave=" + wave + "/lantern=" + lantern;
             string formation = lantern == 2 ? "compact" : "spread";
             var actions = new List<string>();
             BuyTactics(run, policy, spending, actions);
@@ -119,10 +172,11 @@ internal static class EndToEndBalanceProbe
             if (reloaded.Wave != run.Wave || reloaded.Gold != run.Gold ||
                 reloaded.Capture().RandomState != saved.RandomState ||
                 !reloaded.TacticIds.SequenceEqual(run.TacticIds) ||
-                !reloaded.LegacyResearchIds.SequenceEqual(legacy) || reloaded.StartFormationId != "standard" ||
+                !reloaded.LegacyResearchIds.SequenceEqual(legacy) || reloaded.StartFormationId != starter ||
                 HybridBalanceProbe.Party(reloaded) != HybridBalanceProbe.Party(run))
                 throw new InvalidOperationException("Run save changed legal preparation.");
             run = reloaded;
+            if (interruptions) run = JsonReload(db, run);
             var attempt = new Attempt { wave = wave, lanternBefore = lantern,
                 formation = formation, gold = run.Gold,
                 supply = run.Roster.SupplyUsed, deployed = run.DeployedIds.Count,
@@ -136,6 +190,19 @@ internal static class EndToEndBalanceProbe
             bool hasHybrid = run.DeployedIds.Any(id => run.Roster.Find(id).FormId == policy.Id);
             var battle = run.BeginBattle();
             if (battle == null) throw new InvalidOperationException("Legal battle could not begin.");
+            CatalogBattle uninterrupted = null;
+            if (interruptions)
+            {
+                uninterrupted = ExpeditionRun.Restore(db, run.Capture()).ResumeBattle();
+                battle.Step(1.37f);
+                run = JsonReload(db, run);
+                battle = run.ResumeBattle();
+                Verify(battle.Time == 0f, "Interrupted battle must restart from saved preparation");
+                Verify(BattleFingerprint(battle) == BattleFingerprint(uninterrupted), "Restart changed initial actors");
+                string beforeInvalid = StableJson(run.Capture());
+                Verify(run.Summon() == null && !run.Continue() && !run.PurchaseTactic("bulwark") &&
+                    StableJson(run.Capture()) == beforeInvalid, "Battle rejected actions mutated state");
+            }
             battle.Event += e => {
                 if (run.Wave >= 23 && e.Kind == CatalogEventKind.Damage)
                 {
@@ -171,22 +238,58 @@ internal static class EndToEndBalanceProbe
                     if (e.Kind == CatalogEventKind.SkillUsed) attempt.hybridSkills++;
                 }
             };
-            while (!battle.Ended && battle.Time < 75f) battle.Step(.25f);
+            // Match the game's 60 Hz timeout boundary, including the last partial batch.
+            while (!battle.Ended && battle.Time < 75f) battle.Step(battle.Time < 74.75f ? .25f : 1f / 60f);
+            if (uninterrupted != null)
+            {
+                while (!uninterrupted.Ended && uninterrupted.Time < 75f) uninterrupted.Step(1f / 60f);
+                Verify(BattleFingerprint(battle) == BattleFingerprint(uninterrupted), "Resume or step batching changed battle outcome");
+            }
             attempt.win = battle.Ended && battle.Winner == CatalogTeam.Ally;
             attempt.timedOut = !battle.Ended;
             attempt.seconds = (int)Math.Round(battle.Time);
             var allies = battle.Units.Where(u => u.Team == CatalogTeam.Ally).ToArray();
             attempt.allyHpFraction = Math.Round(allies.Average(u => Math.Max(0, u.Hp) / u.MaxHp), 3);
             attempts.Add(attempt);
+            int goldBefore = run.Gold, lanternBefore = run.Lantern;
             if (!run.ResolveBattle(attempt.win)) throw new InvalidOperationException("Resolve rejected result.");
+            if (interruptions)
+            {
+                Verify(run.Gold == goldBefore + run.LastReward && (attempt.win || run.LastReward == 0) &&
+                    run.Lantern == lanternBefore - (attempt.win ? 0 : 1), "Result currency or lantern mismatch");
+                run = JsonReload(db, run);
+                string beforeDuplicate = StableJson(run.Capture());
+                Verify(!run.ResolveBattle(attempt.win) && StableJson(run.Capture()) == beforeDuplicate,
+                    "Duplicate result paid rewards or spent lantern twice");
+                accountProgress.Observe(run); journal.Observe(run);
+                Verify(!accountProgress.Observe(run) && !journal.Observe(run), "Progress or story awarded twice");
+                accountProgress = ExpeditionProgress.Restore(serializer.Deserialize<ExpeditionProgressSave>(serializer.Serialize(accountProgress.Capture())));
+                journal = ExpeditionJournal.Restore(serializer.Deserialize<ExpeditionJournalSave>(serializer.Serialize(journal.Capture())));
+                Verify(accountProgress.BestWave == run.Victories &&
+                    accountProgress.ResearchEarned == run.Victories + run.Victories / 5, "Earned research drifted from actual first clears");
+            }
             if (run.LastVictory != attempt.win || !run.Continue())
                 throw new InvalidOperationException("Result progression failed.");
+            if (interruptions)
+            {
+                run = JsonReload(db, run);
+                string beforeDuplicate = StableJson(run.Capture());
+                Verify(!run.Continue() && StableJson(run.Capture()) == beforeDuplicate, "Duplicate Continue advanced twice");
+            }
             if (attempt.win && lantern < 3) retryWins++;
             if (run.Phase != ExpeditionPhase.Preparation) break;
         }
         int wins = attempts.Count(a => a.win);
         if (run.Phase == ExpeditionPhase.Completed && wins < ExpeditionRun.TotalWaves)
             throw new InvalidOperationException("Completed without real victories.");
+        if (interruptions)
+        {
+            Verify(run.Phase == ExpeditionPhase.Completed || run.Phase == ExpeditionPhase.Defeated, "Run did not terminate");
+            Verify(accountProgress.HardUnlocked == (run.Phase == ExpeditionPhase.Completed), "Clear eligibility disagrees with actual completion");
+            string terminal = StableJson(run.Capture());
+            Verify(run.BeginBattle() == null && run.Summon() == null && !run.Undo() &&
+                StableJson(run.Capture()) == terminal, "Terminal run accepts gameplay actions");
+        }
         return new SeedResult { account = account, policy = policy.Id, spending = spending, seed = seed,
             complete = run.Phase == ExpeditionPhase.Completed,
             defeatedAt = run.Phase == ExpeditionPhase.Defeated ? run.Wave : 0,
@@ -204,8 +307,20 @@ internal static class EndToEndBalanceProbe
 
     static void Main(string[] args)
     {
-        if (args.Length < 5 || args.Length > 8)
-            throw new ArgumentException("catalog report firstSeed count growthOrder [spending] [policy] [account] required");
+        try { Execute(args); }
+        catch (Exception error)
+        {
+            Console.Error.WriteLine("FAILED " + context + ": " + error.GetType().Name + ": " + error.Message);
+            Environment.ExitCode = 1;
+        }
+    }
+
+    static void Execute(string[] args)
+    {
+        if (args.Length < 5 || args.Length > 10)
+            throw new ArgumentException("catalog report firstSeed count growthOrder [spending] [policy] [account] [starter] [interruptions] required");
+        starter = args.Length >= 9 ? args[8] : "standard";
+        interruptions = args.Length >= 10 && bool.Parse(args[9]);
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
         if (first < 1 || count < 1 || count > 1000) throw new ArgumentOutOfRangeException("seed range");
         HybridBalanceProbe.ConfigureGrowthOrder(args[4]);
@@ -218,17 +333,18 @@ internal static class EndToEndBalanceProbe
         if (policyFilter != "all" && policyFilter != "focus" && !HybridBalanceProbe.Policies.Any(p => p.Id == policyFilter))
             throw new ArgumentException("Unsupported policy filter.");
         string accountFilter = args.Length >= 8 ? args[7] : "fresh";
-        if (accountFilter != "all" && accountFilter != "fresh" && accountFilter != "researched")
+        if (accountFilter != "all" && accountFilter != "fresh" && accountFilter != "researched" && accountFilter != "unlocked")
             throw new ArgumentException("Unsupported account profile.");
         var all = new List<SeedResult>();
         var rows = new List<Row>();
         var waves = new List<WaveRow>();
-        foreach (string account in new[] { "fresh", "researched" })
+        foreach (string account in new[] { "fresh", "researched", "unlocked" })
         foreach (var policy in HybridBalanceProbe.Policies)
             foreach (string spending in new[] { "none", "early", "delayed", "selective" })
             {
                 if (filter != "all" && spending != filter) continue;
                 if (accountFilter != "all" && account != accountFilter) continue;
+                if (accountFilter == "all" && account == "unlocked") continue;
                 if (policyFilter == "focus")
                 { if (policy.Id != "final" && policy.Id != "H-01" && policy.Id != "H-05") continue; }
                 else if (policyFilter != "all" && policy.Id != policyFilter) continue;
@@ -277,9 +393,10 @@ internal static class EndToEndBalanceProbe
                 foreach (SeedResult result in results)
                     if (result.seed != first) result.trace = result.trace.Where(a => !a.win).ToArray();
             }
-        var report = new Report { firstSeed = first, count = count,
+        var report = new Report { firstSeed = first, count = count, starter = starter, growthOrder = args[4],
+            interruptions = interruptions, boundaryChecks = boundaryChecks,
             note = "Real run progression only. Losses consume lantern; only wins pay rewards. Growth order: " +
-                args[4] + ". Accounts: fresh has no permanent research, researched has all six nodes (27 points). Both start standard. Fixed automated policies, not human win rates. Trace beyond first seed keeps losses only. Wave rates are conditional on reaching the wave.",
+                args[4] + ". Accounts: fresh has no research; researched has all six nodes (27 points); unlocked has only the three starter unlocks (9 points). Starter: " + starter + ". Fixed automated policies, not human win rates. Trace beyond first seed keeps losses only. Wave rates are conditional on reaching the wave.",
             rows = rows.ToArray(), waves = waves.ToArray(), seedResults = all.ToArray() };
         File.WriteAllText(args[1], new JavaScriptSerializer { MaxJsonLength = int.MaxValue }.Serialize(report));
     }

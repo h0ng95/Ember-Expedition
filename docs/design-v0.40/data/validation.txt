@@ -1,0 +1,18 @@
+PASS: battle report, 6 assertions.
+PASS: catalog combat regression, 3011 assertions.
+Expedition preparation hints: 62 checks passed.
+Expedition progress: 421 checks passed.
+PASS: expedition research, 61 assertions.
+PASS: expedition run, 2052 assertions.
+PASS: expedition story, 26 checks.
+PASS: hybrid combat, 15 assertions.
+PASS: preparation preview, 11 assertions.
+V040 sample seed=40001 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40002 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40003 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40004 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40005 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40006 phase=Defeated wave=15 victories=14 supply=22 gold=15
+V040 sample seed=40007 phase=Completed wave=30 victories=30 supply=35 gold=375
+V040 sample seed=40008 phase=Defeated wave=15 victories=14 supply=22 gold=15
+PASS: Unity expedition save and complete-run validation, 5180 assertions; sample completions 6/8. This is an integration check, not release balance.

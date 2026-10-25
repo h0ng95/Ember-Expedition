@@ -76,7 +76,7 @@ namespace Expedition.EditorTools
                 bool gotBoss = art.TryGetBounds(GardenEnemyArt.Species[3], 0, Vector2.zero, out boss);
                 bool gotGuard = art.TryGetBounds(GardenEnemyArt.Species[0], 0, Vector2.zero, out guard);
                 Check(gotBoss && gotGuard && boss.width > guard.width &&
-                    Mathf.Abs(boss.height - 250f) < .1f,
+                    Mathf.Abs(boss.height - 340f) < .1f,
                     "garden boss keeps the large fixed silhouette scale");
             }
             finally { art.Release(); }

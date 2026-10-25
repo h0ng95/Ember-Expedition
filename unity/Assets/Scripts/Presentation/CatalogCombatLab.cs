@@ -689,7 +689,7 @@ namespace Expedition.Presentation
                 }
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
-                    point.y -= unit.FlightLift * 60f;
+                    point.y -= PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y);
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
@@ -936,7 +936,7 @@ namespace Expedition.Presentation
 
         static float FloatLift(CatalogBattleUnit unit)
         {
-            return unit.EnemyRole == CatalogEnemyRole.CrownDrake ? 94f + unit.FlightLift * 60f : 0f;
+            return unit.EnemyRole == CatalogEnemyRole.CrownDrake ? 94f + PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y) : 0f;
         }
 
         string UnitName(CatalogBattleUnit unit)
@@ -1025,7 +1025,7 @@ namespace Expedition.Presentation
                         species == ForestEnemyArt.Species[2] || species == ForestEnemyArt.Species[3]);
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
-                bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds);
+                bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds, view.StateTime);
                 GUI.color = beforeForest;
                 if (drewForest)
                 {

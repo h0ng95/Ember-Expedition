@@ -28,7 +28,17 @@ namespace Expedition.Presentation
         public static float SilhouetteHeight(string id)
         {
             return id == Species[0] ? 108f : id == Species[1] ? 110f :
-                id == Species[2] ? 150f : id == Species[3] ? 300f : 0f;
+                id == Species[2] ? 150f : id == Species[3] ? 340f : 0f;
+        }
+
+        // Reserve room for the taller of both wing poses, so flapping does not
+        // make the body jump and the enlarged dragon stays below the fixed HUD.
+        public static float VisualFlightLift(float flightLift, float worldY)
+        {
+            if (flightLift <= 0f) return 0f;
+            float groundY = Math.Max(377f, Math.Min(617f, 497f - worldY * 48f));
+            float wingHeight = SilhouetteHeight(Species[3]) * 222f / 184f;
+            return Math.Min(flightLift * 60f, groundY - 76f - wingHeight);
         }
 
         public static int FrameIndex(string id, int state, float stateTime, float windupAge,

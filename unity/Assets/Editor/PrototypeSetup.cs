@@ -128,6 +128,8 @@ namespace Expedition.EditorTools
             var importer = (TextureImporter)assetImporter;
             bool startup = assetPath == StartupArtSetup.ImagePath;
             bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal);
+            bool frostFloating = assetPath.StartsWith("Assets/Resources/Art/Enemies/v039/frost-boss-floating", StringComparison.Ordinal) ||
+                assetPath == "Assets/Resources/Art/Enemies/v039/frost-boss-full-motion.png";
             importer.textureType = startup ? TextureImporterType.Sprite : TextureImporterType.Default;
             if (startup)
             {
@@ -146,7 +148,7 @@ namespace Expedition.EditorTools
             importer.isReadable = false;
             importer.alphaIsTransparency = true;
             // Catalog sprite sheets are loaded on demand on mobile; keep each sheet bounded.
-            importer.maxTextureSize = bossEffect ||
+            importer.maxTextureSize = bossEffect || frostFloating ||
                 assetPath.StartsWith("Assets/Resources/Art/Units/v010/", StringComparison.Ordinal) ? 1024 : 2048;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
         }

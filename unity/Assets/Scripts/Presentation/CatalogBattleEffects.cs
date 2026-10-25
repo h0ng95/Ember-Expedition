@@ -96,7 +96,7 @@ namespace Expedition.Presentation
             effects.Add(new Effect { Point = new Vector2(unit.X, unit.Y), Color = color,
                 Kind = kind, Size = size, Duration = duration, Direction = direction,
                 BodyOffset = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
-                    150f + unit.FlightLift * 60f : 57f });
+                    150f + PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y) : 57f });
         }
 
         public void Observe(CatalogBattleEvent e, CatalogBattle battle)
@@ -333,7 +333,7 @@ namespace Expedition.Presentation
                 if (target == null || !target.IsAlive) continue;
                 Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(unit.Team == CatalogTeam.Ally ? 20 : -20, -65);
                 float targetBodyOffset = target.EnemyRole == CatalogEnemyRole.CrownDrake ?
-                    150f + target.FlightLift * 60f : 58f;
+                    150f + PalaceEnemyArt.VisualFlightLift(target.FlightLift, target.Y) : 58f;
                 Vector2 to = project(new Vector2(target.X, target.Y)) +
                     new Vector2(0, -targetBodyOffset);
                 float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);

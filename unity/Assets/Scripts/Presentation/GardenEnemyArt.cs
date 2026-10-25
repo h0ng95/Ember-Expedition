@@ -28,7 +28,7 @@ namespace Expedition.Presentation
         public static float SilhouetteHeight(string id)
         {
             return id == Species[0] ? 104f : id == Species[1] ? 112f :
-                id == Species[2] ? 145f : id == Species[3] ? 250f : 0f;
+                id == Species[2] ? 145f : id == Species[3] ? 340f : 0f;
         }
 
         public static int FrameIndex(string id, int state, float stateTime, float windupAge,

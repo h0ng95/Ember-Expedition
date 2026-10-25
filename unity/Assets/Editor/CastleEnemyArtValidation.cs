@@ -76,7 +76,7 @@ namespace Expedition.EditorTools
                 Check(gotBoss && gotInfantry,
                     "runtime geometry missing from generated manifest");
                 Check(boss.height > 144f && boss.width > infantry.width &&
-                    Mathf.Abs(boss.height - 244f) < .1f,
+                    Mathf.Abs(boss.height - 266f) < .1f,
                     "castle boss retains large fixed silhouette scale");
             }
             finally { art.Release(); }

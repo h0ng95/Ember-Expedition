@@ -26,7 +26,7 @@ namespace Expedition.Presentation
         public static float SilhouetteHeight(string id)
         {
             return id == Species[0] ? 90f : id == Species[1] ? 100f :
-                id == Species[2] ? 140f : id == Species[3] ? 244f : 0f;
+                id == Species[2] ? 140f : id == Species[3] ? 266f : 0f;
         }
 
         // The first slam impact must play its release pose even when an enraged

@@ -75,7 +75,7 @@ namespace Expedition.EditorTools
                 bool gotBoss = art.TryGetBounds(MineEnemyArt.Species[3], 0, Vector2.zero, out boss);
                 bool gotWorker = art.TryGetBounds(MineEnemyArt.Species[0], 0, Vector2.zero, out worker);
                 Check(gotBoss && gotWorker && boss.width > worker.width &&
-                    Mathf.Abs(boss.height - 244f) < .1f,
+                    Mathf.Abs(boss.height - 280f) < .1f,
                     "furnace boss keeps the large fixed silhouette scale");
             }
             finally { art.Release(); }

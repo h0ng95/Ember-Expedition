@@ -36,6 +36,7 @@ namespace Expedition.Presentation
         readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         readonly Dictionary<string, RenderTexture> clippedTextures = new Dictionary<string, RenderTexture>();
         readonly HashSet<string> missing = new HashSet<string>();
+        readonly FrostBossFloatingArt frostBossFloating = new FrostBossFloatingArt();
         Material clipMaterial;
 
         public ForestEnemyArt()
@@ -112,6 +113,13 @@ namespace Expedition.Presentation
 
         public bool TryGetBounds(string id, int index, Vector2 foot, out Rect bounds)
         {
+            if (id == FrostEnemyArt.Species[3] && index >= 0 && index < 24 &&
+                frostBossFloating.TryGetBounds(index, foot, 0f, out bounds)) return true;
+            return TryGetOriginalBounds(id, index, foot, out bounds);
+        }
+
+        bool TryGetOriginalBounds(string id, int index, Vector2 foot, out Rect bounds)
+        {
             bounds = default(Rect);
             if (!entries.TryGetValue(id, out ForestEnemySheet sheet) || !Valid(sheet) || index < 0 || index >= 24)
                 return false;
@@ -125,9 +133,11 @@ namespace Expedition.Presentation
             return bounds.width > 0 && bounds.height > 0;
         }
 
-        public bool Draw(string id, int index, Vector2 foot, out Rect bounds)
+        public bool Draw(string id, int index, Vector2 foot, out Rect bounds, float walkTime = -1f)
         {
-            if (!TryGetBounds(id, index, foot, out bounds)) return false;
+            if (id == FrostEnemyArt.Species[3] && index >= 0 && index < 24 &&
+                frostBossFloating.Draw(index, foot, Mathf.Max(0, walkTime), clipMaterial, out bounds)) return true;
+            if (!TryGetOriginalBounds(id, index, foot, out bounds)) return false;
             ForestEnemySheet sheet = entries[id];
             if (!textures.TryGetValue(id, out Texture2D texture) && !missing.Contains(id))
             {
@@ -204,6 +214,7 @@ namespace Expedition.Presentation
 
         public void Release()
         {
+            frostBossFloating.Release();
             foreach (RenderTexture texture in clippedTextures.Values)
                 if (texture != null) { texture.Release(); DisposeObject(texture); }
             clippedTextures.Clear();

@@ -41,7 +41,7 @@ namespace Expedition.Presentation
             "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest }
+            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest, GuideMenu }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -130,6 +130,7 @@ namespace Expedition.Presentation
             if (!startupReady || run == null || badSave) return;
             try
             {
+                ObserveLessonAction(diagnosticAction);
                 PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(run.Capture()));
                 PlayerPrefs.Save();
                 savePresent = true;
@@ -213,7 +214,8 @@ namespace Expedition.Presentation
                 ExpeditionRun nextRun = ExpeditionRun.New(database, seed,
                     ExpeditionDifficulty.Normal, badProgress || progress == null ?
                     Array.Empty<string>() : progress.ResearchIds,
-                    badProgress ? "standard" : selectedFormationId);
+                    badProgress ? "standard" : selectedFormationId,
+                    badProgress || progress == null ? (int?)null : progress.BestWave);
                 if (run != null && run.Phase != ExpeditionPhase.Completed && run.Phase != ExpeditionPhase.Defeated)
                     playtest.Record("run_replaced", run, "Player chose a new expedition; not a battle defeat.");
                 run = nextRun;
@@ -226,6 +228,7 @@ namespace Expedition.Presentation
                 selectedId = null;
                 benchPage = 0;
                 tutorialReplayWave = 0;
+                lessonReplay = ExpeditionLesson.None;
                 tutorialRangeAcknowledged = false;
                 Save();
             }
@@ -282,6 +285,7 @@ namespace Expedition.Presentation
                 return;
             }
             FilterTutorialGuiEvent();
+            FilterLessonGuiEvent();
             Fill(new Rect(0, 0, Width, Height), Background);
             GUI.enabled = modal == Modal.None;
             if (home || run == null) DrawHome();
@@ -296,6 +300,7 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(350, 667, 580, 34), toast, centered);
             }
             DrawTutorialSpotlight();
+            DrawLessonSpotlight();
             GUI.matrix = Matrix4x4.identity;
         }
 
@@ -553,6 +558,9 @@ namespace Expedition.Presentation
 
         void DrawResult()
         {
+            if (run.Phase == ExpeditionPhase.Completed || run.Phase == ExpeditionPhase.Defeated ||
+                run.Phase == ExpeditionPhase.Result && (run.Lantern == 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves))
+            { DrawExpeditionSummary(); return; }
             bool victory = run.Phase == ExpeditionPhase.Completed ||
                 (run.Phase == ExpeditionPhase.Result && run.LastVictory);
             StoryEntry clearStory = run.LastVictory ? ExpeditionStory.BossClear(run.Wave) : null;
@@ -581,7 +589,7 @@ namespace Expedition.Presentation
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
                 run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                 ExpeditionRun.TotalWaves + "전투 돌파 · 원정 완료" :
-                "획득 골드 0 G   ·   보유 " + run.Gold + " G";
+                "이번 전투 보상 0 G   ·   보유 " + run.Gold + " G";
             GUI.Label(new Rect(content.x, clearStory == null ? 370 : 376,
                 HasBattleReport ? content.width - 210 : content.width, 43), reward, heading);
             if (HasBattleReport && GUI.Button(new Rect(content.xMax - 195, 370, 195, 48), "전투 기록", button))
@@ -608,6 +616,7 @@ namespace Expedition.Presentation
             else if (modal == Modal.Effects) DrawMemberEffects();
             else if (modal == Modal.BattleReport) DrawBattleReport();
             else if (modal == Modal.Playtest) DrawPlaytest();
+            else if (modal == Modal.GuideMenu) DrawGuideMenu();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
@@ -1048,6 +1057,7 @@ namespace Expedition.Presentation
                     victory => { run.ResolveBattle(victory); CompleteReport();
                         Save(victory ? "battle_win" : "battle_loss", battleSeconds: battle.Time); enabled = true; },
                     () => { home = true; Save("battle_exit", "Return home; no inferred defeat.", battle.Time); enabled = true; });
+                lab.ConfigureExpeditionSpeed(run.BattleSpeed, value => { if (run.SetBattleSpeed(value)) Save("battle_speed", value.ToString()); });
             }
             catch (Exception exception) { enabled = true; Notice("전투를 열지 못했습니다: " + exception.Message); }
         }
@@ -1184,7 +1194,7 @@ namespace Expedition.Presentation
             if (canceled) { CancelPointer(); return; }
             Vector2 point = new Vector2((screen.x - viewport.x) * Width / viewport.width,
                 (Screen.height - screen.y - viewport.y) * Height / viewport.height);
-            if (!TutorialPointerAllowed(point, down, up))
+            if (!TutorialPointerAllowed(point, down, up) || !LessonPointerAllowed(point, down, up))
             {
                 if (up) CancelPointer();
                 return;

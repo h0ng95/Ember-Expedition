@@ -174,7 +174,7 @@ namespace Expedition.Presentation
         void DrawTutorialReplayButton()
         {
             if (GUI.Button(new Rect(554, 100, 150, 34), "조작 안내", button))
-            { tutorialReplayWave = run.Wave; tutorialRangeAcknowledged = false; }
+            { CancelPointer(); modal = Modal.GuideMenu; }
         }
 
         void BuildTutorialHoles(ExpeditionTutorialStep step)

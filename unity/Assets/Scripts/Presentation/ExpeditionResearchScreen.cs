@@ -149,7 +149,8 @@ namespace Expedition.Presentation
                 { Save("tactic_purchase", selected.Id); lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f; }
             }
             GUI.enabled = enabled;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button)) modal = Modal.None;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button))
+            { FinishLesson(ExpeditionLesson.Tactics); modal = Modal.None; }
         }
 
         void DrawResearchRoutes(bool tactics, bool unavailable)

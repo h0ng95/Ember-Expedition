@@ -160,6 +160,19 @@ namespace Expedition.Presentation
         float latestSkillUntil, bossNoticeUntil;
         int selected, category, trait, branch, fusionPair, preset, galleryState, screen, dragged = -1;
         float clock, accumulator, speed = 1f, galleryTime;
+        Action<int> expeditionSpeedChanged;
+
+        public void ConfigureExpeditionSpeed(int value, Action<int> changed)
+        {
+            speed = value == 2 ? 2f : 1f;
+            expeditionSpeedChanged = changed;
+        }
+
+        void ToggleSpeed()
+        {
+            speed = speed == 1f ? 2f : 1f;
+            if (expeditionMode && expeditionSpeedChanged != null) expeditionSpeedChanged((int)speed);
+        }
         bool paused, galleryAuto;
         GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
         Font uiFont;
@@ -214,6 +227,7 @@ namespace Expedition.Presentation
         public void OpenExpeditionBattle(CatalogBattle runBattle, int wave, int total,
             string encounter, Action<bool> onResult, Action onExit)
         {
+            expeditionSpeedChanged = null;
             if (runBattle == null || onResult == null || onExit == null)
                 throw new ArgumentNullException("Expedition battle callbacks and battle are required.");
             Open(null, null);
@@ -870,7 +884,7 @@ namespace Expedition.Presentation
             }
             GUI.Label(new Rect(758, 24, 135, 30), clock.ToString("0.0") + " / 75초", label);
             if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button))
-                speed = speed == 1f ? 2f : 1f;
+                ToggleSpeed();
             if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button))
                 SetPaused(!paused);
         }
@@ -1170,7 +1184,7 @@ namespace Expedition.Presentation
             GUI.enabled = screen == 0;
             if (GUI.Button(new Rect(412, 665, 210, 37), PresetNames[preset], button)) preset = (preset + 1) % Presets.Length;
             GUI.enabled = true;
-            if (GUI.Button(new Rect(633, 665, 110, 37), speed == 1 ? "1×" : "2×", button)) speed = speed == 1 ? 2 : 1;
+            if (GUI.Button(new Rect(633, 665, 110, 37), speed == 1 ? "1×" : "2×", button)) ToggleSpeed();
             GUI.enabled = screen == 1 && battle != null && !battle.Ended;
             if (GUI.Button(new Rect(752, 665, 130, 37), paused ? "RESUME" : "PAUSE", button)) paused = !paused;
             GUI.enabled = party.Count > 0;

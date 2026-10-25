@@ -121,6 +121,7 @@ namespace Expedition.Presentation
             yield return null;
             startupStage = "안내 상태를 확인하고 있습니다";
             if (!CompleteStage(LoadTutorial)) yield break;
+            if (!CompleteStage(LoadLessons)) yield break;
             yield return null;
             startupStage = "동료 그림을 준비하고 있습니다";
             if (!CompleteStage(() => art = new CatalogArtView())) yield break;

@@ -36,6 +36,9 @@ namespace Expedition.Core
         public uint RandomState;
         public string LastSummonedFamily;
         public int FamilyStreak;
+        // Optional presentation metadata. Older v8 saves deserialize these as zero/false.
+        public int BattleSpeed, ResearchBaselineBestWave;
+        public bool HasResearchBaseline;
         public CatalogRosterSave Roster;
         public string[] DeployedIds;
         // Most recent preparation action first. Summons are written into every older entry.
@@ -116,6 +119,19 @@ namespace Expedition.Core
         public int Victories { get; private set; }
         public bool LastVictory { get; private set; }
         public ExpeditionPhase Phase { get; private set; }
+        public int BattleSpeed { get; private set; }
+        public bool HasResearchBaseline { get; private set; }
+        public int ResearchBaselineBestWave { get; private set; }
+        public int VictoryGoldEarned { get { return TotalEarned(Victories, VictoryRewards) - 40; } }
+        public int GoldSpent { get { return VictoryGoldEarned + 40 - Gold; } }
+        public int? ResearchEarnedThisRun { get { return HasResearchBaseline ? (int?)Math.Max(0,
+            Victories + Victories / 5 - ResearchBaselineBestWave - ResearchBaselineBestWave / 5) : null; } }
+        public bool SetBattleSpeed(int value)
+        {
+            if (value != 1 && value != 2) return false;
+            BattleSpeed = value;
+            return true;
+        }
         public string EncounterName { get { return Encounters[Wave - 1]; } }
         public string EncounterDescription { get { return EncounterDescriptions[Wave - 1]; } }
 
@@ -127,7 +143,8 @@ namespace Expedition.Core
 
         public static ExpeditionRun New(CatalogDatabase catalog, uint seed,
             ExpeditionDifficulty difficulty = ExpeditionDifficulty.Normal,
-            IEnumerable<string> legacyResearchIds = null, string startFormationId = "standard")
+            IEnumerable<string> legacyResearchIds = null, string startFormationId = "standard",
+            int? researchBaselineBestWave = null)
         {
             if (difficulty != ExpeditionDifficulty.Normal)
                 throw new ArgumentOutOfRangeException("difficulty", "Difficulty is unavailable.");
@@ -137,6 +154,11 @@ namespace Expedition.Core
                 throw new ArgumentException("Starting formation is unavailable.", "startFormationId");
             string[] startingForms = CatalogLegacyResearch.GetFormationUnits(startFormationId);
             var run = new ExpeditionRun(catalog);
+            if (researchBaselineBestWave.HasValue && (researchBaselineBestWave.Value < 0 || researchBaselineBestWave.Value > TotalWaves))
+                throw new ArgumentOutOfRangeException("researchBaselineBestWave");
+            run.BattleSpeed = 1;
+            run.HasResearchBaseline = researchBaselineBestWave.HasValue;
+            run.ResearchBaselineBestWave = researchBaselineBestWave ?? 0;
             run.Difficulty = difficulty;
             run.ContentWaves = TotalWaves;
             run.legacyResearchIds.AddRange(selectedLegacy);
@@ -648,6 +670,8 @@ namespace Expedition.Core
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
                 TacticIds = tacticIds.ToArray(), LegacyResearchIds = legacyResearchIds.ToArray(),
                 StartFormationId = StartFormationId,
+                BattleSpeed = BattleSpeed, HasResearchBaseline = HasResearchBaseline,
+                ResearchBaselineBestWave = ResearchBaselineBestWave,
                 Wave = Wave, Lantern = Lantern,
                 Gold = Gold, LastReward = LastReward, RewardedWave = RewardedWave,
                 Victories = Victories, LastVictory = LastVictory,
@@ -718,6 +742,10 @@ namespace Expedition.Core
             run.StartFormationId = current ? save.StartFormationId : "standard";
             run.Roster = CatalogRoster.Restore(catalog, save.Roster);
             run.Wave = save.Wave; run.Lantern = save.Lantern;
+            run.BattleSpeed = save.BattleSpeed == 2 ? 2 : 1;
+            run.HasResearchBaseline = save.HasResearchBaseline && save.ResearchBaselineBestWave >= 0 &&
+                save.ResearchBaselineBestWave <= TotalWaves;
+            run.ResearchBaselineBestWave = run.HasResearchBaseline ? save.ResearchBaselineBestWave : 0;
             run.Gold = save.Gold; run.LastReward = save.LastReward;
             run.RewardedWave = save.RewardedWave; run.Victories = save.Victories;
             run.LastVictory = save.LastVictory; run.Phase = save.Phase;

@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Reflection;
+using Expedition.Core;
 using Expedition.Presentation;
 using UnityEditor;
 using UnityEngine;
@@ -24,6 +26,7 @@ namespace Expedition.EditorTools
                 !boss.Overlaps(new Rect(904, 14, 125, 49)) &&
                 !boss.Overlaps(new Rect(1043, 14, 211, 49)),
                 "boss panel leaves encounter, timer, speed and pause controls clear");
+            ValidateHeaderText();
 
             var kind = CatalogCombatLab.BattleFloatKind.Burn;
             Check(CatalogCombatLab.HudRules.MergeDot(kind, "unit", .18f, kind, "unit"),
@@ -85,6 +88,62 @@ namespace Expedition.EditorTools
                 Check(select.Invoke(null, new object[] { ability[i] }).ToString() == visual[i],
                     ability[i] + " uses its own impact visual");
             Debug.Log("Battle readability validated: boss HUD, damage lanes and ten boss impact mappings.");
+        }
+
+        static void Fits(GUIStyle style, Rect rect, string text)
+        {
+            var content = new GUIContent(text);
+            Check(style.CalcSize(content).x <= rect.width && style.CalcHeight(content, rect.width) <= rect.height,
+                "header text clipped: " + text + " needs " + style.CalcSize(content).x + "x" +
+                style.CalcHeight(content, rect.width) + " in " + rect.width + "x" + rect.height);
+        }
+
+        static void ValidateHeaderText()
+        {
+            Font font = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 21);
+            var go = new GameObject("Boss header validation"); go.SetActive(false);
+            var lab = go.AddComponent<CatalogCombatLab>();
+            try
+            {
+                var name = CatalogCombatLab.HudRules.HeaderText(font, 21, TextAnchor.MiddleLeft, true);
+                var health = CatalogCombatLab.HudRules.HeaderText(font, 14, TextAnchor.MiddleRight);
+                var badge = CatalogCombatLab.HudRules.HeaderText(font, 12, TextAnchor.MiddleCenter, true);
+                var timer = CatalogCombatLab.HudRules.HeaderText(font, 12, TextAnchor.MiddleLeft, true);
+                MethodInfo unitName = typeof(CatalogCombatLab).GetMethod("UnitName", BindingFlags.Instance | BindingFlags.NonPublic);
+                var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
+                var run = ExpeditionRun.New(db, 43030);
+                Directory.CreateDirectory("Logs/v043-fixtures");
+                int bosses = 0;
+                for (int wave = 1; wave <= 30; wave++)
+                {
+                    if (wave % 5 == 0)
+                        File.WriteAllText("Logs/v043-fixtures/hud-" + wave + ".json", JsonUtility.ToJson(run.Capture()));
+                    CatalogBattle battle = run.BeginBattle();
+                    foreach (CatalogBattleUnit unit in battle.Units)
+                    {
+                        if (!unit.IsBoss) continue;
+                        bosses++;
+                        Fits(name, CatalogCombatLab.HudRules.BossName, (string)unitName.Invoke(lab, new object[] { unit }));
+                        Fits(health, CatalogCombatLab.HudRules.BossHealth, unit.MaxHp.ToString("0") + " / " + unit.MaxHp.ToString("0"));
+                    }
+                    run.ResolveBattle(true); if (wave < 30) run.Continue();
+                }
+                Check(bosses == 6, "all six actual boss headers were measured");
+                Fits(health, CatalogCombatLab.HudRules.BossHealth, "99999 / 99999");
+                for (int i = 0; i < 4; i++)
+                {
+                    Rect chip = CatalogCombatLab.HudRules.BossChip(i);
+                    Check(chip.xMin > CatalogCombatLab.HudRules.BossName.xMax &&
+                        chip.xMax <= CatalogCombatLab.HudRules.BossPanel.xMax - 10 &&
+                        chip.yMax <= CatalogCombatLab.HudRules.BossHealth.yMin,
+                        "four status chips stay separate from name, health and border");
+                    if (i > 0) Check(!chip.Overlaps(CatalogCombatLab.HudRules.BossChip(i - 1)), "status chips overlap");
+                    Fits(badge, chip, "분노");
+                    Fits(timer, new Rect(chip.x + 17, chip.y, chip.width - 17, chip.height), "10.0");
+                }
+                Debug.Log("Boss header text validated: 6 live encounter names/HP values, five-digit HP, rage and 4 status slots.");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(font); }
         }
     }
 }

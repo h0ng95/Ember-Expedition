@@ -87,6 +87,17 @@ namespace Expedition.Presentation
         public static class HudRules
         {
             public static readonly Rect BossPanel = new Rect(337f, 5f, 405f, 66f);
+            public static readonly Rect BossName = new Rect(351f, 7f, 173f, 34f);
+            public static readonly Rect BossHealth = new Rect(598f, 39f, 130f, 26f);
+            public static Rect BossChip(int index) { return new Rect(531f + index * 50f, 12f, 47f, 26f); }
+            public static GUIStyle HeaderText(Font font, int size, TextAnchor alignment, bool bold = false)
+            {
+                // Compact HUD labels must not inherit the skin's padding or wrapping.
+                return new GUIStyle { font = font, fontSize = size, alignment = alignment,
+                    fontStyle = bold ? FontStyle.Bold : FontStyle.Normal, wordWrap = false,
+                    clipping = TextClipping.Clip, padding = new RectOffset(0, 0, 0, 0),
+                    normal = { textColor = ExpeditionUiTheme.Cream } };
+            }
             static readonly Vector2[] DirectLanes = {
                 new Vector2(0f, 0f), new Vector2(-74f, -32f), new Vector2(74f, -32f),
                 new Vector2(-74f, 32f), new Vector2(74f, 32f), new Vector2(0f, -64f)
@@ -175,6 +186,7 @@ namespace Expedition.Presentation
         }
         bool paused, galleryAuto;
         GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
+        GUIStyle bossNameText, bossHealthText, bossBadgeText, bossStatusText;
         Font uiFont;
         Rect viewport;
 
@@ -568,6 +580,10 @@ namespace Expedition.Presentation
             label = new GUIStyle(GUI.skin.label) { fontSize = 17, normal = { textColor = ExpeditionUiTheme.Cream } };
             small = new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = ExpeditionUiTheme.Muted } };
             tiny = new GUIStyle(small) { fontSize = 12 };
+            bossNameText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleLeft, true);
+            bossHealthText = HudRules.HeaderText(uiFont, 14, TextAnchor.MiddleRight);
+            bossBadgeText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleCenter, true);
+            bossStatusText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleLeft, true);
             centered = new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             dotText = new GUIStyle(centered) { fontSize = 13 };
             statusText = new GUIStyle(tiny) { alignment = TextAnchor.MiddleLeft,
@@ -856,12 +872,12 @@ namespace Expedition.Presentation
             {
                 Rect panel = HudRules.BossPanel;
                 ExpeditionUiTheme.PanelBox(panel);
-                GUI.Label(new Rect(351, 8, 195, 29), UnitName(boss), heading);
+                GUI.Label(HudRules.BossName, UnitName(boss), bossNameText);
                 int chip = 0;
                 if (boss.BossEnraged)
                 {
-                    Fill(new Rect(551, 11, 42, 20), new Color(.43f, .13f, .1f));
-                    GUI.Label(new Rect(551, 11, 42, 20), "분노", tiny);
+                    Fill(HudRules.BossChip(chip), new Color(.43f, .13f, .1f));
+                    GUI.Label(HudRules.BossChip(chip), "분노", bossBadgeText);
                     chip++;
                 }
                 if (boss.FrozenRemaining > 0f)
@@ -873,14 +889,14 @@ namespace Expedition.Presentation
                 if (boss.PoisonRemaining > 0f)
                     DrawBossStatusChip(chip++, "독", boss.PoisonRemaining,
                         new Color(.17f, .22f, .08f), new Color(.72f, .96f, .4f));
-                Fill(new Rect(352, 44, 258, 12), new Color(.06f, .07f, .09f));
-                Fill(new Rect(354, 46, 254 * Mathf.Clamp01(boss.Hp / boss.MaxHp), 8),
+                Fill(new Rect(351, 46, 236, 12), new Color(.06f, .07f, .09f));
+                Fill(new Rect(353, 48, 232 * Mathf.Clamp01(boss.Hp / boss.MaxHp), 8),
                     new Color(.9f, .37f, .29f));
                 if (boss.Shield > 0f)
-                    Fill(new Rect(354, 59, 254 * Mathf.Clamp01(boss.Shield / boss.MaxHp), 3),
+                    Fill(new Rect(353, 61, 232 * Mathf.Clamp01(boss.Shield / boss.MaxHp), 3),
                         new Color(.5f, .84f, 1f));
-                GUI.Label(new Rect(619, 38, 115, 27),
-                    boss.Hp.ToString("0") + " / " + boss.MaxHp.ToString("0"), small);
+                GUI.Label(HudRules.BossHealth,
+                    boss.Hp.ToString("0") + " / " + boss.MaxHp.ToString("0"), bossHealthText);
             }
             GUI.Label(new Rect(758, 24, 135, 30), clock.ToString("0.0") + " / 75초", label);
             if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button))
@@ -892,8 +908,8 @@ namespace Expedition.Presentation
         void DrawBossStatusChip(int index, string symbol, float remaining, Color background, Color foreground)
         {
             if (index >= 4) return;
-            DrawStatus(new Rect(551 + index * 45, 11, 42, 20), symbol, remaining,
-                background, foreground);
+            DrawStatus(HudRules.BossChip(index), symbol, remaining,
+                background, foreground, bossStatusText);
         }
 
         static bool IsDimRegionalEnemy(CatalogBattleUnit unit)
@@ -919,10 +935,11 @@ namespace Expedition.Presentation
             GUI.Label(rect, name, dotText);
         }
 
-        void DrawStatus(Rect rect, string name, float remaining, Color background, Color foreground)
+        void DrawStatus(Rect rect, string name, float remaining, Color background, Color foreground,
+            GUIStyle textStyle = null)
         {
             Fill(rect, background);
-            Rect glyph = new Rect(rect.x + 3f, rect.y + 4f, 12f, 12f);
+            Rect glyph = new Rect(rect.x + 3f, rect.center.y - 6f, 12f, 12f);
             if (name == "빙")
             {
                 Fill(new Rect(glyph.x + 5, glyph.y, 2, 12), foreground);
@@ -945,7 +962,7 @@ namespace Expedition.Presentation
             Color prior = GUI.color;
             GUI.color = foreground;
             GUI.Label(new Rect(rect.x + 17f, rect.y, rect.width - 17f, rect.height),
-                (rect.width < 60f ? "" : name) + remaining.ToString("0.0"), statusText);
+                (rect.width < 60f ? "" : name) + remaining.ToString("0.0"), textStyle ?? statusText);
             GUI.color = prior;
         }
 

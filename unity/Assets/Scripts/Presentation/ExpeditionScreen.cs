@@ -986,8 +986,8 @@ namespace Expedition.Presentation
         static readonly HybridGuidance H02Guide = new HybridGuidance("근접 타격·주변 최대 2명 회복(자신 가능)", "전열 근접 회복", "전열 곁 · 먼 후열은 회복 불가");
         static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 이동 둔화", "후열 관통·이동 둔화", "적의 진로가 겹치는 뒤쪽");
         static readonly HybridGuidance H04Guide = new HybridGuidance("범위 내 적에게 화상·둔화·피해", "후열 범위 견제", "뭉친 적을 겨냥하는 뒤쪽");
-        static readonly HybridGuidance H05Guide = new HybridGuidance("자신과 부상자 2명 우선 회복·공격력 강화", "부상자 회복·공격 지원", "아군이 거리 4.5 안에 들어오는 중열");
-        static readonly HybridGuidance H06Guide = new HybridGuidance("표식·5초 안 다음 기본공격 1회 +60%", "후열 단발 공격 지원", "본인 + 거리 3 내 가까운 아군 2명");
+        static readonly HybridGuidance H05Guide = new HybridGuidance("광역 회복·위급한 동료 추가 회복·공격력 강화", "위급한 동료 회복·공격 지원", "아군이 거리 4.5 안에 들어오는 중열");
+        static readonly HybridGuidance H06Guide = new HybridGuidance("표식 사격·5초 안 다음 기본공격 1회 +60%", "후열 지휘 사격·공격 지원", "본인 + 거리 3 내 가까운 아군 2명");
 
         static HybridGuidance HybridGuide(string formId)
         {

@@ -161,17 +161,23 @@ namespace Expedition.Core
                 case "H-05":
                 {
                     float songHeal = EffectivePower(a) * 2.2f;
+                    float rescueHeal = EffectivePower(a);
+                    bool rescued = false;
                     Heal(a, a, songHeal, id);
                     GiveBuff(a, a, CatalogBuffKind.Power, .15f, 4f, id);
                     foreach (CatalogBattleUnit ally in LowestAllies(a, CatalogPreparationPreview.SupportRadius(id), 2, true))
                     {
-                        Heal(a, ally, songHeal, id);
+                        // Preserve the area-support role while bridging a focused damage spike.
+                        bool rescue = !rescued && ally.Hp < ally.MaxHp * .5f;
+                        Heal(a, ally, songHeal + (rescue ? rescueHeal : 0f), id);
+                        if (rescue) rescued = true;
                         GiveBuff(a, ally, CatalogBuffKind.Power, .15f, 4f, id);
                     }
                     break;
                 }
                 case "H-06":
                     Mark(a, target, 5f);
+                    Direct(a, target, 1.6f, id);
                     a.ExtraBasicMultiplier = .6f; a.ExtraBasicUntil = Time + 5f;
                     Emit(CatalogEventKind.Buff, a, a, id, .6f);
                     foreach (CatalogBattleUnit ally in NearbyAllies(a, CatalogPreparationPreview.SupportRadius(id), true, 2))

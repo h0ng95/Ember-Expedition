@@ -216,7 +216,7 @@ namespace Expedition.Presentation
             {
                 string skill = member.FormId.StartsWith("F-", StringComparison.Ordinal) ? member.BranchId : member.FormId;
                 return skill != "B-PR" && skill != "B-BA" && skill != "E-KN-G" && skill != "E-PR-G" &&
-                    skill != "E-PR-H" && skill != "E-BA-G" && skill != "E-BA-A" && skill != "H-05" && skill != "H-06";
+                    skill != "E-PR-H" && skill != "E-BA-G" && skill != "E-BA-A" && skill != "H-05";
             }
             return true;
         }

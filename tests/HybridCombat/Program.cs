@@ -85,9 +85,51 @@ internal static class HybridCombatTests
         Check(singer.Buffs.Any() && injured.Buffs.Any() && critical.Buffs.Any() &&
             !nearby.Buffs.Any() && !outside.Buffs.Any(),
             "The support buff should follow the same two healing targets.");
-        Check(Math.Abs((singer.Hp - selfBefore) - (injured.Hp - injuredBefore)) < .001f &&
+        Check(Math.Abs((injured.Hp - injuredBefore) - Math.Min(injured.MaxHp - injuredBefore, singer.Power * 3.2f)) < .001f &&
             Math.Abs((singer.Hp - selfBefore) - (critical.Hp - criticalBefore)) < .001f,
-            "Self and ally healing should use the same cast-time power before the self buff.");
+            "Only the most injured other ally receives emergency healing, using pre-buff cast power.");
+
+        battle = new CatalogBattle(db);
+        singer = Ally(battle, "singer", "H-05", 0);
+        injured = Ally(battle, "injured", "B-KN", .5f);
+        singer.Hp = 1;
+        injured.Hp = injured.MaxHp * .5f;
+        injuredBefore = injured.Hp;
+        Cast(battle, singer, null, "H-05");
+        Check(Math.Abs(injured.Hp - injuredBefore - singer.Power * 2.2f) < .001f &&
+            Math.Abs(singer.Hp - 1 - singer.Power * 2.2f) < .001f,
+            "Exactly half health does not trigger rescue, and the caster never gets the extra heal.");
+
+        battle = new CatalogBattle(db);
+        singer = Ally(battle, "singer", "H-05", 0);
+        injured = Ally(battle, "injured", "B-KN", .5f);
+        critical = Ally(battle, "critical", "B-KN", 1f);
+        injured.Hp = critical.Hp = 1;
+        Cast(battle, singer, null, "H-05");
+        Check(Math.Abs(injured.Hp - 1 - singer.Power * 3.2f) < .001f &&
+            Math.Abs(critical.Hp - 1 - singer.Power * 2.2f) < .001f,
+            "A tied critical pair receives one extra heal, resolved by distance.");
+
+        battle = new CatalogBattle(db);
+        var commander = Ally(battle, "commander", "H-06", 0);
+        ally = Ally(battle, "friend", "B-AR", -.5f);
+        outside = Ally(battle, "outside", "B-AR", -3.1f);
+        enemy = battle.AddEnemy("enemy", 10000, 1, 0, 100, 1, .001f, false, 1, 0);
+        float shot = 0;
+        battle.Event += e => { if (e.Kind == CatalogEventKind.Damage && e.AbilityId == "H-06") shot += e.Amount; };
+        Cast(battle, commander, enemy, "H-06");
+        Check(Math.Abs(shot - commander.Power * 1.6f) < .001f && enemy.MarkRemaining > 0,
+            "Command performs one marked direct shot at the documented coefficient.");
+        Check(commander.ExtraBasicMultiplier == .6f && ally.ExtraBasicMultiplier == .6f && outside.ExtraBasicMultiplier == 0,
+            "The shot preserves the next-basic support range.");
+
+        battle = new CatalogBattle(db);
+        commander = Ally(battle, "commander", "H-06", 0);
+        ally = Ally(battle, "friend", "B-KN", -.5f); ally.Hp = 1;
+        enemy = battle.AddEnemy("enemy", 10, 1, 0, 100, 1, .001f, false, 1, 0);
+        Cast(battle, commander, enemy, "H-06");
+        Check(!enemy.IsAlive && ally.Hp > 1 && ally.ExtraBasicMultiplier == .6f,
+            "A command kill triggers spoils and still grants the ally follow-up attack.");
 
         battle = new CatalogBattle(db);
         front = Ally(battle, "front", "H-01", 0f);

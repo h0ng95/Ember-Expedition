@@ -51,6 +51,14 @@ namespace Expedition.EditorTools
                     Check(ReferenceEquals(preview, Call(screen, "UnitPreview", run.Roster.Find("ally-01"), null, null)), "uncached preview");
                     string skills = (string)Call(screen, "UnitSkills", preview.Member);
                     string effects = (string)Call(screen, "UnitEffects", preview.Member);
+                    if (form.Id == "H-05")
+                        Check(skills.Contains("50%") && skills.Contains("100%"), "emergency healing condition missing");
+                    if (form.Id == "H-06")
+                    {
+                        Check(skills.Contains("160%") && skills.Contains("60%"), "command shot or follow-up missing");
+                        Check((bool)Call(screen, "EffectCanApply", "spellcraft", preview.Member) &&
+                            (bool)Call(screen, "EffectCanApply", "ember-insight", preview.Member), "command shot research eligibility missing");
+                    }
                     Check(skills.Contains(CatalogUnitInfo.Skill(form.Id)) && effects.Contains(CatalogUnitInfo.Trait(form.InnateTrait)), "missing details");
                     if (form.Id.StartsWith("F-")) Check(skills.Contains(CatalogUnitInfo.Skill(branch)), "final lost branch details");
                     Check(before == JsonUtility.ToJson(run.Capture()), "preview changed save");
@@ -68,9 +76,29 @@ namespace Expedition.EditorTools
                     new[]{"E-FI-E","E-IC-S"}, new[]{"E-PR-H","E-BA-A"}, new[]{"E-AR-T","E-BA-G"} };
                 for (int i = 0; i < pairs.Length; i++)
                     File.WriteAllText("Logs/v041-fixtures/hybrid-" + (i + 1) + ".json", JsonUtility.ToJson(Fixture(db, pairs[i][0], pairs[i][0], pairs[i][1]).Capture()));
+                Directory.CreateDirectory("Logs/v043-fixtures");
+                foreach (string hybrid in new[] { "H-05", "H-06" })
+                {
+                    var run = ExpeditionRun.New(db, 43003, researchBaselineBestWave: 0);
+                    while (run.Wave < 10) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
+                    var state = run.Capture();
+                    state.Roster.Members[0].FormId = "F-KN";
+                    state.Roster.Members[0].BranchId = "E-KN-G";
+                    state.Roster.Members[0].Growth = 6;
+                    state.Roster.Members[1].FormId = hybrid;
+                    state.Roster.Members[1].BranchId = null;
+                    state.Roster.Members[1].Growth = 0;
+                    state.Roster.Members[1].X = -2.4f; state.Roster.Members[1].Y = -.4f;
+                    state.Roster.Members[2].FormId = "F-PR";
+                    state.Roster.Members[2].BranchId = "E-PR-H";
+                    state.Roster.Members[2].Growth = 6;
+                    // QA checkpoint only: not an acquisition or balance result.
+                    File.WriteAllText("Logs/v043-fixtures/" + hybrid + ".json", JsonUtility.ToJson(ExpeditionRun.Restore(db, state).Capture()));
+                }
                 Debug.Log("PASS: Unity unit information, " + checks + " assertions; QA checkpoints exported (simulated victories, not balance evidence).");
             }
             finally { UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(font); }
+            BattleReadabilityValidation.Validate();
             PrototypeSetup.BuildAndroid();
         }
     }

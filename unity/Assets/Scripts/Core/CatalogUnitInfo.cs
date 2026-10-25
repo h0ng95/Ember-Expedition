@@ -61,8 +61,8 @@ namespace Expedition.Core
                 case "H-02": return "근접 타격 후 주변 부상자 회복";
                 case "H-03": return "최대 3명 관통 · 이동 둔화";
                 case "H-04": return "화상과 둔화를 함께 부여하는 범위 공격";
-                case "H-05": return "자신과 부상자 2명 회복 · 공격력 강화";
-                case "H-06": return "표식 · 자신과 동료의 다음 기본 공격 강화";
+                case "H-05": return "광역 회복 · 위급한 동료 추가 회복 · 공격 지원";
+                case "H-06": return "지휘 사격 · 표식 · 다음 기본 공격 강화";
                 default: return Role(id);
             }
         }
@@ -100,8 +100,8 @@ namespace Expedition.Core
                 case "H-02": text = "단일 적에게 위력 160% 피해. 거리 2.5 안의 부상자 최대 2명을 위력 180% 회복, 자신 포함."; break;
                 case "H-03": text = "사거리 안 직선 경로의 적 최대 3명에게 위력 200% 피해 · 이동 속도 30% 감소, 3초."; break;
                 case "H-04": text = "반경 1.5 안의 적 최대 4명에게 화상, 이동 속도 30% 감소(3초), 위력 200% 피해 순으로 적용."; break;
-                case "H-05": text = "자신과 거리 4.5 안의 부상자 최대 2명 위력 220% 회복 · 공격력 +15%, 4초."; break;
-                case "H-06": text = "적에게 표식 5초. 자신과 거리 3 안의 가까운 아군 2명의 다음 기본 공격 1회 +60%, 5초 안에 사용."; break;
+                case "H-05": text = "자신과 거리 4.5 안의 부상자 최대 2명 위력 220% 회복 · 공격력 +15%, 4초. 회복 전 체력 50% 미만인 동료 중 가장 위급한 1명은 위력 100% 추가 회복(자신 제외)."; break;
+                case "H-06": text = "적에게 표식(5초)을 부여하고 위력 160% 사격. 자신과 거리 3 안의 가까운 아군 2명의 다음 기본 공격 1회 +60%, 5초 안에 사용."; break;
                 default: throw new ArgumentException("Unknown ally skill: " + id);
             }
             return "재사용 " + CatalogBattle.SkillCooldown(id).ToString("0") + "초\n" + text;

@@ -1,0 +1,268 @@
+{
+  "baselineCommit": "5ca7d21",
+  "casesPerVersion": 2112,
+  "battlesPerVersion": 6336,
+  "paired": [
+    {
+      "hybrid": "H-05",
+      "cases": 1056,
+      "separate": {
+        "wins": 315,
+        "meanOpeningDps": 153.9861,
+        "meanHealing": 396.9417,
+        "meanProtection": 934.9575,
+        "meanOpeningCommonHealth": 0.7707,
+        "meanSurvivors": 1.1402,
+        "meanRemainingHpFraction": 0.1646,
+        "meanWinSeconds": 38.5964
+      },
+      "beforeFour": {
+        "wins": 220,
+        "meanOpeningDps": 148.2635,
+        "meanHealing": 652.9646,
+        "meanProtection": 821.0293,
+        "meanOpeningCommonHealth": 0.7921,
+        "meanSurvivors": 0.7386,
+        "meanRemainingHpFraction": 0.1478,
+        "meanWinSeconds": 43.8424
+      },
+      "afterFour": {
+        "wins": 284,
+        "meanOpeningDps": 149.0897,
+        "meanHealing": 744.8848,
+        "meanProtection": 845.4998,
+        "meanOpeningCommonHealth": 0.7995,
+        "meanSurvivors": 0.9129,
+        "meanRemainingHpFraction": 0.1783,
+        "meanWinSeconds": 45.0932
+      },
+      "beforeRefilled": {
+        "wins": 404,
+        "meanOpeningDps": 157.6018,
+        "meanHealing": 667.2029,
+        "meanProtection": 885.9142,
+        "meanOpeningCommonHealth": 0.7901,
+        "meanSurvivors": 1.375,
+        "meanRemainingHpFraction": 0.2154,
+        "meanWinSeconds": 42.1705
+      },
+      "afterRefilled": {
+        "wins": 436,
+        "meanOpeningDps": 158.4518,
+        "meanHealing": 755.0974,
+        "meanProtection": 928.0104,
+        "meanOpeningCommonHealth": 0.7952,
+        "meanSurvivors": 1.572,
+        "meanRemainingHpFraction": 0.2436,
+        "meanWinSeconds": 42.6289
+      },
+      "beforeLostWinningMatch": 75,
+      "afterLostWinningMatch": 74,
+      "afterGainedWinningMatch": 195,
+      "fresh": {
+        "cases": 528,
+        "separate": 103,
+        "before": 148,
+        "after": 168
+      }
+    },
+    {
+      "hybrid": "H-06",
+      "cases": 1056,
+      "separate": {
+        "wins": 290,
+        "meanOpeningDps": 158.2117,
+        "meanHealing": 557.0375,
+        "meanProtection": 799.6104,
+        "meanOpeningCommonHealth": 0.7839,
+        "meanSurvivors": 1.1875,
+        "meanRemainingHpFraction": 0.1704,
+        "meanWinSeconds": 38.1263
+      },
+      "beforeFour": {
+        "wins": 160,
+        "meanOpeningDps": 149.4383,
+        "meanHealing": 526.0565,
+        "meanProtection": 579.2431,
+        "meanOpeningCommonHealth": 0.756,
+        "meanSurvivors": 0.6098,
+        "meanRemainingHpFraction": 0.1093,
+        "meanWinSeconds": 39.2917
+      },
+      "afterFour": {
+        "wins": 204,
+        "meanOpeningDps": 159.0652,
+        "meanHealing": 523.3321,
+        "meanProtection": 576.6116,
+        "meanOpeningCommonHealth": 0.758,
+        "meanSurvivors": 0.697,
+        "meanRemainingHpFraction": 0.1216,
+        "meanWinSeconds": 37.2269
+      },
+      "beforeRefilled": {
+        "wins": 308,
+        "meanOpeningDps": 168.2131,
+        "meanHealing": 543.4367,
+        "meanProtection": 604.3689,
+        "meanOpeningCommonHealth": 0.765,
+        "meanSurvivors": 1.125,
+        "meanRemainingHpFraction": 0.1686,
+        "meanWinSeconds": 33.0051
+      },
+      "afterRefilled": {
+        "wins": 408,
+        "meanOpeningDps": 178.1241,
+        "meanHealing": 537.4967,
+        "meanProtection": 599.8023,
+        "meanOpeningCommonHealth": 0.769,
+        "meanSurvivors": 1.3409,
+        "meanRemainingHpFraction": 0.2044,
+        "meanWinSeconds": 31.8412
+      },
+      "beforeLostWinningMatch": 66,
+      "afterLostWinningMatch": 49,
+      "afterGainedWinningMatch": 167,
+      "fresh": {
+        "cases": 528,
+        "separate": 108,
+        "before": 76,
+        "after": 116
+      }
+    }
+  ],
+  "journeys": [
+    {
+      "hybrid": "H-05",
+      "account": "fresh",
+      "runs": 64,
+      "beforeComplete": 9,
+      "afterComplete": 10,
+      "policies": [
+        {
+          "spending": "none",
+          "before": 4,
+          "after": 4,
+          "acquired": 14
+        },
+        {
+          "spending": "early",
+          "before": 0,
+          "after": 0,
+          "acquired": 9
+        },
+        {
+          "spending": "delayed",
+          "before": 3,
+          "after": 4,
+          "acquired": 14
+        },
+        {
+          "spending": "selective",
+          "before": 2,
+          "after": 2,
+          "acquired": 12
+        }
+      ]
+    },
+    {
+      "hybrid": "H-05",
+      "account": "researched",
+      "runs": 64,
+      "beforeComplete": 21,
+      "afterComplete": 30,
+      "policies": [
+        {
+          "spending": "none",
+          "before": 4,
+          "after": 11,
+          "acquired": 15
+        },
+        {
+          "spending": "early",
+          "before": 3,
+          "after": 3,
+          "acquired": 12
+        },
+        {
+          "spending": "delayed",
+          "before": 4,
+          "after": 4,
+          "acquired": 15
+        },
+        {
+          "spending": "selective",
+          "before": 10,
+          "after": 12,
+          "acquired": 14
+        }
+      ]
+    },
+    {
+      "hybrid": "H-06",
+      "account": "fresh",
+      "runs": 64,
+      "beforeComplete": 7,
+      "afterComplete": 21,
+      "policies": [
+        {
+          "spending": "none",
+          "before": 0,
+          "after": 1,
+          "acquired": 16
+        },
+        {
+          "spending": "early",
+          "before": 1,
+          "after": 1,
+          "acquired": 15
+        },
+        {
+          "spending": "delayed",
+          "before": 3,
+          "after": 11,
+          "acquired": 16
+        },
+        {
+          "spending": "selective",
+          "before": 3,
+          "after": 8,
+          "acquired": 16
+        }
+      ]
+    },
+    {
+      "hybrid": "H-06",
+      "account": "researched",
+      "runs": 64,
+      "beforeComplete": 24,
+      "afterComplete": 40,
+      "policies": [
+        {
+          "spending": "none",
+          "before": 2,
+          "after": 9,
+          "acquired": 16
+        },
+        {
+          "spending": "early",
+          "before": 2,
+          "after": 6,
+          "acquired": 15
+        },
+        {
+          "spending": "delayed",
+          "before": 7,
+          "after": 11,
+          "acquired": 16
+        },
+        {
+          "spending": "selective",
+          "before": 13,
+          "after": 14,
+          "acquired": 16
+        }
+      ]
+    }
+  ],
+  "limitations": "Controlled equal-investment encounter snapshots, not acquisition or human win rates. Reserve is already owned in all arms. Opening metrics stop at min(20s, battle end). Damage includes absorbed shields, excludes overkill; healing is effective HP restored."
+}

@@ -1,0 +1,10 @@
+Tool: built-in image_gen
+Edit target: unity/Assets/Resources/Art/Branding/ignis-splash-v1.png
+Character reference: unity/Assets/Resources/Art/Units/v010/B-KN.png
+
+Use case: precise-object-edit.
+Asset type: landscape pixel-art splash background for our original medieval mobile game.
+Input image 1 is the EDIT TARGET: existing night landscape, castle, moon, campfire and seated dark-armored knight. Input image 2 is the CHARACTER IDENTITY REFERENCE: our actual playable base-knight sprite sheet B-KN, showing the same knight in many animation frames. Use ONLY ONE knight from the sheet as identity guidance, never paste the sheet.
+Primary request: Replace ONLY the seated knight and his personal sword/equipment in image 1 with a resting seated version of the base knight from image 2. Keep the knight beside the campfire at the SAME location and approximately the same overall footprint (right side, center near 80% x and 58% y). Preserve the short, stout/chibi anatomy and identifiable design from reference 2: rounded ivory/cream and gold armor, round gold helmet with dark vertical visor, navy/teal blue plume, teal tabard, round teal-blue shield with gold rim, gold central boss and four small gold diamond ornaments, short straight pale sword. Set the round shield leaning by him or held resting near his knees. No red scarf and no black armored redesign. His feet and equipment must rest naturally on the ledge. Integrate warm fire lighting and cool moon shadows without hiding his blue and ivory colors.
+Style: match image 1's crisp pixel art and scene lighting, while preserving reference 2's character identity and proportions.
+Strict invariants: leave the castle, moon, clouds, mountains, ruined arch, lantern, vegetation, foreground ledge, fire size and position, entire left title area and bottom loading area unchanged. Keep the camera, landscape aspect ratio and composition. No additional characters, no text, no UI, no logo, no watermark. This is a small localized character correction, not a new scene.

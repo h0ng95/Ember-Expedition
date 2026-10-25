@@ -76,23 +76,6 @@ namespace Expedition.Presentation
             Screen.orientation = ScreenOrientation.LandscapeLeft;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
-            try
-            {
-                TextAsset content = Resources.Load<TextAsset>("Content/unit-catalog-v010");
-                if (content == null) throw new InvalidOperationException("동료 자료를 찾을 수 없습니다.");
-                database = CatalogDatabase.FromJson(content.text);
-                battlefield = Resources.Load<Texture2D>("Art/forest-battlefield");
-                outpost = Resources.Load<Texture2D>("Art/ruined-outpost-battlefield");
-                furnace = Resources.Load<Texture2D>("Art/Environments/v024/furnace-battlefield");
-                frost = Resources.Load<Texture2D>("Art/Environments/v029/frost-battlefield");
-                garden = Resources.Load<Texture2D>("Art/Environments/v030/garden-battlefield");
-                palace = Resources.Load<Texture2D>("Art/Environments/v031/palace-battlefield");
-                LoadJournal();
-                LoadProgress();
-                LoadSave();
-                LoadTutorial();
-            }
-            catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
             backgroundCamera = GetComponent<Camera>();
             if (backgroundCamera == null) backgroundCamera = gameObject.AddComponent<Camera>();
             backgroundCamera.clearFlags = CameraClearFlags.SolidColor;
@@ -101,7 +84,8 @@ namespace Expedition.Presentation
             backgroundCamera.depth = -10;
         }
 
-        void OnEnable() { if (art == null) art = new CatalogArtView(); }
+        void Start() { BeginStartup(); }
+        void OnEnable() { if (startupReady && art == null) art = new CatalogArtView(); }
         void OnDisable() { CancelPointer(); if (art != null) { art.Dispose(); art = null; } }
         void OnDestroy()
         {
@@ -140,7 +124,7 @@ namespace Expedition.Presentation
 
         void Save()
         {
-            if (run == null || badSave) return;
+            if (!startupReady || run == null || badSave) return;
             try
             {
                 PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(run.Capture()));
@@ -217,6 +201,7 @@ namespace Expedition.Presentation
 
         void NewRun()
         {
+            if (!startupReady) return;
             try
             {
                 ObserveProgress();
@@ -281,6 +266,12 @@ namespace Expedition.Presentation
             EnsureStyles();
             GUI.matrix = Matrix4x4.TRS(new Vector3(viewport.x, viewport.y), Quaternion.identity,
                 new Vector3(scale, scale, 1f));
+            if (!startupReady)
+            {
+                DrawStartup();
+                GUI.matrix = Matrix4x4.identity;
+                return;
+            }
             FilterTutorialGuiEvent();
             Fill(new Rect(0, 0, Width, Height), Background);
             GUI.enabled = modal == Modal.None;
@@ -1294,7 +1285,7 @@ namespace Expedition.Presentation
 
         void Update()
         {
-            if (home || run == null || run.Phase != ExpeditionPhase.Preparation ||
+            if (!startupReady || home || run == null || run.Phase != ExpeditionPhase.Preparation ||
                 modal != Modal.None || viewport.width <= 0) { CancelPointer(); return; }
             bool down = false, held = false, up = false, canceled = false;
             Vector2 screen;

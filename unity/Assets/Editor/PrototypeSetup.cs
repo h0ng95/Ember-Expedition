@@ -44,6 +44,7 @@ namespace Expedition.EditorTools
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
             PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
             AppIconSetup.Configure();
+            StartupArtSetup.Configure();
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.OpenGLES3 });
             PlayerSettings.colorSpace = ColorSpace.Gamma;
@@ -125,7 +126,13 @@ namespace Expedition.EditorTools
         {
             if (!assetPath.StartsWith("Assets/Resources/Art/", StringComparison.Ordinal)) return;
             var importer = (TextureImporter)assetImporter;
-            importer.textureType = TextureImporterType.Default;
+            bool startup = assetPath == StartupArtSetup.ImagePath;
+            importer.textureType = startup ? TextureImporterType.Sprite : TextureImporterType.Default;
+            if (startup)
+            {
+                importer.textureShape = TextureImporterShape.Texture2D;
+                importer.spriteImportMode = SpriteImportMode.Single;
+            }
             importer.filterMode = FilterMode.Point;
             importer.wrapMode = TextureWrapMode.Clamp;
             importer.npotScale = TextureImporterNPOTScale.None;

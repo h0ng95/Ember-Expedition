@@ -1,0 +1,11 @@
+Built-in image_gen. Original generated background, 2026-10-25.
+Project asset: unity/Assets/Resources/Art/Branding/ignis-splash-v1.png
+No existing franchise character or logo was supplied as a reference.
+
+Use case: stylized-concept.
+Asset type: production background painting for a landscape pixel-art Android game startup/loading screen, IGNIS: ASHEN OATH.
+Create an original medieval dark-fantasy pixel-art vista, 16:9 landscape composition, preferably 1920 by 1080. Crisp intentional square pixel clusters, limited rich palette, 1990s premium 16-bit RPG title-screen craftsmanship, no photorealism, no painterly smooth brushes, no 3D.
+Nightfall over an abandoned kingdom. Small broken stone arch and far ruined castle silhouettes in blue haze. On the RIGHT HALF around x=72%, y=58%, a small weary knight in charcoal armor with restrained antique-gold trim and a red scarf rests beside a small orange campfire and an ember lantern. The character should occupy only about 18% image height, firmly seated on a grassy stone ledge. A sheathed sword leans beside the knight. Tiny warm embers rise over the fire. This is an original character without any existing franchise design.
+LEFT HALF upper and middle (x=8% to 49%, y=14% to 64%) should be beautifully quiet dark indigo atmospheric sky and low contrast haze with minimal detail, reserved for a large readable title to be added by code. The BOTTOM 22% should be mostly dark blue-black foreground with low detail and subtle pixel rocks, reserved for a centered loading bar and two lines of loading status to be added by code. Keep important subjects away from extreme edges for mobile safe areas.
+Palette: midnight navy, muted blue slate and desaturated pine, warm amber orange fire, ivory highlights, worn gold and deep red scarf. Luminous fire has clean stepped pixel lighting, not blurry bloom. Strong silhouette and depth, calm anticipation before an expedition. Atmospheric but readable on a low-end phone.
+Absolutely NO text, NO letters, NO logo, NO UI, NO progress bar, NO watermark, NO border. One final full-bleed background image only.

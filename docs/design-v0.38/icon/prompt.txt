@@ -1,0 +1,12 @@
+Generated using built-in image_gen.
+Edit target: unity/Assets/Art/Branding/ignis-app-icon.png (original dark knight icon)
+Identity reference: unity/Assets/Resources/Art/Branding/ignis-splash-v1.png (approved mature knight)
+Final destination: unity/Assets/Art/Branding/ignis-app-icon.png
+The user requested replacing the app icon to match the revised splash character.
+
+Use case: precise-object-edit.
+Asset type: final square Android game app icon for IGNIS: ASHEN OATH.
+Input 1 is the existing app icon to redesign. Input 2 is the approved splash illustration and authoritative CHARACTER IDENTITY and tone reference; use the seated knight at the right as the same character for the new icon.
+Primary request: replace the old charcoal helmet with fire crest and red scarf with a close-up portrait of the approved splash knight. Keep the strong single-knight three-quarter portrait composition, navy background and restrained warm ember backlight of input 1. Match input 2's more lifelike mature knight, grounded heavy armor, refined steel material and quiet serious tone. Transfer the rounded steel helmet with antique-gold visor/edges, vertical dark visor openings, navy-blue flowing plume and deep teal/navy cloth around the neck. Keep realistic armor shape and joints, natural human proportions. The navy plume and gold visor are key recognizable features and must remain readable at small icon sizes. No red cloth, no fire emblem on forehead, no crown or extra horns. No shield or weapon across the face; head and upper shoulders only.
+Rendering: polished cinematic PIXEL ART with controlled crisp clusters and convincing metal lighting, not a cartoon toy, not chibi, not a smooth 3D render, not a photograph. Warm fire rim on one side, cool dark blue shadows on the other, gold visor brightest focal point. Simplify tiny decoration for 48px legibility.
+Composition: true square 1024x1024 image. Center the helmet and plume inside the central 68% safe region so round and rounded-square launcher masks do not cut the important silhouette. Shoulders may bleed off the bottom. Face clearly readable at 48px. Dark full-bleed opaque navy background, subtle warm glow immediately behind head, no scene, no specks cluttering the outline. Do not bake rounded corners or borders. No letters, text, logo, watermark or mockup. One finished icon only.

@@ -1,0 +1,6 @@
+Tool: built-in image_gen
+Edit target: original splash source exec-17186520-3bf5-443c-ae6b-dfeff130b1c9.png
+Character feature reference: unity/Assets/Resources/Art/Units/v010/B-KN.png
+Output destination: unity/Assets/Resources/Art/Branding/ignis-splash-v1.png
+
+undefined

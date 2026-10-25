@@ -18,6 +18,9 @@ internal static class EndToEndBalanceProbe
         public string[] tactics, actions;
         public double allyHpFraction, damage, heal, hybridDamage, hybridHeal, hybridProtected;
         public int hybridSkills;
+        public string firstAllyDefeated;
+        public Dictionary<string, double> incomingBySource, incomingByTarget, outgoingBySource,
+            healingBySource, protectedBySource;
     }
 
     sealed class SeedResult
@@ -84,6 +87,14 @@ internal static class EndToEndBalanceProbe
         }
     }
 
+    static void AddDamage(Dictionary<string, double> totals, string id, double amount)
+    {
+        if (id == null) return;
+        double previous;
+        totals.TryGetValue(id, out previous);
+        totals[id] = previous + amount;
+    }
+
     static SeedResult Simulate(CatalogDatabase db, int seed,
         HybridBalanceProbe.Policy policy, string spending, string account)
     {
@@ -116,11 +127,39 @@ internal static class EndToEndBalanceProbe
                 formation = formation, gold = run.Gold,
                 supply = run.Roster.SupplyUsed, deployed = run.DeployedIds.Count,
                 party = HybridBalanceProbe.Party(run), actions = actions.ToArray(),
-                tactics = run.TacticIds.ToArray() };
+                tactics = run.TacticIds.ToArray(),
+                incomingBySource = new Dictionary<string, double>(),
+                incomingByTarget = new Dictionary<string, double>(),
+                outgoingBySource = new Dictionary<string, double>(),
+                healingBySource = new Dictionary<string, double>(),
+                protectedBySource = new Dictionary<string, double>() };
             bool hasHybrid = run.DeployedIds.Any(id => run.Roster.Find(id).FormId == policy.Id);
             var battle = run.BeginBattle();
             if (battle == null) throw new InvalidOperationException("Legal battle could not begin.");
             battle.Event += e => {
+                if (run.Wave >= 23 && e.Kind == CatalogEventKind.Damage)
+                {
+                    if (e.SourceId != null && e.TargetId != null &&
+                        e.SourceId.StartsWith("ally-", StringComparison.Ordinal))
+                        AddDamage(attempt.outgoingBySource, e.SourceId, e.Amount);
+                    else if (e.SourceId != null && e.TargetId != null &&
+                        e.TargetId.StartsWith("ally-", StringComparison.Ordinal))
+                    {
+                        AddDamage(attempt.incomingBySource, e.SourceId, e.Amount);
+                        AddDamage(attempt.incomingByTarget, e.TargetId, e.Amount);
+                    }
+                }
+                if (run.Wave >= 23 && e.Kind == CatalogEventKind.Defeated &&
+                    e.TargetId != null && e.TargetId.StartsWith("ally-", StringComparison.Ordinal) &&
+                    attempt.firstAllyDefeated == null) attempt.firstAllyDefeated = e.TargetId;
+                if (run.Wave >= 23 && e.SourceId != null &&
+                    e.SourceId.StartsWith("ally-", StringComparison.Ordinal))
+                {
+                    if (e.Kind == CatalogEventKind.Heal)
+                        AddDamage(attempt.healingBySource, e.SourceId, e.Amount);
+                    if (e.Kind == CatalogEventKind.ShieldBlocked)
+                        AddDamage(attempt.protectedBySource, e.SourceId, e.Amount);
+                }
                 if (e.SourceId == null || !e.SourceId.StartsWith("ally-", StringComparison.Ordinal)) return;
                 if (e.Kind == CatalogEventKind.Damage) attempt.damage += e.Amount;
                 if (e.Kind == CatalogEventKind.Heal) attempt.heal += e.Amount;

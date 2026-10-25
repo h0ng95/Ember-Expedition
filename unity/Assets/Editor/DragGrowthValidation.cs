@@ -23,6 +23,8 @@ namespace Expedition.EditorTools
         { return typeof(ExpeditionScreen).GetField(field, Private).GetValue(screen); }
         static void Call(ExpeditionScreen screen, string method, params object[] args)
         { typeof(ExpeditionScreen).GetMethod(method, Private).Invoke(screen, args); }
+        static object Read(ExpeditionScreen screen, string method, params object[] args)
+        { return typeof(ExpeditionScreen).GetMethod(method, Private).Invoke(screen, args); }
         static void Point(ExpeditionScreen screen, Vector2 point, bool down, bool held, bool up, float now)
         { Call(screen, "ProcessPointer", point, down, held, up, now); }
         static Vector2 Target(ExpeditionRun run, string id)
@@ -47,6 +49,58 @@ namespace Expedition.EditorTools
             var field = typeof(ExpeditionScreen).GetField("modal", Private);
             field.SetValue(screen, Enum.ToObject(field.FieldType, 0));
         }
+        static void Tap(ExpeditionScreen screen, Vector2 point)
+        {
+            Point(screen, point, true, true, false, 0);
+            Point(screen, point, false, false, true, .1f);
+        }
+        static string Snapshot(ExpeditionRun run) { return JsonUtility.ToJson(run.Capture()); }
+        static void ValidatePreparationSelection(ExpeditionScreen screen, CatalogDatabase database)
+        {
+            var run = ExpeditionRun.New(database, 35001);
+            Attach(screen, run);
+            Call(screen, "SelectPreparation", new object[] { null });
+            string before = Snapshot(run);
+            Tap(screen, Target(run, "ally-01"));
+            Check((string)Get(screen, "preparationSelectionId") == "ally-01" &&
+                Get(screen, "modal").ToString() == "None" && Snapshot(run) == before,
+                "first field tap selects a read-only range preview");
+            Tap(screen, Target(run, "ally-01"));
+            Check(Get(screen, "modal").ToString() == "Detail" && (string)Get(screen, "selectedId") == "ally-01",
+                "second tap of the selected field member opens details");
+            Attach(screen, run);
+            Tap(screen, Target(run, "ally-02"));
+            Check((string)Get(screen, "preparationSelectionId") == "ally-02" &&
+                Get(screen, "modal").ToString() == "None", "another field member changes selection without opening details");
+
+            CatalogMember priest = run.Roster.Find("ally-03"), knight = run.Roster.Find("ally-01");
+            var support = CatalogPreparationPreview.ForSkill("B-PR");
+            Point(screen, Target(run, priest.Id), true, true, false, 0);
+            Point(screen, new Vector2(-500, 1000), false, true, false, .1f);
+            Check((string)Get(screen, "preparationSelectionId") == priest.Id,
+                "drag threshold selects the newly dragged field member");
+            Vector2 projected = (Vector2)Read(screen, "PreparationPosition", priest);
+            Check(Mathf.Abs(projected.x + 6.2f) < .0001f && Mathf.Abs(projected.y + 2.5f) < .0001f &&
+                Snapshot(run) == before, "drag projection clamps to legal placement without changing the save or Undo");
+            Check(!(bool)Read(screen, "IsSupportCandidate", priest, knight, support),
+                "dragging support out of reach immediately removes its candidate");
+            Point(screen, new Vector2(455, 335), false, true, false, .2f);
+            Check((bool)Read(screen, "IsSupportCandidate", priest, knight, support) && Snapshot(run) == before,
+                "dragging support back into reach updates candidates without committing movement");
+            Call(screen, "CancelPointer");
+            Point(screen, new Vector2(455, 335), false, false, true, .8f);
+            projected = (Vector2)Read(screen, "PreparationPosition", priest);
+            Check(projected == new Vector2(priest.X, priest.Y) && Snapshot(run) == before && !run.CanUndo,
+                "canceled preview and later release restore saved coordinates without a growth or move");
+
+            var next = ExpeditionRun.New(database, 35002);
+            Attach(screen, next);
+            // Deliberately tap before an OnGUI pass: reused ally IDs must not retain old-run selection.
+            Tap(screen, Target(next, "ally-03"));
+            Check((string)Get(screen, "preparationSelectionId") == "ally-03" &&
+                Get(screen, "modal").ToString() == "None" && ReferenceEquals(Read(screen, "PreparationSelection"), next.Roster.Find("ally-03")),
+                "new run clears stale selection even before drawing the first frame");
+        }
         public static void Validate()
         {
             assertions = 0;
@@ -59,6 +113,7 @@ namespace Expedition.EditorTools
                 var database = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
                 var screen = go.AddComponent<ExpeditionScreen>();
                 Set(screen, "database", database);
+                ValidatePreparationSelection(screen, database);
                 var run = ExpeditionRun.New(database, 72);
                 string donor = run.Summon();
                 Attach(screen, run);

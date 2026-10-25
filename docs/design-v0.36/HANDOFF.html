@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.36 · 첫 원정 조작 안내</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>v0.36 · 첫 원정 조작 안내</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 안내 순서</a>
+<a href="#section-2">2. 표시와 저장</a>
+<a href="#section-3">3. 범위</a>
+<a href="#section-4">4. 검증</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-25 · IGNIS: ASHEN OATH</p>
+<p>처음 플레이할 때 실제 1·2전투에서 눌러야 할 버튼과 조작 대상을 강조한다. <strong>안내 대상과 설명을 밝게 남기고 나머지 화면을 어둡게 덮는 스포트라이트 방식</strong>이다. 실제 원정을 진행하며 소환·출전 배치·범위 확인을 배운다.</p>
+<h2 id="section-1">1. 안내 순서</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>구간</th>
+<th>안내</th>
+<th>플레이어가 하는 일</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>첫 전투</td>
+<td>동료 소환</td>
+<td>강조된 소환 버튼으로 동료를 얻는다.</td>
+</tr>
+<tr>
+<td>첫 전투</td>
+<td>출전 배치</td>
+<td>대기석의 동료를 전장 빈 곳으로 끌어놓는다.</td>
+</tr>
+<tr>
+<td>첫 전투</td>
+<td>전투 시작</td>
+<td>출전한 동료로 자동 전투를 시작한다.</td>
+</tr>
+<tr>
+<td>두 번째 전투</td>
+<td>동료 선택</td>
+<td>전장에 있는 동료를 눌러 사거리와 지원 범위를 본다.</td>
+</tr>
+<tr>
+<td>두 번째 전투</td>
+<td>범위 확인</td>
+<td>금색 기본 사거리와 청록색 지원 범례를 확인한다.</td>
+</tr>
+<tr>
+<td>두 번째 전투</td>
+<td>전투 시작</td>
+<td>필요하면 위치를 조정한 뒤 다음 전투를 시작한다.</td>
+</tr>
+</tbody></table></div>
+<p>한 번에 한 가지 행동을 보여준다. 안내 중에는 대상과 안내 카드의 조작을 받으며, 어두운 곳을 잘못 눌러 다른 행동이 실행되지 않도록 한다. <code>건너뛰기</code>를 누르면 자유롭게 조작할 수 있다. 이미 행동했거나 현재 편성에서 수행할 수 없는 단계는 상태에 맞게 안내한다.</p>
+<p>소환·시작 단계는 해당 버튼을, 배치 단계는 대기 동료와 놓을 위치를 밝게 남긴다. 동료를 끌 때도 드래그 중인 모습이 가려지지 않는다. 설명과 다음·건너뛰기 버튼은 어두운 화면 위의 별도 카드에 표시한다.</p>
+<p><img src="screenshots/first-summon.png" alt="첫 전투의 소환 버튼 강조"></p>
+<p><img src="screenshots/first-deploy.png" alt="대기석에서 빈 배치 지점으로 이어지는 점선"></p>
+<p><img src="screenshots/first-start.png" alt="배치 후 전투 시작 버튼으로 강조 이동"></p>
+<p><img src="screenshots/second-select.png" alt="두 번째 전투의 동료 선택 안내"></p>
+<p><img src="screenshots/second-range.png" alt="동료를 선택한 뒤 기본 사거리와 지원 범위 확인"></p>
+<h2 id="section-2">2. 표시와 저장</h2>
+<ul>
+<li>기존에 플레이한 계정에는 자동 안내를 강제로 표시하지 않는다.</li>
+<li><code>건너뛰기</code>는 현재 전투의 안내를 닫는다. 1전투 안내를 건너뛰어도 2전투 안내는 남아 있다.</li>
+<li>전장 제목 옆 <code>조작 안내</code>로 다시 볼 수 있다. 1·2전투는 현재 상태에 맞는 단계부터, 3전투 이후는 현재 동료의 범위 확인 안내만 표시한다. 안내를 다시 열어도 원정을 초기화하지 않는다.</li>
+<li>진행 중인 원정과 별도의 안내 상태를 저장한다.</li>
+<li>소환은 기존처럼 실제 골드와 난수를 사용한다. 안내용 무료 동료나 확정 결과를 추가하지 않는다.</li>
+<li>게임의 원정 저장 형식, 유닛 능력치와 전투 난도는 변경하지 않는다.</li>
+</ul>
+<h2 id="section-3">3. 범위</h2>
+<p>이번 안내는 첫 조작을 익히는 데 집중한다. 성장·진화·결합·전술 트리의 모든 규칙을 첫 화면에서 설명하지 않는다. 이후 처음 해당 선택을 할 때 필요한 안내를 추가할 수 있다.</p>
+<p>초보자 첫 완주까지 걸리는 시간은 아직 실측하지 않았다. 이 안내를 적용한 실제 신규 플레이에서 소환·배치에 머무는 시간, 안내 건너뛰기, 첫 패배 구간을 확인한 뒤 난도를 판단한다.</p>
+<h2 id="section-4">4. 검증</h2>
+<ul>
+<li>Unity Editor 안내·스포트라이트 검사 55개 통과: 신규·기존 계정, 안내 저장 값, 소환 후 상태, 재화 부족, 출전 정원, 건너뛰기와 다시 보기, 원정 데이터 불변, 겹친 강조 구역의 마스크 면적과 입력 허용 범위 검사.</li>
+<li>기존 Unity 저장 마이그레이션 340개, 드래그·범위 입력 검사 26개, 전장 가림 검사 18개 통과.</li>
+<li>독립 코드 검토에서 발견한 배치 안내 좌표의 실제 드롭 범위 불일치를 수정했다. 안내 지점은 실제 드롭 후 좌표가 바뀌지 않는 범위에서, 동료가 점유하지 않은 곳을 찾는다.</li>
+<li>스포트라이트 추가 검토에서 거점 입력 차단, 밝은 배치 구역 가장자리의 성장 오동작, 버튼 밖에서 놓았을 때 입력 상태가 남을 수 있는 경로를 수정했다.</li>
+</ul>
+<p>Galaxy Buddy2 실기기 확인:</p>
+<ul>
+<li>기존 원정·성과가 있는 계정은 2전투 준비 화면에서도 자동 안내가 나타나지 않았다.</li>
+<li>임시 신규 계정은 1전투 소환 안내부터 시작했다. 실제 20G를 사용해 무작위 동료를 대기석에 얻었다.</li>
+<li>소환 직후 강제 종료·재실행 후에도 같은 동료와 20G가 유지되었고, 배치 안내부터 이어졌다.</li>
+<li>표시된 빈자리로 드래그하면 출전 인원이 3명에서 4명으로 바뀌고 전투 시작 안내로 전환되었다.</li>
+<li>실제 1전투 승리 후 2전투로 진행했다. 2전투 준비 상태에서 재실행하고 동료 선택·범위 표시·다음 버튼을 확인했다.</li>
+<li>2전투 안내를 건너뛰고 재실행해도 자동 안내가 다시 나타나지 않았다. <code>조작 안내</code>로 다시 열고 진행할 수 있었다.</li>
+<li>확인한 안내 본문과 다음·건너뛰기·조작 안내 버튼의 글자가 화면 안에 들어왔다. 전투 시작 버튼과 기존 설명 영역을 가리지 않았다.</li>
+<li>스포트라이트 상태에서 어두운 전투 시작 버튼·다른 동료를 눌러도 실행되지 않았다. 밝은 소환 버튼에서 누른 뒤 바깥으로 손을 떼면 소환이 취소되고, 이어서 건너뛰기 버튼을 한 번 눌러 닫을 수 있었다.</li>
+<li>배치 안내 중 대기 동료를 기존 동료 위에 오래 겹쳤다가 놓아도 성장 재료로 소모되지 않았다. 표시된 빈자리로 드래그하면 정상 배치되었고, 끄는 모습도 밝게 표시되었다.</li>
+<li>준비 상태에서 재실행했을 때 거점의 이어하기가 정상 작동했다. 2전투에서는 밝게 보이는 사제의 머리를 눌러 범위 안내로 넘어가고, 다음 버튼으로 시작 안내까지 진행했다.</li>
+<li>검사 종료 후 기존 PlayerPrefs 전체를 바이트 단위로 동일하게 복원하고 앱을 종료했다. 설치된 APK는 이번 빌드다.</li>
+</ul>
+<p>Android 최종 빌드 성공: <code>unity/Logs/v036-spotlight-final-build.log</code>. 마지막 실행의 Unity·AndroidRuntime 로그에서 예외를 발견하지 않았다. 최종 APK에서도 캐릭터의 얼굴과 배치 글자를 강조선이 가리지 않는지 확인했다. 별도 장시간 성능 검사나 사람의 학습 효과 측정은 이번 작업에 포함하지 않았다.</p>
+<p>APK SHA-256: <code>1B6E9197555E84F6DE7CFC175338E4D129DD39603D2D2BED53C2394701047CF6</code>.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

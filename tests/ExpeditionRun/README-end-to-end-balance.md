@@ -14,6 +14,8 @@ The probe uses `ExpeditionRun.New`, legal summons, transfers, evolutions, combin
 
 Since v0.34, `-Account fresh` (default) starts without permanent research. `-Account researched` uses all six currently available nodes, costing 27 earned points. Both use the standard three-unit starter to isolate research stat effects. `-Account all` compares the two profiles; it does not simulate earning research over successive runs or evaluate the three alternative starters. The profile is included in every result and the research snapshot is checked after each save/restore.
 
+Since v0.35, retained attempt traces for waves 23–30 include `firstAllyDefeated`, actual HP damage grouped by source/target, actual healing, and absorbed shields credited to their provider. `outgoingBySource` is HP damage only; unlike the in-game report, it does not include shield absorption. Power/haste buff contribution is not separately attributed. These passive event observers do not change targeting, RNG, simulation speed, or outcomes. Compare formation and roster together: retries can also spend remaining gold, so not every spread/compact pair is an isolated formation experiment.
+
 `-Policy focus` selects the final-only control and H-01/H-05. `waves` aggregates all attempts before traces are trimmed: `reached` is the number of runs that reached that wave, `firstWins` counts wins on their first attempt, `wins` includes retries, and `timeouts` counts attempts reaching the 75-second limit. These are conditional rates; later-wave samples exclude earlier defeats. Hybrid shield absorption and skill casts are also recorded, without changing the simulation.
 
 ```powershell

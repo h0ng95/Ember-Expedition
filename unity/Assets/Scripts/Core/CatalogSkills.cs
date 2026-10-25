@@ -41,8 +41,8 @@ namespace Expedition.Core
                 skill == "F-KN" || skill == "F-PR" || skill == "F-BA" || skill == "H-05";
             if (support)
             {
-                if (skill == "E-PR-H" && LowestAlly(actor, 4.8f, false, true) == null) return false;
-                if (skill == "B-PR" && LowestAlly(actor, 4.5f, false, false) == null) return false;
+                if (skill == "E-PR-H" && LowestAlly(actor, CatalogPreparationPreview.SupportRadius(skill), false, true) == null) return false;
+                if (skill == "B-PR" && LowestAlly(actor, CatalogPreparationPreview.SupportRadius(skill), false, false) == null) return false;
             }
             else
             {
@@ -62,7 +62,7 @@ namespace Expedition.Core
         {
             string skill = actor.PendingSkillId;
             CatalogBattleUnit target = actor.PendingTargetId == null ? null : Get(actor.PendingTargetId);
-            if (skill == "E-PR-H" && LowestAlly(actor, 4.8f, false, true) == null)
+            if (skill == "E-PR-H" && LowestAlly(actor, CatalogPreparationPreview.SupportRadius(skill), false, true) == null)
                 return; // Recovery waits if another healer restored the target during windup.
             if (target != null && (!target.IsAlive || target.Team == actor.Team)) target = null;
             if (target == null && !IsSupportSkill(skill)) target = ChooseEnemy(actor, false, false);
@@ -89,12 +89,12 @@ namespace Expedition.Core
                 case "B-KN": Direct(a, target, 1.8f, id); Slow(a, target, .2f, 2f); break;
                 case "B-AR": Direct(a, target, 1.2f, id); Mark(a, target, 5f); break;
                 case "B-FI": CircleHit(a, target, 1f, 3, 1.6f, id, true, 0, 0); break;
-                case "B-PR": ShieldLowest(a, 4.5f, 1, EffectivePower(a) * 1.8f, 4f, id); break;
+                case "B-PR": ShieldLowest(a, CatalogPreparationPreview.SupportRadius(id), 1, EffectivePower(a) * 1.8f, 4f, id); break;
                 case "B-IC": CircleHit(a, target, 1.2f, 3, 1.3f, id, false, .25f, 3f); break;
-                case "B-BA": BuffNear(a, 2.5f, 2, CatalogBuffKind.Power, .2f, 4f, id, true); break;
+                case "B-BA": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.Power, .2f, 4f, id, true); break;
                 case "E-KN-G":
                     GiveShield(a, a, EffectivePower(a) * 2.5f, 4f, id);
-                    CatalogBattleUnit nearest = NearestOtherAlly(a, 2f);
+                    CatalogBattleUnit nearest = NearestOtherAlly(a, CatalogPreparationPreview.SupportRadius(id));
                     if (nearest != null) GiveShield(a, nearest, EffectivePower(a) * 2.5f, 4f, id);
                     break;
                 case "E-AR-P": LineHit(a, target, .5f, 3, 2.1f, id, 0, 0); break;
@@ -108,15 +108,15 @@ namespace Expedition.Core
                     a.ZoneX = target.X; a.ZoneY = target.Y;
                     a.ZoneNextAt = Time + 1f; a.ZoneTicksLeft = 4;
                     break;
-                case "E-PR-G": ShieldLowest(a, 4.8f, 2, EffectivePower(a) * 2.3f, 4f, id); break;
-                case "E-PR-H": Heal(a, LowestAlly(a, 4.8f, false, true), EffectivePower(a) * 2.6f, id); break;
+                case "E-PR-G": ShieldLowest(a, CatalogPreparationPreview.SupportRadius(id), 2, EffectivePower(a) * 2.3f, 4f, id); break;
+                case "E-PR-H": Heal(a, LowestAlly(a, CatalogPreparationPreview.SupportRadius(id), false, true), EffectivePower(a) * 2.6f, id); break;
                 case "E-IC-F": CircleHit(a, target, 1.6f, 4, 1.7f, id, false, .4f, 4f); break;
                 case "E-IC-S": Direct(a, target, 1.9f, id); Slow(a, target, .3f, 2f); break;
-                case "E-BA-G": BuffNear(a, 2.8f, 2, CatalogBuffKind.DamageReduction, .2f, 4f, id, true); break;
-                case "E-BA-A": BuffNear(a, 2.8f, 2, CatalogBuffKind.Haste, .2f, 4f, id, true); break;
+                case "E-BA-G": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.DamageReduction, .2f, 4f, id, true); break;
+                case "E-BA-A": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.Haste, .2f, 4f, id, true); break;
                 case "F-KN":
                     GiveShield(a, a, a.MaxHp * .18f, 5f, id);
-                    foreach (CatalogBattleUnit ally in LowestAllies(a, 2.5f, 2, true))
+                    foreach (CatalogBattleUnit ally in LowestAllies(a, CatalogPreparationPreview.SupportRadius(id), 2, true))
                         GiveShield(a, ally, a.MaxHp * .18f, 5f, id);
                     break;
                 case "F-AR": Direct(a, target, 4.2f, id); Mark(a, target, 5f); break;
@@ -147,7 +147,7 @@ namespace Expedition.Core
                     break;
                 case "H-02":
                     Direct(a, target, 1.6f, id);
-                    foreach (CatalogBattleUnit ally in LowestAllies(a, 2.5f, 2, false))
+                    foreach (CatalogBattleUnit ally in LowestAllies(a, CatalogPreparationPreview.SupportRadius(id), 2, false))
                         Heal(a, ally, EffectivePower(a) * 1.8f, id);
                     break;
                 case "H-03": LineHit(a, target, .5f, 3, 2f, id, .3f, 3f); break;
@@ -163,7 +163,7 @@ namespace Expedition.Core
                     float songHeal = EffectivePower(a) * 2.2f;
                     Heal(a, a, songHeal, id);
                     GiveBuff(a, a, CatalogBuffKind.Power, .15f, 4f, id);
-                    foreach (CatalogBattleUnit ally in LowestAllies(a, 4.5f, 2, true))
+                    foreach (CatalogBattleUnit ally in LowestAllies(a, CatalogPreparationPreview.SupportRadius(id), 2, true))
                     {
                         Heal(a, ally, songHeal, id);
                         GiveBuff(a, ally, CatalogBuffKind.Power, .15f, 4f, id);
@@ -174,7 +174,7 @@ namespace Expedition.Core
                     Mark(a, target, 5f);
                     a.ExtraBasicMultiplier = .6f; a.ExtraBasicUntil = Time + 5f;
                     Emit(CatalogEventKind.Buff, a, a, id, .6f);
-                    foreach (CatalogBattleUnit ally in NearbyAllies(a, 3f, true, 2))
+                    foreach (CatalogBattleUnit ally in NearbyAllies(a, CatalogPreparationPreview.SupportRadius(id), true, 2))
                     {
                         ally.ExtraBasicMultiplier = .6f; ally.ExtraBasicUntil = Time + 5f;
                         Emit(CatalogEventKind.Buff, a, ally, id, .6f);

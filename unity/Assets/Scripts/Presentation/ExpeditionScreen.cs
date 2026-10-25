@@ -90,6 +90,7 @@ namespace Expedition.Presentation
                 LoadJournal();
                 LoadProgress();
                 LoadSave();
+                LoadTutorial();
             }
             catch (Exception exception) { error = "원정 자료를 열 수 없습니다: " + exception.Message; }
             backgroundCamera = GetComponent<Camera>();
@@ -104,6 +105,7 @@ namespace Expedition.Presentation
         void OnDisable() { CancelPointer(); if (art != null) { art.Dispose(); art = null; } }
         void OnDestroy()
         {
+            ReleasePreparationPreview();
             if (battleReport != null) battleReport.Dispose();
             if (font != null) Destroy(font);
             ExpeditionUiTheme.Release();
@@ -229,6 +231,8 @@ namespace Expedition.Presentation
                 modal = Modal.None;
                 selectedId = null;
                 benchPage = 0;
+                tutorialReplayWave = 0;
+                tutorialRangeAcknowledged = false;
                 Save();
             }
             catch (Exception exception) { Notice("새 원정을 시작하지 못했습니다: " + exception.Message); }
@@ -277,6 +281,7 @@ namespace Expedition.Presentation
             EnsureStyles();
             GUI.matrix = Matrix4x4.TRS(new Vector3(viewport.x, viewport.y), Quaternion.identity,
                 new Vector3(scale, scale, 1f));
+            FilterTutorialGuiEvent();
             Fill(new Rect(0, 0, Width, Height), Background);
             GUI.enabled = modal == Modal.None;
             if (home || run == null) DrawHome();
@@ -290,6 +295,7 @@ namespace Expedition.Presentation
                 ExpeditionUiTheme.PanelBox(new Rect(340, 660, 600, 48), true);
                 GUI.Label(new Rect(350, 667, 580, 34), toast, centered);
             }
+            DrawTutorialSpotlight();
             GUI.matrix = Matrix4x4.identity;
         }
 
@@ -374,10 +380,12 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.PanelBox(new Rect(724, 94, 523, 430));
             ExpeditionUiTheme.Rule(new Rect(48, 185, 615, 1));
             ExpeditionUiTheme.Rule(new Rect(48, 350, 615, 1));
-            GUI.Label(new Rect(46, 100, 630, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
+            GUI.Label(new Rect(46, 100, 470, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
+            DrawTutorialReplayButton();
+            DrawPreparationRange();
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
             GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
-            GUI.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
+            DrawTutorialAdvice();
             if (GUI.Button(new Rect(735, 270, 154, 48), showHelp ? "도움말 접기" : "배치 도움말", button))
                 showHelp = !showHelp;
             if (GUI.Button(new Rect(905, 270, 154, 48), "지역 이야기", button))
@@ -388,7 +396,8 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(1075, 270, 154, 48),
                 "원정 전술 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
             { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
-            if (run.IsBossWave && !showHelp)
+            if (DrawSelectedPreparation()) { }
+            else if (run.IsBossWave && !showHelp)
             {
                 GUI.Label(new Rect(735, 326, 490, 28), "보스 준비 점검", hint);
                 string[] checks = ExpeditionPreparationHints.ForBoss(run, database);
@@ -398,7 +407,7 @@ namespace Expedition.Presentation
             else
                 GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
                     "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
-                    "동료를 겹쳐 놓으면 성장 +1\n결합은 가능한 조합 목록에서 선택\n남은 골드는 다음 전투에도 유지됩니다.", body);
+                    "동료를 누르면 사거리·지원 범위 표시\n한 번 더 누르면 상세 · 끌어서 위치 이동\n결합은 가능한 조합 목록에서 선택", body);
             List<CatalogCombinationOption> combinations = run.GetCombinationOptions();
             if (combinations.Count > 0 && GUI.Button(new Rect(735, 468, 315, 52),
                 combinations.Count == 1 ? database.Get(combinations[0].ResultId).Name + " 결합 가능" :
@@ -415,6 +424,7 @@ namespace Expedition.Presentation
                 Vector2 foot = ArenaPoint(member);
                 DrawUnit(member, new Rect(foot.x - 48, foot.y - 113, 96, 110),
                     new Rect(foot.x - 64, foot.y, 128, 31));
+                DrawPreparationMarker(member, foot);
             }
             DrawDock();
             if (pointerDragging && pointerId != null)
@@ -458,12 +468,12 @@ namespace Expedition.Presentation
                 case 21: return "가시 근위병이 전열을 지킵니다.\n독침 사냥꾼의 사격을 받을 후열을 살피세요.";
                 case 22: return "독침 사냥꾼은 세 번째 명중에 독을 남깁니다.\n중독된 동료는 회복 효과가 줄어듭니다.";
                 case 23: return "사냥꾼의 독과 근위병의 전열 압박이 겹칩니다.\n해로운 상태가 걸린 동료의 체력을 살피세요.";
-                case 24: return "황혼정원사는 가까운 적 둘에게 보호막을 줍니다.\n보호막이 없는 적부터 집중할 수도 있습니다.";
+                case 24: return "황혼정원사는 가까운 호위 둘에게 보호막을 줍니다.\n전열을 지원 범위 안에 두고 장기전에 대비하세요.";
                 case 25: return "먼 동료 최대 셋 발밑에 가시가 차례로 솟습니다.\n후열을 분산 배치하세요 · 중독 중 회복량 −35%.";
                 case 26: return "왕궁 근위병이 전열을 지킵니다.\n뒤의 석궁병에게 약한 동료가 노출되지 않게 하세요.";
                 case 27: return "왕궁 석궁병은 약해진 동료를 노립니다.\n전열과 후열의 거리를 다시 점검하세요.";
                 case 28: return "근위병과 석궁병이 함께 압박합니다.\n성장한 동료의 전승과 배치를 살펴보세요.";
-                case 29: return "왕궁 집행관은 가까운 적에게 보호막을 줍니다.\n위험한 석궁병부터 노릴 수도 있습니다.";
+                case 29: return "집행관이 가까운 호위를 반복해서 보호합니다.\n전열을 지원 범위 안에 두고 석궁 사격을 버티세요.";
                 case 30: return "직선 브레스 뒤 먼 동료를 노린 비행 폭격이 옵니다.\n착지 충격파는 용의 발밑에서 퍼집니다.";
                 default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
             }
@@ -1166,6 +1176,7 @@ namespace Expedition.Presentation
             {
                 CatalogBattle battle = resume ? run.ResumeBattle() : run.BeginBattle();
                 if (battle == null) { Notice("전투를 시작할 수 없습니다."); return; }
+                FinishTutorialWave(run.Wave);
                 BeginReport(battle);
                 Save();
                 modal = Modal.None;
@@ -1310,6 +1321,11 @@ namespace Expedition.Presentation
             if (canceled) { CancelPointer(); return; }
             Vector2 point = new Vector2((screen.x - viewport.x) * Width / viewport.width,
                 (Screen.height - screen.y - viewport.y) * Height / viewport.height);
+            if (!TutorialPointerAllowed(point, down, up))
+            {
+                if (up) CancelPointer();
+                return;
+            }
             ProcessPointer(point, down, held, up, Time.unscaledTime);
             if (down && Input.touchCount > 0 && pointerId != null)
             { pointerTouch = true; pointerFingerId = Input.GetTouch(0).fingerId; }
@@ -1319,6 +1335,7 @@ namespace Expedition.Presentation
         {
             if (down)
             {
+                PreparationSelection();
                 pointerId = MemberAt(point);
                 pointerStart = point;
                 CatalogMember grabbed = pointerId == null ? null : run.Roster.Find(pointerId);
@@ -1328,7 +1345,10 @@ namespace Expedition.Presentation
                 ResetHover();
             }
             if (held && pointerId != null && (point - pointerStart).sqrMagnitude > 144f)
+            {
+                if (!pointerDragging && IsDeployed(pointerId)) SelectPreparation(pointerId);
                 pointerDragging = true;
+            }
             pointerCurrent = point + pointerGrabOffset;
             if (pointerDragging && (held || up)) UpdateHover(point, now);
             if (!up || pointerId == null) return;
@@ -1338,7 +1358,15 @@ namespace Expedition.Presentation
             bool armed = hoverArmed;
             CancelPointer();
             if (!wasDragging)
-            { selectedId = id; modal = Modal.Detail; return; }
+            {
+                if (IsDeployed(id))
+                {
+                    if (preparationSelectionId == id) { selectedId = id; modal = Modal.Detail; }
+                    else SelectPreparation(id);
+                }
+                else { selectedId = id; modal = Modal.Detail; }
+                return;
+            }
             if (armed && recipientId != null)
             {
                 bool applied = run.Transfer(id, recipientId, false);
@@ -1375,6 +1403,7 @@ namespace Expedition.Presentation
                 if (run.Move(id, Mathf.Clamp((pointerCurrent.x - 560f) / 75f, -6.2f, -.2f),
                     Mathf.Clamp((GroundY - pointerCurrent.y) / GroundYScale, -2.5f, 2.2f))) Save();
                 else Save();
+                SelectPreparation(id);
             }
             else if (point.y >= 550 && IsDeployed(id))
             {

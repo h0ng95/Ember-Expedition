@@ -43,7 +43,7 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 91, content.width, 43), "전투 기여도", heading);
             GUI.Label(new Rect(content.x, 143, content.width, 53),
-                "피해는 적 체력과 보호막에 준 실제 피해의 합계입니다. 회복과 보호는 실제 적용된 양입니다.", body);
+                "피해: 적 체력·보호막에 준 실제 피해 · 회복/보호: 실제 적용량\n공격력·공격 속도 강화의 추가 기여는 별도로 집계하지 않습니다.", body);
             ExpeditionUiTheme.Rule(new Rect(content.x, 202, content.width, 2));
             GUI.Label(new Rect(content.x + 12, 210, 330, 32), "동료", body);
             GUI.Label(new Rect(content.x + 364, 210, 182, 32), "피해", body);

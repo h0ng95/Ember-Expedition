@@ -298,6 +298,7 @@ namespace Expedition.EditorTools
 
         public static void BuildAndroid()
         {
+            ExpeditionTutorialValidation.Validate();
             Validate();
             ExpeditionStoryValidation.BuildAndroid();
         }

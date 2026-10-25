@@ -10,6 +10,7 @@ namespace Expedition.Presentation
     {
         const float Width = 1280f, Height = 720f, Tick = 1f / 60f;
         const float SettlementDuration = .55f;
+        const float CorpseFadeStart = .45f, CorpseFadeEnd = 1.05f;
         const string ArtRoot = "Art/Units/v010/";
         static readonly string[] FormIds = {
             "B-KN", "B-AR", "B-FI", "B-PR", "B-IC", "B-BA",
@@ -64,6 +65,7 @@ namespace Expedition.Presentation
         {
             public View View;
             public Vector2 Point;
+            public Rect Bounds;
             public float Height;
             public bool RegionalArtLoaded;
         }
@@ -335,8 +337,12 @@ namespace Expedition.Presentation
             {
                 // Bosses keep their own attack/locomotion pose when hit. HP,
                 // impact effects and damage numbers still communicate damage.
-                target.HitTime = target.Unit.IsBoss ? 0f : .24f;
-                target.NewHit = !target.Unit.IsBoss;
+                // Periodic damage must not restart or cancel an existing direct-hit pose.
+                if (e.AbilityId != "BURN" && e.AbilityId != "POISON")
+                {
+                    target.HitTime = target.Unit.IsBoss ? 0f : .24f;
+                    target.NewHit = !target.Unit.IsBoss;
+                }
                 if (floating.Count < 24) floating.Add(new FloatText {
                     Text = "−" + e.Amount.ToString("0"), Position = new Vector2(target.Unit.X, target.Unit.Y),
                     Color = target.Unit.Team == CatalogTeam.Ally ? new Color(1f, .53f, .47f) : Gold,
@@ -413,7 +419,7 @@ namespace Expedition.Presentation
             float visualDt = settling ? dt : gameDt;
             foreach (View view in combatViews)
             {
-                float actorDt = view.Unit.FrozenRemaining > 0f ? 0f : visualDt;
+                float actorDt = view.Unit.IsAlive && view.Unit.FrozenRemaining > 0f ? 0f : visualDt;
                 if (view.Unit.FrozenRemaining > 0f) view.HitTime = 0f;
                 if (!view.NewHit) view.HitTime = Mathf.Max(0, view.HitTime - Mathf.Min(actorDt, .08f));
                 view.NewHit = false;
@@ -581,19 +587,26 @@ namespace Expedition.Presentation
 
             Rect arena = new Rect(24, 92, 1232, 560);
             if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
-            // Bosses remain behind living allies and escorts. Other actors use foot depth.
+            // Enemy bodies use foot depth, including bosses; allies paint in front.
             var sorted = new List<View>(combatViews);
             sorted.Sort((a, b) => BattleVisibility.Compare(a.Unit.IsAlive, a.Unit.Y, a.Unit.Team, a.Unit.Id,
-                b.Unit.IsAlive, b.Unit.Y, b.Unit.Team, b.Unit.Id, a.Unit.IsBoss, b.Unit.IsBoss));
+                b.Unit.IsAlive, b.Unit.Y, b.Unit.Team, b.Unit.Id));
             var drawn = new List<DrawnCombatant>(sorted.Count);
+            bool hiddenEscortsMarked = false;
             foreach (View view in sorted)
             {
                 CatalogBattleUnit unit = view.Unit;
+                if (!unit.IsAlive && view.StateTime >= CorpseFadeEnd) continue;
+                if (!hiddenEscortsMarked && unit.IsAlive && unit.Team == CatalogTeam.Ally)
+                {
+                    MarkHiddenEscorts(drawn);
+                    hiddenEscortsMarked = true;
+                }
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
                     point.y -= unit.FlightLift * 60f;
                 Color previous = GUI.color;
-                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, Mathf.Max(.24f, 1f - view.StateTime));
+                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
                 else if (view.HitTime > .13f) GUI.color = new Color(1f, .62f, .48f, 1f);
                 if (unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f)
@@ -608,8 +621,9 @@ namespace Expedition.Presentation
                     new Rect(point.x - 60, point.y - 144, 120, 144), ShouldFlip(view));
                 GUI.color = previous;
                 drawn.Add(new DrawnCombatant { View = view, Point = point,
-                    Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
+                    Bounds = bounds, Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
             }
+            if (!hiddenEscortsMarked) MarkHiddenEscorts(drawn);
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
             // HUD is painted after every silhouette.
             foreach (DrawnCombatant painted in drawn)
@@ -679,6 +693,28 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(440, 302, 400, 50), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
                 if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) SetPaused(false);
                 if (GUI.Button(new Rect(642, 384, 198, 62), "거점으로", button)) Close();
+            }
+        }
+
+        void MarkHiddenEscorts(List<DrawnCombatant> drawn)
+        {
+            for (int i = 0; i < drawn.Count; i++)
+            {
+                CatalogBattleUnit escort = drawn[i].View.Unit;
+                if (!escort.IsAlive || escort.Team != CatalogTeam.Enemy || escort.IsBoss) continue;
+                for (int j = i + 1; j < drawn.Count; j++)
+                {
+                    CatalogBattleUnit boss = drawn[j].View.Unit;
+                    if (!boss.IsAlive || !boss.IsBoss ||
+                        !BattleVisibility.NeedsEscortReveal(drawn[i].Bounds, drawn[j].Bounds)) continue;
+                    // Keep the sprite behind the boss. Only its ground position needs a cue.
+                    Vector2 foot = drawn[i].Point;
+                    Color cue = new Color(1f, .62f, .38f, .7f);
+                    Fill(new Rect(foot.x - 12f, foot.y + 2f, 24f, 2f), cue);
+                    Fill(new Rect(foot.x - 12f, foot.y - 1f, 2f, 5f), cue);
+                    Fill(new Rect(foot.x + 10f, foot.y - 1f, 2f, 5f), cue);
+                    break;
+                }
             }
         }
 
@@ -1106,6 +1142,12 @@ namespace Expedition.Presentation
             if (state == 2) return Mathf.Min(5, (int)(time * 24) % 6);
             if (state == 3) return 4 + (int)(time * 12) % 2;
             return Mathf.Min(3, (int)(time * 7));
+        }
+
+        static float CorpseAlpha(float stateTime)
+        {
+            return Mathf.Clamp01((CorpseFadeEnd - stateTime) /
+                (CorpseFadeEnd - CorpseFadeStart));
         }
 
         static int BattleAnimationFrame(View view)

@@ -4,7 +4,8 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
-- 최신 구현: **v0.34 결합체 역할 보완·Normal 난도 점검**. 잿불 검위의 자기 보호막과 성가 기수의 부상자 우선 회복을 추가하고, 신규·연구 계정 및 전술 지출 순서를 비교했다. 동료 상세·결합 확인의 기술 설명과 버튼 간격도 정리했다. [변경·검증 기록](docs/design-v0.34/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.34/HANDOFF.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [연구·전술 규칙](docs/design-v0.32/HANDOFF.md) · [연구 보드·전투 기여도](docs/design-v0.33/HANDOFF.md).
+- 최신 구현: **v0.39 전투 HUD·보스 6종 도트 공격 애니메이션·로컬 테스트 기록**. 고정 보스 정보, 피해·상태 구분, 지역 적 가독성과 고유 공격 연출을 보완했다. [변경·검증 기록](docs/design-v0.39/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.39/HANDOFF.html) · [공격 애니메이션 미리보기](docs/design-v0.39/boss-effects-preview.html). Normal 30전투만 플레이 가능하며 Hard 전투는 준비 중이다. [스플래시·기사 아이콘](docs/design-v0.38/HANDOFF.md) · [첫 조작 안내](docs/design-v0.36/HANDOFF.md) · [결합체·난도 검토](docs/design-v0.34/HANDOFF.md).
+- 출시 준비 실행 계획: **전투 가독성 → 첫 플레이테스트 → 밸런스·안내 → 저장·설정·영어·사운드 → 광고·출시 검증**. 1단계 구현 후 신규 플레이어 관찰과 기록 분석을 진행할 차례다. [순서·완료 기준·체크리스트·테스트 양식](docs/release-readiness-v0.38.md) · [읽기용 문서](docs/release-readiness-v0.38.html). [연구·전술 규칙](docs/design-v0.32/HANDOFF.md) · [연구 보드·전투 기여도](docs/design-v0.33/HANDOFF.md).
 - 비교 검토 이력: [초반 난도·시작 인원·직업 해금 비교](docs/design-v0.16/early-progression-review.md). 난도 변경은 v0.17에 반영했으며, 시작 인원·골드·직업 해금 제안은 미적용이다.
 - 적 미술: 숲·성채·폐광·서리 성당·황혼 정원·잿빛 왕궁 각각 4종, 총 24종은 **개별 애니메이션 첫 제작본**을 사용한다. [왕궁 제작·검증](docs/design-v0.31/HANDOFF.html).
 - 첫 마켓 출시 목표: **한 원정 30전투, 5전투마다 보스**. 30전투 경로를 연결했으며 전체 난도·연출과 출시 준비는 진행 중이다. 100전투·무한 모드는 출시 후 후보다. [출시 범위와 개발 순서](docs/design-v0.16/early-progression-review.md#10-첫-마켓-출시-범위-30전투).

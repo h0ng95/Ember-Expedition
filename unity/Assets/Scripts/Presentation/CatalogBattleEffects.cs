@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace Expedition.Presentation
 {
-    // Bounded, code-drawn effects: no particle objects or additional sprite sheets per hit.
+    // Bounded effect records; boss animation sheets are cached and drawn by UV.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, BombBurst }
+        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, BombBurst,
+            ChargeDust, GolemCrack, FurnacePillar, FurnaceEmber, FrostSpire, DrakeLand }
         sealed class Effect
         {
             public Vector2 Point;
@@ -20,6 +21,7 @@ namespace Expedition.Presentation
         }
 
         readonly List<Effect> effects = new List<Effect>(24);
+        readonly BossSpriteEffects spriteEffects = new BossSpriteEffects();
         readonly AudioSource[] voices = new AudioSource[4];
         readonly AudioClip hit, arrow, launch;
         readonly HashSet<string> launched = new HashSet<string>();
@@ -70,6 +72,23 @@ namespace Expedition.Presentation
 
         static bool IsProjectile(CatalogBattleUnit unit) { return unit.Range > 2.1f; }
 
+        static EffectKind BossEffectKind(string ability)
+        {
+            switch (ability)
+            {
+                case "BOSS_CHARGE": return EffectKind.ChargeDust;
+                case "GOLEM_SLAM": case "GOLEM_AFTERSHOCK": return EffectKind.GolemCrack;
+                case "FURNACE_BLAST": return EffectKind.FurnacePillar;
+                case "FURNACE_EMBER": return EffectKind.FurnaceEmber;
+                case "FROST_NOVA": return EffectKind.FrostSpire;
+                case "GARDEN_BRIARS": return EffectKind.RootBurst;
+                case "DRACONIC_BREATH": return EffectKind.Breath;
+                case "DRACONIC_BOMB": return EffectKind.BombBurst;
+                case "DRACONIC_LAND": return EffectKind.DrakeLand;
+                default: return EffectKind.GroundImpact;
+            }
+        }
+
         void Add(EffectKind kind, CatalogBattleUnit unit, Color color, float size, float duration, int direction)
         {
             if (unit == null) return;
@@ -89,15 +108,13 @@ namespace Expedition.Presentation
             {
                 if (effects.Count == 24) effects.RemoveAt(0);
                 bool charge = e.AbilityId == "BOSS_CHARGE";
-                bool roots = e.AbilityId == "GARDEN_BRIARS";
                 bool breath = e.AbilityId == "DRACONIC_BREATH";
-                bool bomb = e.AbilityId == "DRACONIC_BOMB";
-                effects.Add(new Effect { Kind = breath ? EffectKind.Breath : bomb ?
-                    EffectKind.BombBurst : roots ? EffectKind.RootBurst : EffectKind.GroundImpact,
+                effects.Add(new Effect { Kind = BossEffectKind(e.AbilityId),
                     Point = breath ? new Vector2(source.BreathOriginX, source.BreathOriginY) :
-                        charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) :
+                        charge ? new Vector2(source.ChargeOriginX, source.ChargeOriginY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
-                    EndPoint = breath ? new Vector2(source.BreathTargetX, source.BreathTargetY) : Vector2.zero,
+                    EndPoint = breath ? new Vector2(source.BreathTargetX, source.BreathTargetY) :
+                        charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) : Vector2.zero,
                     Color = source.EnemyRole == CatalogEnemyRole.GardenLord ?
                         new Color(.55f, .86f, .27f) :
                         source.EnemyRole == CatalogEnemyRole.CrownDrake ?
@@ -109,17 +126,30 @@ namespace Expedition.Presentation
                         new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
                     Size = breath ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
                     HalfWidth = breath ? source.BreathHalfWidth : 0f,
-                    Duration = roots ? .6f : breath ? .4f : .45f });
+                    Duration = e.AbilityId == "GARDEN_BRIARS" ? .6f :
+                        breath ? .44f : .5f });
                 Play(hit, 1f);
             }
+            if (e.Kind == CatalogEventKind.ChargeHit && source != null && target != null)
+            {
+                if (effects.Count == 24) effects.RemoveAt(0);
+                effects.Add(new Effect { Kind = EffectKind.ChargeDust,
+                    Point = new Vector2(source.ChargeOriginX, source.ChargeOriginY),
+                    EndPoint = new Vector2(target.X, target.Y),
+                    Size = .6f, Duration = .38f,
+                    Color = new Color(.74f, .55f, .34f) });
+            }
             if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
-                source != null && target != null && !IsProjectile(source))
+                source != null && target != null && !IsProjectile(source) &&
+                (e.Kind == CatalogEventKind.BasicHit || source.Team != target.Team))
                 Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction);
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
                 bool periodic = e.AbilityId == "BURN" || e.AbilityId == "POISON";
                 bool strong = !periodic && e.AbilityId != "BASIC";
-                Add(EffectKind.Impact, target, color, periodic ? 9 : strong ? 35 : 20, .23f, direction);
+                Color impact = e.AbilityId == "BURN" ? new Color(1f, .5f, .18f) :
+                    e.AbilityId == "POISON" ? new Color(.72f, .96f, .36f) : color;
+                Add(EffectKind.Impact, target, impact, periodic ? 9 : strong ? 35 : 20, .23f, direction);
                 if (!periodic)
                 {
                     Play(source != null && IsProjectile(source) ? arrow : hit, strong ? .85f : .65f);
@@ -165,7 +195,8 @@ namespace Expedition.Presentation
             {
                 if (unit.AttackPhase == CatalogAttackPhase.Ready || !unit.IsAlive)
                 { launched.Remove(unit.Id); continue; }
-                if (IsProjectile(unit) && unit.AttackTargetId != null && unit.AttackWindupRemaining <= .18f &&
+                if (unit.AttackPhase == CatalogAttackPhase.WindingBasic && IsProjectile(unit) &&
+                    unit.AttackTargetId != null && unit.AttackWindupRemaining <= .18f &&
                     launched.Add(unit.Id)) Play(launch, .4f);
             }
         }
@@ -261,11 +292,10 @@ namespace Expedition.Presentation
                     unit.DrakePhase != CrownDrakePhase.AirWarning || unit.SlamWarningRemaining <= 0f)
                     continue;
                 Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                float fall = Mathf.Clamp01(1f - unit.SlamWarningRemaining / 1.1f);
-                Vector2 fireball = center + new Vector2(0, -150f * (1f - fall));
-                Ring(fireball, 11, 11, new Color(1f, .72f, .22f, .96f), 6);
-                Line(fireball + new Vector2(0, -27), fireball + new Vector2(0, -12),
-                    7, new Color(1f, .31f, .1f, .8f));
+                float fall = Mathf.Clamp01(1f - unit.SlamWarningRemaining /
+                    (unit.BossEnraged ? .9f : 1.1f));
+                spriteEffects.DrawFallingFireball(center, fall,
+                    Mathf.FloorToInt(battle.Time * 10f));
             }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
@@ -297,7 +327,7 @@ namespace Expedition.Presentation
             }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
-                if (!unit.IsAlive || unit.AttackPhase == CatalogAttackPhase.Ready || !IsProjectile(unit) ||
+                if (!unit.IsAlive || unit.AttackPhase != CatalogAttackPhase.WindingBasic || !IsProjectile(unit) ||
                     unit.AttackWindupRemaining > .18f || unit.ChargeWarningRemaining > 0) continue;
                 CatalogBattleUnit target = battle.Get(unit.AttackTargetId);
                 if (target == null || !target.IsAlive) continue;
@@ -336,17 +366,47 @@ namespace Expedition.Presentation
                 }
                 if (effect.Kind == EffectKind.RootBurst)
                 {
-                    DrawRootBurst(project(effect.Point), t);
+                    spriteEffects.DrawRoots(project(effect.Point), effect.Size, t);
                     continue;
                 }
                 if (effect.Kind == EffectKind.Breath)
                 {
-                    DrawBreath(project, effect, t);
+                    spriteEffects.DrawBreath(project(effect.Point), project(effect.EndPoint),
+                        effect.HalfWidth, t);
                     continue;
                 }
                 if (effect.Kind == EffectKind.BombBurst)
                 {
-                    DrawBombBurst(project(effect.Point), t);
+                    spriteEffects.DrawFireImpact(project(effect.Point), t);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.DrakeLand)
+                {
+                    Vector2 ground = project(effect.Point);
+                    spriteEffects.DrawFireImpact(ground, t, effect.Size * 83f * 1.55f, .85f);
+                    spriteEffects.DrawCharge(ground, .55f, t);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.ChargeDust)
+                {
+                    spriteEffects.DrawCharge(project(effect.EndPoint), effect.Size, t);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.GolemCrack)
+                {
+                    spriteEffects.DrawGolem(project(effect.Point), effect.Size, t);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.FurnacePillar || effect.Kind == EffectKind.FurnaceEmber)
+                {
+                    bool ember = effect.Kind == EffectKind.FurnaceEmber;
+                    spriteEffects.DrawFireImpact(project(effect.Point), t,
+                        effect.Size * 83f * (ember ? 1.3f : 1.55f), ember ? .7f : 1.3f);
+                    continue;
+                }
+                if (effect.Kind == EffectKind.FrostSpire)
+                {
+                    spriteEffects.DrawFrost(project(effect.Point), effect.Size, t);
                     continue;
                 }
                 Vector2 point = project(effect.Point) + new Vector2(0, -effect.BodyOffset);
@@ -380,65 +440,6 @@ namespace Expedition.Presentation
                     }
                     if (t < .35f) Fill(new Rect(point.x - 5, point.y - 5, 10, 10), new Color(1, 1, .9f, 1 - t * 2));
                 }
-            }
-        }
-
-        // Five narrow roots rise at the stored impact point, then retract into the ground.
-        // This is drawn after actors so each of the boss's separate target strikes is visible.
-        static void DrawRootBurst(Vector2 center, float progress)
-        {
-            float fade = 1f - Mathf.Clamp01((progress - .55f) / .45f);
-            Ring(center + new Vector2(0, -3), 69, 12, new Color(.23f, .11f, .28f, .7f * fade), 4);
-            for (int i = 0; i < 5; i++)
-            {
-                float local = progress - i * .035f;
-                if (local <= 0f) continue;
-                float rise = local < .19f ? local / .19f : local < .66f ? 1f :
-                    1f - Mathf.Clamp01((local - .66f) / .34f);
-                if (rise <= 0f) continue;
-                int spread = i - 2;
-                Vector2 basePoint = center + new Vector2(spread * 21f, Mathf.Abs(spread) * 2f);
-                Vector2 tip = basePoint + new Vector2(spread * 3f, -(80f - Mathf.Abs(spread) * 11f) * rise);
-                Line(basePoint, tip, 8f, new Color(.22f, .11f, .27f, .92f * fade));
-                Line(basePoint + new Vector2(2, 0), tip + new Vector2(2, 0), 3f,
-                    new Color(.53f, .88f, .27f, .95f * fade));
-                Vector2 fork = Vector2.Lerp(basePoint, tip, .52f);
-                Line(fork, fork + new Vector2(spread <= 0 ? -10f : 10f, -14f * rise), 3f,
-                    new Color(.62f, .35f, .73f, .9f * fade));
-            }
-        }
-
-        static void DrawBreath(Func<Vector2, Vector2> project, Effect effect, float progress)
-        {
-            Vector2 axis = (effect.EndPoint - effect.Point).normalized;
-            Vector2 side = new Vector2(-axis.y, axis.x);
-            float reach = Mathf.Lerp(.32f, 1f, Mathf.Clamp01(progress / .3f));
-            float fade = 1f - Mathf.Clamp01((progress - .45f) / .55f);
-            for (int i = -3; i <= 3; i++)
-            {
-                float offset = i / 3f * effect.HalfWidth * .88f;
-                Vector2 start = effect.Point + axis * .35f + side * offset;
-                Vector2 end = Vector2.Lerp(effect.Point, effect.EndPoint, reach) + side * offset;
-                Color flame = i == 0 ? new Color(1f, .88f, .32f, .95f * fade) :
-                    i % 2 == 0 ? new Color(1f, .32f, .1f, .82f * fade) :
-                    new Color(1f, .58f, .17f, .9f * fade);
-                Line(project(start), project(end), i == 0 ? 12f : 7f, flame);
-                Vector2 ember = project(Vector2.Lerp(start, end, .45f + (i + 3) * .05f));
-                Fill(new Rect(ember.x - 4, ember.y - 4, 8, 8), flame);
-            }
-        }
-
-        static void DrawBombBurst(Vector2 center, float progress)
-        {
-            float fade = 1f - progress;
-            Ring(center, 48f * (.55f + progress), 22f * (.55f + progress),
-                new Color(1f, .44f, .13f, fade), 6f * fade + 1f);
-            for (int i = -2; i <= 2; i++)
-            {
-                Vector2 basePoint = center + new Vector2(i * 15f, -5f);
-                Vector2 tip = basePoint + new Vector2(i * 3f, -(35f - Mathf.Abs(i) * 5f) * fade);
-                Line(basePoint, tip, 6f * fade + 1f,
-                    new Color(1f, i == 0 ? .8f : .42f, .14f, fade));
             }
         }
 

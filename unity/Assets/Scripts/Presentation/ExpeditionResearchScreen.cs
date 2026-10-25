@@ -90,7 +90,8 @@ namespace Expedition.Presentation
                 {
                     lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f;
                     progressDirty = true;
-                    try { WriteProgress(); Notice("연구 완료 · 다음 새 원정부터 적용됩니다."); }
+                    try { WriteProgress(); playtest.Record("legacy_research_purchase", run, selected.Id);
+                        Notice("연구 완료 · 다음 새 원정부터 적용됩니다."); }
                     catch (Exception exception) { Notice("연구 저장에 실패했습니다: " + exception.Message); }
                 }
             }
@@ -145,7 +146,7 @@ namespace Expedition.Presentation
                 owned ? "선택 완료" : "전술 선택  ·  " + selected.Cost + " G", primary))
             {
                 if (run.PurchaseTactic(selected.Id))
-                { Save(); lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f; }
+                { Save("tactic_purchase", selected.Id); lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f; }
             }
             GUI.enabled = enabled;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button)) modal = Modal.None;

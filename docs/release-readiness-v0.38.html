@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IGNIS — 첫 출시 전 검증과 추가 개발 계획</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">EMBER EXPEDITION · GAME DESIGN</div>
+<h1>IGNIS — 첫 출시 전 검증과 추가 개발 계획</h1>
+<p>동료의 성장과 조합, 배치와 보스 공략을 중심으로 플레이 규칙과 제작 방향을 정리합니다.</p>
+<div class="chips"><span>플레이 방향</span><span>성장과 조합</span><span>배치와 보스</span><span>제작 범위</span><span>검토안</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">1. 현재 위치</a>
+<a href="#section-2">2. 가장 먼저 — 전투를 읽을 수 있게 만들기</a>
+<a href="#section-3">3. 사람의 첫 플레이와 난도 검증</a>
+<a href="#section-4">4. 추가 개발 — 이해·선택·반복 플레이</a>
+<a href="#section-5">5. 저장·성능·기기 대응</a>
+<a href="#section-6">6. 설정·사운드·영어</a>
+<a href="#section-7">7. 광고 무료판과 광고 없는 유료판</a>
+<a href="#section-8">8. Google Play 배포 준비</a>
+<a href="#section-9">9. 개발 순서와 완료 기준</a>
+<a href="#section-10">10. 첫 출시 이후로 미룰 수 있는 것</a>
+<a href="#section-11">11. 실행 체크리스트</a>
+<a href="#section-12">12. 플레이테스트 기록 양식</a><a class="source-link" href="release-readiness-v0.38.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-25 · 기준 커밋 <code>847729e</code> · Android / Normal 30전투</p>
+<p><strong>현재는 첫 비공개 플레이테스트를 준비할 단계다.</strong> 전투·성장·연구·저장·첫 조작 안내·스플래시까지 큰 흐름은 연결되어 있다. 앞으로는 실제 사람이 이해하고 즐기는지, 반복 플레이가 성립하는지, 휴대폰에서 기록을 잃지 않고 안정적으로 끝낼 수 있는지를 확인해야 한다.</p>
+<p>이 문서는 코드와 v0.32~v0.38 검증 기록을 읽고 정리한 실행 계획이다. 사용자가 개발 순서에 동의해 작업·검증·완료 기준을 아래에 정리했다. 문서의 상태는 실제 구현 및 검증 증거가 있을 때 갱신한다. 아래 수량·성능 목표는 제안이며, 이미 달성한 결과나 업계 공통 기준이 아니다.</p>
+<p><strong>진행 순서:</strong> 전투 가독성 → 첫 플레이테스트 → 밸런스·안내 보완 → 저장·설정·영어·사운드 → 광고·출시 빌드 → 비공개 테스트와 출시 판단.</p>
+<p><strong>진행 상황:</strong> 1단계의 전투 화면·최소 진단 기록과 보스 6종의 공격 효과를 v0.39에 구현했다. <a href="design-v0.39/HANDOFF.html">구현·검증 결과와 화면</a>을 참고한다. 다음 우선순위는 2단계 사람 플레이테스트다. 실행 체크리스트는 11절, 사람 플레이 기록 양식은 12절에 있다.</p>
+<h2 id="section-1">1. 현재 위치</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>확인한 현재 상태</th>
+<th>남은 일</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>본편</td>
+<td>6개 지역·30전투·5전투마다 보스</td>
+<td>처음부터 끝까지 사람의 선택으로 연속 플레이</td>
+</tr>
+<tr>
+<td>동료</td>
+<td>30형태·성장·진화·결합·애니메이션 첫 제작본</td>
+<td>모든 형태의 실전 가치와 동작·표시 점검</td>
+</tr>
+<tr>
+<td>연구·전술</td>
+<td>영구 연구 6노드, 원정 전술 6노드·최대 3개 구매</td>
+<td>지출 선택의 의미, 반복 플레이의 목표 점검</td>
+</tr>
+<tr>
+<td>안내</td>
+<td>1·2전투의 소환·배치·범위 스포트라이트 안내</td>
+<td>첫 성장·진화·결합·전술 구매 시점의 안내</td>
+</tr>
+<tr>
+<td>전투 검사</td>
+<td>계산·저장·입력 검사, 전투별 실기기 장면 확인</td>
+<td>인간의 완주 시간·이탈 이유·장시간 성능</td>
+</tr>
+<tr>
+<td>저장</td>
+<td>PlayerPrefs의 JSON, 버전 이행과 오류 감지</td>
+<td>앱 자체 복구용 백업, 중단·업데이트·기록 이전 검증</td>
+</tr>
+<tr>
+<td>아트·브랜딩</td>
+<td>지역 배경, 적 24종, 통일한 스플래시·아이콘</td>
+<td>전투 HUD·적 대비·모든 기술의 시각적 가독성</td>
+</tr>
+<tr>
+<td>사운드</td>
+<td>합성 효과음, 전투의 근접·화살 효과음 재생</td>
+<td>음악·기술별 소리·음량 조절·믹싱</td>
+</tr>
+<tr>
+<td>상품·언어</td>
+<td>광고 무료판 + 별도 광고 없는 유료판 계획, 한국어 중심</td>
+<td>광고 SDK·판별 빌드·영어 전 과정</td>
+</tr>
+<tr>
+<td>배포</td>
+<td>개발용 APK, 기본 패키지명, 버전 0.0.1</td>
+<td>출시용 AAB·서명·버전·스토어 자료</td>
+</tr>
+</tbody></table></div>
+<p>v0.37의 1~30전투 점검은 전투별 체크포인트를 불러온 화면 검토였다. 사람이 구매와 배치를 직접 고르며 완주한 자료와 구분한다. 자동 정책의 승률은 실제 초보자의 승률로 사용하지 않는다. <a href="design-v0.37/HANDOFF.md">전투 점검 기록</a></p>
+<h2 id="section-2">2. 가장 먼저 — 전투를 읽을 수 있게 만들기</h2>
+<p>v0.37에서 이미 발견했지만 아직 적용하지 않은 부분을 우선 처리한다.</p>
+<ol>
+<li><strong>보스 체력·이름·상태를 고정된 정보 영역으로 정리.</strong> 날개와 머리 위에 글자가 몰리는 문제를 줄인다.</li>
+<li><strong>피해 숫자와 상태 표시 분리.</strong> 짧은 간격의 지속 피해는 표시만 묶고 실제 피해 계산·공격 횟수는 유지한다. 빙결·화상·중독은 아이콘과 형태로도 구분한다.</li>
+<li><strong>어두운 적의 실루엣 보완.</strong> 폐광·정원의 적에 필요한 범위만 대비를 조정한다.</li>
+<li><strong>전투 HUD 테마 통일.</strong> 거점의 잿빛·금장 테마에 맞추고 전투 예고 문구를 실제 적·행동과 연결한다.</li>
+<li><strong>타격 시점 확인.</strong> 검이 닿는 순간, 화살·마법의 발사와 적중, 피해 숫자와 소리가 일치하는지 살핀다. 현재 투사체 경로의 어색함은 점검 후보이며 확정된 버그로 단정하지 않는다.</li>
+</ol>
+<p>완료 판단: 사람이 전투를 보고 “누가 얼었는지”, “보스가 무엇을 했는지”, “어느 동료가 먼저 무너졌는지”를 설명할 수 있어야 한다. 1배속·2배속과 후반 밀집 편성에서 모두 확인한다.</p>
+<h2 id="section-3">3. 사람의 첫 플레이와 난도 검증</h2>
+<h3>먼저 5~8명에게 설명 없이 맡겨 보기</h3>
+<p>첫 소규모 검토는 문제 발견용이다. 시장 전체 승률을 추정하는 표본으로 쓰지 않는다. 장르 경험이 적은 사람과 익숙한 사람을 섞고, 관찰 중 정답 배치나 조합을 알려주지 않는다.</p>
+<ul>
+<li>첫 소환·배치·전투를 외부 설명 없이 할 수 있는가.</li>
+<li>동료를 겹쳤을 때 성장·진화·결합의 차이를 이해하는가.</li>
+<li>5전투 보스 이전에 필요한 선택을 스스로 했는가.</li>
+<li>진 뒤 이유와 바꿔 볼 선택을 말할 수 있는가.</li>
+<li>원정 종료 후 다른 조합으로 다시 시작하고 싶은가.</li>
+<li>한 원정의 실제 시간, 전투를 보는 시간, 준비에 쓰는 시간은 얼마인가.</li>
+</ul>
+<h3>난도는 구간·빌드·계정을 나누어 조정</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>검증할 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1~2전투</td>
+<td>조작을 익히는 여유가 있는가</td>
+</tr>
+<tr>
+<td>3~10전투</td>
+<td>소환·배치·성장의 첫 선택이 의미 있는가</td>
+</tr>
+<tr>
+<td>11~20전투</td>
+<td>조합과 전술의 효과가 드러나고 같은 행동의 반복이 지루하지 않은가</td>
+</tr>
+<tr>
+<td>21~30전투</td>
+<td>앞에서 만든 빌드가 시험받고, 패배가 이해 가능한가</td>
+</tr>
+<tr>
+<td>신규·연구 계정</td>
+<td>연구가 없어도 공략 가능하며, 연구 완료가 자동 승리를 만들지 않는가</td>
+</tr>
+<tr>
+<td>일반 진화·결합 편성</td>
+<td>재료·골드를 더 쓴 결합이 특정 역할에서 실질적인 장점을 주는가</td>
+</tr>
+</tbody></table></div>
+<p>v0.34~v0.35 자료에서는 29전투의 보호막·배치 상호작용이 큰 고비였고, 성가 기수 편성은 여러 자동 정책에서 일반 최종 진화보다 불리했다. 자동 정책의 한계를 감안해 이 두 항목을 사람 플레이에서도 우선 확인한다. 공격력 버프의 간접 기여를 개인 피해량만으로 평가하지 않는다. <a href="design-v0.34/HANDOFF.md">v0.34 비교</a> · <a href="design-v0.35/HANDOFF.md">v0.35 후반 분석</a></p>
+<p><strong>목표 제안:</strong> 적어도 3종류의 다른 빌드가 Normal에서 현실적인 완주 경로를 갖고, 배치·지출을 무시하는 선택은 후반에서 손해를 본다. 처음부터 적 체력·공격력을 전부 올리지 않고 원인별로 조정한다.</p>
+<h3>최소 진단 기록</h3>
+<p>앱 버전·시드·시작 편성·연구 상태·소환/성장/전술 지출·단계별 승패·등불 소모·전투 시간·중도 종료 지점을 남기는 로컬 진단 내보내기부터 추천한다. 이후 원격 분석을 추가한다면 전송 범위와 개인정보 안내를 별도로 설계한다.</p>
+<h2 id="section-4">4. 추가 개발 — 이해·선택·반복 플레이</h2>
+<h3>출시 전 우선</h3>
+<ul>
+<li><strong>첫 성장·첫 결합 안내:</strong> 실제로 재료가 모였을 때 한 번 보여준다. 최초 실행에 긴 설명을 한꺼번에 넣지 않는다. 기존 1·2전투 안내와 이어지게 한다.</li>
+<li><strong>플레이용 동료 도감:</strong> 발견한 직업, 역할, 진화 경로, 결합 재료와 결과를 게임 안에서 찾아볼 수 있게 한다. 개발용 시험실을 그대로 공개용 도감으로 쓰지 않는다.</li>
+<li><strong>결과의 납득:</strong> 기존 전투 기여도와 결과 창을 활용해 피해·회복·보호의 의미를 설명한다. 실제 데이터로 뒷받침할 수 없는 자동 공략 조언은 넣지 않는다.</li>
+<li><strong>첫 완주 마무리:</strong> 최종 보스 뒤 이야기·완주 기록·다음에 해볼 편성을 연결한다. 이미 있는 원정 기록과 성과를 중심으로 보완한다.</li>
+</ul>
+<h3>반복 플레이가 단조롭다면 다음으로</h3>
+<p>소수의 <strong>유물 또는 지역 종료 선택 보상</strong>을 시범 도입할 수 있다. 예를 들어 6~10개 후보 중 일부를 선택하고, 단순 공격력 보너스보다 표식·보호막·화상·빙결 등 기존 역할을 바꾸는 효과에 집중한다. 이는 미구현 제안이다. 기존 전술·연구와 역할이 겹치는지 먼저 확인하고 한 종류부터 시험한다.</p>
+<p>현재 영구 연구는 6노드로 작다. 시작 편성과 공략 방향을 넓히는 연구를 우선 검토한다. 단순 능력치 노드를 대량 추가해 반복 횟수로 난도를 무너뜨리는 구조는 피한다. 해금 조건이 공개되지 않아 원하는 빌드를 시도하기 어려워지는지도 함께 확인한다.</p>
+<p>30형태 전부에 대해 기술·대상·사거리·상태 이상·전승·결합 재료·동작·설명 문구의 검사표를 만든다. 무한 빙결, 보호막 반복, 회복 정체로 전투가 풀리지 않는 조건과 시간 초과 처리도 포함한다.</p>
+<h2 id="section-5">5. 저장·성능·기기 대응</h2>
+<h3>저장과 복구</h3>
+<p>현재 저장 버전 이행과 손상 감지 검사는 있다. 앱 자체 백업과 기기 간 이전은 없다. <a href="design-v0.37/HANDOFF.md">현재 저장 구조</a></p>
+<ul>
+<li>마지막 정상 기록을 복구할 수 있는 백업과 복원 안내 추가.</li>
+<li>소환·결합·연구 구매·보상 수령 직전/직후 강제 종료를 시험해 골드·유닛·연구가 유실되거나 중복 지급되지 않는지 확인.</li>
+<li>전투 중 종료 후 어디서 재개되는지 규칙을 일관되게 표시.</li>
+<li>원정·성과·이야기 저장 도중 중단되어도 데이터 사이의 상태가 어긋나지 않는지 검증.</li>
+<li>이전 출시 버전에서 업데이트한 뒤 진행을 이어가는 이행 시험.</li>
+<li>앱 삭제·기기 교체 복구를 제공할지 결정하고 실제 제공 범위를 명확히 안내.</li>
+</ul>
+<p>첫 출시의 자체 서버와 계정 로그인은 필수로 제안하지 않는다. 로컬 중심 구조로도 시작할 수 있지만, 복구와 기록 이전은 사용자 경험으로 설계해야 한다. SQLite로 바꾸는 것만으로 이 문제가 해결되지는 않는다.</p>
+<h3>성능과 화면</h3>
+<ul>
+<li>Buddy2에서 원정 반복을 포함한 30~60분 실행: 프레임 시간, 메모리 증가, 발열, 배터리 소모, 앱 멈춤을 측정.</li>
+<li>후반 최대 편성·범위 공격·상태 이상이 겹치는 전투에서 1배속과 2배속 확인.</li>
+<li>Buddy2 외 최신 Android, 다른 화면 비율, 노치·제스처 영역이 다른 기기와 가능한 태블릿 검증.</li>
+<li>화면 잠금·홈 이동·전화/알림·이어폰 연결·오디오 복귀·OS의 프로세스 종료 확인.</li>
+<li>저사양에서 60fps가 불안정하면 30fps 고정과 효과량 조절을 검토. 평균값뿐 아니라 반복되는 긴 프레임을 본다.</li>
+</ul>
+<p>출시 기준 제안: 지원 기기에서 선택한 프레임 목표를 지속 유지하고, 진행을 막는 크래시·저장 유실·중복 보상 등 알려진 중대 결함을 해결한다. 짧은 테스트 중 오류가 없었다는 사실만으로 무결함을 주장하지 않는다.</p>
+<h2 id="section-6">6. 설정·사운드·영어</h2>
+<ul>
+<li><strong>공통 설정:</strong> 효과음·음악 음량, 언어, 배속 기본값, 필요한 경우 화면 흔들림/섬광 감소. 저장 후 재시작해도 유지.</li>
+<li><strong>사운드:</strong> 거점·일반 전투·보스의 분위기, 물리/화염/빙결/회복의 구분, 승리·패배·결합의 피드백. 현재 등록된 음원은 기본 합성 효과음 중심이며 BGM 제작은 남아 있다.</li>
+<li><strong>영어:</strong> UI·직업명·기술·연구·튜토리얼·이야기·오류·광고 안내까지 문자열을 외부화하고 한영 용어집을 일치시킨다.</li>
+<li>긴 영어 문장에서 버튼·다이어로그·도감이 잘리지 않는지, 글꼴이 누락되지 않는지 확인. 한국어 UI의 폭을 그대로 고정해 번역만 바꾸지 않는다.</li>
+<li>대표 이미지와 게임 내 도트 캐릭터가 같은 인물로 인식되는지, 스토어 그림이 실제 플레이 품질과 동떨어지지 않는지 확인.</li>
+</ul>
+<p>현재 전투에는 일시정지와 1·2배속이 있다. 이를 새로 만들 작업으로 중복 계산하지 않는다. 공통 설정 화면과 영어 전 과정은 추가 범위다.</p>
+<h2 id="section-7">7. 광고 무료판과 광고 없는 유료판</h2>
+<p>기존 방향인 <strong>인앱결제 없음 / 광고 무료 앱 / 별도 광고 없는 유료 앱</strong>을 기준으로 한다. 현재 광고 SDK와 판별 배포 설정은 구현되지 않았다.</p>
+<ol>
+<li>같은 게임 코드를 공유하면서 패키지·서명/버전 관리·광고 포함 여부를 분리한다. 유료판에는 광고 SDK도 제외하는 구성을 권한다.</li>
+<li>무료판은 전투 도중 광고를 넣지 않는다. 우선 원정 종료 등 자연스러운 경계에 제한적으로 노출하는 안부터 테스트한다. 노출 주기와 형식은 확정할 작업이다.</li>
+<li>광고가 없거나 로딩에 실패해도 기본 게임이 진행되어야 한다. 광고에서 돌아올 때 화면·오디오·일시정지 상태를 복구한다.</li>
+<li>보상형 광고를 넣는다면 보상 중복/누락을 막고, 무료판과 유료판의 골드·재도전 기회를 어떻게 동등하게 할지 정한다. 현재는 보상형을 확정하지 않는다.</li>
+<li><strong>무료판에서 유료판으로 옮길 때 진행 기록을 가져오는 경로</strong>를 설계한다. 다른 앱의 PlayerPrefs가 자동 공유된다고 가정하지 않는다.</li>
+<li>광고 SDK가 다루는 데이터까지 포함해 개인정보처리방침과 데이터 보안 정보를 작성한다. AdMob 채택 시 지역별 동의·개인정보 선택 접근은 UMP 공식 흐름을 검토한다. <a href="https://support.google.com/googleplay/android-developer/answer/10787469?hl=en">Google 데이터 보안 안내</a> · <a href="https://developers.google.com/admob/unity/privacy">Unity용 UMP 안내</a></li>
+</ol>
+<p>무료·유료 두 앱은 각각 설치·업데이트·광고 유무·기록 이전을 검증해야 한다. 동시 출시가 부담되면 출시 순서를 나누되, 사용자에게 안내할 이전 규칙부터 정한다.</p>
+<h2 id="section-8">8. Google Play 배포 준비</h2>
+<p>2026-10-25에 공식 문서를 확인했다. 제출 시점에 Play Console의 적용 요건을 다시 확인한다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>현재와 필요한 작업</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>출시 빌드</td>
+<td>현재 <code>BuildOptions.Development</code> APK. 개발 표시와 시험실을 출시에서 제외하고 서명된 AAB 빌드 경로 마련. 새 앱의 Google Play 배포는 AAB 필요. <a href="https://developer.android.com/guide/app-bundle">공식 안내</a></td>
+</tr>
+<tr>
+<td>앱 식별자·버전</td>
+<td>현재 <code>com.expeditionprototype.combatdemo</code>, 0.0.1 / versionCode 1. 무료·유료 패키지명과 배포별 증가 규칙 확정</td>
+</tr>
+<tr>
+<td>서명 관리</td>
+<td>업로드 키·Play App Signing 설정과 안전한 키 보관·복구 계획. 키를 저장소에 넣지 않음</td>
+</tr>
+<tr>
+<td>대상 API</td>
+<td>공식 안내는 2026-08-31부터 새 앱·업데이트에 Android 16/API 36 이상 요구. 현재 생성 Gradle은 targetSdk 36이지만 출시 AAB에서도 확인. <a href="https://support.google.com/googleplay/android-developer/answer/11926878?hl=en">공식 요건</a></td>
+</tr>
+<tr>
+<td>16KB 페이지</td>
+<td>Unity 네이티브 라이브러리와 추후 광고 SDK까지 정렬·실행 호환 확인. API 35 이상 대상 앱의 64비트 기기 지원 요건에 포함된다. 이번 검토에서는 실제 검사를 실행하지 않음. <a href="https://developer.android.com/guide/practices/page-sizes">공식 검증 안내</a></td>
+</tr>
+<tr>
+<td>계정·테스트</td>
+<td>2023-11-13 이후 만든 개인 계정이면 최소 12명이 연속 14일 참여한 비공개 테스트 후 프로덕션 접근 신청 필요. 단순 기간 충족을 자동 승인으로 해석하지 않음. 계정 유형은 현재 미확인. <a href="https://support.google.com/googleplay/android-developer/answer/14151465?hl=en">공식 테스트 요건</a></td>
+</tr>
+<tr>
+<td>스토어 제출</td>
+<td>한영 설명·실제 플레이 스크린샷·기능 이미지·아이콘·문의 연락처·광고 포함·연령/콘텐츠 등급·대상 연령·개인정보처리방침·데이터 보안 신고</td>
+</tr>
+<tr>
+<td>운영</td>
+<td>버그 신고에 앱 버전·기기·재현 방법을 받을 창구, 릴리즈 오류 확인, 문제 발생 시 배포 중단/수정 절차</td>
+</tr>
+</tbody></table></div>
+<p>게임 이름, 캐릭터, UI, 음악, 글꼴과 외부 SDK의 출처·이용 조건을 묶어 검토한다. 자체 제작/생성 기록은 보관하되 그것만으로 권리 문제가 없음을 보증하지 않는다. 참고작의 고유 이름·캐릭터·표현을 최종 자산에 가져오지 않았는지 확인한다.</p>
+<h2 id="section-9">9. 개발 순서와 완료 기준</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>작업 묶음</th>
+<th>다음으로 넘어갈 기준</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>전투 HUD·보스 정보·피해/상태 표시, 최소 진단 내보내기</td>
+<td>후반 장면이 읽히고 테스트 결과를 재현할 수 있음</td>
+</tr>
+<tr>
+<td>2</td>
+<td>신규 플레이 5~8명, 직접 Normal 연속 플레이</td>
+<td>막히는 조작·지루한 구간·첫 실패 이유·원정 시간 확보</td>
+</tr>
+<tr>
+<td>3</td>
+<td>결과 기반 난도·경제·결합 밸런스, 상황별 안내·도감</td>
+<td>여러 빌드의 의미 있는 공략 경로와 반복 플레이 동기 확인</td>
+</tr>
+<tr>
+<td>4</td>
+<td>저장 복구·설정·사운드·영어·장시간 기기 시험</td>
+<td>중대 결함 해결, 지원 기기와 언어에서 주요 흐름 검증</td>
+</tr>
+<tr>
+<td>5</td>
+<td>광고/유료판·기록 이전·출시 AAB</td>
+<td>두 상품의 설치·업데이트·광고 실패 경로·기록 보존 확인</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Play 비공개 테스트·스토어 자료·운영 준비</td>
+<td>적용 계정 요건 충족 및 출시 후보 빌드 검증·승인</td>
+</tr>
+</tbody></table></div>
+<p>계정 확인, 테스트 참여자 모집, 이름·아트 권리 검토는 앞 단계와 함께 준비할 수 있다. 요구되는 테스트 기간은 마지막에 몰아서 줄일 수 없다.</p>
+<p><strong>1단계 구현과 대표 장면 점검은 v0.39에 반영했다.</strong> 다음은 이 빌드로 처음 하는 사람의 반응을 얻는 2단계다. 테스트에서 나온 문제는 재현 조건·심각도·수정 결과와 함께 기록해 이후 개발의 기준으로 삼는다. 사운드 청취와 장시간 성능 측정은 아직 남아 있다.</p>
+<h2 id="section-10">10. 첫 출시 이후로 미룰 수 있는 것</h2>
+<ul>
+<li>Hard 모드, 100전투, 무한 모드.</li>
+<li>대규모 신규 직업·보스·연구 트리 확장.</li>
+<li>계정·자체 서버·랭킹·실시간 기능.</li>
+<li>방대한 스토리 영상, 전 유닛 음성, 장식 스킨.</li>
+</ul>
+<p>첫 출시 목표는 <strong>Normal 30전투를 여러 조합으로 다시 하고 싶고, 처음 하는 사람도 선택의 결과를 이해하며, 안심하고 이어할 수 있는 게임</strong>으로 잡는다. 콘텐츠 양·완성도·수익성 판단은 이후 사람의 플레이와 운영 자료로 갱신한다.</p>
+<h2 id="section-11">11. 실행 체크리스트</h2>
+<p>기존 구현은 1절의 현황을 따른다. 아래 체크박스는 <strong>추가 작업과 검증</strong>이다. 2026-10-25 v0.39의 완료 범위를 반영했으며, 구현·자동 검사·실기기 확인과 사람 플레이 결과를 구분한다.</p>
+<h3>1단계 · v0.39 반영 — 전투 화면과 진단</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>작업</th>
+<th>확인할 완료 기준</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B01</td>
+<td>상단 전투 HUD·보스 정보 정리</td>
+<td>보스 이름·체력·상태와 일시정지·배속 조작이 겹치지 않는다. 비행·큰 공격에도 정보 위치가 안정적이다.</td>
+</tr>
+<tr>
+<td>B02</td>
+<td>피해 숫자·상태 표시 정리</td>
+<td>직접 타격·지속 피해·회복을 구분하고, 빙결·화상·중독을 색 외의 모양으로도 읽을 수 있다. 계산값과 표시 합계가 맞는다.</td>
+</tr>
+<tr>
+<td>B03</td>
+<td>어두운 적과 호위 가독성 보완</td>
+<td>폐광·정원에서 적을 찾을 수 있고, 보스 뒤 호위는 발 위치에 맞게 일부 가려지며 공중에 뜬 것처럼 보이지 않는다.</td>
+</tr>
+<tr>
+<td>B04</td>
+<td>공격·투사체·소리 시점 점검</td>
+<td>대표 근접·원거리·마법 공격과 이동 표적에서 발사·적중·피해 표시의 명백한 어긋남을 해결한다.</td>
+</tr>
+<tr>
+<td>B05</td>
+<td>로컬 플레이 진단 내보내기</td>
+<td>버전·시드·편성·연구·지출·승패·등불·단계별 시간·종료 지점을 기록한다. 중단은 패배와 구분하고 기록에 사람의 이름은 필요 없다.</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> B01~B05 구현·점검 결과를 각각 기록한다. B04는 지원 기술의 잘못된 공격 표시와 보스 전용 효과를 수정했으며 실제 사운드 청취는 후속 검사로 남겼다.</li>
+<li><input checked="" disabled="" type="checkbox"> 여섯 보스와 폐광·정원·후반 밀집 일반전(14·24·29)을 1배속/2배속으로 확인한다.</li>
+<li><input checked="" disabled="" type="checkbox"> Buddy2 원래 비율과 임시 16:9에서 버튼·문구·안전 영역의 겹침을 확인한다. 실제 다른 기기 검증은 4단계에도 남긴다.</li>
+<li><input checked="" disabled="" type="checkbox"> 전투 계산 Core의 변경이 없음을 확인하고 대표 동일 시드·편성에서 기록 유무 및 내보낸 상태의 전투·보상 결과를 비교한다. 모든 조합의 전후 전수 검사는 아니다.</li>
+<li><input checked="" disabled="" type="checkbox"> 전투 화면과 짧은 녹화, 변경 목록, 남은 문제를 남긴다. 선정 화면은 <a href="design-v0.39/HANDOFF.html">v0.39 문서</a>에 있다.</li>
+<li><input disabled="" type="checkbox"> 실제 청취로 발사음·적중음·소리 지연을 확인한다. 장시간 성능 검사는 4단계에서 진행한다.</li>
+</ul>
+<p><strong>이 단계 완료:</strong> 대표 장면의 정보 겹침을 해결하고 실기기에서 확인했으며, 다음 사람 테스트에서 실패·중단 상황을 추적할 수 있다. 실제 이해도는 2단계에서 확인한다.</p>
+<h3>2단계 · 첫 플레이테스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 처음 하는 사람 5~8명의 장르 경험·기기·사용 언어를 기록하고 같은 테스트 빌드를 배포한다.</li>
+<li><input disabled="" type="checkbox"> 신규 계정의 첫 1~5전투를 외부 설명 없이 관찰한다. 도중에 알려준 내용은 도움을 받은 것으로 기록한다.</li>
+<li><input disabled="" type="checkbox"> 가능한 참여자에게 Normal 한 원정의 종료까지 맡기고, 완주·등불 소진·자발적 종료를 구분한다. 모두가 완주해야 하는 기준은 아니다.</li>
+<li><input disabled="" type="checkbox"> 12절 양식으로 시간·막힌 조작·실패 이유·다음 판 의향을 정리한다.</li>
+<li><input disabled="" type="checkbox"> 재현 가능한 문제와 사람의 선호를 구분하고, 수정 우선순위를 정한다.</li>
+</ul>
+<h3>3단계 · 결과 기반 게임성 보완</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 발견한 난도 고비와 지출 문제를 원인별로 수정한다. 29전투와 결합 편성을 우선 관찰한다.</li>
+<li><input disabled="" type="checkbox"> 첫 성장·진화·결합·전술 구매 안내와 플레이용 도감을 연결한다.</li>
+<li><input disabled="" type="checkbox"> 동료 30형태의 기능·문구·동작 검사표를 채우고, 서로 다른 빌드의 공략 경로를 확인한다.</li>
+<li><input disabled="" type="checkbox"> 최종 보스 이후의 이야기·완주 기록·다음 도전 흐름을 점검한다.</li>
+<li><input disabled="" type="checkbox"> 반복 플레이 자료를 보고 유물/지역 보상과 연구 확장을 도입할지 판단한다. 추가하기로 한 경우에는 별도 규칙·균형 검증 범위를 작성한다.</li>
+</ul>
+<h3>4단계 · 제품 완성도와 안정성</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 정상 저장 백업·복구와 행동/보상 경계에서의 강제 종료·업데이트 이행을 검증한다.</li>
+<li><input disabled="" type="checkbox"> 공통 설정·음악/효과음·한국어/영어 전 과정을 완성하고 설정 유지와 문구 잘림을 확인한다.</li>
+<li><input disabled="" type="checkbox"> Buddy2 30~60분, 추가 기기·화면 비율·최신 Android, 화면 잠금/복귀·오디오 중단을 시험한다.</li>
+<li><input disabled="" type="checkbox"> 기기별 성능 결과를 보고 프레임 목표·효과 옵션·지원 범위를 확정한다.</li>
+</ul>
+<h3>5단계 · 무료판·유료판과 출시 빌드</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 광고 형식·노출 시점·보상 여부, 두 상품의 플레이 조건과 기록 이전 방법을 확정한다.</li>
+<li><input disabled="" type="checkbox"> 무료/유료 빌드와 무료→유료 기록 이전을 구현하고, 광고 실패·복귀·네트워크 없음 경로를 시험한다.</li>
+<li><input disabled="" type="checkbox"> 출시 패키지·서명·버전과 AAB 배포 경로를 만들고 개발용 메뉴/표시를 정리한다.</li>
+<li><input disabled="" type="checkbox"> 출시 후보 AAB에서 API·네이티브/광고 SDK 호환·설치·업데이트를 확인한다.</li>
+</ul>
+<h3>6단계 · 비공개 테스트와 출시 판단</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Play 계정 유형과 해당 테스트·검토 절차를 확인한다.</li>
+<li><input disabled="" type="checkbox"> 출시 후보 빌드로 필요한 비공개 테스트를 진행하고 발견 문제를 수정·재확인한다.</li>
+<li><input disabled="" type="checkbox"> 한영 스토어 자료·등급·광고/개인정보 안내·문의 창구와 아트/음원/글꼴 출처를 정리한다.</li>
+<li><input disabled="" type="checkbox"> 마지막 출시 판단에서 진행 불가·저장 유실·중복 보상·반복 크래시 등 알려진 중대 결함이 남아 있는지 확인한다.</li>
+</ul>
+<h3>진행 중 확정할 항목</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>결정 시점</th>
+<th>현재 상태</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>광고 형식·빈도·보상</td>
+<td>5단계 구현 전</td>
+<td>미정</td>
+</tr>
+<tr>
+<td>무료·유료 동시 출시 여부와 기록 이전 UX</td>
+<td>5단계 구현 전</td>
+<td>미정</td>
+</tr>
+<tr>
+<td>유료판 가격·출시 국가·대상 연령</td>
+<td>상품/스토어 준비</td>
+<td>미정</td>
+</tr>
+<tr>
+<td>데이터 삭제·기기 교체 시 복구 범위</td>
+<td>4단계 저장 설계</td>
+<td>미정</td>
+</tr>
+<tr>
+<td>유물·지역 보상·연구 확장 규모</td>
+<td>2~3단계 반복 플레이 검토 후</td>
+<td>조건부 검토</td>
+</tr>
+<tr>
+<td>프레임 목표·최소 지원 기기</td>
+<td>4단계 측정 후</td>
+<td>미정</td>
+</tr>
+</tbody></table></div>
+<p>이 결정들은 기록할 작업이며, 현재 전투 화면 개선을 시작하기 위한 선행 조건은 아니다.</p>
+<h2 id="section-12">12. 플레이테스트 기록 양식</h2>
+<p>한 참여자·한 원정마다 아래 양식을 복사한다. 자료가 없으면 미측정으로 남기고, 시간과 승률을 추정해 채우지 않는다.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>기록</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>참여자 구분</td>
+<td>익명 번호 / 로그라이트·오토배틀 경험</td>
+</tr>
+<tr>
+<td>실행 환경</td>
+<td>빌드·커밋 / 기기·OS / 언어</td>
+</tr>
+<tr>
+<td>시작 조건</td>
+<td>신규·기존 계정 / 연구 / 시작 편성 / 시드</td>
+</tr>
+<tr>
+<td>첫 조작</td>
+<td>혼자 완료 / 도움 받은 지점 / 건너뛴 안내</td>
+</tr>
+<tr>
+<td>종료 상태</td>
+<td>완주 / 등불 소진 / 자발적 종료 / 앱 오류 / 진행 중</td>
+</tr>
+<tr>
+<td>도달·시간</td>
+<td>최고 단계 / 준비·전투·휴식 시간 / 최초 실패 단계</td>
+</tr>
+<tr>
+<td>선택</td>
+<td>주요 소환·성장·결합·전술 / 지출 기록 파일</td>
+</tr>
+<tr>
+<td>가장 헷갈린 곳</td>
+<td>단계·화면·조작 / 참여자의 표현</td>
+</tr>
+<tr>
+<td>패배 이해</td>
+<td>참여자가 생각한 원인 / 다음에 바꾸려는 선택</td>
+</tr>
+<tr>
+<td>반복 의향</td>
+<td>다시 하고 싶은 이유 또는 그만하고 싶은 이유</td>
+</tr>
+<tr>
+<td>발견 문제</td>
+<td>재현 순서 / 심각도 / 화면·로그 / 수정 후 재확인</td>
+</tr>
+</tbody></table></div>
+<p>체크포인트 주입으로 특정 장면만 확인한 경우에는 별도 기능 점검으로 표시한다. 사람의 연속 원정 통계에 합치지 않는다.</p>
+</main>
+</div>
+<footer>기획 검토안 · 세부 규칙과 수치는 플레이 검증 후 조정합니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

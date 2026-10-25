@@ -127,11 +127,17 @@ namespace Expedition.EditorTools
             if (!assetPath.StartsWith("Assets/Resources/Art/", StringComparison.Ordinal)) return;
             var importer = (TextureImporter)assetImporter;
             bool startup = assetPath == StartupArtSetup.ImagePath;
+            bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal);
             importer.textureType = startup ? TextureImporterType.Sprite : TextureImporterType.Default;
             if (startup)
             {
                 importer.textureShape = TextureImporterShape.Texture2D;
                 importer.spriteImportMode = SpriteImportMode.Single;
+            }
+            if (bossEffect)
+            {
+                importer.textureShape = TextureImporterShape.Texture2D;
+                importer.alphaSource = TextureImporterAlphaSource.FromInput;
             }
             importer.filterMode = FilterMode.Point;
             importer.wrapMode = TextureWrapMode.Clamp;
@@ -140,7 +146,8 @@ namespace Expedition.EditorTools
             importer.isReadable = false;
             importer.alphaIsTransparency = true;
             // Catalog sprite sheets are loaded on demand on mobile; keep each sheet bounded.
-            importer.maxTextureSize = assetPath.StartsWith("Assets/Resources/Art/Units/v010/", StringComparison.Ordinal) ? 1024 : 2048;
+            importer.maxTextureSize = bossEffect ||
+                assetPath.StartsWith("Assets/Resources/Art/Units/v010/", StringComparison.Ordinal) ? 1024 : 2048;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
         }
 

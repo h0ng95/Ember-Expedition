@@ -1,0 +1,15 @@
+{
+  "width": 1536,
+  "height": 1024,
+  "rowCut": 490,
+  "anchorX": 230.0,
+  "referenceBodyHeight": 459.0,
+  "frames": [
+    { "x": 32, "y": 9, "width": 421, "height": 459, "footY": 468.0 },
+    { "x": 550, "y": 9, "width": 439, "height": 459, "footY": 468.0 },
+    { "x": 1078, "y": 14, "width": 416, "height": 451, "footY": 465.0 },
+    { "x": 35, "y": 509, "width": 429, "height": 452, "footY": 961.0 },
+    { "x": 546, "y": 513, "width": 419, "height": 448, "footY": 961.0 },
+    { "x": 1075, "y": 513, "width": 414, "height": 446, "footY": 959.0 }
+  ]
+}

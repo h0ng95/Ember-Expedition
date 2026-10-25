@@ -45,7 +45,7 @@ namespace Expedition.Presentation
         };
         static readonly Color Ink = new Color(.06f, .11f, .12f);
         static readonly Color Panel = new Color(.11f, .18f, .19f, .97f);
-        static readonly Color Gold = new Color(.99f, .78f, .41f);
+        static readonly Color Gold = ExpeditionUiTheme.Gold;
 
         sealed class Slot
         {
@@ -68,13 +68,54 @@ namespace Expedition.Presentation
             public Rect Bounds;
             public float Height;
             public bool RegionalArtLoaded;
+            public bool CoveredByBoss;
         }
         sealed class FloatText
         {
             public string Text;
+            public string TargetId;
+            public float Amount;
+            public BattleFloatKind Kind;
+            public int Lane;
             public Vector2 Position;
             public Color Color;
             public float Age, Lift;
+        }
+
+        public enum BattleFloatKind { Direct, Burn, Poison, Heal, Shield, Freeze, PoisonApplied }
+
+        public static class HudRules
+        {
+            public static readonly Rect BossPanel = new Rect(337f, 5f, 405f, 66f);
+            static readonly Vector2[] DirectLanes = {
+                new Vector2(0f, 0f), new Vector2(-74f, -32f), new Vector2(74f, -32f),
+                new Vector2(-74f, 32f), new Vector2(74f, 32f), new Vector2(0f, -64f)
+            };
+            public static Vector2 DirectLane(int index) { return DirectLanes[Mathf.Clamp(index, 0, 5)]; }
+            public static float DirectLaneShiftY(float baseY, float minY, float maxY)
+            {
+                // Move the whole six-label pattern; flipping individual lanes can stack them.
+                float shift = Mathf.Max(0f, minY - (baseY - 64f));
+                return Mathf.Min(shift, maxY - (baseY + 32f));
+            }
+            public static int FirstFreeDirectLane(int used)
+            {
+                for (int i = 0; i < DirectLanes.Length; i++)
+                    if ((used & (1 << i)) == 0) return i;
+                return -1;
+            }
+            public static bool MergeDot(BattleFloatKind existing, string existingTarget, float age,
+                BattleFloatKind incoming, string incomingTarget)
+            {
+                return (incoming == BattleFloatKind.Burn || incoming == BattleFloatKind.Poison) &&
+                    existing == incoming && existingTarget == incomingTarget && age <= .22f;
+            }
+            public static string DamageText(BattleFloatKind kind, float amount)
+            {
+                string prefix = kind == BattleFloatKind.Burn ? "화상 " :
+                    kind == BattleFloatKind.Poison ? "중독 " : "";
+                return prefix + "−" + amount.ToString("0.##");
+            }
         }
 
         [Serializable] sealed class ArtManifest { public ArtEntry[] entries; }
@@ -120,7 +161,7 @@ namespace Expedition.Presentation
         int selected, category, trait, branch, fusionPair, preset, galleryState, screen, dragged = -1;
         float clock, accumulator, speed = 1f, galleryTime;
         bool paused, galleryAuto;
-        GUIStyle title, heading, label, small, button, tiny, centered;
+        GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
         Font uiFont;
         Rect viewport;
 
@@ -343,13 +384,13 @@ namespace Expedition.Presentation
                     target.HitTime = target.Unit.IsBoss ? 0f : .24f;
                     target.NewHit = !target.Unit.IsBoss;
                 }
-                if (floating.Count < 24) floating.Add(new FloatText {
-                    Text = "−" + e.Amount.ToString("0"), Position = new Vector2(target.Unit.X, target.Unit.Y),
-                    Color = target.Unit.Team == CatalogTeam.Ally ? new Color(1f, .53f, .47f) : Gold,
-                    Lift = FloatLift(target.Unit) });
+                BattleFloatKind kind = e.AbilityId == "BURN" ? BattleFloatKind.Burn :
+                    e.AbilityId == "POISON" ? BattleFloatKind.Poison : BattleFloatKind.Direct;
+                AddDamageFloat(target.Unit, kind, e.Amount);
             }
             if ((e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield) && target != null && floating.Count < 24)
-                floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + e.Amount.ToString("0"),
+                floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + e.Amount.ToString("0.##"),
+                    Kind = e.Kind == CatalogEventKind.Heal ? BattleFloatKind.Heal : BattleFloatKind.Shield,
                     Position = new Vector2(target.Unit.X, target.Unit.Y), Color = e.Kind == CatalogEventKind.Heal ?
                     new Color(.55f, 1f, .64f) : new Color(.5f, .84f, 1f), Lift = FloatLift(target.Unit) });
             if (e.Kind == CatalogEventKind.Shield && e.AbilityId == "MINE_GUARD" && source != null)
@@ -371,12 +412,54 @@ namespace Expedition.Presentation
                 target.ReleaseRemaining = 0f;
                 target.NewRelease = false;
                 if (floating.Count < 24)
-                    floating.Add(new FloatText { Text = "빙결", Position = new Vector2(target.Unit.X, target.Unit.Y),
+                    floating.Add(new FloatText { Text = "◆ 빙결", Kind = BattleFloatKind.Freeze,
+                        Position = new Vector2(target.Unit.X, target.Unit.Y),
                         Color = new Color(.59f, .88f, 1f), Lift = FloatLift(target.Unit) });
             }
             if (e.Kind == CatalogEventKind.Poison && target != null && floating.Count < 24)
-                floating.Add(new FloatText { Text = "중독", Position = new Vector2(target.Unit.X, target.Unit.Y),
+                floating.Add(new FloatText { Text = "◆ 중독", Kind = BattleFloatKind.PoisonApplied,
+                    Position = new Vector2(target.Unit.X, target.Unit.Y),
                     Color = new Color(.73f, 1f, .42f), Lift = FloatLift(target.Unit) });
+        }
+
+        void AddDamageFloat(CatalogBattleUnit target, BattleFloatKind kind, float amount)
+        {
+            if (kind == BattleFloatKind.Burn || kind == BattleFloatKind.Poison)
+                for (int i = floating.Count - 1; i >= 0; i--)
+                    if (HudRules.MergeDot(floating[i].Kind, floating[i].TargetId, floating[i].Age,
+                        kind, target.Id))
+                    {
+                        floating[i].Amount += amount;
+                        floating[i].Text = HudRules.DamageText(kind, floating[i].Amount);
+                        floating[i].Position = new Vector2(target.X, target.Y);
+                        return;
+                    }
+            if (floating.Count >= 24) return;
+            int lane = 0;
+            if (kind == BattleFloatKind.Direct)
+            {
+                int used = 0;
+                float oldestAge = -1f;
+                int oldestLane = 0;
+                foreach (FloatText active in floating)
+                    if (active.Kind == BattleFloatKind.Direct && active.TargetId == target.Id &&
+                        active.Age < .68f)
+                    {
+                        used |= 1 << active.Lane;
+                        if (active.Age > oldestAge) { oldestAge = active.Age; oldestLane = active.Lane; }
+                    }
+                lane = HudRules.FirstFreeDirectLane(used);
+                if (lane < 0) lane = oldestLane; // At most six readable slots per target.
+            }
+            floating.Add(new FloatText {
+                Kind = kind, TargetId = target.Id, Amount = amount, Lane = lane,
+                Text = HudRules.DamageText(kind, amount),
+                Position = new Vector2(target.X, target.Y),
+                Color = kind == BattleFloatKind.Burn ? new Color(1f, .61f, .26f) :
+                    kind == BattleFloatKind.Poison ? new Color(.74f, .96f, .42f) :
+                    target.Team == CatalogTeam.Ally ? new Color(1f, .53f, .47f) : Gold,
+                Lift = FloatLift(target)
+            });
         }
 
         void Update()
@@ -467,14 +550,17 @@ namespace Expedition.Presentation
                 "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Arial"
             }, 18);
             title = new GUIStyle(GUI.skin.label) { fontSize = 29, fontStyle = FontStyle.Bold, normal = { textColor = Gold } };
-            heading = new GUIStyle(GUI.skin.label) { fontSize = 21, fontStyle = FontStyle.Bold, normal = { textColor = Color.white } };
-            label = new GUIStyle(GUI.skin.label) { fontSize = 17, normal = { textColor = Color.white } };
-            small = new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = new Color(.8f, .9f, .88f) } };
+            heading = new GUIStyle(GUI.skin.label) { fontSize = 21, fontStyle = FontStyle.Bold, normal = { textColor = ExpeditionUiTheme.Cream } };
+            label = new GUIStyle(GUI.skin.label) { fontSize = 17, normal = { textColor = ExpeditionUiTheme.Cream } };
+            small = new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = ExpeditionUiTheme.Muted } };
             tiny = new GUIStyle(small) { fontSize = 12 };
             centered = new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
-            button = new GUIStyle(GUI.skin.button) { fontSize = 16, fontStyle = FontStyle.Bold };
+            dotText = new GUIStyle(centered) { fontSize = 13 };
+            statusText = new GUIStyle(tiny) { alignment = TextAnchor.MiddleLeft,
+                fontStyle = FontStyle.Bold, normal = { textColor = ExpeditionUiTheme.Cream } };
+            button = ExpeditionUiTheme.CreateButtonStyle(uiFont, 16);
             if (uiFont != null)
-                foreach (GUIStyle style in new[] { title, heading, label, small, tiny, centered, button }) style.font = uiFont;
+                foreach (GUIStyle style in new[] { title, heading, label, small, tiny, centered, dotText, statusText, button }) style.font = uiFont;
         }
 
         void OnGUI()
@@ -574,19 +660,18 @@ namespace Expedition.Presentation
 
         void DrawExpeditionBattle()
         {
-            Fill(new Rect(0, 0, Width, Height), Ink);
+            Fill(new Rect(0, 0, Width, Height), ExpeditionUiTheme.Background);
             if (expeditionBackground != null)
                 GUI.DrawTexture(new Rect(0, 68, Width, 652), expeditionBackground, ScaleMode.ScaleAndCrop);
-            Fill(new Rect(0, 68, Width, 652), new Color(.025f, .07f, .07f, .28f));
-            Fill(new Rect(0, 0, Width, 76), new Color(.035f, .085f, .09f));
-            GUI.Label(new Rect(26, 17, 690, 40), expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal, title);
-            GUI.Label(new Rect(745, 24, 145, 30), clock.ToString("0.0") + " / 75초", label);
-            if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button)) speed = speed == 1f ? 2f : 1f;
-            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button)) SetPaused(!paused);
-            if (battle == null) return;
+            Fill(new Rect(0, 68, Width, 652), new Color(.02f, .025f, .045f, .24f));
+            if (battle == null) { DrawBattleHeader(null); return; }
 
             Rect arena = new Rect(24, 92, 1232, 560);
             if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
+            foreach (View view in combatViews)
+                if (view.Unit.IsAlive && IsDimRegionalEnemy(view.Unit))
+                    DrawRegionalFootMarker(ExpeditionPoint(new Vector2(view.Unit.X, view.Unit.Y), arena),
+                        view.Unit.Id.StartsWith("garden-", StringComparison.Ordinal));
             // Enemy bodies use foot depth, including bosses; allies paint in front.
             var sorted = new List<View>(combatViews);
             sorted.Sort((a, b) => BattleVisibility.Compare(a.Unit.IsAlive, a.Unit.Y, a.Unit.Team, a.Unit.Id,
@@ -631,11 +716,11 @@ namespace Expedition.Presentation
                 View view = painted.View;
                 CatalogBattleUnit unit = view.Unit;
                 Vector2 point = painted.Point;
-                if (!unit.IsAlive) continue;
-                float width = unit.IsBoss ? 174f : 74f;
-                float barHeight = painted.RegionalArtLoaded ? painted.Height + (unit.IsBoss ? 23f : 12f) :
+                if (!unit.IsAlive || unit.IsBoss) continue;
+                float width = 74f;
+                float barHeight = painted.RegionalArtLoaded ? painted.Height + 12f :
                     unit.Team == CatalogTeam.Ally ? AllyHudHeight(unit.FormId) :
-                    unit.IsBoss ? 267f : unit.Team == CatalogTeam.Enemy &&
+                    unit.Team == CatalogTeam.Enemy &&
                     unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
                 float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
                 float barX = Mathf.Clamp(point.x - width * .5f, arena.x + 3, arena.xMax - width - 3);
@@ -647,38 +732,55 @@ namespace Expedition.Presentation
                 float statusY = barY + 16f;
                 if (unit.FrozenRemaining > 0f)
                 {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "빙결 ", unit.FrozenRemaining,
+                    DrawStatus(new Rect(barX, statusY, width, 20), "빙", unit.FrozenRemaining,
                         new Color(.035f, .18f, .27f, .87f), new Color(.68f, .91f, 1f));
                     statusY += 21f;
                 }
                 if (unit.BurnRemaining > 0f)
                 {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "화상 ", unit.BurnRemaining,
+                    DrawStatus(new Rect(barX, statusY, width, 20), "화", unit.BurnRemaining,
                         new Color(.32f, .095f, .035f, .87f), new Color(1f, .72f, .43f));
                     statusY += 21f;
                 }
                 if (unit.PoisonRemaining > 0f)
                 {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "중독 ", unit.PoisonRemaining,
+                    DrawStatus(new Rect(barX, statusY, width, 20), "독", unit.PoisonRemaining,
                         new Color(.12f, .16f, .075f, .87f), new Color(.78f, 1f, .48f));
                     statusY += 21f;
                 }
-                if (unit.IsBoss) GUI.Label(new Rect(barX - 30, barY - 33, 260, 31), UnitName(unit), heading);
+                if (IsDimRegionalEnemy(unit) && !painted.CoveredByBoss)
+                    DrawRegionalNameplate(new Rect(barX - 29, barY - 23, width + 58, 20), UnitName(unit));
                 else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
-                if (unit.IsBoss && unit.BossEnraged)
-                    GUI.Label(new Rect(barX, statusY, width, 26), "분노", centered);
             }
             foreach (FloatText text in floating)
             {
                 Vector2 point = ExpeditionPoint(text.Position, arena);
                 Color previous = GUI.color;
-                GUI.color = new Color(text.Color.r, text.Color.g, text.Color.b, 1f - text.Age / .75f);
-                float textY = Mathf.Clamp(point.y - 156f - text.Lift - text.Age * 42f,
+                bool dot = text.Kind == BattleFloatKind.Burn || text.Kind == BattleFloatKind.Poison;
+                Vector2 lane = text.Kind == BattleFloatKind.Direct ?
+                    HudRules.DirectLane(text.Lane) : Vector2.zero;
+                float baseY = Mathf.Clamp(point.y - (dot ? 119f : 156f) - text.Lift - text.Age * 42f,
                     arena.y + 24, arena.yMax - 30);
-                GUI.Label(new Rect(point.x - 40, textY, 80, 28), text.Text, centered);
+                float shift = text.Kind == BattleFloatKind.Direct ?
+                    HudRules.DirectLaneShiftY(baseY, arena.y + 24, arena.yMax - 30) : 0f;
+                float textY = Mathf.Clamp(baseY + lane.y + shift,
+                    arena.y + 24, arena.yMax - 30);
+                float width = dot ? 110f : 92f;
+                float textX = Mathf.Clamp(point.x + lane.x - width * .5f,
+                    arena.x + 2f, arena.xMax - width - 2f);
+                GUIStyle style = dot ? dotText : centered;
+                Rect number = new Rect(textX, textY, width, 28);
+                float opacity = Mathf.Clamp01(1f - text.Age / .75f);
+                GUI.color = new Color(.015f, .02f, .025f, opacity * .82f);
+                GUI.Label(new Rect(number.x + 1.5f, number.y + 2f, width, 28), text.Text, style);
+                GUI.color = new Color(text.Color.r, text.Color.g, text.Color.b, opacity);
+                GUI.Label(number, text.Text, style);
                 GUI.color = previous;
             }
-            Fill(new Rect(0, 664, Width, 56), new Color(.035f, .085f, .09f, .92f));
+            DrawBattleHeader(BattleBoss());
+            Color hudPanel = ExpeditionUiTheme.Panel;
+            Fill(new Rect(0, 664, Width, 56), new Color(hudPanel.r, hudPanel.g, hudPanel.b, .96f));
+            ExpeditionUiTheme.Rule(new Rect(16, 664, Width - 32, 2));
             GUI.Label(new Rect(28, 677, 870, 30), latestSkill != null && latestSkillUntil > clock ?
                 latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", label);
             int alive = 0, enemies = 0;
@@ -688,7 +790,7 @@ namespace Expedition.Presentation
             if (paused)
             {
                 Fill(new Rect(0, 76, Width, 588), new Color(.015f, .04f, .04f, .72f));
-                Fill(new Rect(402, 220, 476, 276), Panel);
+                Fill(new Rect(402, 220, 476, 276), ExpeditionUiTheme.Panel);
                 GUI.Label(new Rect(440, 245, 400, 45), "잠시 쉬어가기", title);
                 GUI.Label(new Rect(440, 302, 400, 50), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
                 if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) SetPaused(false);
@@ -713,17 +815,122 @@ namespace Expedition.Presentation
                     Fill(new Rect(foot.x - 12f, foot.y + 2f, 24f, 2f), cue);
                     Fill(new Rect(foot.x - 12f, foot.y - 1f, 2f, 5f), cue);
                     Fill(new Rect(foot.x + 10f, foot.y - 1f, 2f, 5f), cue);
+                    DrawnCombatant hidden = drawn[i];
+                    hidden.CoveredByBoss = true;
+                    drawn[i] = hidden;
                     break;
                 }
             }
         }
 
+        CatalogBattleUnit BattleBoss()
+        {
+            if (battle == null) return null;
+            foreach (CatalogBattleUnit unit in battle.Units)
+                if (unit.IsBoss) return unit;
+            return null;
+        }
+
+        void DrawBattleHeader(CatalogBattleUnit boss)
+        {
+            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 76));
+            GUI.Label(new Rect(26, 17, boss == null ? 690 : 302, 40),
+                expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal,
+                boss == null ? title : heading);
+            if (boss != null)
+            {
+                Rect panel = HudRules.BossPanel;
+                ExpeditionUiTheme.PanelBox(panel);
+                GUI.Label(new Rect(351, 8, 195, 29), UnitName(boss), heading);
+                int chip = 0;
+                if (boss.BossEnraged)
+                {
+                    Fill(new Rect(551, 11, 42, 20), new Color(.43f, .13f, .1f));
+                    GUI.Label(new Rect(551, 11, 42, 20), "분노", tiny);
+                    chip++;
+                }
+                if (boss.FrozenRemaining > 0f)
+                    DrawBossStatusChip(chip++, "빙", boss.FrozenRemaining,
+                        new Color(.07f, .25f, .34f), new Color(.67f, .89f, 1f));
+                if (boss.BurnRemaining > 0f)
+                    DrawBossStatusChip(chip++, "화", boss.BurnRemaining,
+                        new Color(.37f, .13f, .06f), new Color(1f, .68f, .35f));
+                if (boss.PoisonRemaining > 0f)
+                    DrawBossStatusChip(chip++, "독", boss.PoisonRemaining,
+                        new Color(.17f, .22f, .08f), new Color(.72f, .96f, .4f));
+                Fill(new Rect(352, 44, 258, 12), new Color(.06f, .07f, .09f));
+                Fill(new Rect(354, 46, 254 * Mathf.Clamp01(boss.Hp / boss.MaxHp), 8),
+                    new Color(.9f, .37f, .29f));
+                if (boss.Shield > 0f)
+                    Fill(new Rect(354, 59, 254 * Mathf.Clamp01(boss.Shield / boss.MaxHp), 3),
+                        new Color(.5f, .84f, 1f));
+                GUI.Label(new Rect(619, 38, 115, 27),
+                    boss.Hp.ToString("0") + " / " + boss.MaxHp.ToString("0"), small);
+            }
+            GUI.Label(new Rect(758, 24, 135, 30), clock.ToString("0.0") + " / 75초", label);
+            if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button))
+                speed = speed == 1f ? 2f : 1f;
+            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button))
+                SetPaused(!paused);
+        }
+
+        void DrawBossStatusChip(int index, string symbol, float remaining, Color background, Color foreground)
+        {
+            if (index >= 4) return;
+            DrawStatus(new Rect(551 + index * 45, 11, 42, 20), symbol, remaining,
+                background, foreground);
+        }
+
+        static bool IsDimRegionalEnemy(CatalogBattleUnit unit)
+        {
+            return unit.Team == CatalogTeam.Enemy && !unit.IsBoss &&
+                (unit.Id.StartsWith("mine-", StringComparison.Ordinal) ||
+                 unit.Id.StartsWith("garden-", StringComparison.Ordinal));
+        }
+
+        static void DrawRegionalFootMarker(Vector2 foot, bool garden)
+        {
+            Color color = garden ? new Color(.67f, .85f, .46f, .62f) :
+                new Color(.94f, .68f, .42f, .62f);
+            Fill(new Rect(foot.x - 22f, foot.y + 2f, 44f, 2f), color);
+            Fill(new Rect(foot.x - 22f, foot.y - 2f, 2f, 6f), color);
+            Fill(new Rect(foot.x + 20f, foot.y - 2f, 2f, 6f), color);
+        }
+
+        void DrawRegionalNameplate(Rect rect, string name)
+        {
+            Fill(rect, new Color(.07f, .085f, .1f, .86f));
+            ExpeditionUiTheme.Rule(new Rect(rect.x + 2f, rect.y + 1f, rect.width - 4f, 1f));
+            GUI.Label(rect, name, dotText);
+        }
+
         void DrawStatus(Rect rect, string name, float remaining, Color background, Color foreground)
         {
             Fill(rect, background);
+            Rect glyph = new Rect(rect.x + 3f, rect.y + 4f, 12f, 12f);
+            if (name == "빙")
+            {
+                Fill(new Rect(glyph.x + 5, glyph.y, 2, 12), foreground);
+                Fill(new Rect(glyph.x, glyph.y + 5, 12, 2), foreground);
+                Fill(new Rect(glyph.x + 2, glyph.y + 2, 2, 2), foreground);
+                Fill(new Rect(glyph.x + 8, glyph.y + 8, 2, 2), foreground);
+            }
+            else if (name == "화")
+            {
+                Fill(new Rect(glyph.x + 5, glyph.y, 3, 4), foreground);
+                Fill(new Rect(glyph.x + 3, glyph.y + 4, 7, 5), foreground);
+                Fill(new Rect(glyph.x + 1, glyph.y + 9, 11, 3), foreground);
+            }
+            else
+            {
+                Fill(new Rect(glyph.x + 4, glyph.y, 4, 4), foreground);
+                Fill(new Rect(glyph.x + 2, glyph.y + 4, 8, 5), foreground);
+                Fill(new Rect(glyph.x + 4, glyph.y + 9, 4, 3), foreground);
+            }
             Color prior = GUI.color;
             GUI.color = foreground;
-            GUI.Label(rect, name + remaining.ToString("0.0"), centered);
+            GUI.Label(new Rect(rect.x + 17f, rect.y, rect.width - 17f, rect.height),
+                (rect.width < 60f ? "" : name) + remaining.ToString("0.0"), statusText);
             GUI.color = prior;
         }
 

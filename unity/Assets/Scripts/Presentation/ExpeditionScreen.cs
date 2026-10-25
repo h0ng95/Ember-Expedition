@@ -41,7 +41,7 @@ namespace Expedition.Presentation
             "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport }
+            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -73,6 +73,8 @@ namespace Expedition.Presentation
 
         void Awake()
         {
+            playtest = GetComponent<PlaytestRecorder>();
+            if (playtest == null) playtest = gameObject.AddComponent<PlaytestRecorder>();
             Screen.orientation = ScreenOrientation.LandscapeLeft;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
@@ -110,6 +112,7 @@ namespace Expedition.Presentation
                 ExpeditionRunSave state = JsonUtility.FromJson<ExpeditionRunSave>(json);
                 if (state == null) throw new InvalidOperationException("저장 형식을 읽을 수 없음");
                 run = ExpeditionRun.Restore(database, state);
+                playtest.Begin(run, null);
                 ObserveJournal();
                 ObserveProgress();
             }
@@ -122,7 +125,7 @@ namespace Expedition.Presentation
             }
         }
 
-        void Save()
+        void Save(string diagnosticAction = "checkpoint", string detail = null, float battleSeconds = -1)
         {
             if (!startupReady || run == null || badSave) return;
             try
@@ -132,6 +135,7 @@ namespace Expedition.Presentation
                 savePresent = true;
                 ObserveJournal();
                 ObserveProgress();
+                playtest.Record(diagnosticAction, run, detail, battleSeconds);
             }
             catch (Exception exception) { Notice("저장하지 못했습니다: " + exception.Message); }
         }
@@ -205,10 +209,15 @@ namespace Expedition.Presentation
             try
             {
                 ObserveProgress();
-                run = ExpeditionRun.New(database, unchecked((uint)DateTime.UtcNow.Ticks),
+                uint seed = unchecked((uint)DateTime.UtcNow.Ticks);
+                ExpeditionRun nextRun = ExpeditionRun.New(database, seed,
                     ExpeditionDifficulty.Normal, badProgress || progress == null ?
                     Array.Empty<string>() : progress.ResearchIds,
                     badProgress ? "standard" : selectedFormationId);
+                if (run != null && run.Phase != ExpeditionPhase.Completed && run.Phase != ExpeditionPhase.Defeated)
+                    playtest.Record("run_replaced", run, "Player chose a new expedition; not a battle defeat.");
+                run = nextRun;
+                playtest.Begin(run, seed);
                 badSave = false;
                 legacySave = false;
                 error = null;
@@ -330,9 +339,10 @@ namespace Expedition.Presentation
             { selectedFormationId = "standard"; modal = Modal.NewRun; }
             GUI.enabled = modal == Modal.None && run != null;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "이어하기", button))
-            { home = false; modal = Modal.None; }
+            { home = false; modal = Modal.None; playtest.Record("continue_run", run); }
             GUI.enabled = modal == Modal.None;
             if (GUI.Button(new Rect(1020, 650, 225, 48), "개발용 전투 시험실", button)) OpenLab();
+            DrawPlaytestButton();
             if (badProgress)
             {
                 ExpeditionUiTheme.PanelBox(new Rect(155, 590, 970, 48));
@@ -349,7 +359,7 @@ namespace Expedition.Presentation
         void DrawHeader(string phase)
         {
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
-            if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save(); }
+            if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
             GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
             GUI.Label(new Rect(505, 18, 365, 43), DifficultyLabel(run.Difficulty) + " · 전투 " +
@@ -504,7 +514,7 @@ namespace Expedition.Presentation
             GUI.enabled = modal == Modal.None && run.CanUndo;
             if (GUI.Button(new Rect(1075, 483, 164, 44), "되돌리기", button))
             {
-                if (run.Undo()) { selectedId = null; Save(); Notice("직전 준비 행동을 되돌렸습니다."); }
+                if (run.Undo()) { selectedId = null; Save("undo"); Notice("직전 준비 행동을 되돌렸습니다."); }
                 else Notice("대기석 공간이 부족하거나 되돌릴 행동이 없습니다.");
             }
             GUI.enabled = modal == Modal.None;
@@ -582,7 +592,7 @@ namespace Expedition.Presentation
                 string next = run.Lantern <= 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                     "원정 결과" : run.LastVictory ? "다음 전투 준비  ›" : "같은 전투 재도전  ›";
                 if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), next, primary))
-                { if (run.Continue()) { Save(); selectedId = null; } }
+                { if (run.Continue()) { Save("advance"); selectedId = null; } }
             }
             else if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "거점으로", primary)) home = true;
         }
@@ -597,6 +607,7 @@ namespace Expedition.Presentation
             else if (modal == Modal.Tactics) DrawTactics();
             else if (modal == Modal.Effects) DrawMemberEffects();
             else if (modal == Modal.BattleReport) DrawBattleReport();
+            else if (modal == Modal.Playtest) DrawPlaytest();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
             else DrawConfirmation();
@@ -760,7 +771,7 @@ namespace Expedition.Presentation
             Rect firstActions = new Rect(277, 430, 726, 58), secondActions = new Rect(277, 504, 726, 58);
             if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 0, 3), IsDeployed(member.Id) ? "대기석으로" : "출전시키기", button))
             {
-                if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save(); modal = Modal.None; }
+                if (run.SetDeployed(member.Id, !IsDeployed(member.Id))) { Save("deployment", member.Id); modal = Modal.None; }
                 else Notice("출전 1~5명 · 대기석 최대 7명을 유지해야 합니다.");
             }
             if (GUI.Button(ExpeditionUiTheme.FooterButton(firstActions, 1, 3), "전승", button))
@@ -774,7 +785,7 @@ namespace Expedition.Presentation
             GUI.enabled = true;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 0, 3), member.MaterialLocked ? "재료 보호 해제" : "재료 보호", button))
             {
-                if (run.SetMaterialLocked(member.Id, !member.MaterialLocked)) Save();
+                if (run.SetMaterialLocked(member.Id, !member.MaterialLocked)) Save("material_lock", member.Id);
                 else Notice("재료 보호 상태를 바꾸지 못했습니다.");
             }
             if (GUI.Button(ExpeditionUiTheme.FooterButton(secondActions, 2, 3), "적용 효과", button))
@@ -1138,7 +1149,7 @@ namespace Expedition.Presentation
                 pendingAction == GrowthAction.Evolve ? run.Evolve(selectedId, pendingFormId) :
                 pendingAction == GrowthAction.Combine && run.Combine(selectedId, pendingOtherId, pendingFormId);
             if (!applied) { Notice("현재 조건에서는 실행할 수 없습니다."); modal = Modal.Detail; return; }
-            Save();
+            Save(pendingAction.ToString().ToLowerInvariant(), selectedId + ":" + pendingOtherId + ":" + pendingFormId);
             Notice("동료의 성장이 반영되었습니다. 되돌리기로 취소할 수 있습니다.");
             if (pendingAction == GrowthAction.Transfer)
             {
@@ -1155,7 +1166,7 @@ namespace Expedition.Presentation
         {
             string id = run.Summon();
             if (id == null) { Notice("지금은 소환할 수 없습니다."); return; }
-            Save();
+            Save("summon", id);
             benchPage = Mathf.Max(0, (run.Roster.Members.Count - run.DeployedIds.Count - 1) / 5);
             CatalogMember member = run.Roster.Find(id);
             Notice("새 동료: " + database.Get(member.FormId).Name + "  ·  대기석에 합류했습니다.");
@@ -1169,20 +1180,22 @@ namespace Expedition.Presentation
                 if (battle == null) { Notice("전투를 시작할 수 없습니다."); return; }
                 FinishTutorialWave(run.Wave);
                 BeginReport(battle);
-                Save();
+                Save(resume ? "battle_restart" : "battle_start", resume ? "Restart from saved pre-battle checkpoint." : null);
                 modal = Modal.None;
                 CatalogCombatLab lab = GetComponent<CatalogCombatLab>();
                 if (lab == null) lab = gameObject.AddComponent<CatalogCombatLab>();
                 enabled = false;
                 lab.OpenExpeditionBattle(battle, run.Wave, ExpeditionRun.TotalWaves, run.EncounterName,
-                    victory => { run.ResolveBattle(victory); CompleteReport(); Save(); enabled = true; },
-                    () => { home = true; Save(); enabled = true; });
+                    victory => { run.ResolveBattle(victory); CompleteReport();
+                        Save(victory ? "battle_win" : "battle_loss", battleSeconds: battle.Time); enabled = true; },
+                    () => { home = true; Save("battle_exit", "Return home; no inferred defeat.", battle.Time); enabled = true; });
             }
             catch (Exception exception) { enabled = true; Notice("전투를 열지 못했습니다: " + exception.Message); }
         }
 
         void OpenLab()
         {
+            playtest.Record("open_developer_lab", run, "Lab battles are excluded from expedition results.");
             CatalogCombatLab lab = GetComponent<CatalogCombatLab>();
             if (lab == null) lab = gameObject.AddComponent<CatalogCombatLab>();
             enabled = false;
@@ -1363,7 +1376,7 @@ namespace Expedition.Presentation
                 bool applied = run.Transfer(id, recipientId, false);
                 if (applied)
                 {
-                    Save();
+                    Save("transfer", recipientId + ":" + id);
                     growthPulseId = recipientId;
                     growthPulseUntil = Time.unscaledTime + .6f;
                     CatalogMember grown = run.Roster.Find(recipientId);
@@ -1392,13 +1405,13 @@ namespace Expedition.Presentation
                     { Notice("출전은 다섯 명까지 가능합니다."); return; }
                 }
                 if (run.Move(id, Mathf.Clamp((pointerCurrent.x - 560f) / 75f, -6.2f, -.2f),
-                    Mathf.Clamp((GroundY - pointerCurrent.y) / GroundYScale, -2.5f, 2.2f))) Save();
-                else Save();
+                    Mathf.Clamp((GroundY - pointerCurrent.y) / GroundYScale, -2.5f, 2.2f))) Save("position", id);
+                else Save("deployment", id);
                 SelectPreparation(id);
             }
             else if (point.y >= 550 && IsDeployed(id))
             {
-                if (run.SetDeployed(id, false)) Save();
+                if (run.SetDeployed(id, false)) Save("bench", id);
                 else Notice("대기석이 가득 찼거나 마지막 출전 동료입니다.");
             }
         }

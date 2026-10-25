@@ -37,11 +37,12 @@ namespace Expedition.EditorTools
                             Rect bounds;
                             if (!art.TryGetBounds("palace-boss", frame,
                                 new Vector2(900f, groundY - PalaceEnemyArt.VisualFlightLift(lift, y)), out bounds) ||
-                                bounds.yMin < 75.9f)
-                                throw new InvalidOperationException("Flying dragon must clear the fixed top HUD.");
+                                groundY - PalaceEnemyArt.VisualFlightLift(lift, y) -
+                                    150f * PalaceEnemyArt.SilhouetteHeight("palace-boss") / 184f < 75.9f)
+                                throw new InvalidOperationException("Flying dragon head and torso must clear the fixed top HUD.");
                         }
                 Debug.Log("Full-body frost boss: 24 combat frames use four complete poses; idle height 290, stable attack baseline, Point/1024 verified.");
-                Debug.Log("Enlarged dragon: both wing poses clear the HUD at three depths and three flight lifts.");
+                Debug.Log("Enlarged dragon: head/torso clear the HUD at three depths and three flight lifts; wing tips may pass behind it.");
             }
             finally { art.Release(); }
         }

@@ -12,6 +12,7 @@ namespace Expedition.Presentation
             ChargeDust, GolemCrack, FurnacePillar, FurnaceEmber, FrostSpire, DrakeLand }
         sealed class Effect
         {
+            public string SourceId;
             public Vector2 Point;
             public Vector2 EndPoint;
             public Color Color;
@@ -89,14 +90,16 @@ namespace Expedition.Presentation
             }
         }
 
-        void Add(EffectKind kind, CatalogBattleUnit unit, Color color, float size, float duration, int direction)
+        void Add(EffectKind kind, CatalogBattleUnit unit, Color color, float size, float duration,
+            int direction, float animationTime)
         {
             if (unit == null) return;
             if (effects.Count == 24) effects.RemoveAt(0);
             effects.Add(new Effect { Point = new Vector2(unit.X, unit.Y), Color = color,
                 Kind = kind, Size = size, Duration = duration, Direction = direction,
                 BodyOffset = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
-                    150f + PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y) : 57f });
+                    150f +
+                    PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, animationTime) : 57f });
         }
 
         public void Observe(CatalogBattleEvent e, CatalogBattle battle)
@@ -109,7 +112,7 @@ namespace Expedition.Presentation
                 if (effects.Count == 24) effects.RemoveAt(0);
                 bool charge = e.AbilityId == "BOSS_CHARGE";
                 bool breath = e.AbilityId == "DRACONIC_BREATH";
-                effects.Add(new Effect { Kind = BossEffectKind(e.AbilityId),
+                effects.Add(new Effect { Kind = BossEffectKind(e.AbilityId), SourceId = source.Id,
                     Point = breath ? new Vector2(source.BreathOriginX, source.BreathOriginY) :
                         charge ? new Vector2(source.ChargeOriginX, source.ChargeOriginY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
@@ -127,7 +130,7 @@ namespace Expedition.Presentation
                     Size = breath ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
                     HalfWidth = breath ? source.BreathHalfWidth : 0f,
                     Duration = e.AbilityId == "GARDEN_BRIARS" ? .6f :
-                        breath ? .44f : .5f });
+                        breath ? PalaceEnemyArt.BreathVisualDuration : .5f });
                 Play(hit, 1f);
             }
             if (e.Kind == CatalogEventKind.ChargeHit && source != null && target != null)
@@ -142,14 +145,14 @@ namespace Expedition.Presentation
             if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
                 source != null && target != null && !IsProjectile(source) &&
                 (e.Kind == CatalogEventKind.BasicHit || source.Team != target.Team))
-                Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction);
+                Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction, battle.Time);
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
                 bool periodic = e.AbilityId == "BURN" || e.AbilityId == "POISON";
                 bool strong = !periodic && e.AbilityId != "BASIC";
                 Color impact = e.AbilityId == "BURN" ? new Color(1f, .5f, .18f) :
                     e.AbilityId == "POISON" ? new Color(.72f, .96f, .36f) : color;
-                Add(EffectKind.Impact, target, impact, periodic ? 9 : strong ? 35 : 20, .23f, direction);
+                Add(EffectKind.Impact, target, impact, periodic ? 9 : strong ? 35 : 20, .23f, direction, battle.Time);
                 if (!periodic)
                 {
                     Play(source != null && IsProjectile(source) ? arrow : hit, strong ? .85f : .65f);
@@ -159,9 +162,9 @@ namespace Expedition.Presentation
             }
             if (e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield)
                 Add(EffectKind.Support, target, e.Kind == CatalogEventKind.Heal ?
-                    new Color(.45f, 1f, .6f) : new Color(.5f, .8f, 1f), 32, .4f, 1);
+                    new Color(.45f, 1f, .6f) : new Color(.5f, .8f, 1f), 32, .4f, 1, battle.Time);
             if (e.Kind == CatalogEventKind.Poison)
-                Add(EffectKind.Impact, target, new Color(.75f, 1f, .35f), 27, .35f, 1);
+                Add(EffectKind.Impact, target, new Color(.75f, 1f, .35f), 27, .35f, 1, battle.Time);
         }
 
         void Play(AudioClip clip, float volume)
@@ -212,10 +215,16 @@ namespace Expedition.Presentation
                     float lift = unit.FlightLift;
                     if (lift > 0f)
                     {
-                        Ring(ground + new Vector2(0, -4), 65 + lift * 19, 11 + lift * 4,
-                            new Color(.08f, .045f, .055f, .65f - lift * .2f), 7);
-                        Line(ground + new Vector2(-30, -3), ground + new Vector2(30, -3), 3,
-                            new Color(.17f, .09f, .07f, .45f));
+                        // Keep the shadow on the floor: higher flight narrows and fades it.
+                        float rise = Mathf.SmoothStep(0f, 1f, lift);
+                        float radius = Mathf.Lerp(72f, 50f, rise);
+                        Color shadow = new Color(.035f, .025f, .04f,
+                            Mathf.Lerp(.42f, .25f, rise) * Mathf.Clamp01(lift * 5f));
+                        for (int row = -5; row <= 5; row++)
+                        {
+                            float half = radius * Mathf.Sqrt(1f - row * row / 36f);
+                            Fill(new Rect(ground.x - half, ground.y - 4f + row * 2f, half * 2f, 2f), shadow);
+                        }
                     }
                     if (unit.BreathWarningRemaining > 0f)
                     {
@@ -284,7 +293,20 @@ namespace Expedition.Presentation
             }
         }
 
-        public void Draw(CatalogBattle battle, Func<Vector2, Vector2> project)
+        public bool TryGetBreathProgress(string sourceId, out float progress)
+        {
+            foreach (Effect effect in effects)
+                if (effect.Kind == EffectKind.Breath && effect.SourceId == sourceId)
+                {
+                    progress = Mathf.Clamp01(effect.Age / effect.Duration);
+                    return true;
+                }
+            progress = 0f;
+            return false;
+        }
+
+        public void Draw(CatalogBattle battle, Func<Vector2, Vector2> project,
+            Func<string, Vector2?> breathMouth)
         {
             foreach (CatalogBattleUnit unit in battle.Units)
             {
@@ -333,7 +355,8 @@ namespace Expedition.Presentation
                 if (target == null || !target.IsAlive) continue;
                 Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(unit.Team == CatalogTeam.Ally ? 20 : -20, -65);
                 float targetBodyOffset = target.EnemyRole == CatalogEnemyRole.CrownDrake ?
-                    150f + PalaceEnemyArt.VisualFlightLift(target.FlightLift, target.Y) : 58f;
+                    150f +
+                    PalaceEnemyArt.VisualFlightLift(target.FlightLift, target.Y, battle.Time) : 58f;
                 Vector2 to = project(new Vector2(target.X, target.Y)) +
                     new Vector2(0, -targetBodyOffset);
                 float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);
@@ -371,8 +394,11 @@ namespace Expedition.Presentation
                 }
                 if (effect.Kind == EffectKind.Breath)
                 {
-                    spriteEffects.DrawBreath(project(effect.Point), project(effect.EndPoint),
-                        effect.HalfWidth, t);
+                    Vector2? mouth = breathMouth(effect.SourceId);
+                    // Follow the rendered jaw, but keep the warned ground endpoint locked.
+                    // A dead or absent source has no mouth and must not leave detached fire.
+                    if (mouth.HasValue)
+                        spriteEffects.DrawBreath(mouth.Value, project(effect.EndPoint), effect.HalfWidth, t);
                     continue;
                 }
                 if (effect.Kind == EffectKind.BombBurst)

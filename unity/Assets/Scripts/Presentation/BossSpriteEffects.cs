@@ -97,15 +97,11 @@ namespace Expedition.Presentation
                 1f - Mathf.Clamp01((progress - .78f) / .22f));
         }
 
-        internal bool DrawBreath(Vector2 groundOrigin, Vector2 groundTarget,
+        internal bool DrawBreath(Vector2 mouth, Vector2 groundTarget,
             float halfWidth, float progress)
         {
             Load();
             if (breath == null) return false;
-            // The stored Core origin is at the dragon's feet. The attack frames'
-            // mouth lies about .62 silhouette heights left and .50 above that foot.
-            float bossHeight = PalaceEnemyArt.SilhouetteHeight("palace-boss");
-            Vector2 mouth = groundOrigin + new Vector2(-bossHeight * .62f, -bossHeight * .5f);
             Vector2 delta = mouth - groundTarget;
             float length = delta.magnitude;
             if (length < 1f) return false;

@@ -58,7 +58,7 @@ namespace Expedition.Presentation
             public Vector2 LastPosition;
             public float StateTime, HitTime, WindupAge, ReleaseAge, ReleaseRemaining;
             public string ReleaseAbilityId;
-            public int State;
+            public int State, RenderedEnemyFrame;
             public bool NewHit, NewRelease, WasWinding;
         }
         struct DrawnCombatant
@@ -689,7 +689,7 @@ namespace Expedition.Presentation
                 }
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
-                    point.y -= PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y);
+                    point.y -= PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, battle.Time);
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
@@ -709,7 +709,8 @@ namespace Expedition.Presentation
                     Bounds = bounds, Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
             }
             if (!hiddenEscortsMarked) MarkHiddenEscorts(drawn);
-            if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena));
+            if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena),
+                id => DrawnBreathMouth(drawn, id));
             // HUD is painted after every silhouette.
             foreach (DrawnCombatant painted in drawn)
             {
@@ -934,9 +935,11 @@ namespace Expedition.Presentation
             GUI.color = prior;
         }
 
-        static float FloatLift(CatalogBattleUnit unit)
+        float FloatLift(CatalogBattleUnit unit)
         {
-            return unit.EnemyRole == CatalogEnemyRole.CrownDrake ? 94f + PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y) : 0f;
+            return unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
+                94f +
+                PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, battle.Time) : 0f;
         }
 
         string UnitName(CatalogBattleUnit unit)
@@ -984,6 +987,19 @@ namespace Expedition.Presentation
                 entry.frames[0].height, 120f, 144f, 12f, 134f);
         }
 
+        static Vector2? DrawnBreathMouth(List<DrawnCombatant> drawn, string sourceId)
+        {
+            foreach (DrawnCombatant painted in drawn)
+                if (painted.View.Unit.Id == sourceId && painted.View.Unit.IsAlive &&
+                    painted.RegionalArtLoaded && PalaceEnemyArt.SpeciesFor(painted.View.Unit) == "palace-boss")
+                {
+                    Vector2 mouth;
+                    if (PalaceEnemyArt.TryGetBreathMouth(painted.View.RenderedEnemyFrame, painted.Bounds, out mouth))
+                        return mouth;
+                }
+            return null;
+        }
+
         float DrawExpeditionEnemy(View view, Vector2 foot, out bool regionalArtLoaded, out Rect bounds)
         {
             regionalArtLoaded = false;
@@ -999,7 +1015,8 @@ namespace Expedition.Presentation
             if (species != null && forestEnemyArt != null)
             {
                 int frame = palaceSpecies != null ? PalaceEnemyArt.FrameIndex(species,
-                    view.State, view.StateTime, view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
+                    view.State, view.Unit.IsAirborne ? battle.Time : view.StateTime,
+                    view.WindupAge, view.ReleaseRemaining, view.ReleaseAge,
                     view.Unit.AttackWindupRemaining, view.Unit.DrakePhase, view.Unit.FlightLift,
                     view.Unit.BreathWarningRemaining, view.ReleaseAbilityId) :
                     gardenSpecies != null ? GardenEnemyArt.FrameIndex(species,
@@ -1023,6 +1040,11 @@ namespace Expedition.Presentation
                         view.ReleaseRemaining, view.ReleaseAge, view.Unit.ChargeWarningRemaining,
                         view.Unit.IsCharging, view.Unit.AttackWindupRemaining,
                         species == ForestEnemyArt.Species[2] || species == ForestEnemyArt.Species[3]);
+                float breathProgress;
+                if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && battleEffects != null &&
+                    battleEffects.TryGetBreathProgress(view.Unit.Id, out breathProgress))
+                    frame = PalaceEnemyArt.BreathFrame(breathProgress);
+                view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
                 bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds, view.StateTime);

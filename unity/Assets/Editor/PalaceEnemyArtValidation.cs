@@ -134,9 +134,9 @@ namespace Expedition.EditorTools
                 "breath release follows impact event");
             Check(Frame(boss, 0, 0, 0, 0, 0, 0,
                 CrownDrakePhase.Rising, .5f, 0, null) == 22 &&
-                Frame(boss, 0, .14f, 0, 0, 0, 0,
+                Frame(boss, 0, .27f, 0, 0, 0, 0,
                 CrownDrakePhase.AirWarning, 1f, 0, null) == 23 &&
-                Frame(boss, 3, .14f, 0, 0, 0, 0,
+                Frame(boss, 3, .27f, 0, 0, 0, 0,
                 CrownDrakePhase.LandingWarning, .3f, 0, null) == 23,
                 "wing poses own rise, air warning, and landing over hit pose");
             Check(Frame(boss, 3, 0, 0, 0, 0, 0,

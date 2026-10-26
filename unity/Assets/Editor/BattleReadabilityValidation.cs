@@ -112,10 +112,19 @@ namespace Expedition.EditorTools
                 MethodInfo unitName = typeof(CatalogCombatLab).GetMethod("UnitName", BindingFlags.Instance | BindingFlags.NonPublic);
                 var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
                 var run = ExpeditionRun.New(db, 43030);
+                var hudProgress = ExpeditionProgress.New(); var hudJournal = ExpeditionJournal.New();
                 Directory.CreateDirectory("Logs/v043-fixtures");
+                Directory.CreateDirectory("Logs/v044-fixtures");
                 int bosses = 0;
                 for (int wave = 1; wave <= 30; wave++)
                 {
+                    var encounterStyle = CatalogCombatLab.HudRules.HeaderText(font, wave % 5 == 0 ? 21 : 29, TextAnchor.MiddleLeft, true);
+                    Fits(encounterStyle, CatalogCombatLab.HudRules.Encounter(wave % 5 == 0), run.EncounterName + "   " + wave + "/30");
+                    hudProgress.Observe(run); hudJournal.Observe(run);
+                    var snapshot = new ExpeditionAccountSave { Version = 1, Run = run.Capture(), Progress = hudProgress.Capture(),
+                        Journal = hudJournal.Capture(), TutorialMask = 3, LessonMask = 7 };
+                    snapshot.Validate(db);
+                    File.WriteAllText("Logs/v044-fixtures/hud-" + wave + ".json", JsonUtility.ToJson(snapshot));
                     if (wave % 5 == 0)
                         File.WriteAllText("Logs/v043-fixtures/hud-" + wave + ".json", JsonUtility.ToJson(run.Capture()));
                     CatalogBattle battle = run.BeginBattle();
@@ -129,6 +138,20 @@ namespace Expedition.EditorTools
                     run.ResolveBattle(true); if (wave < 30) run.Continue();
                 }
                 Check(bosses == 6, "all six actual boss headers were measured");
+                Fits(CatalogCombatLab.HudRules.HeaderText(font, 17, TextAnchor.MiddleLeft), CatalogCombatLab.HudRules.Clock, "75.0 / 75초");
+                for (int allies = 0; allies <= 5; allies++)
+                    for (int enemies = 0; enemies <= 12; enemies++)
+                        Fits(CatalogCombatLab.HudRules.HeaderText(font, 21, TextAnchor.MiddleRight, true), CatalogCombatLab.HudRules.UnitCount,
+                            "아군 " + allies + "  ·  적 " + enemies);
+                Check(!CatalogCombatLab.HudRules.Notice.Overlaps(CatalogCombatLab.HudRules.UnitCount) &&
+                    CatalogCombatLab.HudRules.UnitCount.yMax <= 712, "footer regions overlap or touch bottom edge");
+                var notice = CatalogCombatLab.HudRules.HeaderText(font, 17, TextAnchor.MiddleLeft);
+                foreach (CatalogForm form in db.All) Fits(notice, CatalogCombatLab.HudRules.Notice, form.Name + " · 기술 발동");
+                // Measure current Korean announcement literals, including each boss's warning/enrage suffix.
+                string source = File.ReadAllText("Assets/Scripts/Presentation/CatalogCombatLab.cs");
+                foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(source, "\"([^\"\\r\\n]*[가-힣][^\"\\r\\n]*)\""))
+                    if (match.Value.Contains("·") || match.Value.Contains("전투가 끝나면"))
+                        Fits(notice, CatalogCombatLab.HudRules.Notice, match.Groups[1].Value);
                 Fits(health, CatalogCombatLab.HudRules.BossHealth, "99999 / 99999");
                 for (int i = 0; i < 4; i++)
                 {
@@ -141,7 +164,7 @@ namespace Expedition.EditorTools
                     Fits(badge, chip, "분노");
                     Fits(timer, new Rect(chip.x + 17, chip.y, chip.width - 17, chip.height), "10.0");
                 }
-                Debug.Log("Boss header text validated: 6 live encounter names/HP values, five-digit HP, rage and 4 status slots.");
+                Debug.Log("Battle HUD validated: 30 encounter titles, clock, 78 ally/enemy counts, notices, 6 boss names/HP, rage and 4 status slots.");
             }
             finally { UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(font); }
         }

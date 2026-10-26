@@ -56,6 +56,7 @@ namespace Expedition.Presentation
                 (right - left) / (float)sheet.width, (bottom - top) / (float)sheet.height);
             Color previous = GUI.color;
             GUI.color = previous * new Color(1f, 1f, 1f, Mathf.Clamp01(opacity));
+            if (GamePreferences.Current.ReduceFlashes) GUI.color *= new Color(.65f, .65f, .65f, 1f);
             GUI.DrawTextureWithTexCoords(destination, sheet, uv, true);
             GUI.color = previous;
             return true;

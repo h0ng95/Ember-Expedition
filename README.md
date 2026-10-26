@@ -4,6 +4,7 @@
 
 - 개발: **Unity 6.3 LTS / C#**
 - 첫 테스트 기기: **Galaxy Buddy2 (SM-M236L)**
+- 최신 안정성·설정: **v0.44 원정 통합 백업·자동 복구, 공통 설정, 전투 상하단 문구 수정**. 옛 PlayerPrefs 이행과 손상 기록 보관, 음량·피격 흔들림·번쩍임 감소, 거점·일시정지 접근을 연결했다. [검증과 점수 순위 제안](docs/design-v0.44/HANDOFF.md) · [실기기 화면 포함](docs/design-v0.44/HANDOFF.html).
 - 최신 밸런스: **v0.43 성가 기수·원정 유격대장 결합 손익 비교**. 같은 재료량의 결합 전/후/기존 대기 동료 투입 2,112사례를 전후 비교하고 512개 연속 원정으로 교차 확인했다. 성가 기수 긴급 회복, 유격대장 직접 지휘 사격을 추가했다. [판단·검증·원시 자료](docs/design-v0.43/HANDOFF.md) · [화면 포함 읽기용](docs/design-v0.43/HANDOFF.html).
 - 최신 UI 구현: **v0.42 첫 성장·진화·전술 안내, 배속 저장, 원정 종료 요약**. 필요한 순간의 강조 안내·건너뛰기·다시 보기, 같은 원정의 배속 유지, 골드와 신규 연구 PT 집계를 연결했다. 신규 코어 5,744조건과 Buddy2 조작 확인. [변경·검증 기록](docs/design-v0.42/HANDOFF.md) · [실기기 화면 포함](docs/design-v0.42/HANDOFF.html).
 - 동료 정보: **v0.41 동료 30형태 정보·진화·결합 미리보기**. 도트 대기·공격, 실제 시작 스탯, 기술·특성·연구 조건, 소모 재료와 출전 인원 변화를 확인하고 선택한다. 계산 306사례·1,887조건, Unity 217조건 및 Buddy2 조작 확인. [변경·검증 기록](docs/design-v0.41/HANDOFF.md) · [실기기 화면 포함](docs/design-v0.41/HANDOFF.html).
@@ -40,6 +41,7 @@
 ./tests/CatalogBattleReport/run.ps1
 ./tests/UnitPreview/run.ps1
 ./tests/ExpeditionLearning/run.ps1
+./tests/AccountSave/run.ps1
 ./tests/HybridValue/run.ps1
 ./tests/HybridCombat/run.ps1
 ./tests/ExpeditionRun/run-end-to-end-balance.ps1 -FirstSeed 19001 -Count 40 -GrowthOrder Balanced -Spending all -ReportPath .local-tools/balance-holdout.json

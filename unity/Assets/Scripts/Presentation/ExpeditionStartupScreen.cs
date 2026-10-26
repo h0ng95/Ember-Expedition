@@ -43,6 +43,7 @@ namespace Expedition.Presentation
             battlefield = outpost = furnace = frost = garden = palace = null;
             badSave = badProgress = savePresent = legacySave = false;
             journalDirty = progressDirty = false;
+            accountStore = null; loadedAccount = null; storageBlocked = savingAccount = false;
             home = true;
             modal = Modal.None;
             error = startupError = null;
@@ -132,6 +133,7 @@ namespace Expedition.Presentation
             float completeUntil = Time.unscaledTime + .3f;
             while (Time.unscaledTime < completeUntil) yield return null;
             startupReady = true;
+            FinalizeAccountLoad();
         }
 
         static void DrawStartupGradient(bool vertical, float start, float length, int bands, float firstAlpha, float lastAlpha)

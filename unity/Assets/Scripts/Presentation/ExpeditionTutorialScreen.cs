@@ -92,6 +92,8 @@ namespace Expedition.Presentation
 
         void LoadTutorial()
         {
+            if (loadedAccount != null) { tutorialMask = loadedAccount.TutorialMask; return; }
+            if (storageBlocked) { tutorialMask = 3; return; }
             try
             {
                 bool existing = PlayerPrefs.HasKey(SaveKey) || PlayerPrefs.HasKey(LegacySaveKey) ||
@@ -99,9 +101,7 @@ namespace Expedition.Presentation
                 bool hasKey = PlayerPrefs.HasKey(TutorialKey);
                 tutorialMask = ExpeditionTutorialRules.RestoreMask(hasKey,
                     PlayerPrefs.GetInt(TutorialKey, 3), existing);
-                // A new account writes zero before its first run is saved.
-                PlayerPrefs.SetInt(TutorialKey, tutorialMask);
-                PlayerPrefs.Save();
+                // FinalizeAccountLoad persists this together with the whole account.
             }
             catch { tutorialMask = 3; }
         }
@@ -113,8 +113,7 @@ namespace Expedition.Presentation
             int next = tutorialMask | (1 << (wave - 1));
             if (next == tutorialMask) return;
             tutorialMask = next;
-            try { PlayerPrefs.SetInt(TutorialKey, next); PlayerPrefs.Save(); }
-            catch { /* The run remains playable if the separate guide preference cannot save. */ }
+            SaveGuidePreferences();
         }
 
         ExpeditionTutorialStep CurrentTutorialStep()

@@ -32,6 +32,7 @@ namespace Expedition.Presentation
 
         public CatalogBattleEffects(GameObject owner)
         {
+            GamePreferences.Load();
             if (UnityEngine.Object.FindFirstObjectByType<AudioListener>() == null)
                 owner.AddComponent<AudioListener>();
             for (int i = 0; i < voices.Length; i++)
@@ -372,7 +373,8 @@ namespace Expedition.Presentation
                 }
                 else
                 {
-                    Fill(new Rect(point.x - 4, point.y - 4, 8, 8), new Color(1, 1, 1, .95f));
+                    if (!GamePreferences.Current.ReduceFlashes)
+                        Fill(new Rect(point.x - 4, point.y - 4, 8, 8), new Color(1, 1, 1, .95f));
                     Ring(point, 10, 10, color, 2);
                 }
             }
@@ -382,6 +384,7 @@ namespace Expedition.Presentation
                 if (effect.Kind == EffectKind.GroundImpact)
                 {
                     Color impactColor = effect.Color;
+                    if (GamePreferences.Current.ReduceFlashes) impactColor *= new Color(.65f, .65f, .65f, 1f);
                     impactColor.a = 1 - t;
                     Ring(project(effect.Point), effect.Size * 83 * (.6f + .4f * t),
                         effect.Size * 48 * (.6f + .4f * t), impactColor, 6 * (1 - t) + 1);
@@ -437,6 +440,7 @@ namespace Expedition.Presentation
                 }
                 Vector2 point = project(effect.Point) + new Vector2(0, -effect.BodyOffset);
                 Color color = effect.Color;
+                if (GamePreferences.Current.ReduceFlashes) color *= new Color(.65f, .65f, .65f, 1f);
                 color.a = 1 - t;
                 float radius = effect.Size * (.3f + t);
                 if (effect.Kind == EffectKind.Slash)
@@ -464,7 +468,8 @@ namespace Expedition.Presentation
                         Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                         Line(point + direction * radius * .45f, point + direction * radius, 3 * (1 - t) + 1, color);
                     }
-                    if (t < .35f) Fill(new Rect(point.x - 5, point.y - 5, 10, 10), new Color(1, 1, .9f, 1 - t * 2));
+                    if (t < .35f && !GamePreferences.Current.ReduceFlashes)
+                        Fill(new Rect(point.x - 5, point.y - 5, 10, 10), new Color(1, 1, .9f, 1 - t * 2));
                 }
             }
         }

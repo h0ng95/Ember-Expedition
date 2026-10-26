@@ -89,6 +89,10 @@ namespace Expedition.Presentation
             public static readonly Rect BossPanel = new Rect(337f, 5f, 405f, 66f);
             public static readonly Rect BossName = new Rect(351f, 7f, 173f, 34f);
             public static readonly Rect BossHealth = new Rect(598f, 39f, 130f, 26f);
+            public static Rect Encounter(bool boss) { return new Rect(26f, 14f, boss ? 302f : 690f, 48f); }
+            public static readonly Rect Clock = new Rect(758f, 14f, 135f, 48f);
+            public static readonly Rect Notice = new Rect(28f, 670f, 936f, 42f);
+            public static readonly Rect UnitCount = new Rect(1000f, 670f, 254f, 42f);
             public static Rect BossChip(int index) { return new Rect(531f + index * 50f, 12f, 47f, 26f); }
             public static GUIStyle HeaderText(Font font, int size, TextAnchor alignment, bool bold = false)
             {
@@ -184,9 +188,10 @@ namespace Expedition.Presentation
             speed = speed == 1f ? 2f : 1f;
             if (expeditionMode && expeditionSpeedChanged != null) expeditionSpeedChanged((int)speed);
         }
-        bool paused, galleryAuto;
+        bool paused, galleryAuto, battleSettingsOpen;
         GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
         GUIStyle bossNameText, bossHealthText, bossBadgeText, bossStatusText;
+        GUIStyle encounterText, bossEncounterText, clockText, noticeText, unitCountText;
         Font uiFont;
         Rect viewport;
 
@@ -281,12 +286,13 @@ namespace Expedition.Presentation
 
         void OnApplicationPause(bool applicationPaused)
         {
-            if (applicationPaused) SetPaused(true);
+            if (applicationPaused) { GamePreferences.TrySave(); SetPaused(true); }
         }
 
         void SetPaused(bool value)
         {
             paused = value;
+            if (!value) battleSettingsOpen = false;
             if (battleEffects != null) battleEffects.SetPaused(value);
         }
 
@@ -544,7 +550,8 @@ namespace Expedition.Presentation
                 if (winding) view.WindupAge = view.WasWinding ? Mathf.Min(.25f, view.WindupAge + actorDt) : 0;
                 else view.WindupAge = 0;
                 view.WasWinding = winding;
-                int state = !view.Unit.IsAlive ? 4 : view.Unit.FrozenRemaining > 0f ? 0 : view.HitTime > 0 ? 3 :
+                int state = !view.Unit.IsAlive ? 4 : view.Unit.FrozenRemaining > 0f ? 0 :
+                    view.HitTime > 0 && !GamePreferences.Current.ReduceMotion ? 3 :
                     view.ReleaseRemaining > 0 || winding ? 2 :
                     (position - view.LastPosition).sqrMagnitude > .00004f ? 1 : 0;
                 if (state != view.State) { view.State = state; view.StateTime = 0; }
@@ -584,6 +591,12 @@ namespace Expedition.Presentation
             bossHealthText = HudRules.HeaderText(uiFont, 14, TextAnchor.MiddleRight);
             bossBadgeText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleCenter, true);
             bossStatusText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleLeft, true);
+            encounterText = HudRules.HeaderText(uiFont, 29, TextAnchor.MiddleLeft, true);
+            encounterText.normal.textColor = Gold;
+            bossEncounterText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleLeft, true);
+            clockText = HudRules.HeaderText(uiFont, 17, TextAnchor.MiddleLeft);
+            noticeText = HudRules.HeaderText(uiFont, 17, TextAnchor.MiddleLeft);
+            unitCountText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleRight, true);
             centered = new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             dotText = new GUIStyle(centered) { fontSize = 13 };
             statusText = new GUIStyle(tiny) { alignment = TextAnchor.MiddleLeft,
@@ -723,8 +736,8 @@ namespace Expedition.Presentation
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
-                else if (view.HitTime > .13f) GUI.color = new Color(1f, .62f, .48f, 1f);
-                if (unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f)
+                else if (view.HitTime > .13f && !GamePreferences.Current.ReduceFlashes) GUI.color = new Color(1f, .62f, .48f, 1f);
+                if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f)
                     point.x += (unit.Team == CatalogTeam.Ally ? -1 : 1) *
                         Mathf.Sin(view.HitTime / .24f * Mathf.PI) * 6;
                 bool regionalArtLoaded = false;
@@ -812,20 +825,29 @@ namespace Expedition.Presentation
             Color hudPanel = ExpeditionUiTheme.Panel;
             Fill(new Rect(0, 664, Width, 56), new Color(hudPanel.r, hudPanel.g, hudPanel.b, .96f));
             ExpeditionUiTheme.Rule(new Rect(16, 664, Width - 32, 2));
-            GUI.Label(new Rect(28, 677, 870, 30), latestSkill != null && latestSkillUntil > clock ?
-                latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", label);
+            GUI.Label(HudRules.Notice, latestSkill != null && latestSkillUntil > clock ?
+                latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", noticeText);
             int alive = 0, enemies = 0;
             foreach (CatalogBattleUnit unit in battle.Units)
                 if (unit.IsAlive) { if (unit.Team == CatalogTeam.Ally) alive++; else enemies++; }
-            GUI.Label(new Rect(1010, 677, 250, 30), "아군 " + alive + "  ·  적 " + enemies, heading);
+            GUI.Label(HudRules.UnitCount, "아군 " + alive + "  ·  적 " + enemies, unitCountText);
             if (paused)
             {
+                if (battleSettingsOpen)
+                {
+                    if (GameSettingsPanel.Draw(uiFont)) battleSettingsOpen = false;
+                    return;
+                }
                 Fill(new Rect(0, 76, Width, 588), new Color(.015f, .04f, .04f, .72f));
-                Fill(new Rect(402, 220, 476, 276), ExpeditionUiTheme.Panel);
-                GUI.Label(new Rect(440, 245, 400, 45), "잠시 쉬어가기", title);
-                GUI.Label(new Rect(440, 302, 400, 50), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
-                if (GUI.Button(new Rect(440, 384, 184, 62), "계속하기", button)) SetPaused(false);
-                if (GUI.Button(new Rect(642, 384, 198, 62), "거점으로", button)) Close();
+                Rect pauseWindow = new Rect(362, 190, 556, 344);
+                ExpeditionUiTheme.Window(pauseWindow);
+                GUI.Label(new Rect(394, 222, 492, 45), "잠시 쉬어가기", title);
+                GUI.Label(new Rect(394, 280, 492, 52), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
+                if (GUI.Button(new Rect(394, 350, 492, 50), "설정", button)) battleSettingsOpen = true;
+                ExpeditionUiTheme.FooterRule(pauseWindow);
+                Rect footer = ExpeditionUiTheme.FooterRect(pauseWindow);
+                if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "계속하기", button)) SetPaused(false);
+                if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "거점으로", button)) Close();
             }
         }
 
@@ -865,9 +887,9 @@ namespace Expedition.Presentation
         void DrawBattleHeader(CatalogBattleUnit boss)
         {
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 76));
-            GUI.Label(new Rect(26, 17, boss == null ? 690 : 302, 40),
+            GUI.Label(HudRules.Encounter(boss != null),
                 expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal,
-                boss == null ? title : heading);
+                boss == null ? encounterText : bossEncounterText);
             if (boss != null)
             {
                 Rect panel = HudRules.BossPanel;
@@ -898,11 +920,13 @@ namespace Expedition.Presentation
                 GUI.Label(HudRules.BossHealth,
                     boss.Hp.ToString("0") + " / " + boss.MaxHp.ToString("0"), bossHealthText);
             }
-            GUI.Label(new Rect(758, 24, 135, 30), clock.ToString("0.0") + " / 75초", label);
+            GUI.Label(HudRules.Clock, clock.ToString("0.0") + " / 75초", clockText);
+            GUI.enabled = !battleSettingsOpen;
             if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button))
                 ToggleSpeed();
             if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button))
                 SetPaused(!paused);
+            GUI.enabled = true;
         }
 
         void DrawBossStatusChip(int index, string symbol, float remaining, Color background, Color foreground)

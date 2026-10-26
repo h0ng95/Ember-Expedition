@@ -19,12 +19,12 @@ namespace Expedition.Presentation
 
         void LoadLessons()
         {
+            if (loadedAccount != null) { lessonMask = loadedAccount.LessonMask; return; }
+            if (storageBlocked) { lessonMask = 7; return; }
             try
             {
             lessonMask = PlayerPrefs.HasKey(LessonsKey) ? ExpeditionLearning.RestoreMask(PlayerPrefs.GetInt(LessonsKey, 7)) :
                 ExpeditionLearning.ExistingKnowledge(run);
-            PlayerPrefs.SetInt(LessonsKey, lessonMask);
-            PlayerPrefs.Save();
             }
             catch { lessonMask = 7; }
         }
@@ -34,8 +34,7 @@ namespace Expedition.Presentation
         {
             lessonMask |= (int)lesson;
             if (lessonReplay == lesson) lessonReplay = ExpeditionLesson.None;
-            try { PlayerPrefs.SetInt(LessonsKey, lessonMask); PlayerPrefs.Save(); }
-            catch { /* Guide preferences must not prevent normal play. */ }
+            SaveGuidePreferences();
         }
         void ObserveLessonAction(string action)
         {

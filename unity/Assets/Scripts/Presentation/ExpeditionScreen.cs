@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Expedition.Core;
 using UnityEngine;
 
@@ -41,7 +42,7 @@ namespace Expedition.Presentation
             "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest, GuideMenu }
+            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -73,6 +74,7 @@ namespace Expedition.Presentation
 
         void Awake()
         {
+            GamePreferences.Load();
             playtest = GetComponent<PlaytestRecorder>();
             if (playtest == null) playtest = gameObject.AddComponent<PlaytestRecorder>();
             Screen.orientation = ScreenOrientation.LandscapeLeft;
@@ -97,17 +99,19 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Release();
             ExpeditionResearchBoard.Release();
         }
-        void OnApplicationPause(bool paused) { if (paused) { CancelPointer(); Save(); } }
+        void OnApplicationPause(bool paused) { if (paused) { CancelPointer(); GamePreferences.TrySave(); Save(); } }
         void OnApplicationFocus(bool focused) { if (!focused) CancelPointer(); }
 
         void LoadSave()
         {
-            savePresent = PlayerPrefs.HasKey(SaveKey);
+            savePresent = loadedAccount != null ? loadedAccount.Run != null : PlayerPrefs.HasKey(SaveKey);
+            if (storageBlocked) return;
+            if (loadedAccount != null && loadedAccount.Run == null) { savePresent = false; return; }
             legacySave = !savePresent && PlayerPrefs.HasKey(LegacySaveKey);
             if (!savePresent) return;
             try
             {
-                string json = PlayerPrefs.GetString(SaveKey, "");
+                string json = loadedAccount != null ? JsonUtility.ToJson(loadedAccount.Run) : PlayerPrefs.GetString(SaveKey, "");
                 if (string.IsNullOrEmpty(json)) throw new InvalidOperationException("빈 저장 내용");
                 ExpeditionRunSave state = JsonUtility.FromJson<ExpeditionRunSave>(json);
                 if (state == null) throw new InvalidOperationException("저장 형식을 읽을 수 없음");
@@ -130,28 +134,32 @@ namespace Expedition.Presentation
             if (!startupReady || run == null || badSave) return;
             try
             {
+                savingAccount = true;
                 ObserveLessonAction(diagnosticAction);
-                PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(run.Capture()));
-                PlayerPrefs.Save();
-                savePresent = true;
                 ObserveJournal();
                 ObserveProgress();
+                PersistAccount();
                 playtest.Record(diagnosticAction, run, detail, battleSeconds);
             }
             catch (Exception exception) { Notice("저장하지 못했습니다: " + exception.Message); }
+            finally { savingAccount = false; }
         }
 
         void LoadJournal()
         {
+            InitializeAccountStorage();
             journal = ExpeditionJournal.New();
+            if (storageBlocked) return;
             try
             {
+                if (loadedAccount != null) { journal = ExpeditionJournal.Restore(loadedAccount.Journal); return; }
                 if (!PlayerPrefs.HasKey(JournalSaveKey)) return;
                 string json = PlayerPrefs.GetString(JournalSaveKey, "");
-                if (!string.IsNullOrEmpty(json))
-                    journal = ExpeditionJournal.Restore(JsonUtility.FromJson<ExpeditionJournalSave>(json));
+                var state = JsonUtility.FromJson<ExpeditionJournalSave>(json);
+                if (state == null || state.Version != 1 || state.UnlockedIds == null) throw new InvalidDataException("Invalid story save.");
+                journal = ExpeditionJournal.Restore(state);
             }
-            catch (Exception) { journal = ExpeditionJournal.New(); }
+            catch (Exception) { storageBlocked = badProgress = true; error = "이야기 기록을 읽지 못했습니다. 기존 기록을 보관했습니다."; }
         }
 
         void ObserveJournal()
@@ -160,10 +168,6 @@ namespace Expedition.Presentation
             try
             {
                 if (journal.Observe(run)) journalDirty = true;
-                if (!journalDirty) return;
-                PlayerPrefs.SetString(JournalSaveKey, JsonUtility.ToJson(journal.Capture()));
-                PlayerPrefs.Save();
-                journalDirty = false;
             }
             catch (Exception exception) { Notice("원정 기록을 저장하지 못했습니다: " + exception.Message); }
         }
@@ -171,6 +175,8 @@ namespace Expedition.Presentation
         void LoadProgress()
         {
             progress = ExpeditionProgress.New();
+            if (storageBlocked) return;
+            if (loadedAccount != null) { progress = ExpeditionProgress.Restore(loadedAccount.Progress); return; }
             if (!PlayerPrefs.HasKey(ProgressSaveKey)) return;
             try
             {
@@ -181,6 +187,8 @@ namespace Expedition.Presentation
             catch (Exception)
             {
                 badProgress = true;
+                storageBlocked = true;
+                error = "성과 기록을 읽지 못했습니다. 기존 기록을 보관했습니다.";
                 progress = ExpeditionProgress.New();
             }
         }
@@ -191,7 +199,6 @@ namespace Expedition.Presentation
             try
             {
                 if (progress.Observe(run)) progressDirty = true;
-                WriteProgress();
             }
             catch (Exception exception) { Notice("원정 성과를 저장하지 못했습니다: " + exception.Message); }
         }
@@ -199,14 +206,13 @@ namespace Expedition.Presentation
         void WriteProgress()
         {
             if (badProgress || progress == null || !progressDirty) return;
-            PlayerPrefs.SetString(ProgressSaveKey, JsonUtility.ToJson(progress.Capture()));
-            PlayerPrefs.Save();
-            progressDirty = false;
+            PersistAccount();
         }
 
         void NewRun()
         {
             if (!startupReady) return;
+            if (storageBlocked) { Notice("기존 기록 복구가 필요해 새 원정을 시작할 수 없습니다."); return; }
             try
             {
                 ObserveProgress();
@@ -311,6 +317,7 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.DrawEmber(new Vector2(53, 46), 30);
             GUI.Label(new Rect(84, 6, 875, 60), "이그니스: 잿빛 서약", title);
             GUI.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
+            if (GUI.Button(new Rect(851, 20, 128, 49), "설정", button)) modal = Modal.Settings;
             if (GUI.Button(new Rect(995, 20, 260, 49),
                 "원정 기록  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
                 ExpeditionStory.Entries.Count, button))
@@ -340,6 +347,7 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
                     error ?? "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
             ExpeditionUiTheme.FooterRule(panel);
+            GUI.enabled = modal == Modal.None && !storageBlocked;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
             { selectedFormationId = "standard"; modal = Modal.NewRun; }
             GUI.enabled = modal == Modal.None && run != null;
@@ -607,6 +615,7 @@ namespace Expedition.Presentation
 
         void DrawModal()
         {
+            if (modal == Modal.Settings) { if (GameSettingsPanel.Draw(font)) modal = Modal.None; return; }
             Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
             if (modal == Modal.Detail) DrawDetail();
             else if (modal == Modal.Journal) DrawJournal();

@@ -10,7 +10,7 @@ namespace Expedition.Presentation
         ExpeditionRecord selectedRecord;
         static string RecordStatus(ExpeditionRecord record)
         {
-            return (record.FinalRun.Version < 9 ? "이전 규칙 · " : "") +
+            return (record.FinalRun.Version < 9 ? "이전 규칙 · " : record.FinalRun.Version == 9 ? "v0.45 · " : "") +
                 (record.Abandoned ? "포기" : record.FinalRun.Victories == 30 ? "완주" : "패배");
         }
         static string RecordDate(ExpeditionRecord record)
@@ -21,15 +21,17 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 66, content.width, 48), "개인 기록", title);
             if (selectedRecord != null) { DrawRecordDetail(panel, content); return; }
+            if (recordHistory.ArchivedBest != null && GUI.Button(new Rect(content.xMax - 290, 72, 290, 44),
+                "v0.45 최고 기록 보기", button)) selectedRecord = recordHistory.ArchivedBest;
             ExpeditionRecord best = recordHistory.Best;
             GUI.enabled = best != null;
             if (GUI.Button(new Rect(content.x, 130, content.width, 66), best == null ?
-                "첫 기록에 도전하세요 · 영구 강화 없는 Normal 원정" :
+                "첫 기록에 도전하세요 · Normal v0.46" :
                 "개인 최고  " + best.Score.ToString("N0") + "점  ·  " + best.FinalRun.Victories + "/30 격파  ·  자세히", primary) && best != null)
                 selectedRecord = best;
             GUI.enabled = true;
             GUI.Label(new Rect(content.x, 202, content.width, 36),
-                "최근 원정 30개 보관 · 최고 기록 별도 보관 · 포기/이전 규칙은 순위 제외", small);
+                "현재 밸런스의 최고 기록 · 최근 30개 보관 · v0.45 점수는 별도 비교", small);
             var records = recordHistory.Recent;
             int pages = Math.Max(1, (records.Count + 4) / 5);
             recordsPage = Mathf.Clamp(recordsPage, 0, pages - 1);

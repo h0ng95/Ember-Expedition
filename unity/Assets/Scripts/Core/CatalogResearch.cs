@@ -10,9 +10,17 @@ namespace Expedition.Core
         public int Tier { get; private set; }
         public int Cost { get; private set; }
         public int UnlockWave { get; private set; }
+        public int RequiredBossWave { get { return UnlockWave - 1; } }
+        public string RequiredRegion { get { return Tier == 1 ? "숲" : "성채"; } }
         public string PrerequisiteId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
+        public string DescriptionForRules(int rules)
+        {
+            if (rules >= 2 && Id == "spellcraft") return "동료 직접 공격 기술 피해 +30%";
+            if (rules >= 2 && Id == "cinders") return "동료 화상 피해 +50%";
+            return Description;
+        }
 
         internal CatalogResearchNode(string id, string branchId, int tier, int cost,
             int unlockWave, string prerequisiteId, string title, string description)

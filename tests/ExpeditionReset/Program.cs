@@ -25,7 +25,7 @@ class ResetTests
         {
             var a = ExpeditionRun.New(db, seed, startFormationId: form);
             var b = ExpeditionRun.New(db, seed, legacyResearchIds: nodes, startFormationId: form, researchBaselineBestWave: 30);
-            Check(a.RulesVersion == 1 && b.RulesVersion == 1 && b.LegacyResearchIds.Count == 0 && b.TacticIds.Count == 0, "inherited power");
+            Check(a.RulesVersion == CatalogBalance.CurrentRules && b.RulesVersion == CatalogBalance.CurrentRules && b.LegacyResearchIds.Count == 0 && b.TacticIds.Count == 0, "inherited power");
             Check(a.Gold == 40 && b.Gold == 40 && b.Lantern == 3 && b.Roster.Members.Count == 3 && !b.HasResearchBaseline, "fresh conditions");
             Check(a.Summon() == b.Summon() && json.Serialize(a.Roster.Capture()) == json.Serialize(b.Roster.Capture()), "account changes random summon");
             var x = a.BeginBattle(); var y = b.BeginBattle();
@@ -33,7 +33,7 @@ class ResetTests
             Check(x.Winner == y.Winner && x.Time == y.Time && x.Ended == y.Ended, "account changes battle outcome");
             foreach (var u in x.Units) Check(y.Get(u.Id).Hp == u.Hp && y.Get(u.Id).MaxHp == u.MaxHp, "account changes unit stats");
             var restored = Reload(b);
-            Check(restored.RunId == b.RunId && restored.InitialSeed == seed && restored.RulesVersion == 1, "identity roundtrip");
+            Check(restored.RunId == b.RunId && restored.InitialSeed == seed && restored.RulesVersion == CatalogBalance.CurrentRules, "identity roundtrip");
         }
         Reject(() => ExpeditionRun.New(db, 1, startFormationId: "unknown"), "invalid starting formation");
         var legacy = ExpeditionRun.NewLegacy(db, 9, legacyResearchIds: nodes, startFormationId: "ember");

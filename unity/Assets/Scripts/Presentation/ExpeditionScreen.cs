@@ -330,7 +330,7 @@ namespace Expedition.Presentation
                 "이야기  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
                 ExpeditionStory.Entries.Count, button))
                 OpenJournal(null);
-            bool hasNotice = error != null || legacySave || run != null && run.UsesLegacyRules;
+            bool hasNotice = error != null || legacySave || run != null && run.UsesPreviousBalance;
             Rect panel = new Rect(155, hasNotice ? 144 : 176, 970, hasNotice ? 432 : 368);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
@@ -353,7 +353,7 @@ namespace Expedition.Presentation
                     " / " + run.ContentWaves, hint);
             if (hasNotice)
                 GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
-                    error ?? "이전 규칙 원정은 그대로 이어할 수 있습니다. 새 점수 순위에는 포함되지 않습니다.\n새 원정은 영구 강화 없이 연구 0개로 시작합니다.", hint);
+                    error ?? "이전 원정은 기존 밸런스로 이어하며, 점수도 이전 규칙 기록으로 남깁니다.\n새 원정부터 최신 밸런스를 적용하고 연구 0개로 시작합니다.", hint);
             ExpeditionUiTheme.FooterRule(panel);
             GUI.enabled = modal == Modal.None && !storageBlocked;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
@@ -379,7 +379,7 @@ namespace Expedition.Presentation
 
         void DrawHeader(string phase)
         {
-            if (run.UsesLegacyRules) phase = "이전 규칙 원정";
+            if (run.UsesPreviousBalance) phase = run.UsesLegacyRules ? "이전 규칙 원정" : "v0.45 원정";
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);

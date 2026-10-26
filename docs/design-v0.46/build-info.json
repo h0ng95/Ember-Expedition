@@ -1,0 +1,10 @@
+{
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 201829339,
+  "sha256": "6e53edafda3bf872ad4efaaadb65b3c1fa0cc27fd10c27666f59db79e6d38a17",
+  "lastWriteUtc": "2026-10-26T15:33:43.134Z",
+  "developmentBuild": true,
+  "package": "com.expeditionprototype.combatdemo",
+  "rulesVersion": 2,
+  "balanceVersion": "normal-046"
+}

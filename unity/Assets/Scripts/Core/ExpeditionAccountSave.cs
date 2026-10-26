@@ -15,7 +15,7 @@ namespace Expedition.Core
 
         public void Validate(CatalogDatabase database)
         {
-            if (Version > 2 || Run != null && Run.Version > 9 || Progress != null && Progress.Version > 3 || Journal != null && Journal.Version > 1)
+            if (Version > 2 || Run != null && Run.Version > 10 || Progress != null && Progress.Version > 3 || Journal != null && Journal.Version > 1)
                 throw new FutureSaveVersionException();
             if (Version < 1 || Version == 2 && History == null || Progress == null || Journal == null || Journal.Version != 1 || Journal.UnlockedIds == null ||
                 TutorialMask < 0 || TutorialMask > 3 || LessonMask < 0 || LessonMask > 7)

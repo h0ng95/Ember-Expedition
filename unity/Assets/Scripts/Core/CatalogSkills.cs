@@ -90,7 +90,7 @@ namespace Expedition.Core
                 case "B-AR": Direct(a, target, 1.2f, id); Mark(a, target, 5f); break;
                 case "B-FI": CircleHit(a, target, 1f, 3, 1.6f, id, true, 0, 0); break;
                 case "B-PR": ShieldLowest(a, CatalogPreparationPreview.SupportRadius(id), 1, EffectivePower(a) * 1.8f, 4f, id); break;
-                case "B-IC": CircleHit(a, target, 1.2f, 3, 1.3f, id, false, .25f, 3f); break;
+                case "B-IC": CircleHit(a, target, 1.2f, 3, CatalogBalance.FrostPower(id, balanceRules), id, false, .25f, 3f); break;
                 case "B-BA": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.Power, .2f, 4f, id, true); break;
                 case "E-KN-G":
                     GiveShield(a, a, EffectivePower(a) * 2.5f, 4f, id);
@@ -110,8 +110,8 @@ namespace Expedition.Core
                     break;
                 case "E-PR-G": ShieldLowest(a, CatalogPreparationPreview.SupportRadius(id), 2, EffectivePower(a) * 2.3f, 4f, id); break;
                 case "E-PR-H": Heal(a, LowestAlly(a, CatalogPreparationPreview.SupportRadius(id), false, true), EffectivePower(a) * 2.6f, id); break;
-                case "E-IC-F": CircleHit(a, target, 1.6f, 4, 1.7f, id, false, .4f, 4f); break;
-                case "E-IC-S": Direct(a, target, 1.9f, id); Slow(a, target, .3f, 2f); break;
+                case "E-IC-F": CircleHit(a, target, 1.6f, 4, CatalogBalance.FrostPower(id, balanceRules), id, false, .4f, 4f); break;
+                case "E-IC-S": Direct(a, target, CatalogBalance.FrostPower(id, balanceRules), id); Slow(a, target, .3f, 2f); break;
                 case "E-BA-G": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.DamageReduction, .2f, 4f, id, true); break;
                 case "E-BA-A": BuffNear(a, CatalogPreparationPreview.SupportRadius(id), 2, CatalogBuffKind.Haste, .2f, 4f, id, true); break;
                 case "F-KN":
@@ -132,7 +132,7 @@ namespace Expedition.Core
                             GiveShield(a, ally, EffectivePower(a) * 1.6f, 5f, id);
                         }
                     break;
-                case "F-IC": CircleHit(a, target, 2f, 5, 2.6f, id, false, .4f, 4f); break;
+                case "F-IC": CircleHit(a, target, 2f, 5, CatalogBalance.FrostPower(id, balanceRules), id, false, .4f, 4f); break;
                 case "F-BA":
                     foreach (CatalogBattleUnit ally in units)
                         if (ally.IsAlive && ally.Team == a.Team)

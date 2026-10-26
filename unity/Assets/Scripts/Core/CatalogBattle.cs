@@ -144,6 +144,7 @@ namespace Expedition.Core
         readonly List<CatalogBattleUnit> units = new List<CatalogBattleUnit>();
         readonly Dictionary<string, CatalogBattleUnit> byId = new Dictionary<string, CatalogBattleUnit>(StringComparer.Ordinal);
         float accumulator;
+        readonly int balanceRules;
         public event Action<CatalogBattleEvent> Event;
         public IReadOnlyList<CatalogBattleUnit> Units { get { return units.AsReadOnly(); } }
         public IReadOnlyList<string> TacticIds { get { return publicTactics; } }
@@ -155,9 +156,12 @@ namespace Expedition.Core
         public CatalogBattle(CatalogDatabase database) : this(database, null) { }
 
         public CatalogBattle(CatalogDatabase database, IEnumerable<string> tacticIds,
-            IEnumerable<string> legacyResearchIds = null)
+            IEnumerable<string> legacyResearchIds = null, int balanceRules = 1)
         {
             if (database == null) throw new ArgumentNullException("database");
+            if (balanceRules < 0 || balanceRules > CatalogBalance.CurrentRules)
+                throw new ArgumentOutOfRangeException("balanceRules");
+            this.balanceRules = balanceRules;
             this.database = database;
             var selected = new List<string>(tacticIds ?? new string[0]);
             var permanent = new List<string>(legacyResearchIds ?? new string[0]);
@@ -862,8 +866,8 @@ namespace Expedition.Core
                 if (tactics.Contains("marksmanship") && basic && source.Range > 2.1f) raw *= 1.15f;
                 if (tactics.Contains("exploitation") &&
                     (target.MarkRemaining > 0f || target.SlowPercent > 0f)) raw *= 1.18f;
-                if (tactics.Contains("spellcraft") && !basic && !periodic) raw *= 1.15f;
-                if (tactics.Contains("cinders") && ability == "BURN") raw *= 1.3f;
+                if (tactics.Contains("spellcraft") && !basic && !periodic) raw *= CatalogBalance.Spellcraft(balanceRules);
+                if (tactics.Contains("cinders") && ability == "BURN") raw *= CatalogBalance.Cinders(balanceRules);
                 if (legacyResearch.Contains("ember-insight") && !basic && !periodic) raw *= 1.05f;
                 if (legacyResearch.Contains("frost-focus") && basic) raw *= 1.05f;
             }

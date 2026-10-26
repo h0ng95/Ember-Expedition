@@ -128,6 +128,7 @@ namespace Expedition.Core
         public int ResearchBaselineBestWave { get; private set; }
         public int RulesVersion { get; private set; }
         public bool UsesLegacyRules { get { return RulesVersion == 0; } }
+        public bool UsesPreviousBalance { get { return RulesVersion < CatalogBalance.CurrentRules; } }
         public string RunId { get; private set; }
         public uint InitialSeed { get; private set; }
         public float CombatSeconds { get; private set; }
@@ -180,7 +181,7 @@ namespace Expedition.Core
                 throw new ArgumentException("Starting formation is unavailable.", "startFormationId");
             string[] startingForms = CatalogLegacyResearch.GetFormationUnits(startFormationId);
             var run = new ExpeditionRun(catalog);
-            run.RulesVersion = legacyRules ? 0 : 1;
+            run.RulesVersion = legacyRules ? 0 : CatalogBalance.CurrentRules;
             run.RunId = Guid.NewGuid().ToString("N");
             run.InitialSeed = seed == 0 ? 0x6d2b79f5u : seed;
             if (researchBaselineBestWave.HasValue && (researchBaselineBestWave.Value < 0 || researchBaselineBestWave.Value > TotalWaves))
@@ -208,10 +209,13 @@ namespace Expedition.Core
         {
             CatalogResearchNode node = CatalogResearch.Get(id);
             return Phase == ExpeditionPhase.Preparation && node != null &&
-                Wave >= node.UnlockWave && Gold >= node.Cost &&
+                HasResearchRegion(node) && Gold >= node.Cost &&
                 tacticIds.Count < CatalogResearch.MaxNodes && !tacticIds.Contains(id) &&
                 (node.PrerequisiteId == null || tacticIds.Contains(node.PrerequisiteId));
         }
+
+        public bool HasResearchRegion(CatalogResearchNode node)
+        { return node != null && Victories >= node.RequiredBossWave; }
 
         public bool PurchaseTactic(string id)
         {
@@ -457,7 +461,7 @@ namespace Expedition.Core
 
         CatalogBattle CreateBattle()
         {
-            var result = new CatalogBattle(catalog, tacticIds, legacyResearchIds);
+            var result = new CatalogBattle(catalog, tacticIds, legacyResearchIds, RulesVersion);
             foreach (string id in deployedIds)
             {
                 CatalogMember member = Roster.Find(id);
@@ -696,7 +700,7 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : 9, Difficulty = Difficulty,
+            return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : RulesVersion == 1 ? 9 : 10, Difficulty = Difficulty,
                 RulesVersion = RulesVersion, RunId = RunId, InitialSeed = InitialSeed,
                 CombatSeconds = CombatSeconds,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
@@ -722,7 +726,7 @@ namespace Expedition.Core
             bool twenty = save != null && save.Version == 5;
             bool twentyFive = save != null && save.Version == 6;
             bool thirty = save != null && save.Version == 7;
-            bool fresh = save != null && save.Version == 9;
+            bool fresh = save != null && save.Version >= 9;
             bool current = save != null && save.Version >= 8;
             int saveWaves = legacy ? 10 : current || thirty ? TotalWaves : twentyFive ? 25 : twenty ? 20 : 15;
             // Validate old files against their original economy before granting expansion rewards.
@@ -735,8 +739,8 @@ namespace Expedition.Core
             int[] rewards = legacy ? LegacyVictoryRewards : current || thirty ? VictoryRewards :
                 twentyFive ? twentyFiveRewards : twenty ? twentyRewards : fifteenRewards;
             Guid parsedId;
-            if (save == null || save.Version < 2 || save.Version > 9 ||
-                fresh && (save.RulesVersion != 1 || !Guid.TryParseExact(save.RunId, "N", out parsedId) ||
+            if (save == null || save.Version < 2 || save.Version > 10 ||
+                fresh && (save.RulesVersion != (save.Version == 9 ? 1 : 2) || !Guid.TryParseExact(save.RunId, "N", out parsedId) ||
                     save.InitialSeed == 0 || save.PreviousClearWaves != 0 || save.HasResearchBaseline ||
                     float.IsNaN(save.CombatSeconds) || float.IsInfinity(save.CombatSeconds) || save.CombatSeconds < 0 ||
                     save.LegacyResearchIds == null || save.LegacyResearchIds.Length != 0) ||
@@ -773,7 +777,7 @@ namespace Expedition.Core
             int tacticCost = CatalogResearch.ValidateSelection(selectedTactics, save.Wave);
             CatalogLegacyResearch.ValidateSelection(selectedLegacy);
             var run = new ExpeditionRun(catalog);
-            run.RulesVersion = fresh ? 1 : 0;
+            run.RulesVersion = fresh ? save.RulesVersion : 0;
             run.RunId = Guid.TryParseExact(save.RunId, "N", out parsedId) ? save.RunId : Guid.NewGuid().ToString("N");
             run.InitialSeed = save.InitialSeed;
             run.CombatSeconds = fresh ? save.CombatSeconds : 0;

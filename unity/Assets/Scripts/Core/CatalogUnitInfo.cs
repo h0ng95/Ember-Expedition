@@ -67,7 +67,7 @@ namespace Expedition.Core
             }
         }
 
-        public static string Skill(string id)
+        public static string Skill(string id, int balanceRules = 1)
         {
             string text;
             switch (id)
@@ -76,7 +76,7 @@ namespace Expedition.Core
                 case "B-AR": text = "체력이 낮은 적에게 위력 120% 피해 · 표식 5초."; break;
                 case "B-FI": text = "반경 1 안의 적 최대 3명에게 위력 160% 피해와 화상."; break;
                 case "B-PR": text = "거리 4.5 안의 아군 1명에게 위력 180% 보호막, 4초. 자신 포함 · 보호막이 부족한 부상자 우선."; break;
-                case "B-IC": text = "반경 1.2 안의 적 최대 3명에게 위력 130% 피해 · 이동 속도 25% 감소, 3초."; break;
+                case "B-IC": text = "반경 1.2 안의 적 최대 3명에게 위력 " + (CatalogBalance.FrostPower(id, balanceRules) * 100).ToString("0") + "% 피해 · 이동 속도 25% 감소, 3초."; break;
                 case "B-BA": text = "자신과 거리 2.5 안의 가까운 아군 2명 공격력 +20%, 4초."; break;
                 case "E-KN-G": text = "자신과 거리 2 안의 가장 가까운 아군 1명에게 위력 250% 보호막, 4초."; break;
                 case "E-KN-C": return "보호막이 피해로 깨질 때 반격 · 재사용 2.5초\n전방 거리 1.8 안의 적 최대 3명에게 위력 220% 피해 · 이동 속도 20% 감소, 2초. 보호막 공급이 필요하며 빙결 중에는 반격할 수 없습니다.";
@@ -86,15 +86,15 @@ namespace Expedition.Core
                 case "E-FI-E": text = "적 위치에 화염 지대 생성. 반경 1.6 안의 최대 4명에게 1초마다 위력 65% 피해와 화상, 총 4회."; break;
                 case "E-PR-G": text = "거리 4.8 안의 아군 최대 2명에게 위력 230% 보호막, 4초. 자신 포함 · 보호막이 부족한 부상자 우선."; break;
                 case "E-PR-H": text = "거리 4.8 안에서 체력 비율이 가장 낮은 아군 1명 회복, 위력 260%. 자신 포함 · 부상자가 없으면 대기."; break;
-                case "E-IC-F": text = "반경 1.6 안의 적 최대 4명에게 위력 170% 피해 · 이동 속도 40% 감소, 4초."; break;
-                case "E-IC-S": text = "단일 적에게 위력 190% 피해 · 이동 속도 30% 감소, 2초."; break;
+                case "E-IC-F": text = "반경 1.6 안의 적 최대 4명에게 위력 " + (CatalogBalance.FrostPower(id, balanceRules) * 100).ToString("0") + "% 피해 · 이동 속도 40% 감소, 4초."; break;
+                case "E-IC-S": text = "단일 적에게 위력 " + (CatalogBalance.FrostPower(id, balanceRules) * 100).ToString("0") + "% 피해 · 이동 속도 30% 감소, 2초."; break;
                 case "E-BA-G": text = "자신과 거리 2.8 안의 가까운 아군 2명 받는 피해 20% 감소, 4초."; break;
                 case "E-BA-A": text = "자신과 거리 2.8 안의 가까운 아군 2명 공격 속도 +20%, 4초."; break;
                 case "F-KN": text = "자신과 거리 2.5 안의 부상자 2명에게 자신의 최대 체력 18% 보호막, 5초."; break;
                 case "F-AR": text = "사거리 안의 가장 먼 적에게 위력 420% 피해 · 표식 5초."; break;
                 case "F-FI": text = "적이 밀집한 지점의 반경 1.8 안 최대 5명에게 위력 330% 피해와 화상."; break;
                 case "F-PR": text = "살아 있는 아군 전체를 위력 160%만큼 회복하고 같은 양의 보호막 부여, 5초."; break;
-                case "F-IC": text = "반경 2 안의 적 최대 5명에게 위력 260% 피해 · 이동 속도 40% 감소, 4초."; break;
+                case "F-IC": text = "반경 2 안의 적 최대 5명에게 위력 " + (CatalogBalance.FrostPower(id, balanceRules) * 100).ToString("0") + "% 피해 · 이동 속도 40% 감소, 4초."; break;
                 case "F-BA": text = "살아 있는 아군 전체 공격력 +20%, 받는 피해 15% 감소, 5초."; break;
                 case "H-01": text = "전방 거리 2 안의 적 최대 3명에게 위력 240% 피해와 화상. 자신에게 최대 체력 15% 보호막, 4초."; break;
                 case "H-02": text = "단일 적에게 위력 160% 피해. 거리 2.5 안의 부상자 최대 2명을 위력 180% 회복, 자신 포함."; break;

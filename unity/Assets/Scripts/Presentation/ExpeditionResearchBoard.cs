@@ -8,14 +8,6 @@ namespace Expedition.Presentation
     {
         static Texture2D ring, disc, glow;
         static readonly Texture2D[] glyphs = new Texture2D[6];
-        static readonly string[][] patterns = {
-            new[] { "..#.....", "..#####.", "..####..", "..#####.", "..#.....", "..#.....", "..#.....", ".###...." },
-            new[] { ".######.", ".#....#.", ".#..#.#.", ".#.##.#.", ".#.##.#.", "..####..", "...##...", "...##..." },
-            new[] { "....#...", "...##...", "...###..", ".#.###..", ".#####..", ".##.###.", "..#..#..", "...##..." },
-            new[] { ".##..##.", "#######.", "#..#..#.", "##.#.##.", "#..#..#.", "##.#.##.", "#######.", "...#...." },
-            new[] { "...#....", ".#.#.#..", "..###...", "#######.", "..###...", ".#.#.#..", "...#....", "........" },
-            new[] { "...#....", "..###...", ".#.#.#..", "#######.", ".#.#.#..", "..###...", "...#....", "........" }
-        };
 
         public static Color BranchColor(int branch)
         {
@@ -26,8 +18,8 @@ namespace Expedition.Presentation
         public static readonly Vector2 Core = new Vector2(229, 337);
         public static Vector2 Position(int branch, int tier)
         {
-            return tier == 1 ? new Vector2(branch == 1 ? 475 : 428, 219 + branch * 118) :
-                new Vector2(branch == 1 ? 734 : 681, 201 + branch * 136);
+            return tier == 1 ? new Vector2(branch == 1 ? 475 : 428, 205 + branch * 136) :
+                new Vector2(branch == 1 ? 734 : 681, 205 + branch * 136);
         }
 
         public static void Background(Rect rect)
@@ -72,7 +64,7 @@ namespace Expedition.Presentation
 
         public static bool Node(Vector2 center, int glyph, int tier, Color color, string title,
             string cost, bool owned, bool available, bool selected, bool recent,
-            GUIStyle label, GUIStyle caption)
+            GUIStyle label, GUIStyle caption, string lockedHint = "잠김")
         {
             EnsureTextures();
             float radius = tier == 1 ? 27 : 32;
@@ -80,7 +72,7 @@ namespace Expedition.Presentation
             bool clicked = GUI.Button(new Rect(center.x - 48, center.y - hitRadius, 96, hitRadius * 2),
                 GUIContent.none, GUIStyle.none);
             // The title and cost are part of the same visible target on a touch screen.
-            clicked |= GUI.Button(new Rect(center.x - 95, center.y + 39, 190, 49), GUIContent.none, GUIStyle.none);
+            clicked |= GUI.Button(new Rect(center.x - 100, center.y + 38, 200, 50), GUIContent.none, GUIStyle.none);
             Color state = owned ? color : available ? Color.Lerp(color, Color.white, .25f) : new Color(.38f, .4f, .46f);
             if (owned || selected || available)
             {
@@ -96,7 +88,7 @@ namespace Expedition.Presentation
                 Draw(ring, new Rect(center.x - r, center.y - r, r * 2, r * 2), ExpeditionUiTheme.Gold);
                 ExpeditionUiTheme.Fill(new Rect(center.x - 3, center.y - r - 5, 6, 6), ExpeditionUiTheme.Gold);
             }
-            Draw(glyphs[glyph], new Rect(center.x - 15, center.y - 15, 30, 30), owned || available ? color : state);
+            Glyph(new Rect(center.x - 20, center.y - 20, 40, 40), glyph, owned || available ? Color.white : new Color(.58f, .61f, .68f));
             if (owned)
             {
                 Vector2 check = center + new Vector2(radius - 3, radius - 6);
@@ -104,14 +96,20 @@ namespace Expedition.Presentation
                 Line(check + new Vector2(-4, 0), check + new Vector2(-1, 3), ExpeditionUiTheme.Cream, 2);
                 Line(check + new Vector2(-1, 3), check + new Vector2(5, -4), ExpeditionUiTheme.Cream, 2);
             }
-            GUI.Label(new Rect(center.x - 95, center.y + 39, 190, 25), title, label);
-            GUI.Label(new Rect(center.x - 95, center.y + 65, 190, 23),
-                owned ? "활성" : available ? cost + " · 해금 가능" : cost + " · 잠김", caption);
+            GUI.Label(new Rect(center.x - 100, center.y + 38, 200, 26), title, label);
+            GUI.Label(new Rect(center.x - 100, center.y + 64, 200, 24),
+                owned ? "활성" : available ? cost + " · 해금 가능" : cost + " · " + lockedHint, caption);
             return clicked;
         }
 
         public static void Glyph(Rect rect, int index, Color color)
-        { EnsureTextures(); Draw(glyphs[index], rect, color); }
+        {
+            EnsureTextures();
+            Texture2D sprite = glyphs[index];
+            float scale = Mathf.Max(1, Mathf.Floor(Mathf.Min(rect.width / sprite.width, rect.height / sprite.height)));
+            Vector2 size = new Vector2(sprite.width * scale, sprite.height * scale);
+            Draw(sprite, new Rect(rect.center.x - size.x * .5f, rect.center.y - size.y * .5f, size.x, size.y), color);
+        }
 
         static void Line(Vector2 a, Vector2 b, Color color, float width)
         {
@@ -135,14 +133,7 @@ namespace Expedition.Presentation
         {
             if (ring != null) return;
             ring = Radial(0); disc = Radial(1); glow = Radial(2);
-            for (int i = 0; i < glyphs.Length; i++)
-            {
-                Texture2D tex = Texture(8, "Research rune " + i);
-                var pixels = new Color[64];
-                for (int y = 0; y < 8; y++)
-                    for (int x = 0; x < 8; x++) pixels[(7 - y) * 8 + x] = patterns[i][y][x] == '#' ? Color.white : Color.clear;
-                tex.SetPixels(pixels); tex.Apply(false, true); glyphs[i] = tex;
-            }
+            for (int i = 0; i < glyphs.Length; i++) glyphs[i] = ResearchPixelIcons.Create(i);
         }
 
         static Texture2D Radial(int kind)

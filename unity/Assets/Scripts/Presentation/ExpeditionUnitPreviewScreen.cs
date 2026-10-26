@@ -58,9 +58,9 @@ namespace Expedition.Presentation
 
         string UnitSkills(CatalogMember member)
         {
-            string result = CatalogUnitInfo.Skill(member.FormId);
+            string result = CatalogUnitInfo.Skill(member.FormId, run.RulesVersion);
             if (member.FormId.StartsWith("F-", StringComparison.Ordinal))
-                result += "\n\n유지되는 분기 기술 · " + database.Get(member.BranchId).Name + "\n" + CatalogUnitInfo.Skill(member.BranchId);
+                result += "\n\n유지되는 분기 기술 · " + database.Get(member.BranchId).Name + "\n" + CatalogUnitInfo.Skill(member.BranchId, run.RulesVersion);
             return result + "\n\n배치: " + CatalogUnitInfo.Placement(member.FormId) + "\n\n" + CatalogUnitInfo.Keywords;
         }
 
@@ -80,7 +80,7 @@ namespace Expedition.Presentation
             foreach (string id in run.TacticIds)
             {
                 if (!EffectCanApply(id, member)) continue;
-                result.Append("\n\n연구 · ").Append(CatalogResearch.Get(id).Description).Append('\n').Append(EffectCondition(id)); any = true;
+                result.Append("\n\n연구 · ").Append(CatalogResearch.Get(id).DescriptionForRules(run.RulesVersion)).Append('\n').Append(EffectCondition(id)); any = true;
             }
             if (!any) result.Append("\n\n적용 중인 전투 연구 없음");
             return result.ToString();

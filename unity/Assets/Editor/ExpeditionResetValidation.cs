@@ -28,6 +28,8 @@ namespace Expedition.EditorTools
             return save;
         }
         public static void ValidateAndBuild()
+        { Validate(); PrototypeSetup.BuildAndroid(); }
+        public static void Validate()
         {
             AccountSettingsValidation.Validate();
             var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
@@ -57,7 +59,7 @@ namespace Expedition.EditorTools
                     Check(fresh != null && fresh.StartFormationId == form && !fresh.UsesLegacyRules && fresh.LegacyResearchIds.Count == 0, "fresh start ignores archived nodes");
                     var saved = JsonUtility.FromJson<ExpeditionAccountSave>(((ExpeditionSaveStore)Get(screen, "accountStore")).Load().Payload);
                     saved.Validate(db); checks++;
-                    Check(saved.Version == 2 && saved.Run.Version == 9 && saved.Progress.ResearchIds.Length == 6, "migration archive retained");
+                    Check(saved.Version == 2 && saved.Run.Version == 10 && saved.Progress.ResearchIds.Length == 6, "migration archive retained");
                 }
                 var run = (ExpeditionRun)Get(screen, "run");
                 Advance(run, 30); Call(screen, "Save", "battle_win", null, 0f);
@@ -83,7 +85,6 @@ namespace Expedition.EditorTools
                 Debug.Log("PASS reset/history Unity integration: " + checks + " checks; actual NewRun, archive preservation, atomic result history, reload and labels.");
             }
             finally { UnityEngine.Object.DestroyImmediate(go); if (font != null) UnityEngine.Object.DestroyImmediate(font); }
-            PrototypeSetup.BuildAndroid();
         }
     }
 }

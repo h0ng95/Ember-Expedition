@@ -6,6 +6,8 @@
 
 [합의한 개편 기준](expedition-reset-plan.html) · [자동 전투 상세 결과](balance-results.md) · [결과 JSON](balance-results.json)
 
+> 이 문서는 v0.45 구현 당시 기록이다. 현재 지역 해금·수치·개인 기록 분리는 [v0.46 구현 기록](../design-v0.46/HANDOFF.html)을 따른다.
+
 ## 달라진 플레이 규칙
 
 | 항목 | 구현한 동작 |
@@ -41,6 +43,8 @@ Galaxy Buddy2(2408×1080)에서 직접 조작·캡처했다. 아래 11전투 연
 ![개인 기록 목록](images/records-list.png)
 
 ![기록 상세와 최종 편성](images/record-detail.png)
+
+**위 사진의 3명은 화면 검사용 시험 편성이다. 기본 세 명으로 실제 완주했다는 의미가 아니다. 실제 출전은 최대 5명이며 종료 당시 출전 동료가 표시된다.**
 
 ## 점수 규칙
 

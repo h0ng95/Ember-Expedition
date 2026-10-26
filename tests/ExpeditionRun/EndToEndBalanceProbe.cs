@@ -12,6 +12,7 @@ internal static class EndToEndBalanceProbe
 {
     static string starter = "standard";
     static string researchBranch = "defense";
+    static string rulesProfile = "current";
     static bool interruptions;
     static int boundaryChecks;
     static string context;
@@ -100,7 +101,7 @@ internal static class EndToEndBalanceProbe
     sealed class Report
     {
         public int firstSeed, count;
-        public string note, starter, growthOrder, researchBranch;
+        public string note, starter, growthOrder, researchBranch, rulesProfile;
         public bool interruptions;
         public int boundaryChecks;
         public Row[] rows;
@@ -151,11 +152,16 @@ internal static class EndToEndBalanceProbe
     static SeedResult Simulate(CatalogDatabase db, int seed,
         HybridBalanceProbe.Policy policy, string spending, string account)
     {
-        // Alternative starts require their real unlock; no runtime state is forged.
+        // Archived account inputs never grant new-run power.
         string[] legacy = account == "researched" ?
             CatalogLegacyResearch.Nodes.Select(n => n.Id).ToArray() : account == "unlocked" ?
             CatalogLegacyResearch.Nodes.Where(n => n.Tier == 1).Select(n => n.Id).ToArray() : new string[0];
         var run = ExpeditionRun.New(db, (uint)seed, ExpeditionDifficulty.Normal, legacy, starter);
+        if (rulesProfile == "v045")
+        {
+            var previous = run.Capture(); previous.Version = 9; previous.RulesVersion = 1;
+            run = ExpeditionRun.Restore(db, previous);
+        }
         var accountProgress = ExpeditionProgress.New();
         var journal = ExpeditionJournal.New();
         var progress = new HybridBalanceProbe.Progress();
@@ -321,11 +327,13 @@ internal static class EndToEndBalanceProbe
 
     static void Execute(string[] args)
     {
-        if (args.Length < 5 || args.Length > 11)
+        if (args.Length < 5 || args.Length > 12)
             throw new ArgumentException("catalog report firstSeed count growthOrder [spending] [policy] [account] [starter] [interruptions] required");
         starter = args.Length >= 9 ? args[8] : "standard";
         interruptions = args.Length >= 10 && bool.Parse(args[9]);
         researchBranch = args.Length >= 11 ? args[10] : "defense";
+        rulesProfile = args.Length >= 12 ? args[11] : "current";
+        if (rulesProfile != "current" && rulesProfile != "v045") throw new ArgumentException("Unknown rules profile.");
         if (researchBranch != "defense" && researchBranch != "precision" && researchBranch != "arcana")
             throw new ArgumentException("Unsupported research branch.");
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
@@ -400,7 +408,7 @@ internal static class EndToEndBalanceProbe
                 foreach (SeedResult result in results)
                     if (result.seed != first) result.trace = result.trace.Where(a => !a.win).ToArray();
             }
-        var report = new Report { firstSeed = first, count = count, starter = starter, growthOrder = args[4], researchBranch = researchBranch,
+        var report = new Report { firstSeed = first, count = count, starter = starter, growthOrder = args[4], researchBranch = researchBranch, rulesProfile = rulesProfile,
             interruptions = interruptions, boundaryChecks = boundaryChecks,
             note = "Real run progression only. Losses consume lantern; only wins pay rewards. Growth order: " +
                 args[4] + ". Account labels describe archived legacy inputs only; new expeditions ignore all permanent power and starter unlocks. Starter: " + starter + ". Fixed automated policies, not human win rates. Trace beyond first seed keeps losses only. Wave rates are conditional on reaching the wave.",

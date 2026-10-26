@@ -28,13 +28,12 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, 328, content.width, 38), "이번 원정에서 번 골드  " + run.VictoryGoldEarned + " G", heading);
             GUI.Label(new Rect(content.x, 370, content.width, 62),
                 "사용 " + run.GoldSpent + " G (시작 자금 40 G 포함)  ·  남은 골드 " + run.Gold + " G\n남은 골드는 새 원정으로 이월되지 않습니다.", body);
-            string earned = badProgress ? "연구 기록을 확인할 수 없습니다." : run.ResearchEarnedThisRun.HasValue ?
-                "이번 원정에서 획득한 연구 포인트  +" + run.ResearchEarnedThisRun.Value + " PT" :
-                "이번 원정의 획득 PT · 이전 저장은 개별 집계 없음";
-            GUI.Label(new Rect(content.x, 449, content.width, 36), earned, heading);
-            GUI.Label(new Rect(content.x, 491, content.width, 48),
-                (badProgress || progress == null ? "" : "현재 사용 가능  " + progress.ResearchPoints + " PT  ·  ") +
-                "연구와 해금은 다음 원정에도 유지됩니다.\n연구 PT는 첫 격파 1점 + 보스 첫 격파 추가 1점입니다.", small);
+            GUI.Label(new Rect(content.x, 446, content.width, 42), run.UsesLegacyRules ?
+                "이전 규칙 원정 · 새 점수 순위 제외" : "원정 점수  " + run.Score.ToString("N0"), heading);
+            GUI.Label(new Rect(content.x, 490, content.width, 64), run.UsesLegacyRules ?
+                "다음 새 원정부터 영구 강화 없이 시작합니다.\n도감·이야기·성과 기록은 유지됩니다." :
+                "격파 " + (run.Victories * 10000).ToString("N0") + " + 완주 " + (cleared ? "30,000" : "0") +
+                " + 등불 " + (run.Lantern * 1000).ToString("N0") + "\n새 원정에서는 동료·골드·연구가 초기화됩니다.", small);
             ExpeditionUiTheme.FooterRule(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             GUI.enabled = HasBattleReport;

@@ -22,7 +22,7 @@ static class Program
                 var progress = ExpeditionProgress.Restore(new ExpeditionProgressSave { Version = 2, BestWave = baseline, ResearchIds = new string[0] });
                 var run = ExpeditionRun.New(db, 42, researchBaselineBestWave: baseline);
                 int originalEarned = progress.ResearchEarned, earnedGold = 0;
-                Check(run.BattleSpeed == 1 && run.VictoryGoldEarned == 0 && run.ResearchEarnedThisRun == 0, "fresh summary");
+                Check(run.BattleSpeed == 1 && run.VictoryGoldEarned == 0 && !run.ResearchEarnedThisRun.HasValue, "fresh summary");
                 Check(run.SetBattleSpeed(2) && !run.SetBattleSpeed(3), "speed validation");
                 string recruited = run.Summon(); Check(recruited != null && run.GoldSpent == 20, "summon expense");
                 for (int wave = 1; wave <= 30; wave++)
@@ -31,21 +31,21 @@ static class Program
                     progress.Observe(run);
                     int balance = progress.ResearchPoints;
                     Check(!progress.Observe(run) && progress.ResearchPoints == balance, "summary must not grant repeat rewards");
-                    Check(run.ResearchEarnedThisRun == progress.ResearchEarned - originalEarned, "first-clear PT mismatch");
+                    Check(!run.ResearchEarnedThisRun.HasValue && progress.ResearchEarned == originalEarned, "first-clear PT mismatch");
                     Check(run.VictoryGoldEarned == earnedGold && run.GoldSpent == 20, "cumulative gold mismatch");
                     run = RoundTrip(run);
-                    Check(run.BattleSpeed == 2 && run.ResearchBaselineBestWave == baseline && run.HasResearchBaseline, "metadata lost on restart");
+                    Check(run.BattleSpeed == 2 && run.ResearchBaselineBestWave == 0 && !run.HasResearchBaseline, "metadata lost on restart");
                     Check(run.Continue(), "continue");
                 }
-                Check(run.Phase == ExpeditionPhase.Completed && run.ResearchEarnedThisRun == 36 - originalEarned, "clear summary");
+                Check(run.Phase == ExpeditionPhase.Completed && !run.ResearchEarnedThisRun.HasValue, "clear summary");
             }
             var failed = ExpeditionRun.New(db, 43, researchBaselineBestWave: 5);
             for (int i = 0; i < 8; i++) Win(failed);
             int initialGold = failed.Gold;
             for (int i = 0; i < 3; i++) { failed.BeginBattle(); failed.ResolveBattle(false); failed.Continue(); failed = RoundTrip(failed); }
             Check(failed.Phase == ExpeditionPhase.Defeated && failed.Wave == 9 && failed.Victories == 8 &&
-                failed.ResearchEarnedThisRun == 3 && failed.Gold == initialGold && failed.VictoryGoldEarned == initialGold - 40, "defeat summary");
-            var old = failed.Capture(); old.HasResearchBaseline = false; old.BattleSpeed = 0;
+                !failed.ResearchEarnedThisRun.HasValue && failed.Gold == initialGold && failed.VictoryGoldEarned == initialGold - 40, "defeat summary");
+            var old = failed.Capture(); old.Version = 8; old.HasResearchBaseline = false; old.BattleSpeed = 0;
             var restored = ExpeditionRun.Restore(db, old);
             Check(!restored.ResearchEarnedThisRun.HasValue && restored.BattleSpeed == 1, "old saves require unknown PT and default speed");
             old.HasResearchBaseline = true; old.ResearchBaselineBestWave = 999; old.BattleSpeed = 999;

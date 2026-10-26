@@ -5,7 +5,8 @@ param([int]$FirstSeed = 1, [int]$Count = 20,
     [ValidateSet('all', 'focus', 'final', 'H-01', 'H-02', 'H-03', 'H-04', 'H-05', 'H-06')][string]$Policy = 'all',
     [ValidateSet('all', 'fresh', 'researched', 'unlocked')][string]$Account = 'fresh',
     [ValidateSet('standard', 'tactical', 'ember', 'frost')][string]$Starter = 'standard',
-    [switch]$Interruptions)
+    [switch]$Interruptions,
+    [ValidateSet('defense', 'precision', 'arcana')][string]$ResearchBranch = 'defense')
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
@@ -21,7 +22,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'End-to-end balance compilation failed.' }
     $report = Join-Path $projectRoot $ReportPath
     New-Item -ItemType Directory -Force -Path (Split-Path $report) | Out-Null
-    & $binary (Join-Path $projectRoot 'unity/Assets/Resources/Content/unit-catalog-v010.json') $report $FirstSeed $Count $GrowthOrder $Spending $Policy $Account $Starter $Interruptions.IsPresent.ToString()
+    & $binary (Join-Path $projectRoot 'unity/Assets/Resources/Content/unit-catalog-v010.json') $report $FirstSeed $Count $GrowthOrder $Spending $Policy $Account $Starter $Interruptions.IsPresent.ToString() $ResearchBranch
     if ($LASTEXITCODE -ne 0) { throw 'End-to-end balance simulation failed.' }
 }
 finally { if (Test-Path -LiteralPath $binary) { Remove-Item -LiteralPath $binary } }

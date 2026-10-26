@@ -80,9 +80,9 @@ namespace Expedition.Presentation
             foreach (string id in run.TacticIds)
             {
                 if (!EffectCanApply(id, member)) continue;
-                result.Append("\n\n전술 · ").Append(CatalogResearch.Get(id).Description).Append('\n').Append(EffectCondition(id)); any = true;
+                result.Append("\n\n연구 · ").Append(CatalogResearch.Get(id).Description).Append('\n').Append(EffectCondition(id)); any = true;
             }
-            if (!any) result.Append("\n\n적용 중인 전투 연구·전술 없음");
+            if (!any) result.Append("\n\n적용 중인 전투 연구 없음");
             return result.ToString();
         }
 

@@ -11,30 +11,30 @@ namespace Expedition.Core
         public int BestWave;
         public int CompletedWaves;
         public string[] ResearchIds;
+        public int ArchivedResearchEarned;
     }
 
     public sealed class ExpeditionProgress
     {
-        const int SaveVersion = 2;
+        const int SaveVersion = 3;
         // This save schema must continue accepting fifteen-wave clears after more content ships.
         const int FirstContentWaves = 15;
         int bestWave, completedWaves;
+        int archivedResearchEarned;
         readonly List<string> researchIds = new List<string>();
 
         public int BestWave { get { return bestWave; } }
         public int CompletedWaves { get { return completedWaves; } }
         public bool HardUnlocked { get { return completedWaves >= ExpeditionRun.ReleaseWaves; } }
         public IReadOnlyList<string> ResearchIds { get { return researchIds.AsReadOnly(); } }
-        // First clears only: one point per new battle, plus one for each new boss.
-        // Deriving the balance from durable progress prevents replay/reload double rewards.
-        public int ResearchEarned { get { return bestWave + bestWave / 5; } }
+        // Freeze the old first-clear point total during migration. New progress
+        // still records best clears, but never grants permanent research points.
+        public int ResearchEarned { get { return archivedResearchEarned; } }
         public int ResearchPoints { get { return ResearchEarned - CatalogLegacyResearch.SelectionCost(researchIds); } }
 
         public bool CanPurchaseResearch(string id)
         {
-            var node = CatalogLegacyResearch.Get(id);
-            return node != null && !researchIds.Contains(id) && ResearchPoints >= node.Cost &&
-                (node.PrerequisiteId == null || researchIds.Contains(node.PrerequisiteId));
+            return false; // Retained records are historical; permanent purchases are retired.
         }
 
         public bool PurchaseResearch(string id)
@@ -54,7 +54,10 @@ namespace Expedition.Core
                 save.CompletedWaves > 0 && save.CompletedWaves < FirstContentWaves)
                 throw new ArgumentException("Invalid expedition progress save.");
             var result = new ExpeditionProgress { bestWave = save.BestWave,
-                completedWaves = save.CompletedWaves };
+                completedWaves = save.CompletedWaves,
+                archivedResearchEarned = save.Version < 3 ? save.BestWave + save.BestWave / 5 : save.ArchivedResearchEarned };
+            if (result.archivedResearchEarned < 0 || result.archivedResearchEarned > save.BestWave + save.BestWave / 5)
+                throw new ArgumentException("Invalid archived research points.");
             if (save.Version == 1)
             {
                 if (save.ResearchIds != null && save.ResearchIds.Length != 0)
@@ -73,7 +76,7 @@ namespace Expedition.Core
         public ExpeditionProgressSave Capture()
         { return new ExpeditionProgressSave { Version = SaveVersion,
             BestWave = bestWave, CompletedWaves = completedWaves,
-            ResearchIds = researchIds.ToArray() }; }
+            ResearchIds = researchIds.ToArray(), ArchivedResearchEarned = archivedResearchEarned }; }
 
         public bool Observe(ExpeditionRun run)
         {

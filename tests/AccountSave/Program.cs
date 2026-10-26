@@ -8,13 +8,14 @@ class Program
     static int checks;
     static JavaScriptSerializer json = new JavaScriptSerializer();
     static CatalogDatabase db;
+    static ExpeditionHistory history = new ExpeditionHistory();
     static void Check(bool condition, string why) { checks++; if (!condition) throw new Exception(why); }
     static void Throws(Action action, string why) { bool threw = false; try { action(); } catch { threw = true; } Check(threw, why); }
     static void Validate(string text) { json.Deserialize<ExpeditionAccountSave>(text).Validate(db); }
     static string Snapshot(ExpeditionRun run, ExpeditionProgress progress, ExpeditionJournal journal)
     {
-        progress.Observe(run); journal.Observe(run);
-        return json.Serialize(new ExpeditionAccountSave { Version = 1, Run = run.Capture(), Progress = progress.Capture(),
+        progress.Observe(run); journal.Observe(run); history.Observe(run);
+        return json.Serialize(new ExpeditionAccountSave { Version = 2, HasRun = true, Run = run.Capture(), Progress = progress.Capture(), History = history.Capture(),
             Journal = journal.Capture(), TutorialMask = 3, LessonMask = 7 });
     }
     static void Main(string[] args)
@@ -42,9 +43,9 @@ class Program
             run.Continue(); store.Commit(Snapshot(run, progress, journal)); operations++;
             Check(store.Load().State == SaveReadState.Loaded, "checkpoint reload");
         }
-        Check(progress.PurchaseResearch("tactical-start"), "research purchase");
+        Check(!progress.PurchaseResearch("tactical-start"), "permanent research disabled");
         store.Commit(Snapshot(run, progress, journal));
-        Check(json.Deserialize<ExpeditionAccountSave>(store.Load().Payload).Progress.ResearchIds.Length == 1, "research persists with run");
+        Check(json.Deserialize<ExpeditionAccountSave>(store.Load().Payload).Progress.ResearchIds.Length == 0, "new run carries no permanent research");
         var invalid = json.Deserialize<ExpeditionAccountSave>(store.Load().Payload);
         invalid.Progress = ExpeditionProgress.New().Capture();
         Throws(() => Validate(json.Serialize(invalid)), "mixed checkpoint accepted");
@@ -68,7 +69,7 @@ class Program
         Throws(() => bad.Commit(initial), "silently replaced damaged account");
         Check(File.ReadAllText(Path.Combine(badDir, "account-a.sav")) == "broken A", "damaged original preserved");
         string futureDir = Path.Combine(root, "future"); var future = new ExpeditionSaveStore(futureDir, Validate); future.Commit(initial);
-        var futureData = json.Deserialize<ExpeditionAccountSave>(initial); futureData.Version = 2;
+        var futureData = json.Deserialize<ExpeditionAccountSave>(initial); futureData.Version = 3;
         new ExpeditionSaveStore(futureDir, text => { }).Commit(json.Serialize(futureData));
         Check(future.Load().State == SaveReadState.FutureVersion, "future version rolled back");
         Throws(() => future.Commit(initial), "future version overwritten");

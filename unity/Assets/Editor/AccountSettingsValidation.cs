@@ -25,7 +25,8 @@ namespace Expedition.EditorTools
             Call(screen, "LoadTutorial"); Call(screen, "LoadLessons"); Set(screen, "startupReady", true);
             return screen;
         }
-        public static void ValidateAndBuild()
+        public static void ValidateAndBuild() { Validate(); PrototypeSetup.BuildAndroid(); }
+        public static void Validate()
         {
             string[] keys = { "ember.expedition.run.v013", "ember.expedition.story.v025", "ember.expedition.progress.v027",
                 "ember.expedition.tutorial.v036", "ember.expedition.lessons.v042", "ignis.preferences.v044", "ignis.preferences.v044.backup" };
@@ -37,9 +38,9 @@ namespace Expedition.EditorTools
             {
                 foreach (string key in keys) PlayerPrefs.DeleteKey(key);
                 var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
-                var run = ExpeditionRun.New(db, 44006);
+                var run = ExpeditionRun.NewLegacy(db, 44006);
                 while (run.Wave < 6) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
-                var progress = ExpeditionProgress.New(); progress.Observe(run); progress.PurchaseResearch("tactical-start");
+                var progress = ExpeditionProgress.Restore(new ExpeditionProgressSave { Version = 2, BestWave = 5, ResearchIds = new[] { "tactical-start" } });
                 var journal = ExpeditionJournal.New(); journal.Observe(run);
                 PlayerPrefs.SetString(keys[0], JsonUtility.ToJson(run.Capture()));
                 PlayerPrefs.SetString(keys[1], JsonUtility.ToJson(journal.Capture()));
@@ -49,6 +50,7 @@ namespace Expedition.EditorTools
                 Func<string, ExpeditionScreen> load = dir => { var go = new GameObject("Account QA"); go.SetActive(false); objects.Add(go); return Load(go, db, dir); };
                 var screen = load(root); Call(screen, "FinalizeAccountLoad");
                 var store = (ExpeditionSaveStore)Get(screen, "accountStore");
+                if (store.Load().State != SaveReadState.Loaded) Call(screen, "PersistAccount");
                 Check(store.Load().State == SaveReadState.Loaded, "migration redundant files");
                 Check(((ExpeditionRun)Get(screen, "run")).Wave == 6 && ((ExpeditionProgress)Get(screen, "progress")).ResearchIds.Count == 1, "legacy run/research migration");
                 Check((int)Get(screen, "tutorialMask") == 1 && (int)Get(screen, "lessonMask") == 2, "guide migration");
@@ -105,7 +107,7 @@ namespace Expedition.EditorTools
                 GamePreferences.Load();
             }
             BattleReadabilityValidation.Validate();
-            PrototypeSetup.BuildAndroid();
+
         }
     }
 }

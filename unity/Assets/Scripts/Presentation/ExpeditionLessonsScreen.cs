@@ -152,7 +152,7 @@ namespace Expedition.Presentation
             if (stage == LessonStage.TacticsBoard)
             {
                 GUI.Label(new Rect(card.x + 14, card.y + 10, card.width - 190, 75),
-                    "소환과 전술은 같은 골드를 사용합니다. 40G는 소환 2회분 · 현재 " + run.Gold + "G\n노드를 눌러 효과와 조건을 비교하세요. 전술은 이번 원정에서만 유지됩니다.\n구매는 선택입니다. 소환할 돈을 남겨두어도 됩니다.", lessonText);
+                    "소환과 연구은 같은 골드를 사용합니다. 40G는 소환 2회분 · 현재 " + run.Gold + "G\n노드를 눌러 효과와 조건을 비교하세요. 연구은 이번 원정에서만 유지됩니다.\n구매는 선택입니다. 소환할 돈을 남겨두어도 됩니다.", lessonText);
                 if (GUI.Button(new Rect(card.xMax - 162, card.y + 20, 148, 44), "알겠어", button)) FinishLesson(ExpeditionLesson.Tactics);
                 return;
             }
@@ -160,10 +160,10 @@ namespace Expedition.Presentation
                 "첫 성장 · 강조된 대기 동료를\n출전 동료 위에 끌어 잠시 유지한 뒤 놓으세요.\n성장 +1 · 재료는 소모 · 준비 중 되돌리기 가능" :
                 stage == LessonStage.EvolutionReady ?
                 "진화할 동료가 있어요.\n모습·역할·기술을 비교한 뒤 골라보세요.\n미리보기만 열어서는 동료가 변하지 않습니다." :
-                "전술을 선택할 수 있어요.\n소환과 같은 골드를 써서 원정 전체를 강화해요.\n먼저 효과를 살펴보고 지출을 결정하세요.";
+                "연구를 선택할 수 있어요.\n소환과 같은 골드를 써서 원정 전체를 강화해요.\n먼저 효과를 살펴보고 지출을 결정하세요.";
             GUI.Label(new Rect(card.x + 14, card.y + 8, card.width - 28, 78), message, lessonText);
             if (stage != LessonStage.Growth && GUI.Button(new Rect(card.x + 14, card.y + 90, 330, 42),
-                stage == LessonStage.EvolutionReady ? "진화 비교하기" : "전술 살펴보기", primary))
+                stage == LessonStage.EvolutionReady ? "진화 비교하기" : "연구 살펴보기", primary))
             {
                 CancelPointer();
                 if (stage == LessonStage.EvolutionReady) PrepareEvolution(ExpeditionLearning.EvolutionExample(run));
@@ -188,7 +188,7 @@ namespace Expedition.Presentation
             Rect panel = new Rect(180, 42, 920, 636), content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 74, content.width, 45), "원정 안내 · 언제든 다시 보기", heading);
-            string[] names = { "기본 조작", "성장", "진화", "원정 전술" };
+            string[] names = { "기본 조작", "성장", "진화", "원정 연구" };
             string[] descriptions = {
                 "소환한 동료를 출전시키고, 눌러서 공격·지원 범위를 확인합니다.",
                 "동료 위에 재료를 끌어 잠시 유지하면 성장 +1. 재료는 사라지며 준비 중 되돌릴 수 있습니다.",

@@ -39,6 +39,10 @@ namespace Expedition.Core
         // Optional presentation metadata. Older v8 saves deserialize these as zero/false.
         public int BattleSpeed, ResearchBaselineBestWave;
         public bool HasResearchBaseline;
+        public int RulesVersion;
+        public string RunId;
+        public uint InitialSeed;
+        public float CombatSeconds;
         public CatalogRosterSave Roster;
         public string[] DeployedIds;
         // Most recent preparation action first. Summons are written into every older entry.
@@ -122,6 +126,14 @@ namespace Expedition.Core
         public int BattleSpeed { get; private set; }
         public bool HasResearchBaseline { get; private set; }
         public int ResearchBaselineBestWave { get; private set; }
+        public int RulesVersion { get; private set; }
+        public bool UsesLegacyRules { get { return RulesVersion == 0; } }
+        public string RunId { get; private set; }
+        public uint InitialSeed { get; private set; }
+        public float CombatSeconds { get; private set; }
+        public bool HasEnded { get { return Lantern == 0 || Victories == TotalWaves; } }
+        public int Score { get { return UsesLegacyRules ? 0 : Victories * 10000 +
+            (Victories == TotalWaves ? 30000 : 0) + Lantern * 1000; } }
         public int VictoryGoldEarned { get { return TotalEarned(Victories, VictoryRewards) - 40; } }
         public int GoldSpent { get { return VictoryGoldEarned + 40 - Gold; } }
         public int? ResearchEarnedThisRun { get { return HasResearchBaseline ? (int?)Math.Max(0,
@@ -146,14 +158,31 @@ namespace Expedition.Core
             IEnumerable<string> legacyResearchIds = null, string startFormationId = "standard",
             int? researchBaselineBestWave = null)
         {
+            // Account research arguments are accepted for source compatibility, never applied.
+            return Create(catalog, seed, difficulty, null, startFormationId, null, false);
+        }
+
+        // Only for historical fixtures and validation; the application starts runs with New.
+        public static ExpeditionRun NewLegacy(CatalogDatabase catalog, uint seed,
+            ExpeditionDifficulty difficulty = ExpeditionDifficulty.Normal,
+            IEnumerable<string> legacyResearchIds = null, string startFormationId = "standard",
+            int? researchBaselineBestWave = null)
+        { return Create(catalog, seed, difficulty, legacyResearchIds, startFormationId, researchBaselineBestWave, true); }
+
+        static ExpeditionRun Create(CatalogDatabase catalog, uint seed, ExpeditionDifficulty difficulty,
+            IEnumerable<string> legacyResearchIds, string startFormationId, int? researchBaselineBestWave, bool legacyRules)
+        {
             if (difficulty != ExpeditionDifficulty.Normal)
                 throw new ArgumentOutOfRangeException("difficulty", "Difficulty is unavailable.");
             var selectedLegacy = new List<string>(legacyResearchIds ?? new string[0]);
             CatalogLegacyResearch.ValidateSelection(selectedLegacy);
-            if (!CatalogLegacyResearch.IsFormationAvailable(startFormationId, selectedLegacy))
+            if (legacyRules && !CatalogLegacyResearch.IsFormationAvailable(startFormationId, selectedLegacy))
                 throw new ArgumentException("Starting formation is unavailable.", "startFormationId");
             string[] startingForms = CatalogLegacyResearch.GetFormationUnits(startFormationId);
             var run = new ExpeditionRun(catalog);
+            run.RulesVersion = legacyRules ? 0 : 1;
+            run.RunId = Guid.NewGuid().ToString("N");
+            run.InitialSeed = seed == 0 ? 0x6d2b79f5u : seed;
             if (researchBaselineBestWave.HasValue && (researchBaselineBestWave.Value < 0 || researchBaselineBestWave.Value > TotalWaves))
                 throw new ArgumentOutOfRangeException("researchBaselineBestWave");
             run.BattleSpeed = 1;
@@ -629,6 +658,7 @@ namespace Expedition.Core
         public bool ResolveBattle(bool victory)
         {
             if (Phase != ExpeditionPhase.Battle) return false;
+            if (!UsesLegacyRules && battle != null) CombatSeconds += battle.Time;
             LastVictory = victory;
             if (victory)
             {
@@ -666,7 +696,9 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = 8, Difficulty = Difficulty,
+            return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : 9, Difficulty = Difficulty,
+                RulesVersion = RulesVersion, RunId = RunId, InitialSeed = InitialSeed,
+                CombatSeconds = CombatSeconds,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
                 TacticIds = tacticIds.ToArray(), LegacyResearchIds = legacyResearchIds.ToArray(),
                 StartFormationId = StartFormationId,
@@ -690,7 +722,8 @@ namespace Expedition.Core
             bool twenty = save != null && save.Version == 5;
             bool twentyFive = save != null && save.Version == 6;
             bool thirty = save != null && save.Version == 7;
-            bool current = save != null && save.Version == 8;
+            bool fresh = save != null && save.Version == 9;
+            bool current = save != null && save.Version >= 8;
             int saveWaves = legacy ? 10 : current || thirty ? TotalWaves : twentyFive ? 25 : twenty ? 20 : 15;
             // Validate old files against their original economy before granting expansion rewards.
             int[] fifteenRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 50,
@@ -701,7 +734,12 @@ namespace Expedition.Core
                 30, 30, 35, 40, 50, 35, 35, 40, 45, 50, 40, 40, 45, 50, 0 };
             int[] rewards = legacy ? LegacyVictoryRewards : current || thirty ? VictoryRewards :
                 twentyFive ? twentyFiveRewards : twenty ? twentyRewards : fifteenRewards;
-            if (save == null || save.Version < 2 || save.Version > 8 ||
+            Guid parsedId;
+            if (save == null || save.Version < 2 || save.Version > 9 ||
+                fresh && (save.RulesVersion != 1 || !Guid.TryParseExact(save.RunId, "N", out parsedId) ||
+                    save.InitialSeed == 0 || save.PreviousClearWaves != 0 || save.HasResearchBaseline ||
+                    float.IsNaN(save.CombatSeconds) || float.IsInfinity(save.CombatSeconds) || save.CombatSeconds < 0 ||
+                    save.LegacyResearchIds == null || save.LegacyResearchIds.Length != 0) ||
                 normalSave && save.Difficulty != ExpeditionDifficulty.Normal ||
                 save.Version == 4 && save.ContentWaves != 15 ||
                 twenty && (save.ContentWaves != 20 ||
@@ -716,7 +754,8 @@ namespace Expedition.Core
                     save.PreviousClearWaves != 20 && save.PreviousClearWaves != 25 ||
                     save.PreviousClearWaves > save.Victories) ||
                 current && (save.TacticIds == null || save.LegacyResearchIds == null ||
-                    !CatalogLegacyResearch.IsFormationAvailable(save.StartFormationId, save.LegacyResearchIds)) ||
+                    (fresh ? !IsStartingFormation(save.StartFormationId) :
+                    !CatalogLegacyResearch.IsFormationAvailable(save.StartFormationId, save.LegacyResearchIds))) ||
                 save.Wave < 1 || save.Wave > saveWaves ||
                 save.Lantern < 0 || save.Lantern > 3 || save.Gold < 0 ||
                 save.Gold > TotalEarned(saveWaves, rewards) ||
@@ -734,6 +773,10 @@ namespace Expedition.Core
             int tacticCost = CatalogResearch.ValidateSelection(selectedTactics, save.Wave);
             CatalogLegacyResearch.ValidateSelection(selectedLegacy);
             var run = new ExpeditionRun(catalog);
+            run.RulesVersion = fresh ? 1 : 0;
+            run.RunId = Guid.TryParseExact(save.RunId, "N", out parsedId) ? save.RunId : Guid.NewGuid().ToString("N");
+            run.InitialSeed = save.InitialSeed;
+            run.CombatSeconds = fresh ? save.CombatSeconds : 0;
             run.Difficulty = normalSave ? save.Difficulty : ExpeditionDifficulty.Normal;
             run.ContentWaves = TotalWaves;
             run.PreviousClearWaves = save.Version >= 5 ? save.PreviousClearWaves : 0;
@@ -803,6 +846,9 @@ namespace Expedition.Core
             }
             return run;
         }
+
+        public static bool IsStartingFormation(string id)
+        { return id == "standard" || id == "tactical" || id == "ember" || id == "frost"; }
 
         void ValidateDeployment()
         {

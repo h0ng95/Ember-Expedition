@@ -11,6 +11,7 @@ using Expedition.Core;
 internal static class EndToEndBalanceProbe
 {
     static string starter = "standard";
+    static string researchBranch = "defense";
     static bool interruptions;
     static int boundaryChecks;
     static string context;
@@ -99,7 +100,7 @@ internal static class EndToEndBalanceProbe
     sealed class Report
     {
         public int firstSeed, count;
-        public string note, starter, growthOrder;
+        public string note, starter, growthOrder, researchBranch;
         public bool interruptions;
         public int boundaryChecks;
         public Row[] rows;
@@ -127,7 +128,10 @@ internal static class EndToEndBalanceProbe
             }
             return;
         }
-        foreach (string id in new[] { "bulwark", "shieldcraft", "marksmanship" })
+        string[] path = researchBranch == "precision" ? new[] { "marksmanship", "exploitation", "bulwark" } :
+            researchBranch == "arcana" ? new[] { "spellcraft", "cinders", "bulwark" } :
+            new[] { "bulwark", "shieldcraft", "marksmanship" };
+        foreach (string id in path)
         {
             if (!run.CanPurchaseTactic(id)) continue;
             if (!run.PurchaseTactic(id)) throw new InvalidOperationException("Affordable tactic failed.");
@@ -172,7 +176,7 @@ internal static class EndToEndBalanceProbe
             if (reloaded.Wave != run.Wave || reloaded.Gold != run.Gold ||
                 reloaded.Capture().RandomState != saved.RandomState ||
                 !reloaded.TacticIds.SequenceEqual(run.TacticIds) ||
-                !reloaded.LegacyResearchIds.SequenceEqual(legacy) || reloaded.StartFormationId != starter ||
+                !reloaded.LegacyResearchIds.SequenceEqual(run.UsesLegacyRules ? legacy : new string[0]) || reloaded.StartFormationId != starter ||
                 HybridBalanceProbe.Party(reloaded) != HybridBalanceProbe.Party(run))
                 throw new InvalidOperationException("Run save changed legal preparation.");
             run = reloaded;
@@ -266,7 +270,7 @@ internal static class EndToEndBalanceProbe
                 accountProgress = ExpeditionProgress.Restore(serializer.Deserialize<ExpeditionProgressSave>(serializer.Serialize(accountProgress.Capture())));
                 journal = ExpeditionJournal.Restore(serializer.Deserialize<ExpeditionJournalSave>(serializer.Serialize(journal.Capture())));
                 Verify(accountProgress.BestWave == run.Victories &&
-                    accountProgress.ResearchEarned == run.Victories + run.Victories / 5, "Earned research drifted from actual first clears");
+                    accountProgress.ResearchEarned == 0, "Fresh progress awarded retired permanent research points");
             }
             if (run.LastVictory != attempt.win || !run.Continue())
                 throw new InvalidOperationException("Result progression failed.");
@@ -317,10 +321,13 @@ internal static class EndToEndBalanceProbe
 
     static void Execute(string[] args)
     {
-        if (args.Length < 5 || args.Length > 10)
+        if (args.Length < 5 || args.Length > 11)
             throw new ArgumentException("catalog report firstSeed count growthOrder [spending] [policy] [account] [starter] [interruptions] required");
         starter = args.Length >= 9 ? args[8] : "standard";
         interruptions = args.Length >= 10 && bool.Parse(args[9]);
+        researchBranch = args.Length >= 11 ? args[10] : "defense";
+        if (researchBranch != "defense" && researchBranch != "precision" && researchBranch != "arcana")
+            throw new ArgumentException("Unsupported research branch.");
         int first = int.Parse(args[2]), count = int.Parse(args[3]);
         if (first < 1 || count < 1 || count > 1000) throw new ArgumentOutOfRangeException("seed range");
         HybridBalanceProbe.ConfigureGrowthOrder(args[4]);
@@ -393,10 +400,10 @@ internal static class EndToEndBalanceProbe
                 foreach (SeedResult result in results)
                     if (result.seed != first) result.trace = result.trace.Where(a => !a.win).ToArray();
             }
-        var report = new Report { firstSeed = first, count = count, starter = starter, growthOrder = args[4],
+        var report = new Report { firstSeed = first, count = count, starter = starter, growthOrder = args[4], researchBranch = researchBranch,
             interruptions = interruptions, boundaryChecks = boundaryChecks,
             note = "Real run progression only. Losses consume lantern; only wins pay rewards. Growth order: " +
-                args[4] + ". Accounts: fresh has no research; researched has all six nodes (27 points); unlocked has only the three starter unlocks (9 points). Starter: " + starter + ". Fixed automated policies, not human win rates. Trace beyond first seed keeps losses only. Wave rates are conditional on reaching the wave.",
+                args[4] + ". Account labels describe archived legacy inputs only; new expeditions ignore all permanent power and starter unlocks. Starter: " + starter + ". Fixed automated policies, not human win rates. Trace beyond first seed keeps losses only. Wave rates are conditional on reaching the wave.",
             rows = rows.ToArray(), waves = waves.ToArray(), seedResults = all.ToArray() };
         File.WriteAllText(args[1], new JavaScriptSerializer { MaxJsonLength = int.MaxValue }.Serialize(report));
     }

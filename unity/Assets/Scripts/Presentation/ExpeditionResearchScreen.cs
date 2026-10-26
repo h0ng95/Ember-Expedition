@@ -27,9 +27,9 @@ namespace Expedition.Presentation
         {
             EnsureRuneStyles();
             ExpeditionUiTheme.Window(ResearchWindow);
-            GUI.Label(new Rect(76, 61, 600, 42), tactics ? "원정 전술" : "원정 연구", title);
+            GUI.Label(new Rect(76, 61, 600, 42), tactics ? "원정 연구" : "원정 연구", title);
             GUI.Label(new Rect(78, 111, 760, 30), tactics ?
-                "TACTICS  /  이번 원정의 동료에게 맞는 길을 선택하세요" :
+                "이번 원정 전용  /  새 원정 시작 시 연구가 초기화됩니다" :
                 "RESEARCH  /  첫 돌파의 기록으로 새로운 길을 여세요", small);
             ExpeditionUiTheme.PanelBox(new Rect(936, 65, 268, 70));
             GUI.Label(new Rect(948, 70, 244, 29), tactics ? "원정 골드" : "연구 포인트", runeCaption);
@@ -39,72 +39,12 @@ namespace Expedition.Presentation
             ExpeditionResearchBoard.Background(ResearchMap);
         }
 
-        void DrawLegacyResearch()
-        {
-            bool unavailable = badProgress || progress == null;
-            ResearchHeader(false, unavailable);
-            int count = unavailable ? 0 : progress.ResearchIds.Count;
-            DrawResearchRoutes(false, unavailable);
-            ExpeditionResearchBoard.Center(count, 6, "IGNIS", runeName, runeCaption);
-            for (int b = 0; b < 3; b++)
-                for (int tier = 1; tier <= 2; tier++)
-                {
-                    CatalogLegacyResearchNode node = LegacyNode(LegacyBranches[b], tier);
-                    if (node == null) continue;
-                    bool owned = !unavailable && HasId(progress.ResearchIds, node.Id);
-                    if (ExpeditionResearchBoard.Node(ExpeditionResearchBoard.Position(b, tier), b * 2 + tier - 1,
-                        tier, ExpeditionResearchBoard.BranchColor(b), node.Title, node.Cost + " PT", owned,
-                        !unavailable && progress.CanPurchaseResearch(node.Id), selectedLegacyNodeId == node.Id,
-                        lastUnlockedRune == node.Id && Time.unscaledTime < runePulseUntil, runeName, runeCaption))
-                        selectedLegacyNodeId = node.Id;
-                }
-            CatalogLegacyResearchNode selected = CatalogLegacyResearch.Get(selectedLegacyNodeId) ?? CatalogLegacyResearch.Nodes[0];
-            bool learned = !unavailable && HasId(progress.ResearchIds, selected.Id);
-            bool canBuy = !unavailable && progress.CanPurchaseResearch(selected.Id);
-            int branch = Array.IndexOf(LegacyBranches, selected.BranchId);
-            DrawRuneDetail(selected.Title, selected.Description, branch * 2 + selected.Tier - 1, branch,
-                learned ? "활성화 완료" : canBuy ? "해금 가능" : "잠긴 연구");
-            GUI.Label(new Rect(888, 332, 292, 24), selected.Tier == 1 ? "새로운 시작 편성" : "다음 원정의 효과", hint);
-            if (selected.Tier == 1)
-            {
-                string[] members = CatalogLegacyResearch.GetFormationUnits(selected.BranchId);
-                for (int i = 0; i < members.Length; i++)
-                    if (art != null) art.Draw(members[i], new Rect(894 + i * 91, 362, 72, 88), (int)(Time.unscaledTime * 4f) % 4);
-                GUI.Label(new Rect(888, 449, 292, 27), FormationUnits[branch + 1], runeSmall);
-            }
-            else
-            {
-                GUI.Label(new Rect(888, 371, 292, 85),
-                    selected.Id == "ember-insight" ? "직접 피해를 주는 기술에 적용\n회복·보호막·화상은 제외" :
-                    selected.Id == "frost-focus" ? "모든 동료의 기본 공격에 적용\n별도 공격 기술에는 미적용" :
-                    "시작 편성과 관계없이\n모든 동료의 최대 체력에 적용", runeBody);
-            }
-            GUI.Label(new Rect(888, 486, 292, 61), LegacyLockReason(selected, learned, canBuy), runeSmall);
-            ExpeditionUiTheme.FooterRule(ResearchWindow);
-            Rect footer = ExpeditionUiTheme.FooterRect(ResearchWindow);
-            bool enabled = GUI.enabled; GUI.enabled = canBuy;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
-                learned ? "연구 완료" : "연구 해금  ·  " + selected.Cost + " PT", primary))
-            {
-                if (progress.PurchaseResearch(selected.Id))
-                {
-                    lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f;
-                    progressDirty = true;
-                    try { WriteProgress(); playtest.Record("legacy_research_purchase", run, selected.Id);
-                        Notice("연구 완료 · 다음 새 원정부터 적용됩니다."); }
-                    catch (Exception exception) { Notice("연구 저장에 실패했습니다: " + exception.Message); }
-                }
-            }
-            GUI.enabled = enabled;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button)) modal = Modal.None;
-        }
-
         void DrawTactics()
         {
             if (run == null) { modal = Modal.None; return; }
             ResearchHeader(true, false);
             DrawResearchRoutes(true, false);
-            ExpeditionResearchBoard.Center(run.TacticIds.Count, 3, "TACTICS", runeName, runeCaption);
+            ExpeditionResearchBoard.Center(run.TacticIds.Count, 3, "RESEARCH", runeName, runeCaption);
             for (int b = 0; b < 3; b++)
                 for (int tier = 1; tier <= 2; tier++)
                 {
@@ -120,7 +60,7 @@ namespace Expedition.Presentation
             bool owned = HasId(run.TacticIds, selected.Id), canBuy = run.CanPurchaseTactic(selected.Id);
             int branch = Array.IndexOf(TacticBranches, selected.BranchId);
             DrawRuneDetail(selected.Title, selected.Description, branch * 2 + selected.Tier - 1, branch,
-                owned ? "선택한 전술" : canBuy ? "해금 가능" : "잠긴 전술");
+                owned ? "선택한 연구" : canBuy ? "해금 가능" : "잠긴 연구");
             var affected = new List<CatalogMember>();
             foreach (string id in run.DeployedIds)
             {
@@ -143,7 +83,7 @@ namespace Expedition.Presentation
             Rect footer = ExpeditionUiTheme.FooterRect(ResearchWindow);
             bool enabled = GUI.enabled; GUI.enabled = canBuy;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
-                owned ? "선택 완료" : "전술 선택  ·  " + selected.Cost + " G", primary))
+                owned ? "선택 완료" : "연구 선택  ·  " + selected.Cost + " G", primary))
             {
                 if (run.PurchaseTactic(selected.Id))
                 { Save("tactic_purchase", selected.Id); lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f; }
@@ -200,7 +140,7 @@ namespace Expedition.Presentation
             if (run.Phase != ExpeditionPhase.Preparation) return "전투 준비 중에만 선택할 수 있습니다.";
             if (run.Wave < node.UnlockWave) return "전투 " + node.UnlockWave + " 준비부터 열립니다.";
             if (node.PrerequisiteId != null && !HasId(run.TacticIds, node.PrerequisiteId))
-                return "먼저 연결된 전술을 여세요.\n" + CatalogResearch.Get(node.PrerequisiteId).Title;
+                return "먼저 연결된 연구를 여세요.\n" + CatalogResearch.Get(node.PrerequisiteId).Title;
             if (run.TacticIds.Count >= CatalogResearch.MaxNodes) return "이번 원정은 최대 3개까지 선택합니다.";
             return "골드 " + (node.Cost - run.Gold) + " G가 더 필요합니다.";
         }
@@ -267,10 +207,10 @@ namespace Expedition.Presentation
             {
                 CatalogResearchNode node = CatalogResearch.Get(id);
                 if (!EffectCanApply(id, member)) continue;
-                EffectRow(content.x, y, content.width, "전술", node.Description, EffectCondition(id)); y += 57; shown++;
+                EffectRow(content.x, y, content.width, "연구", node.Description, EffectCondition(id)); y += 57; shown++;
             }
             if (shown == 0) GUI.Label(new Rect(content.x, 213, content.width, 80),
-                "이 동료에게 적용되는 연구·전술이 없습니다.\n고유·전승 특성은 동료 상세에서 확인할 수 있습니다.", body);
+                "이 동료에게 적용되는 연구가 없습니다.\n고유·전승 특성은 동료 상세에서 확인할 수 있습니다.", body);
             GUI.Label(new Rect(content.x, 535, content.width, 23),
                 "현재 원정의 효과 기준 · 전투 중 일시 강화와 적 방어력은 수치에 포함하지 않습니다.", small);
             ExpeditionUiTheme.FooterRule(panel);

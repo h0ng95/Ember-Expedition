@@ -11,6 +11,7 @@ namespace Expedition.Presentation
         ExpeditionAccountSave loadedAccount;
         SaveReadState accountReadState;
         bool storageBlocked, savingAccount;
+        ExpeditionHistory recordHistory = new ExpeditionHistory();
 
         void ValidateAccountJson(string json)
         {
@@ -24,6 +25,9 @@ namespace Expedition.Presentation
             accountStore = new ExpeditionSaveStore(directory ?? Path.Combine(Application.persistentDataPath, "Saves"), ValidateAccountJson);
             var result = accountStore.Load(); accountReadState = result.State;
             if (result.Payload != null) loadedAccount = JsonUtility.FromJson<ExpeditionAccountSave>(result.Payload);
+            if (loadedAccount != null && (loadedAccount.Version >= 2 && !loadedAccount.HasRun ||
+                loadedAccount.Version == 1 && loadedAccount.Run != null && loadedAccount.Run.Version == 0)) loadedAccount.Run = null;
+            recordHistory = ExpeditionHistory.Restore(database, loadedAccount == null || loadedAccount.Version < 2 ? null : loadedAccount.History);
             if (result.State == SaveReadState.Recovered)
                 error = "저장 문제를 발견해 마지막 정상 기록으로 복구했습니다.\n최근 행동 일부는 다시 진행해야 할 수 있습니다.";
             storageBlocked = result.State == SaveReadState.Damaged || result.State == SaveReadState.FutureVersion;
@@ -39,8 +43,10 @@ namespace Expedition.Presentation
         {
             if (storageBlocked || badSave || badProgress) throw new InvalidOperationException("기존 기록을 보호하기 위해 저장을 중지했습니다.");
             if (accountStore == null || journal == null || progress == null) throw new InvalidOperationException("저장 준비 전입니다.");
-            var snapshot = new ExpeditionAccountSave { Version = 1, Run = run == null ? null : run.Capture(),
-                Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask };
+            recordHistory.Observe(run);
+            var snapshot = new ExpeditionAccountSave { Version = 2, HasRun = run != null, Run = run == null ? null : run.Capture(),
+                Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask,
+                History = recordHistory.Capture() };
             accountStore.Commit(JsonUtility.ToJson(snapshot));
             journalDirty = progressDirty = false;
             savePresent = run != null;
@@ -55,7 +61,8 @@ namespace Expedition.Presentation
         {
             if (storageBlocked || badSave || badProgress) return;
             // Migrate only after all old keys have been read. Keep those keys untouched.
-            if (accountReadState == SaveReadState.Empty || accountReadState == SaveReadState.Recovered)
+            if (accountReadState == SaveReadState.Empty || accountReadState == SaveReadState.Recovered ||
+                loadedAccount != null && loadedAccount.Version < 2)
                 try { PersistAccount(); }
                 catch (Exception) { Notice("기록 백업을 저장하지 못했습니다. 다음 저장 때 다시 시도합니다."); }
         }

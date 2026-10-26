@@ -148,7 +148,7 @@ internal static class ExpeditionResearchTests
 
     static void RunEconomyAndSaves()
     {
-        var run = ExpeditionRun.New(database, 73);
+        var run = ExpeditionRun.NewLegacy(database, 73);
         Check(run.TacticIds.Count == 0 && run.LegacyResearchIds.Count == 0 &&
             run.StartFormationId == "standard" && run.Roster.Find("ally-02").FormId == "B-AR",
             "Ordinary new runs retain the original starting trio and no research.");
@@ -207,11 +207,11 @@ internal static class ExpeditionResearchTests
         RejectRestore(forged, "V8 requires an explicit, copy-safe tactic selection.");
         forged = restored.Capture(); forged.Wave = 5;
         RejectRestore(forged, "A tactic cannot appear before its unlock wave.");
-        Check(ExpeditionRun.New(database, 73).TacticIds.Count == 0,
+        Check(ExpeditionRun.NewLegacy(database, 73).TacticIds.Count == 0,
             "A new expedition never inherits run-only tactics.");
 
         string[] external = { "tactical-start", "tactical-vigor" };
-        var tactical = ExpeditionRun.New(database, 91, ExpeditionDifficulty.Normal,
+        var tactical = ExpeditionRun.NewLegacy(database, 91, ExpeditionDifficulty.Normal,
             external, "tactical");
         external[0] = "invalid";
         Check(tactical.LegacyResearchIds.SequenceEqual(new[] { "tactical-start", "tactical-vigor" }) &&
@@ -229,11 +229,11 @@ internal static class ExpeditionResearchTests
         forged = tactical.Capture(); forged.LegacyResearchIds = new string[0];
         RejectRestore(forged, "A nonstandard starting formation requires its permanent unlock.");
         bool unavailable = false;
-        try { ExpeditionRun.New(database, 91, ExpeditionDifficulty.Normal, null, "tactical"); }
+        try { ExpeditionRun.NewLegacy(database, 91, ExpeditionDifficulty.Normal, null, "tactical"); }
         catch (ArgumentException) { unavailable = true; }
         Check(unavailable, "A new run cannot select a locked starting formation.");
 
-        ExpeditionRunSave old = ExpeditionRun.New(database, 107).Capture();
+        ExpeditionRunSave old = ExpeditionRun.NewLegacy(database, 107).Capture();
         old.Version = 7; old.TacticIds = null; old.LegacyResearchIds = null;
         old.StartFormationId = null;
         ExpeditionRun migrated = ExpeditionRun.Restore(database, old);

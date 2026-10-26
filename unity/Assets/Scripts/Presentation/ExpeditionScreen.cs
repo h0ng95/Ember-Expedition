@@ -42,7 +42,7 @@ namespace Expedition.Presentation
             "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, LegacyResearch, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings }
+            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -213,18 +213,21 @@ namespace Expedition.Presentation
         {
             if (!startupReady) return;
             if (storageBlocked) { Notice("기존 기록 복구가 필요해 새 원정을 시작할 수 없습니다."); return; }
+            ExpeditionRun previousRun = run;
+            ExpeditionHistorySave previousHistory = recordHistory.Capture();
             try
             {
                 ObserveProgress();
                 uint seed = unchecked((uint)DateTime.UtcNow.Ticks);
                 ExpeditionRun nextRun = ExpeditionRun.New(database, seed,
-                    ExpeditionDifficulty.Normal, badProgress || progress == null ?
-                    Array.Empty<string>() : progress.ResearchIds,
-                    badProgress ? "standard" : selectedFormationId,
-                    badProgress || progress == null ? (int?)null : progress.BestWave);
+                    ExpeditionDifficulty.Normal, startFormationId: selectedFormationId);
+                recordHistory.Observe(run, true);
                 if (run != null && run.Phase != ExpeditionPhase.Completed && run.Phase != ExpeditionPhase.Defeated)
                     playtest.Record("run_replaced", run, "Player chose a new expedition; not a battle defeat.");
                 run = nextRun;
+                ObserveJournal();
+                ObserveProgress();
+                PersistAccount();
                 playtest.Begin(run, seed);
                 badSave = false;
                 legacySave = false;
@@ -238,7 +241,12 @@ namespace Expedition.Presentation
                 tutorialRangeAcknowledged = false;
                 Save();
             }
-            catch (Exception exception) { Notice("새 원정을 시작하지 못했습니다: " + exception.Message); }
+            catch (Exception exception)
+            {
+                run = previousRun;
+                recordHistory = ExpeditionHistory.Restore(database, previousHistory);
+                Notice("새 원정을 시작하지 못했습니다: " + exception.Message);
+            }
         }
 
         void Notice(string message) { toast = message; toastUntil = Time.unscaledTime + 4f; }
@@ -319,10 +327,10 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
             if (GUI.Button(new Rect(851, 20, 128, 49), "설정", button)) modal = Modal.Settings;
             if (GUI.Button(new Rect(995, 20, 260, 49),
-                "원정 기록  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
+                "이야기  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
                 ExpeditionStory.Entries.Count, button))
                 OpenJournal(null);
-            bool hasNotice = error != null || legacySave;
+            bool hasNotice = error != null || legacySave || run != null && run.UsesLegacyRules;
             Rect panel = new Rect(155, hasNotice ? 144 : 176, 970, hasNotice ? 432 : 368);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
@@ -331,8 +339,8 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
                 "꺼진 왕국에 다시 불을 밝히다", heading);
             if (GUI.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
-                "원정 연구", button))
-            { selectedLegacyNodeId = "tactical-start"; modal = Modal.LegacyResearch; }
+                "개인 기록", button))
+            { recordsPage = 0; selectedRecord = null; modal = Modal.Records; }
             if (GUI.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), "원정 성과", button))
                 modal = Modal.Progress;
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
@@ -345,7 +353,7 @@ namespace Expedition.Presentation
                     " / " + run.ContentWaves, hint);
             if (hasNotice)
                 GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
-                    error ?? "이전 6전투 원정은 보관되어 있습니다. 새 원정을 눌러 골드 원정을 시작하세요.", hint);
+                    error ?? "이전 규칙 원정은 그대로 이어할 수 있습니다. 새 점수 순위에는 포함되지 않습니다.\n새 원정은 영구 강화 없이 연구 0개로 시작합니다.", hint);
             ExpeditionUiTheme.FooterRule(panel);
             GUI.enabled = modal == Modal.None && !storageBlocked;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
@@ -371,13 +379,16 @@ namespace Expedition.Presentation
 
         void DrawHeader(string phase)
         {
+            if (run.UsesLegacyRules) phase = "이전 규칙 원정";
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
             GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
             GUI.Label(new Rect(505, 18, 365, 43), DifficultyLabel(run.Difficulty) + " · 전투 " +
                 run.Wave + " / " + run.ContentWaves + "   등불 " + run.Lantern, body);
-            GUI.Label(new Rect(880, 18, 170, 43), run.Gold + " G", heading);
+            GUI.Label(new Rect(880, 6, 170, 38), run.Gold + " G", heading);
+            if (!run.HasEnded)
+                GUI.Label(new Rect(880, 44, 170, 28), run.UsesLegacyRules ? "이전 규칙" : "현재 " + run.Score.ToString("N0") + "점", small);
             ExpeditionUiTheme.PanelBox(new Rect(1070, 17, 188, 43));
             GUI.Label(new Rect(1080, 21, 168, 33), phase, centered);
         }
@@ -408,7 +419,7 @@ namespace Expedition.Presentation
                 if (regionStory != null) OpenJournal(regionStory.Id);
             }
             if (GUI.Button(new Rect(1075, 270, 154, 48),
-                "원정 전술 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
+                "원정 연구 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
             { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
             if (DrawSelectedPreparation()) { }
             else if (run.IsBossWave && !showHelp)
@@ -617,10 +628,10 @@ namespace Expedition.Presentation
         {
             if (modal == Modal.Settings) { if (GameSettingsPanel.Draw(font)) modal = Modal.None; return; }
             Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
-            if (modal == Modal.Detail) DrawDetail();
+            if (modal == Modal.Records) DrawRecords();
+            else if (modal == Modal.Detail) DrawDetail();
             else if (modal == Modal.Journal) DrawJournal();
             else if (modal == Modal.Progress) DrawProgress();
-            else if (modal == Modal.LegacyResearch) DrawLegacyResearch();
             else if (modal == Modal.Tactics) DrawTactics();
             else if (modal == Modal.Effects) DrawMemberEffects();
             else if (modal == Modal.BattleReport) DrawBattleReport();
@@ -881,9 +892,9 @@ namespace Expedition.Presentation
                 GUI.Label(new Rect(content.x, panel.y + 32, content.width, 48),
                     "새 원정", heading);
                 string warning = savePresent ?
-                    "저장된 원정을 새 출발로 교체합니다. 진행과 편성은 되돌릴 수 없습니다." :
+                    "현재 원정을 끝내고 새로 시작합니다. 동료·골드·연구는 이월되지 않습니다." :
                     legacySave ? "이전 6전투 원정은 별도로 보관됩니다." :
-                    "등불과 기본 동료 3명으로 새로 출발합니다.";
+                    "동료 3명 · 40G · 등불 3개 · 연구 0개로 출발합니다.";
                 GUI.Label(new Rect(content.x, 152, content.width, 50),
                     "현재 공개 " + ExpeditionRun.TotalWaves + "전투 · 전체 목표 30전투\n" + warning, small);
                 Rect normal = new Rect(content.x, 216, content.width, 62);
@@ -910,7 +921,7 @@ namespace Expedition.Presentation
                 {
                     float cardWidth = (content.width - 3 * 12f) / 4f;
                     Rect card = new Rect(content.x + i * (cardWidth + 12f), 402, cardWidth, 116);
-                    bool unlocked = CatalogLegacyResearch.IsFormationAvailable(FormationIds[i], research);
+                    bool unlocked = ExpeditionRun.IsStartingFormation(FormationIds[i]);
                     if (selectedFormationId == FormationIds[i])
                         Fill(new Rect(card.x - 3, card.y - 3, card.width + 6, card.height + 6),
                             new Color(Gold.r, Gold.g, Gold.b, .8f));

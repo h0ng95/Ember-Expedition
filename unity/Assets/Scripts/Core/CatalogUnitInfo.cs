@@ -10,6 +10,8 @@ namespace Expedition.Core
         {
             switch (id)
             {
+                case "B-KN": return "전열 · 첫 피격 버티기";
+                case "B-PR": return "중후열 · 단일 보호막";
                 case "E-KN-G": return "전열 · 자신과 동료 보호막";
                 case "E-KN-C": return "전열 · 보호막 반격";
                 case "E-AR-P": return "후열 · 직선 관통";
@@ -65,6 +67,73 @@ namespace Expedition.Core
                 case "H-06": return "지휘 사격 · 표식 · 다음 기본 공격 강화";
                 default: return Role(id);
             }
+        }
+
+        public static string Strength(string id)
+        {
+            switch (id)
+            {
+                case "H-01": return "앞줄에서 화염 참격으로 여러 적을 치고 자신을 보호합니다.";
+                case "H-02": return "앞줄에서 적을 때리며 자신과 가까운 부상자를 회복합니다.";
+                case "H-03": return "일렬로 선 적을 관통하고 이동을 늦춥니다. 둔화된 적에게 기본 공격으로 표식도 남깁니다.";
+                case "H-04": return "한 번의 범위 기술로 화상과 둔화를 걸어 자신의 추가 기술 피해 조건을 만듭니다.";
+                case "H-05": return "주변 부상자를 회복하면서 공격력을 높이고, 위급한 동료 한 명을 추가로 회복합니다.";
+                case "H-06": return "표식을 남기고 자신과 가까운 동료의 다음 기본 공격을 강화합니다. 기본 공격 중심 편성에 어울립니다.";
+                case "B-PR": return "부상자에게 보호막을 줘 다음 피해를 받아냅니다.";
+                case "E-KN-G": return "자신과 가까운 동료 한 명에게 보호막을 주며 앞줄을 지킵니다.";
+                case "E-KN-C": return "자신의 보호막이 피해로 깨지면 주변 적에게 반격합니다.";
+                case "E-AR-P": return "일렬로 선 적을 최대 세 명까지 관통합니다.";
+                case "E-AR-T": return "체력이 낮은 적을 세 발로 집중 사격하고 표식을 남깁니다.";
+                case "E-PR-G": return "가까운 아군 두 명에게 보호막을 공급합니다.";
+                case "E-PR-H": return "가까운 아군 중 가장 위급한 한 명의 체력을 회복합니다.";
+                case "F-KN": return "선택한 기사 분기 기술을 유지하며, 자신과 가까운 부상자 두 명에게 최대 체력에 비례한 보호막을 줍니다.";
+                case "F-AR": return "선택한 궁수 분기 기술을 유지하며, 사거리 안의 가장 먼 적에게 강한 사격과 표식을 추가합니다.";
+            }
+            switch (CatalogRoster.FamilyCode(id))
+            {
+                case "KN": return "앞줄에서 적을 받아내고 뒤의 공격수를 지킵니다. 진화하면 보호막이나 반격으로 역할이 나뉩니다.";
+                case "AR": return "긴 사거리에서 공격합니다. 진화하면 관통과 집중 사격 중 하나를 선택합니다.";
+                case "FI": return "모인 적에게 범위 피해와 화상을 줍니다.";
+                case "PR": return "보호막이나 회복으로 동료가 더 오래 싸우게 합니다.";
+                case "IC": return "적의 이동을 늦춰 접근을 지연시키고, 둔화 조건을 쓰는 동료와 연계합니다.";
+                case "BA": return "주변 동료의 공격이나 생존을 강화합니다. 강한 동료를 범위 안에 둘수록 유리합니다.";
+                default: throw new ArgumentException("Unknown ally form: " + id);
+            }
+        }
+
+        public static string Caution(string id)
+        {
+            switch (id)
+            {
+                case "H-01": return "보호막은 자신만 받습니다. 기사 분기의 동료 보호와 화염술사의 원거리 공격은 유지되지 않습니다.";
+                case "H-02": return "적을 공격해야 회복합니다. 회복 거리가 짧고, 사제 분기의 보호막이나 먼 아군 지원은 유지되지 않습니다.";
+                case "H-03": return "적이 흩어지면 관통 이득이 줄어듭니다. 두 분기의 기술이 관통 둔화 기술 하나로 바뀝니다.";
+                case "H-04": return "두 명의 기본 공격과 서로 다른 시전 주기를 한 명으로 줄입니다. 단일 적에게는 범위 공격의 이득이 작습니다.";
+                case "H-05": return "기수 분기의 피해 감소·공격 속도, 사제 분기의 보호막을 그대로 유지하지 않습니다. 공격할 동료가 필요합니다.";
+                case "H-06": return "강화는 기술 피해를 높이지 않습니다. 다음 기본 공격 한 번에만 적용되며, 동료가 멀거나 5초 안에 공격하지 못하면 낭비됩니다. 기수의 지속 지원은 유지되지 않습니다.";
+                case "B-PR": return "기본 사제는 체력을 회복하지 않습니다. 회복은 치유 분기로 진화해야 사용할 수 있습니다.";
+                case "E-KN-C": return "자신의 반격 기술은 보호막을 만들지 않습니다. 보호막을 공급할 동료가 필요합니다.";
+                case "E-PR-G": return "보호막은 잃은 체력을 회복하지 않습니다.";
+                case "E-PR-H": return "한 번에 한 명만 회복하므로 여러 동료가 동시에 큰 피해를 받으면 대응이 늦습니다.";
+            }
+            switch (CatalogRoster.FamilyCode(id))
+            {
+                case "KN": return "혼자 적을 모두 잡는 역할은 아닙니다. 공격수와 회복·지원 동료를 함께 배치하세요.";
+                case "AR": return "적에게 가까이 붙으면 위험합니다. 전열과 지원 범위를 함께 확보하세요.";
+                case "FI": return "적이 흩어지면 범위 기술의 효율이 줄어듭니다.";
+                case "PR": return "피해를 줄 공격수가 필요합니다. 전체 기술을 제외하면 지원 거리를 벗어난 동료에게 닿지 않습니다.";
+                case "IC": return "둔화는 이동만 늦춥니다. 공격을 멈추는 빙결이 아니며 보스에게는 절반만 적용됩니다.";
+                case "BA": return "강화는 기술마다 대상 수와 거리가 제한됩니다. 범위 밖 동료에게는 효과가 닿지 않습니다.";
+                default: throw new ArgumentException("Unknown ally form: " + id);
+            }
+        }
+
+        public static string Decision(string id)
+        {
+            string text = "강점\n" + Strength(id) + "\n\n주의점\n" + Caution(id);
+            if (id.StartsWith("H-", StringComparison.Ordinal))
+                text += "\n\n결합 선택\n두 분기 동료의 기존 기술·고유 특성이 결합체의 것으로 교체됩니다. 남는 동료의 전승만 유지합니다. 두 명이 출전 중이었다면 한 자리가 비므로 다른 동료를 배치할 수 있습니다. 최종 진화체와 결합체는 다시 결합하지 않습니다.";
+            return text;
         }
 
         public static string Skill(string id, int balanceRules = 1)

@@ -47,7 +47,7 @@ namespace Expedition.Core
         static readonly CatalogSupportPreview Song = new CatalogSupportPreview(4.5f,
             "자신 + 체력 비율이 낮은 동료 최대 2명 · 회복과 공격력 강화");
         static readonly CatalogSupportPreview Spoils = new CatalogSupportPreview(3f,
-            "공격 기술 적중 시 자신 + 가까운 동료 최대 2명 · 다음 기본 공격 강화");
+            "기술 적중 시 자신+가까운 동료 2명 · 다음 평타 강화");
 
         public static CatalogSupportPreview ForSkill(string id)
         {

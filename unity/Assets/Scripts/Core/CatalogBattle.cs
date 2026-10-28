@@ -44,6 +44,8 @@ namespace Expedition.Core
         public float Power { get; internal set; }
         public float Defense { get; internal set; }
         public float AttackInterval { get; internal set; }
+        // Basic attacks can be tuned independently of boss skill power.
+        internal float BasicPowerScale = 1f;
         public float Range { get; internal set; }
         public float MoveSpeed { get; internal set; }
         public bool DrakeRangedBasic { get; internal set; }
@@ -226,10 +228,13 @@ namespace Expedition.Core
             enemy.EnemyRole = role;
             enemy.BossPatternsEnabled = bossPatterns;
             // A large dragon fights from outside the party instead of entering
-            // melee range. Keep its existing power/cadence; the basic is a short
-            // firebolt now. Older expeditions retain their melee behavior.
+            // melee range. Only the basic firebolt is scaled; skill power and
+            // cadence stay intact. Older expeditions retain their saved rules.
             if (balanceRules >= 4 && bossPatterns && role == CatalogEnemyRole.CrownDrake)
-            { enemy.Range = Math.Max(range, 3.2f); enemy.DrakeRangedBasic = true; }
+            {
+                enemy.Range = Math.Max(range, 3.2f); enemy.DrakeRangedBasic = true;
+                enemy.BasicPowerScale = CatalogBalance.DrakeBasicPower(balanceRules);
+            }
             enemy.NextChargeAt = role == CatalogEnemyRole.Beast ?
                 bossPatterns ? 7f : 1.35f : float.PositiveInfinity;
             enemy.NextSlamAt = bossPatterns && role == CatalogEnemyRole.Golem ? 2f : float.PositiveInfinity;
@@ -796,7 +801,7 @@ namespace Expedition.Core
             if (target == null || !target.IsAlive || target.Team == actor.Team) target = ChooseEnemy(actor, false, false);
             actor.NextBasicAt = Time + actor.AttackInterval * (1f - Math.Min(.4f, BuffTotal(actor, CatalogBuffKind.Haste)));
             if (target == null || !InBasicContact(actor, target)) return;
-            float coefficient = 1f;
+            float coefficient = actor.BasicPowerScale;
             if (actor.ExtraBasicUntil > Time)
             {
                 coefficient += actor.ExtraBasicMultiplier;

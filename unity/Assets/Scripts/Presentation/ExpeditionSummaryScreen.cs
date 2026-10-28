@@ -14,7 +14,7 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, 92, content.width, 59), cleared ? "원정 완료" : "원정 종료", title);
             GUI.Label(new Rect(content.x, 157, content.width, 45), cleared ?
                 "30전투 돌파 · 이그니스의 불이 왕궁 결계에 돌아왔습니다." :
-                "등불을 모두 소진했습니다. 거점에서 준비해 새 원정에 도전하세요.", body);
+                "남은 기회를 모두 소진했습니다. 거점에서 준비해 새 원정에 도전하세요.", body);
             string[] captions = { "도달 전투", "승리한 전투", "격파한 보스" };
             string[] values = { run.Wave + " / " + ExpeditionRun.TotalWaves, run.Victories + "승", run.Victories / 5 + " / 6" };
             Rect cards = new Rect(content.x, 217, content.width, 90);
@@ -33,7 +33,7 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, 490, content.width, 64), run.UsesLegacyRules ?
                 "다음 새 원정부터 영구 강화 없이 시작합니다.\n도감·이야기·성과 기록은 유지됩니다." :
                 "격파 " + (run.Victories * 10000).ToString("N0") + " + 완주 " + (cleared ? "30,000" : "0") +
-                " + 등불 " + (run.Lantern * 1000).ToString("N0") + "\n새 원정에서는 동료·골드·연구가 초기화됩니다.", small);
+                " + 남은 기회 " + (run.Lantern * 1000).ToString("N0") + "\n새 원정에서는 동료·골드·연구가 초기화됩니다.", small);
             ExpeditionUiTheme.FooterRule(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             GUI.enabled = HasBattleReport;

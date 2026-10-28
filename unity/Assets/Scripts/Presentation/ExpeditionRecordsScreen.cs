@@ -40,7 +40,7 @@ namespace Expedition.Presentation
             int pages = Math.Max(1, (records.Count + 4) / 5);
             recordsPage = Mathf.Clamp(recordsPage, 0, pages - 1);
             if (records.Count == 0) GUI.Label(new Rect(content.x, 270, content.width, 95),
-                "아직 저장된 원정 결과가 없습니다.\n완주하거나 등불을 모두 소진하면 점수와 최종 편성을 남깁니다.", body);
+                "아직 저장된 원정 결과가 없습니다.\n완주하거나 남은 기회를 모두 소진하면 점수와 최종 편성을 남깁니다.", body);
             for (int slot = 0; slot < 5; slot++)
             {
                 int index = recordsPage * 5 + slot;
@@ -68,9 +68,9 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, 124, content.width, 38), RecordDate(record) + "   " + RecordStatus(record) +
                 "   ·   " + (record.Ranked ? record.Score.ToString("N0") + "점" : "순위 제외"), heading);
             GUI.Label(new Rect(content.x, 169, content.width, 57),
-                "격파 " + state.Victories + "/30 · 남은 등불 " + state.Lantern + " · 남은 골드 " + state.Gold + "G\n" +
+                "격파 " + state.Victories + "/30 · 남은 기회 " + state.Lantern + " · 남은 골드 " + state.Gold + "G\n" +
                 (record.Ranked ? "격파 " + (state.Victories * 10000).ToString("N0") + " + 완주 " +
-                    (state.Victories == 30 ? "30,000" : "0") + " + 등불 " + (state.Lantern * 1000).ToString("N0") :
+                    (state.Victories == 30 ? "30,000" : "0") + " + 남은 기회 " + (state.Lantern * 1000).ToString("N0") :
                     "포기 및 이전 규칙 기록에는 점수를 부여하지 않습니다."), body);
             GUI.Label(new Rect(content.x, 237, content.width, 34), "최종 출전 편성", hint);
             var roster = recordedRun.Roster;

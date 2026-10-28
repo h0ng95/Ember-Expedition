@@ -112,11 +112,11 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(x, area.y, w, 40), database.Get(member.FormId).Name, infoName);
             GUI.Label(new Rect(x, area.y + 44, w, 30), CatalogUnitInfo.Role(member.FormId), infoText);
             Rect tabs = new Rect(x, area.y + 82, w, 44);
-            for (int i = 0; i < 2; i++)
-                if (GUI.Button(ExpeditionUiTheme.FooterButton(tabs, i, 2),
-                    (infoTabIndex == i ? "✓  " : "") + (i == 0 ? "기술" : "특성 · 연구 효과"), infoTab))
+            for (int i = 0; i < 3; i++)
+                if (GUI.Button(ExpeditionUiTheme.FooterButton(tabs, i, 3),
+                    (infoTabIndex == i ? "✓  " : "") + (i == 0 ? "기술" : i == 1 ? "특성 · 연구" : "강점 · 주의점"), infoTab))
                 { infoTabIndex = i; infoScroll = Vector2.zero; }
-            string text = infoTabIndex == 0 ? UnitSkills(member) : UnitEffects(member);
+            string text = infoTabIndex == 0 ? UnitSkills(member) : infoTabIndex == 1 ? UnitEffects(member) : CatalogUnitInfo.Decision(member.FormId);
             Rect viewport = new Rect(x, area.y + 138, w, area.height - 138);
             float textWidth = w - 34;
             float textHeight = infoText.CalcHeight(new GUIContent(text), textWidth) + 8;

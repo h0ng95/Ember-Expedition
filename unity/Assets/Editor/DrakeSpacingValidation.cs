@@ -26,7 +26,7 @@ namespace Expedition.EditorTools
                 throw new Exception("New drake firebolt/range mismatch.");
             current.ResolveBattle(true);record.Observe(current);
             var restored=ExpeditionHistory.Restore(db,JsonUtility.FromJson<ExpeditionHistorySave>(JsonUtility.ToJson(record.Capture())));
-            if(restored.Best.BalanceVersion!="normal-050"||restored.ArchivedBests.Single().BalanceVersion!="normal-048")
+            if(restored.Best.BalanceVersion!=ExpeditionHistory.BalanceVersion||restored.ArchivedBests.Single().BalanceVersion!="normal-048")
                 throw new Exception("Drake revision mixed score versions.");
             Debug.Log("PASS drake spacing Unity: v048 account retains melee; v050 range/firebolt, original power/cadence and versioned records verified.");
             DragonBreathPlumeValidation.ValidateAndBuild();

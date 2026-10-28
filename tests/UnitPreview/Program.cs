@@ -37,7 +37,7 @@ static class Program
         var member = actual.Roster.Find("ally-01");
         var battle = actual.BeginBattle();
         // The result may remain benched, so create its stats with the same battle factory.
-        var expected = new CatalogBattle(db, actual.TacticIds, actual.LegacyResearchIds).AddUnit("expected", CatalogTeam.Ally,
+        var expected = new CatalogBattle(db, actual.TacticIds, actual.LegacyResearchIds, actual.RulesVersion).AddUnit("expected", CatalogTeam.Ally,
             member.FormId, member.BranchId, member.InheritedTraitId, 0, 0);
         Check(preview.Stats.MaxHp == expected.MaxHp && preview.Stats.Power == expected.Power &&
             preview.Stats.Defense == expected.Defense && preview.Stats.AttackInterval == expected.AttackInterval &&
@@ -80,10 +80,16 @@ static class Program
                     Check(ExpeditionUnitPreview.Create(db, run, "ally-01", "H-" + (h + 1).ToString("00"), "ally-02") == null, "Protected donor accepted");
                 }
             var baseRun = ExpeditionRun.New(db, 41);
+            for (int rules = 1; rules <= CatalogBalance.CurrentRules; rules++)
+            {
+                var saved = Fixture("E-FI-B", "E-FI-B", null, 2).Capture();
+                saved.Version = rules + 8; saved.RulesVersion = rules;
+                Verify(ExpeditionRun.Restore(db, saved), null, null);
+            }
             Check(ExpeditionUnitPreview.Create(db, baseRun, "ally-01", "E-KN-G") == null, "Unready evolution accepted");
             Check(CatalogUnitInfo.Skill("E-IC-F").Contains("이동 속도") && !CatalogUnitInfo.Skill("E-IC-F").Contains("빙결"), "Slow incorrectly described as freeze");
             Check(CatalogUnitInfo.Skill("E-KN-C").Contains("2.5초") && CatalogUnitInfo.Trait("T-H05").Contains("자신에게"), "Conditional skill/trait description regressed");
-            Console.WriteLine("PASS: unit information / projections, " + checks + " assertions; 306 valid stat and growth cases.");
+            Console.WriteLine("PASS: unit information / projections, " + checks + " assertions; 306 stat and growth cases plus " + CatalogBalance.CurrentRules + " saved-rules cases.");
             return 0;
         }
         catch (Exception e) { Console.Error.WriteLine(e); return 1; }

@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28T16:59:00.575Z",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "apkSha256": "80ce7007a2966581cfac10a26e2f2f1818409a7927905dfb71dd8d2ee2a2bc82",
+  "checks": {
+    "unityArt": 1365,
+    "bodyScale": 460,
+    "battleReadability": "passed",
+    "story": 26,
+    "unitPreview": 1912,
+    "refreshedSheetSlots": 242
+  },
+  "limitations": [
+    "Art review and short device smoke tests; not a 30-battle playthrough or frame-time benchmark.",
+    "18 forms retain previous art. E-PR-H/H-05 reuse two reviewed poses."
+  ],
+  "unityLog": "unity/Logs/v054-build.log",
+  "device": {
+    "model": "Galaxy Buddy2 / SM-M236L",
+    "installed": true,
+    "preparationFixtures": [
+      "art-base",
+      "art-frost",
+      "art-advanced",
+      "art-magic"
+    ],
+    "shortBattleFixtures": [
+      "art-base",
+      "art-advanced",
+      "art-magic"
+    ],
+    "magicBattleSpeedToggle": "1x to 2x observed",
+    "originalSavesAndPlayerPrefs": "restored; byte-for-byte verified",
+    "runtimeErrorLogCharacters": 0
+  }
+}

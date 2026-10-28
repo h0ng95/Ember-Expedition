@@ -27,7 +27,7 @@ namespace Expedition.Core
 
     public sealed class ExpeditionHistory
     {
-        public const string BalanceVersion = "normal-050";
+        public const string BalanceVersion = "normal-052";
         public const int ScoreVersion = 1, Limit = 30;
         readonly List<ExpeditionRecord> recent = new List<ExpeditionRecord>();
         readonly List<ExpeditionRecord> archivedBests = new List<ExpeditionRecord>();
@@ -66,13 +66,13 @@ namespace Expedition.Core
             }
         }
         public ExpeditionHistorySave Capture()
-        { return new ExpeditionHistorySave { Version = 4, Recent = recent.ToArray(), Best = Best, HasBest = Best != null,
+        { return new ExpeditionHistorySave { Version = 5, Recent = recent.ToArray(), Best = Best, HasBest = Best != null,
             ArchivedBests = archivedBests.ToArray() }; }
         public static ExpeditionHistory Restore(CatalogDatabase db, ExpeditionHistorySave state)
         {
             var result = new ExpeditionHistory();
             if (state == null) return result;
-            if (state.Version > 4) throw new FutureSaveVersionException();
+            if (state.Version > 5) throw new FutureSaveVersionException();
             if (state.Version < 1 || state.Recent == null || state.Recent.Length > Limit)
                 throw new ArgumentException("Invalid expedition history.");
             var ids = new HashSet<string>(StringComparer.Ordinal);

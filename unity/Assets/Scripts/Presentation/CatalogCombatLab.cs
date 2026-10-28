@@ -20,15 +20,15 @@ namespace Expedition.Presentation
             "H-01", "H-02", "H-03", "H-04", "H-05", "H-06"
         };
         static readonly string[] English = {
-            "Shield Knight", "Scout Archer", "Fire Mage", "Lantern Priest", "Frost Mage", "Oath Rider",
+            "Shield Knight", "Scout Archer", "Fire Mage", "Light Priest", "Frost Mage", "Oath Rider",
             "Guardian Knight", "Counter Knight", "Piercing Archer", "Tracking Archer", "Blast Mage", "Ember Mage",
             "Guardian Priest", "Healing Priest", "Freeze Mage", "Frost Skirmisher", "Guardian Rider", "Vanguard Rider",
-            "Beacon Shieldmaster", "Twilight Marksman", "Beacon Archmage", "Dawn Guide", "Frost Warden", "Oath Bannerlord",
-            "Ember Swordguard", "Lantern Paladin", "Frost Tracker", "Melt Mage", "Hymn Rider", "Expedition Captain"
+            "Oath Shieldmaster", "Twilight Marksman", "Ember Archmage", "Dawn Guide", "Frost Warden", "Oath Bannerlord",
+            "Ember Swordguard", "Radiant Paladin", "Frost Tracker", "Melt Mage", "Hymn Rider", "Expedition Captain"
         };
         static readonly string[] Traits = { "", "T-KN", "T-AR", "T-FI", "T-PR", "T-IC", "T-BA",
             "T-H01", "T-H02", "T-H03", "T-H04", "T-H05", "T-H06" };
-        static readonly string[] TraitNames = { "None", "Shield", "Scout", "Flame", "Lantern", "Frost", "Oath",
+        static readonly string[] TraitNames = { "None", "Shield", "Scout", "Flame", "Ward", "Frost", "Oath",
             "Ember Guard", "Warmth", "Frost Track", "Melt", "Harmony", "Spoils" };
         static readonly string[] CategoryNames = { "BASE 6", "BRANCH", "FINAL 6", "FUSION 6" };
         static readonly string[][] Presets = {
@@ -153,6 +153,7 @@ namespace Expedition.Presentation
         [Serializable] sealed class ArtFrame
         {
             public float x, y, width, height, pivotX, pivotY;
+            public CatalogArtRegion[] regions;
         }
 
         readonly List<Slot> party = new List<Slot>();
@@ -1606,7 +1607,8 @@ namespace Expedition.Presentation
             Rect fitted = CatalogBodyScale.Fit(rect, pivotX, pivotY,
                 cropWidth, cropHeight, scale, multiplier);
             Texture displayed = clippedSheets.TryGetValue(id, out RenderTexture clippedSheet) ? clippedSheet : (Texture)texture;
-            GUI.DrawTextureWithTexCoords(fitted, displayed, uv, true);
+            CatalogAtlasRegions.Draw(fitted, displayed, uv, cropWidth, cropHeight,
+                entry != null && entry.frames != null && index < entry.frames.Length ? entry.frames[index].regions : null);
             return fitted;
         }
 

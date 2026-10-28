@@ -17,6 +17,7 @@ namespace Expedition.Presentation
         [Serializable] sealed class Frame
         {
             public float x, y, width, height, pivotX, pivotY;
+            public CatalogArtRegion[] regions;
         }
 
         readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
@@ -94,7 +95,8 @@ namespace Expedition.Presentation
                 cropWidth, cropHeight, scale, multiplier);
             RenderTexture output;
             Texture display = clipped.TryGetValue(id, out output) ? (Texture)output : sheet;
-            GUI.DrawTextureWithTexCoords(fitted, display, uv, true);
+            CatalogAtlasRegions.Draw(fitted, display, uv, cropWidth, cropHeight,
+                entry != null && entry.frames != null && index < entry.frames.Length ? entry.frames[index].regions : null);
         }
 
         Texture2D Load(string id, Entry entry)

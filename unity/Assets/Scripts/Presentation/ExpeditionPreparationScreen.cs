@@ -10,7 +10,15 @@ namespace Expedition.Presentation
         ExpeditionRun preparationOwner;
         bool previewFinalSkill;
         Texture2D preparationRing, preparationDisc;
-        GUIStyle rangeCaption, rangeRule;
+        GUIStyle rangeCaption, rangeRule, supportName, supportStatus, supportNumber;
+        static readonly Color OutsideColor = new Color(.72f, .60f, .51f);
+
+        public static class SupportLayout
+        {
+            public static Rect Card(int index) { return new Rect(735 + index * 100, 177, 94, 84); }
+            public static Rect Name(int index) { Rect r = Card(index); return new Rect(r.x + 3, r.y + 33, 88, 30); }
+            public static Rect Status(int index) { Rect r = Card(index); return new Rect(r.x + 3, r.y + 63, 88, 20); }
+        }
 
         void SelectPreparation(string id)
         {
@@ -65,6 +73,10 @@ namespace Expedition.Presentation
                     alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
                 rangeRule = new GUIStyle(body) { fontSize = 16, wordWrap = true,
                     alignment = TextAnchor.UpperLeft, clipping = TextClipping.Clip };
+                supportName = new GUIStyle(body) { fontSize = 13, wordWrap = true,
+                    alignment = TextAnchor.MiddleCenter, clipping = TextClipping.Clip };
+                supportStatus = new GUIStyle(supportName) { fontSize = 13, wordWrap = false };
+                supportNumber = new GUIStyle(supportStatus) { fontStyle = FontStyle.Bold };
             }
             if (preparationRing != null) return;
             const int size = 128;
@@ -114,7 +126,8 @@ namespace Expedition.Presentation
                 return;
             }
             GUI.Label(new Rect(46, 133, 640, 28),
-                "금색: 기본 사거리   ·   청록: 지원 기술   ·   강조: 지원 후보", rangeCaption);
+                SelectedSupport(member) == null ? "금색: 기본 공격 사거리 · 끌어서 배치" :
+                "금색: 선택 / 공격   ·   청록: 지원 범위   ·   번호: 오른쪽 동료", rangeCaption);
             Rect clip = new Rect(32, 164, 687, 342);
             Vector2 position = PreparationPosition(member);
             Vector2 center = new Vector2(560f + position.x * 75f, GroundY - position.y * GroundYScale) - clip.position;
@@ -139,19 +152,67 @@ namespace Expedition.Presentation
             if (source == null) return;
             bool chosen = source.Id == member.Id;
             bool eligible = IsSupportCandidate(source, member, SelectedSupport(source));
-            if (!chosen && !eligible) return;
-            Color color = chosen ? Gold : SupportColor;
+            CatalogSupportPreview support = SelectedSupport(source);
+            if (!chosen && support == null) return;
+            Color color = chosen ? Gold : eligible ? SupportColor : OutsideColor;
             PreviewTexture(preparationRing, new Rect(foot.x - 37, foot.y - 14, 74, 17), color);
             // Different shapes as well as color: selection dot, candidate corner brackets.
             if (chosen)
                 PreviewTexture(preparationDisc, new Rect(foot.x - 4, foot.y - 106, 8, 8), Gold);
-            else
+            else if (eligible)
             {
                 Fill(new Rect(foot.x - 45, foot.y - 100, 3, 16), color);
                 Fill(new Rect(foot.x - 45, foot.y - 100, 13, 3), color);
                 Fill(new Rect(foot.x + 42, foot.y - 100, 3, 16), color);
                 Fill(new Rect(foot.x + 32, foot.y - 100, 13, 3), color);
             }
+            else
+            {
+                // Broken brackets distinguish outside-range allies without relying only on color.
+                Fill(new Rect(foot.x - 45, foot.y - 97, 3, 7), color);
+                Fill(new Rect(foot.x + 42, foot.y - 97, 3, 7), color);
+            }
+            if (support != null && !showHelp && CurrentTutorialStep() == ExpeditionTutorialStep.None)
+            {
+                int index = 0;
+                foreach (string id in run.DeployedIds) { if (id == member.Id) break; index++; }
+                Rect badge = new Rect(foot.x - 10, foot.y - 124, 20, 20);
+                Fill(badge, Panel); supportNumber.normal.textColor = color;
+                GUI.Label(badge, (index + 1).ToString(), supportNumber);
+            }
+        }
+
+        bool DrawPreparationSupportSummary()
+        {
+            CatalogMember source = PreparationSelection();
+            CatalogSupportPreview support = SelectedSupport(source);
+            if (source == null || support == null || showHelp || CurrentTutorialStep() != ExpeditionTutorialStep.None)
+                return false;
+            int inside = 0, others = run.DeployedIds.Count - 1;
+            foreach (string id in run.DeployedIds)
+            {
+                CatalogMember target = run.Roster.Find(id);
+                if (target != source && IsSupportCandidate(source, target, support)) inside++;
+            }
+            GUI.Label(new Rect(735, 143, 494, 31),
+                "동료 범위 안 " + inside + "/" + others + "명  ·  " +
+                (others == 0 ? "출전 동료 없음" : inside < others ? "범위 밖 " + (others - inside) + "명" : "모두 닿음"), rangeCaption);
+            for (int i = 0; i < run.DeployedIds.Count; i++)
+            {
+                CatalogMember target = run.Roster.Find(run.DeployedIds[i]);
+                bool self = source == target, eligible = IsSupportCandidate(source, target, support);
+                Color color = self ? Gold : eligible ? SupportColor : OutsideColor;
+                Rect card = SupportLayout.Card(i);
+                Fill(card, new Color(color.r * .12f, color.g * .12f, color.b * .12f, .95f));
+                Fill(new Rect(card.x, card.y, card.width, 2), color);
+                if (art != null) art.Draw(target.FormId, new Rect(card.x + 31, card.y + 3, 32, 30), 0);
+                supportNumber.normal.textColor = color;
+                GUI.Label(new Rect(card.x + 4, card.y + 4, 20, 20), (i + 1).ToString(), supportNumber);
+                GUI.Label(SupportLayout.Name(i), database.Get(target.FormId).Name, supportName);
+                supportStatus.normal.textColor = color;
+                GUI.Label(SupportLayout.Status(i), self ? "자신 포함" : eligible ? "범위 안" : "범위 밖", supportStatus);
+            }
+            return true;
         }
 
         bool DrawSelectedPreparation()
@@ -183,13 +244,13 @@ namespace Expedition.Presentation
             string reach = support == null ? "기술 지원 없음 · 특성 효과는 별도" :
                 (member.FormId.StartsWith("F-") && previewFinalSkill ? "최종 지원 " : "지원 ") +
                 (support.Global ? "전체" : support.Radius.ToString("0.0")) +
-                " · 동료 후보 " + candidates + "명";
+                " · 동료 범위 안 " + candidates + "명";
             if (!twoSkills)
                 GUI.Label(new Rect(735, 368, 494, 30),
                     "기본 " + database.Get(member.FormId).Range.ToString("0.0") + "   |   " + reach, rangeCaption);
             string rule = support == null ? "금색은 기본 사거리 기준입니다.\n근접 공격은 몸체 접촉도 고려합니다." :
                 support.Rule + "\n" + (twoSkills ? (support.Global ? "전체" : "거리 " + support.Radius.ToString("0.0")) +
-                    " · 동료 후보 " + candidates + "명 · " : "") + "전투 중 대상은 달라집니다.";
+                    " · 동료 범위 안 " + candidates + "명 · " : "") + "현재 배치 기준 · 시전 때 대상 결정";
             GUI.Label(new Rect(735, 401, 494, 63), rule, rangeRule);
             return true;
         }

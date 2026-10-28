@@ -11,7 +11,7 @@ namespace Expedition.Core
         ExpeditionUnitPreview(CatalogDatabase database, ExpeditionRun source, string memberId)
         {
             Member = source.Roster.Find(memberId).Copy();
-            Stats = new CatalogBattle(database, source.TacticIds, source.LegacyResearchIds).AddUnit(
+            Stats = new CatalogBattle(database, source.TacticIds, source.LegacyResearchIds, source.RulesVersion).AddUnit(
                 "info-preview", CatalogTeam.Ally, Member.FormId, Member.BranchId, Member.InheritedTraitId, 0, 0);
             DeployedCount = source.DeployedIds.Count;
             RosterCount = source.Roster.Members.Count;

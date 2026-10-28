@@ -1,0 +1,23 @@
+{
+  "backgroundCleanup": "Use case: background-extraction. This is a production pixel-art game sprite sheet. REMOVE BACKGROUND ONLY. The dark brown/black/gray blurry haze surrounding the sprites and the huge dark rectangle in the bottom-right are GARBAGE BACKGROUND, NOT part of the art. Make all space outside the hard outlined character silhouettes and small intentional colored attack symbols perfectly TRANSPARENT (alpha=0). Last two cells on bottom row must be entirely alpha=0. No ground shadows, no dark halo, no tinted mist, no backdrop, no checkerboard pixels, no white matte. Keep exactly the existing22 poses and all pixel-art colors/equipment/positions/layout/dimensions1536x1024; DO NOT redraw characters, change hands, add items, move/crop/resize sprites. Keep crisp dark OUTLINES of the actual figures; erase only all external background and broad haze. Preserve transparency with clean tight cutout edges.",
+  "bannerSpacing": "Use case: precise-object-edit. Fix ONLY row3column3 and row3column4 of this22frame 6x4 transparent1536x1024 pixel-art sheet. The spear of column3 overlaps the character in column4; reduce ONLY the horizontal reach of these two attack poses. Both spears must end at least24 pixels before their own256px cell right edge, with no figure pixels crossing cells. Keep exactlyONE pennant spear, same two-hand grip (near lower left hand, far upper right hand), recognizable short forward thrust and same human size. Bend elbows to shorten reach, do not shrink character body. No other costume/pose/color changes. Remove all external haze/background; true transparent alpha=0 outside silhouettes. Last2cells empty.",
+  "selectedArtSource": {
+    "B-PR": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-a378044c-e6f0-4238-8866-3cd2069357bc.png",
+    "E-PR-H": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-0e3b9250-d209-4b99-bd8f-180b09183d74.png",
+    "F-PR": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-9101d7f7-74f6-4c38-a3a9-de93be96e329.png",
+    "F-KN": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-bc270162-fde7-47d4-82b1-22a23e46ee0b.png",
+    "E-PR-G": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-f6b987dd-91ee-4498-9e2e-e61726b4b30b.png",
+    "H-02": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-54be6ff4-4aa3-4906-a37a-74816d014501.png",
+    "H-05": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-2c4a9673-4b98-449f-b227-9b56bebe211a.png",
+    "B-FI": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-31518649-4734-4592-b6a6-a02b5c7cad48.png",
+    "B-IC": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-76a9996f-3819-4a22-97a9-b5207301046c.png",
+    "B-BA": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-1eab6d63-bc8d-41fe-8fde-7d793600521b.png",
+    "B-AR": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-c4ab19b6-3e90-4fae-a813-71a63e6e0d2f.png"
+  },
+  "notes": "E-PR-H background extraction discarded after it removed two death poses. Initial complete transparent sheet retained; erroneous hit/anticipation poses not selected. H-05 duplicated extra spear frame not selected. Whole-frame holds, never detached body-part edits.",
+  "rejectedRepack": {
+    "file": "exec-50a006f7-6f24-4c5f-8ecb-6b14fc745ff0.png",
+    "reason": "Lost desired light FX and two death poses. Never installed. Original F-PR with gold crescent/stars retained."
+  },
+  "frameCorrection": "Directional FX ownership plus non-overlapping UV subregions. Source PNGs preserved; full body/FX pixels retained and foreign pose pixels excluded."
+}

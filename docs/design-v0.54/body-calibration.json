@@ -1,0 +1,102 @@
+{
+  "referenceBodyHeight": 179.2,
+  "measurement": "First idle pose, manually reviewed head/helmet crown to manifest foot pivot in original pixels. Excludes separate plumes, ponytails, buns, flags, staff ornaments and padding.",
+  "entries": [
+    {
+      "id": "B-AR",
+      "bodyHeight": 192,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 56,
+      "footY": 248
+    },
+    {
+      "id": "B-BA",
+      "bodyHeight": 156,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 98,
+      "footY": 254
+    },
+    {
+      "id": "B-FI",
+      "bodyHeight": 201,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 62,
+      "footY": 263
+    },
+    {
+      "id": "B-IC",
+      "bodyHeight": 191,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 70,
+      "footY": 261
+    },
+    {
+      "id": "B-KN",
+      "bodyHeight": 148,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 99,
+      "footY": 247
+    },
+    {
+      "id": "B-PR",
+      "bodyHeight": 196,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 80,
+      "footY": 276
+    },
+    {
+      "id": "E-PR-G",
+      "bodyHeight": 201,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 54,
+      "footY": 255
+    },
+    {
+      "id": "E-PR-H",
+      "bodyHeight": 191,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 267
+    },
+    {
+      "id": "F-KN",
+      "bodyHeight": 181,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 73,
+      "footY": 254
+    },
+    {
+      "id": "F-PR",
+      "bodyHeight": 189,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 72,
+      "footY": 261
+    },
+    {
+      "id": "H-02",
+      "bodyHeight": 173,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 79,
+      "footY": 252
+    },
+    {
+      "id": "H-05",
+      "bodyHeight": 148,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 112,
+      "footY": 260
+    }
+  ]
+}

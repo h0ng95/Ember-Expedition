@@ -1,0 +1,57 @@
+[
+  {
+    "id": "B-AR",
+    "file": "Art/Units/v054/B-AR.png",
+    "sha256": "4b8c3be744c43b50fcb3137c7a22bf9b2cb439013b8b8d428946d47a82f06370"
+  },
+  {
+    "id": "B-BA",
+    "file": "Art/Units/v054/B-BA.png",
+    "sha256": "0c2535adea0b3bb30cfb8f3873f50af334f548a6d91df6c9328d37f4ffca6098"
+  },
+  {
+    "id": "B-FI",
+    "file": "Art/Units/v054/B-FI.png",
+    "sha256": "7f174b7a7b774804792453f0c17ec43761fcd5ff59c5449d582f751491abbdb2"
+  },
+  {
+    "id": "B-IC",
+    "file": "Art/Units/v054/B-IC.png",
+    "sha256": "3ac0bb3089e08481cc1d8b56e407bfac6dd2bde0f8692b65e34c407b6be238d7"
+  },
+  {
+    "id": "B-PR",
+    "file": "Art/Units/v054/B-PR.png",
+    "sha256": "043e25a56a897c6ca130eb09b8ff79f25abbf40bdddadc50c5524411f6a5be92"
+  },
+  {
+    "id": "E-PR-G",
+    "file": "Art/Units/v054/E-PR-G.png",
+    "sha256": "34e4636c8c91ad3f6ebecf6e944c8e094ea309cf845ec344856319bbd9f1adc3"
+  },
+  {
+    "id": "E-PR-H",
+    "file": "Art/Units/v054/E-PR-H.png",
+    "sha256": "1fd11a8cddd22932ec9c5bf8cac47c9370ad7465dcfb5364b85397994bf29640"
+  },
+  {
+    "id": "F-KN",
+    "file": "Art/Units/v054/F-KN.png",
+    "sha256": "f23b4788a406e4671dd8d202055192c4186a706c140f1b4b0d84fd7bd82f0ed0"
+  },
+  {
+    "id": "F-PR",
+    "file": "Art/Units/v054/F-PR.png",
+    "sha256": "2cead42cb1947de1ecd5779e5e2321c0137d0644113a4ffc25780e791eec960e"
+  },
+  {
+    "id": "H-02",
+    "file": "Art/Units/v054/H-02.png",
+    "sha256": "634a65e0096fb8971be8d872ca7ad849fd8738438020049899e3af6686dd3ade"
+  },
+  {
+    "id": "H-05",
+    "file": "Art/Units/v054/H-05.png",
+    "sha256": "416946b130953421d5c154e6a836e43fd87193150bb8464b63e815be98d27b23"
+  }
+]

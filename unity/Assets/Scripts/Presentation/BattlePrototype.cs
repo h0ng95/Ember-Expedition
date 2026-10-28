@@ -771,7 +771,7 @@ namespace Expedition.Presentation
                 view.RecruitKind == RecruitKind.ShieldKnight ? "KNIGHT" :
                 view.RecruitKind == RecruitKind.LanternPriest ? "PRIEST" : "MAGE");
             if (view.Id == "mage") return "FIRE MAGE (ART TEMP)";
-            if (view.Id == "priest") return "LANTERN PRIEST";
+            if (view.Id == "priest") return "LIGHT PRIEST";
             return preparation.Evolution == KnightEvolution.CounterKnight ? "COUNTER KNIGHT" :
                 preparation.Evolution == KnightEvolution.GuardianKnight ? "GUARDIAN KNIGHT" : "SHIELD KNIGHT";
         }
@@ -779,7 +779,7 @@ namespace Expedition.Presentation
         static string RecruitName(RecruitKind kind)
         {
             if (kind == RecruitKind.ShieldKnight) return "SHIELD KNIGHT";
-            if (kind == RecruitKind.LanternPriest) return "LANTERN PRIEST";
+            if (kind == RecruitKind.LanternPriest) return "LIGHT PRIEST";
             if (kind == RecruitKind.FireMage) return "FIRE MAGE";
             return "SCOUT ARCHER";
         }

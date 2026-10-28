@@ -1,0 +1,4924 @@
+{
+  "rules": 5,
+  "note": "Controlled equal-investment encounter snapshots, not acquisition or human win rates. Current region-gated research only, no permanent bonuses. Research costs are the same per row, not credited as summon gold. Reserve is already owned in all arms. Opening health sampled every 0.25s; event DPS is exact. Damage includes absorbed shields, excludes overkill; healing is effective HP restored.",
+  "cases": 2304,
+  "battles": 6912,
+  "repeatBattles": 11,
+  "assertions": 131084,
+  "byHybrid": {
+    "H-01": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 293,
+          "timeouts": 0,
+          "openingDps": 190.6252,
+          "openingCommonHealth": 0.8015,
+          "healing": 198.9102,
+          "protection": 442.2072,
+          "firstDeath": 36.2538,
+          "hpFraction": 0.4721
+        },
+        "combined": {
+          "wins": 284,
+          "timeouts": 0,
+          "openingDps": 186.5418,
+          "openingCommonHealth": 0.7695,
+          "healing": 166.3117,
+          "protection": 366.842,
+          "firstDeath": 29.7403,
+          "hpFraction": 0.4114
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 203.1776,
+          "openingCommonHealth": 0.7927,
+          "healing": 170.7509,
+          "protection": 396.9429,
+          "firstDeath": 37.1788,
+          "hpFraction": 0.5016
+        },
+        "gainedWins": 8,
+        "lostWins": 13
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 45,
+            "timeouts": 0,
+            "openingDps": 101.3131,
+            "openingCommonHealth": 0.6371,
+            "healing": 0,
+            "protection": 240.213,
+            "firstDeath": 7.5868,
+            "hpFraction": 0.3305
+          },
+          "combined": {
+            "wins": 44,
+            "timeouts": 0,
+            "openingDps": 99.2598,
+            "openingCommonHealth": 0.6284,
+            "healing": 0,
+            "protection": 260.0641,
+            "firstDeath": 6.4097,
+            "hpFraction": 0.2666
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 118.4929,
+            "openingCommonHealth": 0.6665,
+            "healing": 0,
+            "protection": 275.0666,
+            "firstDeath": 7.232,
+            "hpFraction": 0.4935
+          },
+          "gainedWins": 3,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 146.9872,
+            "openingCommonHealth": 0.9282,
+            "healing": 68.0802,
+            "protection": 292.7346,
+            "firstDeath": 63.7083,
+            "hpFraction": 0.7842
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 151.2872,
+            "openingCommonHealth": 0.885,
+            "healing": 69.0988,
+            "protection": 276.3832,
+            "firstDeath": 75,
+            "hpFraction": 0.7609
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 164.0777,
+            "openingCommonHealth": 0.9015,
+            "healing": 69.0988,
+            "protection": 283.1459,
+            "firstDeath": 75,
+            "hpFraction": 0.8221
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 181.2311,
+            "openingCommonHealth": 0.9255,
+            "healing": 126.3523,
+            "protection": 288.1364,
+            "firstDeath": 75,
+            "hpFraction": 0.8621
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 190.939,
+            "openingCommonHealth": 0.8822,
+            "healing": 120.1667,
+            "protection": 203.1727,
+            "firstDeath": 75,
+            "hpFraction": 0.8197
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 206.8411,
+            "openingCommonHealth": 0.9027,
+            "healing": 86.8333,
+            "protection": 204.9691,
+            "firstDeath": 75,
+            "hpFraction": 0.8639
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 13,
+            "timeouts": 0,
+            "openingDps": 165.9566,
+            "openingCommonHealth": 0.7271,
+            "healing": 284.8437,
+            "protection": 560.7446,
+            "firstDeath": 11.3333,
+            "hpFraction": 0.0695
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 144.5731,
+            "openingCommonHealth": 0.6795,
+            "healing": 119.8211,
+            "protection": 413.1639,
+            "firstDeath": 9.0528,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 166.4627,
+            "openingCommonHealth": 0.7131,
+            "healing": 197.0444,
+            "protection": 470.9463,
+            "firstDeath": 9.6945,
+            "hpFraction": 0
+          },
+          "gainedWins": 0,
+          "lostWins": 13
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 248.9576,
+            "openingCommonHealth": 0.8069,
+            "healing": 152.6601,
+            "protection": 448.0428,
+            "firstDeath": 36.2837,
+            "hpFraction": 0.5917
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 239.3978,
+            "openingCommonHealth": 0.7732,
+            "healing": 161.4638,
+            "protection": 354.2182,
+            "firstDeath": 11.8542,
+            "hpFraction": 0.5066
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 258.6987,
+            "openingCommonHealth": 0.7912,
+            "healing": 148.2138,
+            "protection": 395.4425,
+            "firstDeath": 37.5972,
+            "hpFraction": 0.635
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 244.7934,
+            "openingCommonHealth": 0.8766,
+            "healing": 169.2107,
+            "protection": 392.0064,
+            "firstDeath": 59.0729,
+            "hpFraction": 0.7504
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 243.5073,
+            "openingCommonHealth": 0.786,
+            "healing": 95.5593,
+            "protection": 249.1176,
+            "firstDeath": 27.7042,
+            "hpFraction": 0.6449
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 261.9652,
+            "openingCommonHealth": 0.826,
+            "healing": 128.8,
+            "protection": 256.7174,
+            "firstDeath": 64.3611,
+            "hpFraction": 0.7517
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 43,
+            "timeouts": 0,
+            "openingDps": 240.3683,
+            "openingCommonHealth": 0.7709,
+            "healing": 242.0419,
+            "protection": 542.8868,
+            "firstDeath": 19.1944,
+            "hpFraction": 0.3883
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 227.7135,
+            "openingCommonHealth": 0.7483,
+            "healing": 264.7196,
+            "protection": 421.0685,
+            "firstDeath": 11.5875,
+            "hpFraction": 0.2928
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 244.9886,
+            "openingCommonHealth": 0.7604,
+            "healing": 210.727,
+            "protection": 477.0118,
+            "firstDeath": 13.3569,
+            "hpFraction": 0.4468
+          },
+          "gainedWins": 5,
+          "lostWins": 0
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 195.3943,
+            "openingCommonHealth": 0.7394,
+            "healing": 548.0925,
+            "protection": 772.8928,
+            "firstDeath": 17.8506,
+            "hpFraction": 0
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 195.6568,
+            "openingCommonHealth": 0.7731,
+            "healing": 499.6645,
+            "protection": 757.5475,
+            "firstDeath": 21.3137,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 203.8942,
+            "openingCommonHealth": 0.7801,
+            "healing": 525.2895,
+            "protection": 812.2435,
+            "firstDeath": 15.1888,
+            "hpFraction": 0
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 176.4594,
+            "openingCommonHealth": 0.7942,
+            "healing": 0,
+            "protection": 565.482,
+            "firstDeath": 35.7109,
+            "hpFraction": 0.4856
+          },
+          "combined": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 175.4466,
+            "openingCommonHealth": 0.7413,
+            "healing": 0,
+            "protection": 423.365,
+            "firstDeath": 34.1651,
+            "hpFraction": 0.4394
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 186.3534,
+            "openingCommonHealth": 0.7581,
+            "healing": 0,
+            "protection": 489.7866,
+            "firstDeath": 42.4323,
+            "hpFraction": 0.5253
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 92,
+            "timeouts": 0,
+            "openingDps": 223.424,
+            "openingCommonHealth": 0.7508,
+            "healing": 0,
+            "protection": 165.0152,
+            "firstDeath": 27.7694,
+            "hpFraction": 0.3756
+          },
+          "combined": {
+            "wins": 92,
+            "timeouts": 0,
+            "openingDps": 217.9817,
+            "openingCommonHealth": 0.7468,
+            "healing": 0,
+            "protection": 164.0803,
+            "firstDeath": 25.3354,
+            "hpFraction": 0.3397
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 233.1182,
+            "openingCommonHealth": 0.7796,
+            "healing": 0,
+            "protection": 223.05,
+            "firstDeath": 29.9615,
+            "hpFraction": 0.4243
+          },
+          "gainedWins": 8,
+          "lostWins": 4
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 105,
+            "timeouts": 0,
+            "openingDps": 171.9922,
+            "openingCommonHealth": 0.8594,
+            "healing": 596.7305,
+            "protection": 596.1244,
+            "firstDeath": 45.281,
+            "hpFraction": 0.555
+          },
+          "combined": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 166.1972,
+            "openingCommonHealth": 0.8203,
+            "healing": 498.9352,
+            "protection": 513.0806,
+            "firstDeath": 29.7203,
+            "hpFraction": 0.4552
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 190.0614,
+            "openingCommonHealth": 0.8404,
+            "healing": 512.2526,
+            "protection": 477.9921,
+            "firstDeath": 39.1427,
+            "hpFraction": 0.5553
+          },
+          "gainedWins": 0,
+          "lostWins": 9
+        }
+      },
+      "branchA": {
+        "E-KN-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 155,
+            "timeouts": 0,
+            "openingDps": 187.7507,
+            "openingCommonHealth": 0.8045,
+            "healing": 213.9216,
+            "protection": 500.6182,
+            "firstDeath": 42.7072,
+            "hpFraction": 0.5188
+          },
+          "combined": {
+            "wins": 142,
+            "timeouts": 0,
+            "openingDps": 186.5418,
+            "openingCommonHealth": 0.7695,
+            "healing": 166.3117,
+            "protection": 366.842,
+            "firstDeath": 29.7403,
+            "hpFraction": 0.4114
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 203.1776,
+            "openingCommonHealth": 0.7927,
+            "healing": 170.7509,
+            "protection": 396.9429,
+            "firstDeath": 37.1788,
+            "hpFraction": 0.5016
+          },
+          "gainedWins": 0,
+          "lostWins": 11
+        },
+        "E-KN-C": {
+          "cases": 192,
+          "separate": {
+            "wins": 138,
+            "timeouts": 0,
+            "openingDps": 193.4998,
+            "openingCommonHealth": 0.7984,
+            "healing": 183.8987,
+            "protection": 383.7961,
+            "firstDeath": 29.8003,
+            "hpFraction": 0.4253
+          },
+          "combined": {
+            "wins": 142,
+            "timeouts": 0,
+            "openingDps": 186.5418,
+            "openingCommonHealth": 0.7695,
+            "healing": 166.3117,
+            "protection": 366.842,
+            "firstDeath": 29.7403,
+            "hpFraction": 0.4114
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 203.1776,
+            "openingCommonHealth": 0.7927,
+            "healing": 170.7509,
+            "protection": 396.9429,
+            "firstDeath": 37.1788,
+            "hpFraction": 0.5016
+          },
+          "gainedWins": 8,
+          "lostWins": 2
+        }
+      },
+      "branchB": {
+        "E-FI-B": {
+          "cases": 192,
+          "separate": {
+            "wins": 147,
+            "timeouts": 0,
+            "openingDps": 193.3324,
+            "openingCommonHealth": 0.8051,
+            "healing": 200.057,
+            "protection": 441.0581,
+            "firstDeath": 36.3581,
+            "hpFraction": 0.4816
+          },
+          "combined": {
+            "wins": 142,
+            "timeouts": 0,
+            "openingDps": 186.5418,
+            "openingCommonHealth": 0.7695,
+            "healing": 166.3117,
+            "protection": 366.842,
+            "firstDeath": 29.7403,
+            "hpFraction": 0.4114
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 203.1776,
+            "openingCommonHealth": 0.7927,
+            "healing": 170.7509,
+            "protection": 396.9429,
+            "firstDeath": 37.1788,
+            "hpFraction": 0.5016
+          },
+          "gainedWins": 4,
+          "lostWins": 7
+        },
+        "E-FI-E": {
+          "cases": 192,
+          "separate": {
+            "wins": 146,
+            "timeouts": 0,
+            "openingDps": 187.9181,
+            "openingCommonHealth": 0.7978,
+            "healing": 197.7634,
+            "protection": 443.3562,
+            "firstDeath": 36.1494,
+            "hpFraction": 0.4625
+          },
+          "combined": {
+            "wins": 142,
+            "timeouts": 0,
+            "openingDps": 186.5418,
+            "openingCommonHealth": 0.7695,
+            "healing": 166.3117,
+            "protection": 366.842,
+            "firstDeath": 29.7403,
+            "hpFraction": 0.4114
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 203.1776,
+            "openingCommonHealth": 0.7927,
+            "healing": 170.7509,
+            "protection": 396.9429,
+            "firstDeath": 37.1788,
+            "hpFraction": 0.5016
+          },
+          "gainedWins": 4,
+          "lostWins": 6
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 293,
+            "timeouts": 0,
+            "openingDps": 190.6252,
+            "openingCommonHealth": 0.8015,
+            "healing": 198.9102,
+            "protection": 442.2072,
+            "firstDeath": 36.2538,
+            "hpFraction": 0.4721
+          },
+          "combined": {
+            "wins": 284,
+            "timeouts": 0,
+            "openingDps": 186.5418,
+            "openingCommonHealth": 0.7695,
+            "healing": 166.3117,
+            "protection": 366.842,
+            "firstDeath": 29.7403,
+            "hpFraction": 0.4114
+          },
+          "refilled": {
+            "wins": 288,
+            "timeouts": 0,
+            "openingDps": 203.1776,
+            "openingCommonHealth": 0.7927,
+            "healing": 170.7509,
+            "protection": 396.9429,
+            "firstDeath": 37.1788,
+            "hpFraction": 0.5016
+          },
+          "gainedWins": 8,
+          "lostWins": 13
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 70,
+            "timeouts": 0,
+            "openingDps": 180.6266,
+            "openingCommonHealth": 0.7934,
+            "healing": 201.7366,
+            "protection": 451.7724,
+            "firstDeath": 34.1967,
+            "hpFraction": 0.4423
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 175.3739,
+            "openingCommonHealth": 0.7578,
+            "healing": 166.4812,
+            "protection": 363.5304,
+            "firstDeath": 27.4153,
+            "hpFraction": 0.3654
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 189.6936,
+            "openingCommonHealth": 0.7811,
+            "healing": 176.8986,
+            "protection": 396.9491,
+            "firstDeath": 32.3312,
+            "hpFraction": 0.4727
+          },
+          "gainedWins": 4,
+          "lostWins": 2
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 73,
+            "timeouts": 0,
+            "openingDps": 185.4945,
+            "openingCommonHealth": 0.8067,
+            "healing": 203.2536,
+            "protection": 464.7641,
+            "firstDeath": 38.3903,
+            "hpFraction": 0.4821
+          },
+          "combined": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 185.496,
+            "openingCommonHealth": 0.7807,
+            "healing": 194.7004,
+            "protection": 407.7269,
+            "firstDeath": 31.3264,
+            "hpFraction": 0.4393
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 199.471,
+            "openingCommonHealth": 0.8011,
+            "healing": 214.2913,
+            "protection": 439.3606,
+            "firstDeath": 38.3028,
+            "hpFraction": 0.5051
+          },
+          "gainedWins": 3,
+          "lostWins": 4
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 74,
+            "timeouts": 0,
+            "openingDps": 197.1585,
+            "openingCommonHealth": 0.8018,
+            "healing": 194.7307,
+            "protection": 426.7848,
+            "firstDeath": 35.542,
+            "hpFraction": 0.477
+          },
+          "combined": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 191.0235,
+            "openingCommonHealth": 0.7691,
+            "healing": 157.1598,
+            "protection": 346.3672,
+            "firstDeath": 30.1305,
+            "hpFraction": 0.4134
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 208.2282,
+            "openingCommonHealth": 0.7927,
+            "healing": 145.4202,
+            "protection": 382.1861,
+            "firstDeath": 37.9812,
+            "hpFraction": 0.5109
+          },
+          "gainedWins": 1,
+          "lostWins": 3
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 76,
+            "timeouts": 0,
+            "openingDps": 199.2212,
+            "openingCommonHealth": 0.8039,
+            "healing": 195.9198,
+            "protection": 425.5075,
+            "firstDeath": 36.8861,
+            "hpFraction": 0.4869
+          },
+          "combined": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 194.2739,
+            "openingCommonHealth": 0.7703,
+            "healing": 146.9055,
+            "protection": 349.7433,
+            "firstDeath": 30.0889,
+            "hpFraction": 0.4275
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 215.3177,
+            "openingCommonHealth": 0.7958,
+            "healing": 146.3934,
+            "protection": 369.2758,
+            "firstDeath": 40.1,
+            "hpFraction": 0.5178
+          },
+          "gainedWins": 0,
+          "lostWins": 4
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 195.3943,
+          "openingCommonHealth": 0.7394,
+          "healing": 548.0925,
+          "protection": 772.8928,
+          "firstDeath": 17.8506,
+          "hpFraction": 0
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 195.6568,
+          "openingCommonHealth": 0.7731,
+          "healing": 499.6645,
+          "protection": 757.5475,
+          "firstDeath": 21.3137,
+          "hpFraction": 0
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 203.8942,
+          "openingCommonHealth": 0.7801,
+          "healing": 525.2895,
+          "protection": 812.2435,
+          "firstDeath": 15.1888,
+          "hpFraction": 0
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 293,
+          "timeouts": 0,
+          "openingDps": 189.9439,
+          "openingCommonHealth": 0.8103,
+          "healing": 149.027,
+          "protection": 394.9664,
+          "firstDeath": 38.8828,
+          "hpFraction": 0.5395
+        },
+        "combined": {
+          "wins": 284,
+          "timeouts": 0,
+          "openingDps": 185.2397,
+          "openingCommonHealth": 0.7689,
+          "healing": 118.6899,
+          "protection": 311.0269,
+          "firstDeath": 30.9441,
+          "hpFraction": 0.4702
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 203.0753,
+          "openingCommonHealth": 0.7945,
+          "healing": 120.1025,
+          "protection": 337.6142,
+          "firstDeath": 40.3202,
+          "hpFraction": 0.5733
+        },
+        "gainedWins": 8,
+        "lostWins": 13
+      }
+    },
+    "H-02": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 273,
+          "timeouts": 12,
+          "openingDps": 168.7397,
+          "openingCommonHealth": 0.8264,
+          "healing": 381.9641,
+          "protection": 632.4086,
+          "firstDeath": 40.1814,
+          "hpFraction": 0.4991
+        },
+        "combined": {
+          "wins": 272,
+          "timeouts": 16,
+          "openingDps": 164.6764,
+          "openingCommonHealth": 0.8533,
+          "healing": 563.3717,
+          "protection": 520.2059,
+          "firstDeath": 48.2588,
+          "hpFraction": 0.529
+        },
+        "refilled": {
+          "wins": 304,
+          "timeouts": 16,
+          "openingDps": 178.0891,
+          "openingCommonHealth": 0.8641,
+          "healing": 537.0984,
+          "protection": 524.3428,
+          "firstDeath": 50.113,
+          "hpFraction": 0.6139
+        },
+        "gainedWins": 34,
+        "lostWins": 3
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 23,
+            "timeouts": 0,
+            "openingDps": 71.7935,
+            "openingCommonHealth": 0.6454,
+            "healing": 172.1132,
+            "protection": 395.5421,
+            "firstDeath": 8.2466,
+            "hpFraction": 0.1302
+          },
+          "combined": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 72.6935,
+            "openingCommonHealth": 0.7705,
+            "healing": 270.4484,
+            "protection": 279.1463,
+            "firstDeath": 30.4972,
+            "hpFraction": 0.1726
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 89.2041,
+            "openingCommonHealth": 0.7719,
+            "healing": 298.6642,
+            "protection": 289.0503,
+            "firstDeath": 16.9333,
+            "hpFraction": 0.4455
+          },
+          "gainedWins": 25,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 126.0048,
+            "openingCommonHealth": 0.9405,
+            "healing": 186.7913,
+            "protection": 391.5824,
+            "firstDeath": 63.9688,
+            "hpFraction": 0.8376
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 122.5975,
+            "openingCommonHealth": 0.9644,
+            "healing": 346.6078,
+            "protection": 318.5889,
+            "firstDeath": 75,
+            "hpFraction": 0.8383
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 133.9345,
+            "openingCommonHealth": 0.9694,
+            "healing": 312.306,
+            "protection": 304.9026,
+            "firstDeath": 75,
+            "hpFraction": 0.8887
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 158.4042,
+            "openingCommonHealth": 0.9471,
+            "healing": 207.3112,
+            "protection": 407.4191,
+            "firstDeath": 69.5868,
+            "hpFraction": 0.8998
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 157.395,
+            "openingCommonHealth": 0.9337,
+            "healing": 302.0854,
+            "protection": 327.4409,
+            "firstDeath": 75,
+            "hpFraction": 0.9078
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 165.9033,
+            "openingCommonHealth": 0.9445,
+            "healing": 274.9938,
+            "protection": 321.2431,
+            "firstDeath": 75,
+            "hpFraction": 0.9471
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 14,
+            "timeouts": 0,
+            "openingDps": 145.4655,
+            "openingCommonHealth": 0.7684,
+            "healing": 499.5381,
+            "protection": 824.1085,
+            "firstDeath": 16.568,
+            "hpFraction": 0.1192
+          },
+          "combined": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 138.4317,
+            "openingCommonHealth": 0.8001,
+            "healing": 763.9363,
+            "protection": 596.4613,
+            "firstDeath": 19.2472,
+            "hpFraction": 0.2056
+          },
+          "refilled": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 153.4361,
+            "openingCommonHealth": 0.8136,
+            "healing": 685.778,
+            "protection": 581.1639,
+            "firstDeath": 31.9806,
+            "hpFraction": 0.2891
+          },
+          "gainedWins": 5,
+          "lostWins": 3
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 229.2956,
+            "openingCommonHealth": 0.8246,
+            "healing": 261.9662,
+            "protection": 593.8542,
+            "firstDeath": 48.6764,
+            "hpFraction": 0.6513
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 226.6608,
+            "openingCommonHealth": 0.843,
+            "healing": 464.9116,
+            "protection": 422.711,
+            "firstDeath": 52.9833,
+            "hpFraction": 0.6657
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 240.9317,
+            "openingCommonHealth": 0.8533,
+            "healing": 429.3697,
+            "protection": 439.0621,
+            "firstDeath": 53.0556,
+            "hpFraction": 0.7354
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 216.9588,
+            "openingCommonHealth": 0.8998,
+            "healing": 286.2505,
+            "protection": 532.5539,
+            "firstDeath": 60.2229,
+            "hpFraction": 0.7965
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 204.0897,
+            "openingCommonHealth": 0.8518,
+            "healing": 447.8504,
+            "protection": 404.5639,
+            "firstDeath": 64.6972,
+            "hpFraction": 0.7595
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 222.4478,
+            "openingCommonHealth": 0.8755,
+            "healing": 380.5697,
+            "protection": 381.333,
+            "firstDeath": 75,
+            "hpFraction": 0.8435
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 44,
+            "timeouts": 0,
+            "openingDps": 223.5411,
+            "openingCommonHealth": 0.797,
+            "healing": 438.8193,
+            "protection": 742.6425,
+            "firstDeath": 33.8819,
+            "hpFraction": 0.4783
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 220.3731,
+            "openingCommonHealth": 0.8198,
+            "healing": 627.3376,
+            "protection": 539.0067,
+            "firstDeath": 35.3388,
+            "hpFraction": 0.5091
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 231.3691,
+            "openingCommonHealth": 0.8335,
+            "healing": 571.0176,
+            "protection": 560.9585,
+            "firstDeath": 48.4222,
+            "hpFraction": 0.6025
+          },
+          "gainedWins": 4,
+          "lostWins": 0
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 12,
+            "openingDps": 178.4541,
+            "openingCommonHealth": 0.7881,
+            "healing": 1002.923,
+            "protection": 1171.5663,
+            "firstDeath": 20.2999,
+            "hpFraction": 0.08
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 16,
+            "openingDps": 175.17,
+            "openingCommonHealth": 0.8428,
+            "healing": 1283.796,
+            "protection": 1273.7283,
+            "firstDeath": 33.3066,
+            "hpFraction": 0.1733
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 16,
+            "openingDps": 187.4862,
+            "openingCommonHealth": 0.8515,
+            "healing": 1344.0882,
+            "protection": 1317.0287,
+            "firstDeath": 25.5123,
+            "hpFraction": 0.1596
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 85,
+            "timeouts": 0,
+            "openingDps": 150.835,
+            "openingCommonHealth": 0.8117,
+            "healing": 145.0008,
+            "protection": 741.9664,
+            "firstDeath": 43.6665,
+            "hpFraction": 0.4843
+          },
+          "combined": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 149.2349,
+            "openingCommonHealth": 0.8726,
+            "healing": 369.4074,
+            "protection": 669.35,
+            "firstDeath": 59.2182,
+            "hpFraction": 0.5777
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 157.4788,
+            "openingCommonHealth": 0.8742,
+            "healing": 361.7258,
+            "protection": 698.9526,
+            "firstDeath": 57.1624,
+            "hpFraction": 0.6287
+          },
+          "gainedWins": 11,
+          "lostWins": 0
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 90,
+            "timeouts": 0,
+            "openingDps": 202.0136,
+            "openingCommonHealth": 0.7885,
+            "healing": 127.9797,
+            "protection": 273.2513,
+            "firstDeath": 25.8121,
+            "hpFraction": 0.3968
+          },
+          "combined": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 197.101,
+            "openingCommonHealth": 0.7883,
+            "healing": 244.6338,
+            "protection": 44.97,
+            "firstDeath": 30.3578,
+            "hpFraction": 0.3245
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 204.9098,
+            "openingCommonHealth": 0.8172,
+            "healing": 248.3695,
+            "protection": 121.177,
+            "firstDeath": 34.4859,
+            "hpFraction": 0.4024
+          },
+          "gainedWins": 9,
+          "lostWins": 3
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 98,
+            "timeouts": 12,
+            "openingDps": 153.3706,
+            "openingCommonHealth": 0.8789,
+            "healing": 872.9119,
+            "protection": 882.0082,
+            "firstDeath": 51.0656,
+            "hpFraction": 0.6162
+          },
+          "combined": {
+            "wins": 96,
+            "timeouts": 16,
+            "openingDps": 147.6934,
+            "openingCommonHealth": 0.8988,
+            "healing": 1076.0738,
+            "protection": 846.2977,
+            "firstDeath": 55.2004,
+            "hpFraction": 0.6848
+          },
+          "refilled": {
+            "wins": 112,
+            "timeouts": 16,
+            "openingDps": 171.8786,
+            "openingCommonHealth": 0.901,
+            "healing": 1001.1998,
+            "protection": 752.8987,
+            "firstDeath": 58.6906,
+            "hpFraction": 0.8107
+          },
+          "gainedWins": 14,
+          "lostWins": 0
+        }
+      },
+      "branchA": {
+        "E-KN-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 141,
+            "timeouts": 8,
+            "openingDps": 163.3895,
+            "openingCommonHealth": 0.8323,
+            "healing": 406.5301,
+            "protection": 704.1553,
+            "firstDeath": 46.619,
+            "hpFraction": 0.5402
+          },
+          "combined": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 164.6764,
+            "openingCommonHealth": 0.8533,
+            "healing": 563.3717,
+            "protection": 520.2059,
+            "firstDeath": 48.2588,
+            "hpFraction": 0.529
+          },
+          "refilled": {
+            "wins": 152,
+            "timeouts": 8,
+            "openingDps": 178.0891,
+            "openingCommonHealth": 0.8641,
+            "healing": 537.0984,
+            "protection": 524.3428,
+            "firstDeath": 50.113,
+            "hpFraction": 0.6139
+          },
+          "gainedWins": 14,
+          "lostWins": 3
+        },
+        "E-KN-C": {
+          "cases": 192,
+          "separate": {
+            "wins": 132,
+            "timeouts": 4,
+            "openingDps": 174.0899,
+            "openingCommonHealth": 0.8204,
+            "healing": 357.3982,
+            "protection": 560.662,
+            "firstDeath": 33.7438,
+            "hpFraction": 0.458
+          },
+          "combined": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 164.6764,
+            "openingCommonHealth": 0.8533,
+            "healing": 563.3717,
+            "protection": 520.2059,
+            "firstDeath": 48.2588,
+            "hpFraction": 0.529
+          },
+          "refilled": {
+            "wins": 152,
+            "timeouts": 8,
+            "openingDps": 178.0891,
+            "openingCommonHealth": 0.8641,
+            "healing": 537.0984,
+            "protection": 524.3428,
+            "firstDeath": 50.113,
+            "hpFraction": 0.6139
+          },
+          "gainedWins": 20,
+          "lostWins": 0
+        }
+      },
+      "branchB": {
+        "E-PR-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 130,
+            "timeouts": 4,
+            "openingDps": 167.8617,
+            "openingCommonHealth": 0.8093,
+            "healing": 227.8995,
+            "protection": 707.7401,
+            "firstDeath": 39.2597,
+            "hpFraction": 0.4598
+          },
+          "combined": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 164.6764,
+            "openingCommonHealth": 0.8533,
+            "healing": 563.3717,
+            "protection": 520.2059,
+            "firstDeath": 48.2588,
+            "hpFraction": 0.529
+          },
+          "refilled": {
+            "wins": 152,
+            "timeouts": 8,
+            "openingDps": 178.0891,
+            "openingCommonHealth": 0.8641,
+            "healing": 537.0984,
+            "protection": 524.3428,
+            "firstDeath": 50.113,
+            "hpFraction": 0.6139
+          },
+          "gainedWins": 23,
+          "lostWins": 1
+        },
+        "E-PR-H": {
+          "cases": 192,
+          "separate": {
+            "wins": 143,
+            "timeouts": 8,
+            "openingDps": 169.6177,
+            "openingCommonHealth": 0.8435,
+            "healing": 536.0287,
+            "protection": 557.0772,
+            "firstDeath": 41.1031,
+            "hpFraction": 0.5384
+          },
+          "combined": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 164.6764,
+            "openingCommonHealth": 0.8533,
+            "healing": 563.3717,
+            "protection": 520.2059,
+            "firstDeath": 48.2588,
+            "hpFraction": 0.529
+          },
+          "refilled": {
+            "wins": 152,
+            "timeouts": 8,
+            "openingDps": 178.0891,
+            "openingCommonHealth": 0.8641,
+            "healing": 537.0984,
+            "protection": 524.3428,
+            "firstDeath": 50.113,
+            "hpFraction": 0.6139
+          },
+          "gainedWins": 11,
+          "lostWins": 2
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 273,
+            "timeouts": 12,
+            "openingDps": 168.7397,
+            "openingCommonHealth": 0.8264,
+            "healing": 381.9641,
+            "protection": 632.4086,
+            "firstDeath": 40.1814,
+            "hpFraction": 0.4991
+          },
+          "combined": {
+            "wins": 272,
+            "timeouts": 16,
+            "openingDps": 164.6764,
+            "openingCommonHealth": 0.8533,
+            "healing": 563.3717,
+            "protection": 520.2059,
+            "firstDeath": 48.2588,
+            "hpFraction": 0.529
+          },
+          "refilled": {
+            "wins": 304,
+            "timeouts": 16,
+            "openingDps": 178.0891,
+            "openingCommonHealth": 0.8641,
+            "healing": 537.0984,
+            "protection": 524.3428,
+            "firstDeath": 50.113,
+            "hpFraction": 0.6139
+          },
+          "gainedWins": 34,
+          "lostWins": 3
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 62,
+            "timeouts": 3,
+            "openingDps": 158.0979,
+            "openingCommonHealth": 0.82,
+            "healing": 388.4667,
+            "protection": 648.1261,
+            "firstDeath": 36.3927,
+            "hpFraction": 0.4618
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 4,
+            "openingDps": 155.866,
+            "openingCommonHealth": 0.8494,
+            "healing": 592.2523,
+            "protection": 530.2126,
+            "firstDeath": 44.2812,
+            "hpFraction": 0.5002
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 4,
+            "openingDps": 168.6127,
+            "openingCommonHealth": 0.8555,
+            "healing": 547.0886,
+            "protection": 552.3703,
+            "firstDeath": 47.7319,
+            "hpFraction": 0.5914
+          },
+          "gainedWins": 14,
+          "lostWins": 0
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 70,
+            "timeouts": 3,
+            "openingDps": 166.4886,
+            "openingCommonHealth": 0.8315,
+            "healing": 388.0028,
+            "protection": 652.9536,
+            "firstDeath": 42.3423,
+            "hpFraction": 0.5087
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 4,
+            "openingDps": 161.0655,
+            "openingCommonHealth": 0.856,
+            "healing": 553.4907,
+            "protection": 544.0392,
+            "firstDeath": 50.4555,
+            "hpFraction": 0.5402
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 4,
+            "openingDps": 173.664,
+            "openingCommonHealth": 0.8722,
+            "healing": 548.5527,
+            "protection": 534.4406,
+            "firstDeath": 52.6229,
+            "hpFraction": 0.6269
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 72,
+            "timeouts": 3,
+            "openingDps": 175.6602,
+            "openingCommonHealth": 0.8259,
+            "healing": 379.3698,
+            "protection": 618.3955,
+            "firstDeath": 40.733,
+            "hpFraction": 0.5131
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 4,
+            "openingDps": 169.7474,
+            "openingCommonHealth": 0.8548,
+            "healing": 556.0814,
+            "protection": 512.9256,
+            "firstDeath": 49.3173,
+            "hpFraction": 0.5407
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 4,
+            "openingDps": 186.2193,
+            "openingCommonHealth": 0.8642,
+            "healing": 523.8559,
+            "protection": 500.4646,
+            "firstDeath": 50.0486,
+            "hpFraction": 0.6178
+          },
+          "gainedWins": 6,
+          "lostWins": 2
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 69,
+            "timeouts": 3,
+            "openingDps": 174.7122,
+            "openingCommonHealth": 0.8281,
+            "healing": 372.0171,
+            "protection": 610.1594,
+            "firstDeath": 41.2576,
+            "hpFraction": 0.5128
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 4,
+            "openingDps": 172.0267,
+            "openingCommonHealth": 0.8529,
+            "healing": 551.6624,
+            "protection": 493.6462,
+            "firstDeath": 48.9812,
+            "hpFraction": 0.5347
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 4,
+            "openingDps": 183.8604,
+            "openingCommonHealth": 0.8646,
+            "healing": 528.8964,
+            "protection": 510.0956,
+            "firstDeath": 50.0486,
+            "hpFraction": 0.6197
+          },
+          "gainedWins": 8,
+          "lostWins": 1
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 12,
+          "openingDps": 178.4541,
+          "openingCommonHealth": 0.7881,
+          "healing": 1002.923,
+          "protection": 1171.5663,
+          "firstDeath": 20.2999,
+          "hpFraction": 0.08
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 16,
+          "openingDps": 175.17,
+          "openingCommonHealth": 0.8428,
+          "healing": 1283.796,
+          "protection": 1273.7283,
+          "firstDeath": 33.3066,
+          "hpFraction": 0.1733
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 16,
+          "openingDps": 187.4862,
+          "openingCommonHealth": 0.8515,
+          "healing": 1344.0882,
+          "protection": 1317.0287,
+          "firstDeath": 25.5123,
+          "hpFraction": 0.1596
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 273,
+          "timeouts": 0,
+          "openingDps": 167.3519,
+          "openingCommonHealth": 0.8318,
+          "healing": 293.2557,
+          "protection": 555.3861,
+          "firstDeath": 43.0216,
+          "hpFraction": 0.559
+        },
+        "combined": {
+          "wins": 272,
+          "timeouts": 0,
+          "openingDps": 163.1773,
+          "openingCommonHealth": 0.8548,
+          "healing": 460.4539,
+          "protection": 412.5599,
+          "firstDeath": 50.3948,
+          "hpFraction": 0.5798
+        },
+        "refilled": {
+          "wins": 304,
+          "timeouts": 0,
+          "openingDps": 176.7467,
+          "openingCommonHealth": 0.8659,
+          "healing": 421.8141,
+          "protection": 411.1019,
+          "firstDeath": 53.6274,
+          "hpFraction": 0.6788
+        },
+        "gainedWins": 34,
+        "lostWins": 3
+      }
+    },
+    "H-03": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 279,
+          "timeouts": 0,
+          "openingDps": 202.3419,
+          "openingCommonHealth": 0.7296,
+          "healing": 142.1396,
+          "protection": 264.0543,
+          "firstDeath": 30.3747,
+          "hpFraction": 0.4079
+        },
+        "combined": {
+          "wins": 228,
+          "timeouts": 0,
+          "openingDps": 183.7549,
+          "openingCommonHealth": 0.7211,
+          "healing": 133.5074,
+          "protection": 263.042,
+          "firstDeath": 25.3766,
+          "hpFraction": 0.3436
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 198.5198,
+          "openingCommonHealth": 0.7452,
+          "healing": 151.9815,
+          "protection": 294.9547,
+          "firstDeath": 31.5082,
+          "hpFraction": 0.4392
+        },
+        "gainedWins": 14,
+        "lostWins": 5
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 40,
+            "timeouts": 0,
+            "openingDps": 108.3805,
+            "openingCommonHealth": 0.5627,
+            "healing": 0,
+            "protection": 135.6784,
+            "firstDeath": 6.1958,
+            "hpFraction": 0.2201
+          },
+          "combined": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 92.2766,
+            "openingCommonHealth": 0.5825,
+            "healing": 0,
+            "protection": 131.704,
+            "firstDeath": 6.4958,
+            "hpFraction": 0.077
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 120.1562,
+            "openingCommonHealth": 0.6633,
+            "healing": 0,
+            "protection": 170.254,
+            "firstDeath": 6.9667,
+            "hpFraction": 0.3774
+          },
+          "gainedWins": 8,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 171.0459,
+            "openingCommonHealth": 0.8687,
+            "healing": 70.2,
+            "protection": 247.7458,
+            "firstDeath": 75,
+            "hpFraction": 0.7864
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 151.8525,
+            "openingCommonHealth": 0.8537,
+            "healing": 70.2,
+            "protection": 274.1015,
+            "firstDeath": 53.8833,
+            "hpFraction": 0.7408
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 163.3885,
+            "openingCommonHealth": 0.8732,
+            "healing": 70.2,
+            "protection": 281.5638,
+            "firstDeath": 75,
+            "hpFraction": 0.8072
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 206.8691,
+            "openingCommonHealth": 0.8853,
+            "healing": 104.3333,
+            "protection": 176.0833,
+            "firstDeath": 75,
+            "hpFraction": 0.823
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 180.7102,
+            "openingCommonHealth": 0.8636,
+            "healing": 120.1667,
+            "protection": 194.2214,
+            "firstDeath": 64.3611,
+            "hpFraction": 0.7862
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 197.5735,
+            "openingCommonHealth": 0.8866,
+            "healing": 100.8333,
+            "protection": 215.1784,
+            "firstDeath": 75,
+            "hpFraction": 0.8395
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 10,
+            "timeouts": 0,
+            "openingDps": 177.3599,
+            "openingCommonHealth": 0.6813,
+            "healing": 225.7787,
+            "protection": 368.7296,
+            "firstDeath": 10.1396,
+            "hpFraction": 0.0365
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 155.8945,
+            "openingCommonHealth": 0.6834,
+            "healing": 129.8285,
+            "protection": 323.6753,
+            "firstDeath": 9.9986,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 12,
+            "timeouts": 0,
+            "openingDps": 174.3832,
+            "openingCommonHealth": 0.7002,
+            "healing": 318.2681,
+            "protection": 412.2346,
+            "firstDeath": 10.2347,
+            "hpFraction": 0.0283
+          },
+          "gainedWins": 6,
+          "lostWins": 4
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 250.34,
+            "openingCommonHealth": 0.7453,
+            "healing": 99.2117,
+            "protection": 309.5254,
+            "firstDeath": 12.7754,
+            "hpFraction": 0.5194
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 233.138,
+            "openingCommonHealth": 0.733,
+            "healing": 98.8894,
+            "protection": 288.9777,
+            "firstDeath": 10.0472,
+            "hpFraction": 0.4572
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 248.1108,
+            "openingCommonHealth": 0.7437,
+            "healing": 88.3615,
+            "protection": 318.5009,
+            "firstDeath": 15.2583,
+            "hpFraction": 0.5486
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 264.9193,
+            "openingCommonHealth": 0.7948,
+            "healing": 102.2973,
+            "protection": 209.0474,
+            "firstDeath": 38.4365,
+            "hpFraction": 0.6612
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 238.9744,
+            "openingCommonHealth": 0.7727,
+            "healing": 91.5697,
+            "protection": 223.5249,
+            "firstDeath": 31.6056,
+            "hpFraction": 0.6002
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 249.4495,
+            "openingCommonHealth": 0.8031,
+            "healing": 114.8,
+            "protection": 247.1908,
+            "firstDeath": 47.5667,
+            "hpFraction": 0.7019
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 37,
+            "timeouts": 0,
+            "openingDps": 235.1451,
+            "openingCommonHealth": 0.6885,
+            "healing": 182.9617,
+            "protection": 351.4823,
+            "firstDeath": 9.807,
+            "hpFraction": 0.2165
+          },
+          "combined": {
+            "wins": 20,
+            "timeouts": 0,
+            "openingDps": 219.7471,
+            "openingCommonHealth": 0.6809,
+            "healing": 186.9887,
+            "protection": 341.7074,
+            "firstDeath": 9.5945,
+            "hpFraction": 0.0876
+          },
+          "refilled": {
+            "wins": 36,
+            "timeouts": 0,
+            "openingDps": 233.1528,
+            "openingCommonHealth": 0.6831,
+            "healing": 179.894,
+            "protection": 346.3114,
+            "firstDeath": 9.8778,
+            "hpFraction": 0.2106
+          },
+          "gainedWins": 0,
+          "lostWins": 1
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 204.6751,
+            "openingCommonHealth": 0.6102,
+            "healing": 352.3345,
+            "protection": 314.1419,
+            "firstDeath": 15.6437,
+            "hpFraction": 0
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 197.4458,
+            "openingCommonHealth": 0.5992,
+            "healing": 370.4167,
+            "protection": 326.4233,
+            "firstDeath": 17.0263,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 201.9442,
+            "openingCommonHealth": 0.608,
+            "healing": 343.495,
+            "protection": 368.4033,
+            "firstDeath": 12.1611,
+            "hpFraction": 0
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 94,
+            "timeouts": 0,
+            "openingDps": 188.0802,
+            "openingCommonHealth": 0.7005,
+            "healing": 0,
+            "protection": 422.9748,
+            "firstDeath": 35.6448,
+            "hpFraction": 0.4116
+          },
+          "combined": {
+            "wins": 88,
+            "timeouts": 0,
+            "openingDps": 168.3345,
+            "openingCommonHealth": 0.6868,
+            "healing": 0,
+            "protection": 432.2161,
+            "firstDeath": 33.6536,
+            "hpFraction": 0.3559
+          },
+          "refilled": {
+            "wins": 92,
+            "timeouts": 0,
+            "openingDps": 177.8916,
+            "openingCommonHealth": 0.7056,
+            "healing": 0,
+            "protection": 472.7443,
+            "firstDeath": 35.6073,
+            "hpFraction": 0.4314
+          },
+          "gainedWins": 0,
+          "lostWins": 2
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 86,
+            "timeouts": 0,
+            "openingDps": 235.3923,
+            "openingCommonHealth": 0.6879,
+            "healing": 0,
+            "protection": 51.72,
+            "firstDeath": 24.2362,
+            "hpFraction": 0.3505
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 214.7435,
+            "openingCommonHealth": 0.6775,
+            "healing": 0,
+            "protection": 51.72,
+            "firstDeath": 12.0906,
+            "hpFraction": 0.281
+          },
+          "refilled": {
+            "wins": 92,
+            "timeouts": 0,
+            "openingDps": 227.3047,
+            "openingCommonHealth": 0.706,
+            "healing": 0,
+            "protection": 105.5075,
+            "firstDeath": 24.3417,
+            "hpFraction": 0.3641
+          },
+          "gainedWins": 8,
+          "lostWins": 2
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 99,
+            "timeouts": 0,
+            "openingDps": 183.553,
+            "openingCommonHealth": 0.8005,
+            "healing": 426.4189,
+            "protection": 317.468,
+            "firstDeath": 31.2432,
+            "hpFraction": 0.4616
+          },
+          "combined": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 168.1867,
+            "openingCommonHealth": 0.799,
+            "healing": 400.5223,
+            "protection": 305.1898,
+            "firstDeath": 30.3854,
+            "hpFraction": 0.394
+          },
+          "refilled": {
+            "wins": 104,
+            "timeouts": 0,
+            "openingDps": 190.3632,
+            "openingCommonHealth": 0.8239,
+            "healing": 455.9445,
+            "protection": 306.6121,
+            "firstDeath": 34.5755,
+            "hpFraction": 0.5221
+          },
+          "gainedWins": 6,
+          "lostWins": 1
+        }
+      },
+      "branchA": {
+        "E-AR-P": {
+          "cases": 192,
+          "separate": {
+            "wins": 137,
+            "timeouts": 0,
+            "openingDps": 199.9986,
+            "openingCommonHealth": 0.7258,
+            "healing": 134.8952,
+            "protection": 262.9176,
+            "firstDeath": 28.7871,
+            "hpFraction": 0.3922
+          },
+          "combined": {
+            "wins": 114,
+            "timeouts": 0,
+            "openingDps": 183.7549,
+            "openingCommonHealth": 0.7211,
+            "healing": 133.5074,
+            "protection": 263.042,
+            "firstDeath": 25.3766,
+            "hpFraction": 0.3436
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 198.5198,
+            "openingCommonHealth": 0.7452,
+            "healing": 151.9815,
+            "protection": 294.9547,
+            "firstDeath": 31.5082,
+            "hpFraction": 0.4392
+          },
+          "gainedWins": 8,
+          "lostWins": 1
+        },
+        "E-AR-T": {
+          "cases": 192,
+          "separate": {
+            "wins": 142,
+            "timeouts": 0,
+            "openingDps": 204.6851,
+            "openingCommonHealth": 0.7334,
+            "healing": 149.3841,
+            "protection": 265.1909,
+            "firstDeath": 31.9624,
+            "hpFraction": 0.4236
+          },
+          "combined": {
+            "wins": 114,
+            "timeouts": 0,
+            "openingDps": 183.7549,
+            "openingCommonHealth": 0.7211,
+            "healing": 133.5074,
+            "protection": 263.042,
+            "firstDeath": 25.3766,
+            "hpFraction": 0.3436
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 198.5198,
+            "openingCommonHealth": 0.7452,
+            "healing": 151.9815,
+            "protection": 294.9547,
+            "firstDeath": 31.5082,
+            "hpFraction": 0.4392
+          },
+          "gainedWins": 6,
+          "lostWins": 4
+        }
+      },
+      "branchB": {
+        "E-IC-F": {
+          "cases": 192,
+          "separate": {
+            "wins": 139,
+            "timeouts": 0,
+            "openingDps": 199.2919,
+            "openingCommonHealth": 0.7205,
+            "healing": 141.4512,
+            "protection": 265.1011,
+            "firstDeath": 29.917,
+            "hpFraction": 0.4065
+          },
+          "combined": {
+            "wins": 114,
+            "timeouts": 0,
+            "openingDps": 183.7549,
+            "openingCommonHealth": 0.7211,
+            "healing": 133.5074,
+            "protection": 263.042,
+            "firstDeath": 25.3766,
+            "hpFraction": 0.3436
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 198.5198,
+            "openingCommonHealth": 0.7452,
+            "healing": 151.9815,
+            "protection": 294.9547,
+            "firstDeath": 31.5082,
+            "hpFraction": 0.4392
+          },
+          "gainedWins": 7,
+          "lostWins": 2
+        },
+        "E-IC-S": {
+          "cases": 192,
+          "separate": {
+            "wins": 140,
+            "timeouts": 0,
+            "openingDps": 205.3918,
+            "openingCommonHealth": 0.7387,
+            "healing": 142.828,
+            "protection": 263.0074,
+            "firstDeath": 30.8325,
+            "hpFraction": 0.4093
+          },
+          "combined": {
+            "wins": 114,
+            "timeouts": 0,
+            "openingDps": 183.7549,
+            "openingCommonHealth": 0.7211,
+            "healing": 133.5074,
+            "protection": 263.042,
+            "firstDeath": 25.3766,
+            "hpFraction": 0.3436
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 198.5198,
+            "openingCommonHealth": 0.7452,
+            "healing": 151.9815,
+            "protection": 294.9547,
+            "firstDeath": 31.5082,
+            "hpFraction": 0.4392
+          },
+          "gainedWins": 7,
+          "lostWins": 3
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 279,
+            "timeouts": 0,
+            "openingDps": 202.3419,
+            "openingCommonHealth": 0.7296,
+            "healing": 142.1396,
+            "protection": 264.0543,
+            "firstDeath": 30.3747,
+            "hpFraction": 0.4079
+          },
+          "combined": {
+            "wins": 228,
+            "timeouts": 0,
+            "openingDps": 183.7549,
+            "openingCommonHealth": 0.7211,
+            "healing": 133.5074,
+            "protection": 263.042,
+            "firstDeath": 25.3766,
+            "hpFraction": 0.3436
+          },
+          "refilled": {
+            "wins": 288,
+            "timeouts": 0,
+            "openingDps": 198.5198,
+            "openingCommonHealth": 0.7452,
+            "healing": 151.9815,
+            "protection": 294.9547,
+            "firstDeath": 31.5082,
+            "hpFraction": 0.4392
+          },
+          "gainedWins": 14,
+          "lostWins": 5
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 61,
+            "timeouts": 0,
+            "openingDps": 185.9004,
+            "openingCommonHealth": 0.7123,
+            "healing": 147.0618,
+            "protection": 274.0589,
+            "firstDeath": 27.78,
+            "hpFraction": 0.359
+          },
+          "combined": {
+            "wins": 52,
+            "timeouts": 0,
+            "openingDps": 171.2852,
+            "openingCommonHealth": 0.7147,
+            "healing": 133.9614,
+            "protection": 264.8495,
+            "firstDeath": 21.2854,
+            "hpFraction": 0.3109
+          },
+          "refilled": {
+            "wins": 64,
+            "timeouts": 0,
+            "openingDps": 184.4369,
+            "openingCommonHealth": 0.7304,
+            "healing": 137.2248,
+            "protection": 298.3214,
+            "firstDeath": 28.8576,
+            "hpFraction": 0.4007
+          },
+          "gainedWins": 4,
+          "lostWins": 1
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 64,
+            "timeouts": 0,
+            "openingDps": 191.2076,
+            "openingCommonHealth": 0.7276,
+            "healing": 151.8576,
+            "protection": 272.5326,
+            "firstDeath": 31.4158,
+            "hpFraction": 0.3811
+          },
+          "combined": {
+            "wins": 56,
+            "timeouts": 0,
+            "openingDps": 177.4387,
+            "openingCommonHealth": 0.7233,
+            "healing": 134.0595,
+            "protection": 264.883,
+            "firstDeath": 26.85,
+            "hpFraction": 0.3424
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 191.3047,
+            "openingCommonHealth": 0.7493,
+            "healing": 181.7551,
+            "protection": 305.2054,
+            "firstDeath": 34.2111,
+            "hpFraction": 0.4315
+          },
+          "gainedWins": 8,
+          "lostWins": 0
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 79,
+            "timeouts": 0,
+            "openingDps": 225.0369,
+            "openingCommonHealth": 0.7439,
+            "healing": 130.3616,
+            "protection": 247.4678,
+            "firstDeath": 31.8236,
+            "hpFraction": 0.4631
+          },
+          "combined": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 197.1201,
+            "openingCommonHealth": 0.724,
+            "healing": 139.8524,
+            "protection": 253.1402,
+            "firstDeath": 26.5632,
+            "hpFraction": 0.3682
+          },
+          "refilled": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 216.2025,
+            "openingCommonHealth": 0.7569,
+            "healing": 138.6114,
+            "protection": 281.2809,
+            "firstDeath": 31.4743,
+            "hpFraction": 0.4802
+          },
+          "gainedWins": 2,
+          "lostWins": 1
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 75,
+            "timeouts": 0,
+            "openingDps": 207.2225,
+            "openingCommonHealth": 0.7346,
+            "healing": 139.2776,
+            "protection": 262.1579,
+            "firstDeath": 30.4795,
+            "hpFraction": 0.4285
+          },
+          "combined": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 189.1755,
+            "openingCommonHealth": 0.7224,
+            "healing": 126.1565,
+            "protection": 269.2951,
+            "firstDeath": 26.8076,
+            "hpFraction": 0.3531
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 202.1352,
+            "openingCommonHealth": 0.744,
+            "healing": 150.3347,
+            "protection": 295.011,
+            "firstDeath": 31.4896,
+            "hpFraction": 0.4444
+          },
+          "gainedWins": 0,
+          "lostWins": 3
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 204.6751,
+          "openingCommonHealth": 0.6102,
+          "healing": 352.3345,
+          "protection": 314.1419,
+          "firstDeath": 15.6437,
+          "hpFraction": 0
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 197.4458,
+          "openingCommonHealth": 0.5992,
+          "healing": 370.4167,
+          "protection": 326.4233,
+          "firstDeath": 17.0263,
+          "hpFraction": 0
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 201.9442,
+          "openingCommonHealth": 0.608,
+          "healing": 343.495,
+          "protection": 368.4033,
+          "firstDeath": 12.1611,
+          "hpFraction": 0
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 279,
+          "timeouts": 0,
+          "openingDps": 202.0085,
+          "openingCommonHealth": 0.7467,
+          "healing": 112.1118,
+          "protection": 256.8989,
+          "firstDeath": 32.4792,
+          "hpFraction": 0.4662
+        },
+        "combined": {
+          "wins": 228,
+          "timeouts": 0,
+          "openingDps": 181.799,
+          "openingCommonHealth": 0.7385,
+          "healing": 99.6633,
+          "protection": 253.9875,
+          "firstDeath": 26.5695,
+          "hpFraction": 0.3927
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 198.0307,
+          "openingCommonHealth": 0.7648,
+          "healing": 124.6224,
+          "protection": 284.462,
+          "firstDeath": 34.272,
+          "hpFraction": 0.5019
+        },
+        "gainedWins": 14,
+        "lostWins": 5
+      }
+    },
+    "H-04": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 275,
+          "timeouts": 0,
+          "openingDps": 205.1821,
+          "openingCommonHealth": 0.733,
+          "healing": 139.4867,
+          "protection": 263.4514,
+          "firstDeath": 28.9996,
+          "hpFraction": 0.4137
+        },
+        "combined": {
+          "wins": 240,
+          "timeouts": 0,
+          "openingDps": 187.8393,
+          "openingCommonHealth": 0.7231,
+          "healing": 134.9559,
+          "protection": 268.3516,
+          "firstDeath": 26.1441,
+          "hpFraction": 0.3463
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 202.8089,
+          "openingCommonHealth": 0.7491,
+          "healing": 144.399,
+          "protection": 294.0706,
+          "firstDeath": 30.9229,
+          "hpFraction": 0.4486
+        },
+        "gainedWins": 13,
+        "lostWins": 0
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 42,
+            "timeouts": 0,
+            "openingDps": 117.3112,
+            "openingCommonHealth": 0.5943,
+            "healing": 0,
+            "protection": 123.9711,
+            "firstDeath": 5.941,
+            "hpFraction": 0.2822
+          },
+          "combined": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 97.3112,
+            "openingCommonHealth": 0.559,
+            "healing": 0,
+            "protection": 146.0961,
+            "firstDeath": 7.0514,
+            "hpFraction": 0.1314
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 125.9545,
+            "openingCommonHealth": 0.6637,
+            "healing": 0,
+            "protection": 174.8053,
+            "firstDeath": 7.6625,
+            "hpFraction": 0.441
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 169.559,
+            "openingCommonHealth": 0.8711,
+            "healing": 70.2,
+            "protection": 243.6882,
+            "firstDeath": 75,
+            "hpFraction": 0.7888
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 158.0233,
+            "openingCommonHealth": 0.8548,
+            "healing": 70.2,
+            "protection": 262.5911,
+            "firstDeath": 64.4417,
+            "hpFraction": 0.7301
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 165.8446,
+            "openingCommonHealth": 0.8714,
+            "healing": 70.2,
+            "protection": 268.1016,
+            "firstDeath": 75,
+            "hpFraction": 0.7999
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 207.1159,
+            "openingCommonHealth": 0.8841,
+            "healing": 103,
+            "protection": 172.5059,
+            "firstDeath": 75,
+            "hpFraction": 0.8177
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 188.4734,
+            "openingCommonHealth": 0.8699,
+            "healing": 120.1667,
+            "protection": 181.0573,
+            "firstDeath": 64.3611,
+            "hpFraction": 0.791
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 205.8223,
+            "openingCommonHealth": 0.8906,
+            "healing": 86.8333,
+            "protection": 198.3779,
+            "firstDeath": 75,
+            "hpFraction": 0.8429
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 2,
+            "timeouts": 0,
+            "openingDps": 180.3784,
+            "openingCommonHealth": 0.6748,
+            "healing": 219.7276,
+            "protection": 370.8579,
+            "firstDeath": 10.1379,
+            "hpFraction": 0.0093
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 165.9011,
+            "openingCommonHealth": 0.6908,
+            "healing": 159.5047,
+            "protection": 334.342,
+            "firstDeath": 9.9903,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 8,
+            "timeouts": 0,
+            "openingDps": 179.1034,
+            "openingCommonHealth": 0.6961,
+            "healing": 286.0927,
+            "protection": 412.7552,
+            "firstDeath": 10.2181,
+            "hpFraction": 0.0308
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 257.9518,
+            "openingCommonHealth": 0.7492,
+            "healing": 92.6428,
+            "protection": 300.9647,
+            "firstDeath": 9.9379,
+            "hpFraction": 0.5198
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 227.6019,
+            "openingCommonHealth": 0.734,
+            "healing": 93.8399,
+            "protection": 302.1785,
+            "firstDeath": 10.232,
+            "hpFraction": 0.4184
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 251.634,
+            "openingCommonHealth": 0.7442,
+            "healing": 85.0499,
+            "protection": 307.0803,
+            "firstDeath": 9.9736,
+            "hpFraction": 0.5448
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 264.486,
+            "openingCommonHealth": 0.7886,
+            "healing": 92.8204,
+            "protection": 206.1331,
+            "firstDeath": 30.6969,
+            "hpFraction": 0.6373
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 246.7487,
+            "openingCommonHealth": 0.7748,
+            "healing": 82.8717,
+            "protection": 216.6108,
+            "firstDeath": 26.3806,
+            "hpFraction": 0.5817
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 256.6799,
+            "openingCommonHealth": 0.8059,
+            "healing": 109.4667,
+            "protection": 235.9041,
+            "firstDeath": 47.5667,
+            "hpFraction": 0.6913
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 39,
+            "timeouts": 0,
+            "openingDps": 242.5098,
+            "openingCommonHealth": 0.693,
+            "healing": 173.0987,
+            "protection": 344.776,
+            "firstDeath": 9.7611,
+            "hpFraction": 0.2543
+          },
+          "combined": {
+            "wins": 32,
+            "timeouts": 0,
+            "openingDps": 225.7828,
+            "openingCommonHealth": 0.6778,
+            "healing": 225.3138,
+            "protection": 337.0139,
+            "firstDeath": 9.6306,
+            "hpFraction": 0.118
+          },
+          "refilled": {
+            "wins": 40,
+            "timeouts": 0,
+            "openingDps": 236.2266,
+            "openingCommonHealth": 0.6936,
+            "healing": 186.6471,
+            "protection": 360.4701,
+            "firstDeath": 9.8014,
+            "hpFraction": 0.2382
+          },
+          "gainedWins": 1,
+          "lostWins": 0
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 202.1452,
+            "openingCommonHealth": 0.6091,
+            "healing": 364.4039,
+            "protection": 344.7144,
+            "firstDeath": 15.5218,
+            "hpFraction": 0
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 192.8717,
+            "openingCommonHealth": 0.6237,
+            "healing": 327.75,
+            "protection": 366.9233,
+            "firstDeath": 17.0652,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 201.2062,
+            "openingCommonHealth": 0.6274,
+            "healing": 330.9024,
+            "protection": 395.07,
+            "firstDeath": 12.1611,
+            "hpFraction": 0
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 95,
+            "timeouts": 0,
+            "openingDps": 192.335,
+            "openingCommonHealth": 0.6997,
+            "healing": 0,
+            "protection": 416.869,
+            "firstDeath": 33.8046,
+            "hpFraction": 0.4216
+          },
+          "combined": {
+            "wins": 92,
+            "timeouts": 0,
+            "openingDps": 178.5459,
+            "openingCommonHealth": 0.6985,
+            "healing": 0,
+            "protection": 432.2139,
+            "firstDeath": 33.8495,
+            "hpFraction": 0.3863
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 189.1343,
+            "openingCommonHealth": 0.7137,
+            "healing": 0,
+            "protection": 459.0782,
+            "firstDeath": 35.812,
+            "hpFraction": 0.4536
+          },
+          "gainedWins": 1,
+          "lostWins": 0
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 82,
+            "timeouts": 0,
+            "openingDps": 235.855,
+            "openingCommonHealth": 0.6895,
+            "healing": 0,
+            "protection": 51.72,
+            "firstDeath": 24.3008,
+            "hpFraction": 0.3501
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 215.3333,
+            "openingCommonHealth": 0.67,
+            "healing": 0,
+            "protection": 51.72,
+            "firstDeath": 15.7563,
+            "hpFraction": 0.2647
+          },
+          "refilled": {
+            "wins": 88,
+            "timeouts": 0,
+            "openingDps": 226.4345,
+            "openingCommonHealth": 0.7087,
+            "healing": 0,
+            "protection": 111.7474,
+            "firstDeath": 24.3479,
+            "hpFraction": 0.3677
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 98,
+            "timeouts": 0,
+            "openingDps": 187.3564,
+            "openingCommonHealth": 0.8098,
+            "healing": 418.46,
+            "protection": 321.7652,
+            "firstDeath": 28.8933,
+            "hpFraction": 0.4694
+          },
+          "combined": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 169.6386,
+            "openingCommonHealth": 0.8008,
+            "healing": 404.8676,
+            "protection": 321.121,
+            "firstDeath": 28.8265,
+            "hpFraction": 0.3879
+          },
+          "refilled": {
+            "wins": 104,
+            "timeouts": 0,
+            "openingDps": 192.858,
+            "openingCommonHealth": 0.8249,
+            "healing": 433.197,
+            "protection": 311.3861,
+            "firstDeath": 32.6089,
+            "hpFraction": 0.5245
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        }
+      },
+      "branchA": {
+        "E-FI-B": {
+          "cases": 192,
+          "separate": {
+            "wins": 139,
+            "timeouts": 0,
+            "openingDps": 208.1966,
+            "openingCommonHealth": 0.7371,
+            "healing": 144.2519,
+            "protection": 262.3315,
+            "firstDeath": 29.5399,
+            "hpFraction": 0.4239
+          },
+          "combined": {
+            "wins": 120,
+            "timeouts": 0,
+            "openingDps": 187.8393,
+            "openingCommonHealth": 0.7231,
+            "healing": 134.9559,
+            "protection": 268.3516,
+            "firstDeath": 26.1441,
+            "hpFraction": 0.3463
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 202.8089,
+            "openingCommonHealth": 0.7491,
+            "healing": 144.399,
+            "protection": 294.0706,
+            "firstDeath": 30.9229,
+            "hpFraction": 0.4486
+          },
+          "gainedWins": 5,
+          "lostWins": 0
+        },
+        "E-FI-E": {
+          "cases": 192,
+          "separate": {
+            "wins": 136,
+            "timeouts": 0,
+            "openingDps": 202.1677,
+            "openingCommonHealth": 0.729,
+            "healing": 134.7215,
+            "protection": 264.5713,
+            "firstDeath": 28.4592,
+            "hpFraction": 0.4034
+          },
+          "combined": {
+            "wins": 120,
+            "timeouts": 0,
+            "openingDps": 187.8393,
+            "openingCommonHealth": 0.7231,
+            "healing": 134.9559,
+            "protection": 268.3516,
+            "firstDeath": 26.1441,
+            "hpFraction": 0.3463
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 202.8089,
+            "openingCommonHealth": 0.7491,
+            "healing": 144.399,
+            "protection": 294.0706,
+            "firstDeath": 30.9229,
+            "hpFraction": 0.4486
+          },
+          "gainedWins": 8,
+          "lostWins": 0
+        }
+      },
+      "branchB": {
+        "E-IC-F": {
+          "cases": 192,
+          "separate": {
+            "wins": 140,
+            "timeouts": 0,
+            "openingDps": 202.8964,
+            "openingCommonHealth": 0.7275,
+            "healing": 135.5533,
+            "protection": 263.7641,
+            "firstDeath": 28.5747,
+            "hpFraction": 0.4142
+          },
+          "combined": {
+            "wins": 120,
+            "timeouts": 0,
+            "openingDps": 187.8393,
+            "openingCommonHealth": 0.7231,
+            "healing": 134.9559,
+            "protection": 268.3516,
+            "firstDeath": 26.1441,
+            "hpFraction": 0.3463
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 202.8089,
+            "openingCommonHealth": 0.7491,
+            "healing": 144.399,
+            "protection": 294.0706,
+            "firstDeath": 30.9229,
+            "hpFraction": 0.4486
+          },
+          "gainedWins": 4,
+          "lostWins": 0
+        },
+        "E-IC-S": {
+          "cases": 192,
+          "separate": {
+            "wins": 135,
+            "timeouts": 0,
+            "openingDps": 207.4679,
+            "openingCommonHealth": 0.7385,
+            "healing": 143.4201,
+            "protection": 263.1387,
+            "firstDeath": 29.4244,
+            "hpFraction": 0.4132
+          },
+          "combined": {
+            "wins": 120,
+            "timeouts": 0,
+            "openingDps": 187.8393,
+            "openingCommonHealth": 0.7231,
+            "healing": 134.9559,
+            "protection": 268.3516,
+            "firstDeath": 26.1441,
+            "hpFraction": 0.3463
+          },
+          "refilled": {
+            "wins": 144,
+            "timeouts": 0,
+            "openingDps": 202.8089,
+            "openingCommonHealth": 0.7491,
+            "healing": 144.399,
+            "protection": 294.0706,
+            "firstDeath": 30.9229,
+            "hpFraction": 0.4486
+          },
+          "gainedWins": 9,
+          "lostWins": 0
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 275,
+            "timeouts": 0,
+            "openingDps": 205.1821,
+            "openingCommonHealth": 0.733,
+            "healing": 139.4867,
+            "protection": 263.4514,
+            "firstDeath": 28.9996,
+            "hpFraction": 0.4137
+          },
+          "combined": {
+            "wins": 240,
+            "timeouts": 0,
+            "openingDps": 187.8393,
+            "openingCommonHealth": 0.7231,
+            "healing": 134.9559,
+            "protection": 268.3516,
+            "firstDeath": 26.1441,
+            "hpFraction": 0.3463
+          },
+          "refilled": {
+            "wins": 288,
+            "timeouts": 0,
+            "openingDps": 202.8089,
+            "openingCommonHealth": 0.7491,
+            "healing": 144.399,
+            "protection": 294.0706,
+            "firstDeath": 30.9229,
+            "hpFraction": 0.4486
+          },
+          "gainedWins": 13,
+          "lostWins": 0
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 65,
+            "timeouts": 0,
+            "openingDps": 188.4878,
+            "openingCommonHealth": 0.7165,
+            "healing": 148.5131,
+            "protection": 272.6316,
+            "firstDeath": 27.041,
+            "hpFraction": 0.3669
+          },
+          "combined": {
+            "wins": 56,
+            "timeouts": 0,
+            "openingDps": 174.5033,
+            "openingCommonHealth": 0.7126,
+            "healing": 137.9637,
+            "protection": 273.7053,
+            "firstDeath": 21.1757,
+            "hpFraction": 0.3184
+          },
+          "refilled": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 189.6833,
+            "openingCommonHealth": 0.7355,
+            "healing": 146.1398,
+            "protection": 305.2094,
+            "firstDeath": 28.9049,
+            "hpFraction": 0.4091
+          },
+          "gainedWins": 3,
+          "lostWins": 0
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 66,
+            "timeouts": 0,
+            "openingDps": 194.3215,
+            "openingCommonHealth": 0.7309,
+            "healing": 139.9611,
+            "protection": 266.8532,
+            "firstDeath": 29.4073,
+            "hpFraction": 0.3883
+          },
+          "combined": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 180.4994,
+            "openingCommonHealth": 0.7246,
+            "healing": 134.3502,
+            "protection": 278.4563,
+            "firstDeath": 24.4,
+            "hpFraction": 0.3383
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 196.8476,
+            "openingCommonHealth": 0.7546,
+            "healing": 154.8539,
+            "protection": 299.0774,
+            "firstDeath": 31.6153,
+            "hpFraction": 0.4426
+          },
+          "gainedWins": 6,
+          "lostWins": 0
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 73,
+            "timeouts": 0,
+            "openingDps": 224.627,
+            "openingCommonHealth": 0.7445,
+            "healing": 131.3912,
+            "protection": 249.6641,
+            "firstDeath": 29.771,
+            "hpFraction": 0.4567
+          },
+          "combined": {
+            "wins": 64,
+            "timeouts": 0,
+            "openingDps": 200.6642,
+            "openingCommonHealth": 0.7273,
+            "healing": 132.5335,
+            "protection": 259.98,
+            "firstDeath": 29.4208,
+            "hpFraction": 0.3668
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 0,
+            "openingDps": 216.9798,
+            "openingCommonHealth": 0.754,
+            "healing": 127.1921,
+            "protection": 281.3084,
+            "firstDeath": 31.5229,
+            "hpFraction": 0.478
+          },
+          "gainedWins": 3,
+          "lostWins": 0
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 71,
+            "timeouts": 0,
+            "openingDps": 213.2922,
+            "openingCommonHealth": 0.7403,
+            "healing": 138.0812,
+            "protection": 264.6567,
+            "firstDeath": 29.779,
+            "hpFraction": 0.4429
+          },
+          "combined": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 195.6901,
+            "openingCommonHealth": 0.7279,
+            "healing": 134.976,
+            "protection": 261.265,
+            "firstDeath": 29.5799,
+            "hpFraction": 0.3619
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 207.725,
+            "openingCommonHealth": 0.7523,
+            "healing": 149.4102,
+            "protection": 290.687,
+            "firstDeath": 31.6486,
+            "hpFraction": 0.4647
+          },
+          "gainedWins": 1,
+          "lostWins": 0
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 202.1452,
+          "openingCommonHealth": 0.6091,
+          "healing": 364.4039,
+          "protection": 344.7144,
+          "firstDeath": 15.5218,
+          "hpFraction": 0
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 192.8717,
+          "openingCommonHealth": 0.6237,
+          "healing": 327.75,
+          "protection": 366.9233,
+          "firstDeath": 17.0652,
+          "hpFraction": 0
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 201.2062,
+          "openingCommonHealth": 0.6274,
+          "healing": 330.9024,
+          "protection": 395.07,
+          "firstDeath": 12.1611,
+          "hpFraction": 0
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 275,
+          "timeouts": 0,
+          "openingDps": 205.616,
+          "openingCommonHealth": 0.7507,
+          "healing": 107.3556,
+          "protection": 251.8424,
+          "firstDeath": 30.925,
+          "hpFraction": 0.4728
+        },
+        "combined": {
+          "wins": 240,
+          "timeouts": 0,
+          "openingDps": 187.1203,
+          "openingCommonHealth": 0.7373,
+          "healing": 107.4138,
+          "protection": 254.27,
+          "firstDeath": 27.4411,
+          "hpFraction": 0.3958
+        },
+        "refilled": {
+          "wins": 288,
+          "timeouts": 0,
+          "openingDps": 203.0379,
+          "openingCommonHealth": 0.7665,
+          "healing": 117.7557,
+          "protection": 279.6421,
+          "firstDeath": 33.6032,
+          "hpFraction": 0.5127
+        },
+        "gainedWins": 13,
+        "lostWins": 0
+      }
+    },
+    "H-05": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 255,
+          "timeouts": 8,
+          "openingDps": 165.9807,
+          "openingCommonHealth": 0.8024,
+          "healing": 379.539,
+          "protection": 502.7542,
+          "firstDeath": 38.8437,
+          "hpFraction": 0.4665
+        },
+        "combined": {
+          "wins": 208,
+          "timeouts": 16,
+          "openingDps": 162.1092,
+          "openingCommonHealth": 0.7789,
+          "healing": 581.3749,
+          "protection": 398.1187,
+          "firstDeath": 32.9682,
+          "hpFraction": 0.3864
+        },
+        "refilled": {
+          "wins": 272,
+          "timeouts": 16,
+          "openingDps": 173.5189,
+          "openingCommonHealth": 0.8016,
+          "healing": 580.6618,
+          "protection": 456.3802,
+          "firstDeath": 34.1953,
+          "hpFraction": 0.4888
+        },
+        "gainedWins": 33,
+        "lostWins": 16
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 9,
+            "timeouts": 0,
+            "openingDps": 67.8323,
+            "openingCommonHealth": 0.5838,
+            "healing": 159.2553,
+            "protection": 271.4046,
+            "firstDeath": 7.24,
+            "hpFraction": 0.03
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 62.2624,
+            "openingCommonHealth": 0.6132,
+            "healing": 205.461,
+            "protection": 148.654,
+            "firstDeath": 6.6667,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 36,
+            "timeouts": 0,
+            "openingDps": 78.1886,
+            "openingCommonHealth": 0.663,
+            "healing": 238.461,
+            "protection": 232.909,
+            "firstDeath": 6.75,
+            "hpFraction": 0.176
+          },
+          "gainedWins": 27,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 128.1685,
+            "openingCommonHealth": 0.9138,
+            "healing": 196.1839,
+            "protection": 381.3004,
+            "firstDeath": 73.7573,
+            "hpFraction": 0.8433
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 120.8633,
+            "openingCommonHealth": 0.9242,
+            "healing": 387.8242,
+            "protection": 359.3126,
+            "firstDeath": 75,
+            "hpFraction": 0.8776
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 133.3826,
+            "openingCommonHealth": 0.9435,
+            "healing": 339.2567,
+            "protection": 365.9503,
+            "firstDeath": 75,
+            "hpFraction": 0.926
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 160.69,
+            "openingCommonHealth": 0.9138,
+            "healing": 225.86,
+            "protection": 295.0837,
+            "firstDeath": 67.0208,
+            "hpFraction": 0.8598
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 152.7888,
+            "openingCommonHealth": 0.8958,
+            "healing": 370.175,
+            "protection": 269.4635,
+            "firstDeath": 75,
+            "hpFraction": 0.8801
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 163.2701,
+            "openingCommonHealth": 0.9246,
+            "healing": 319.5708,
+            "protection": 274.5918,
+            "firstDeath": 75,
+            "hpFraction": 0.9386
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 12,
+            "timeouts": 0,
+            "openingDps": 144.9177,
+            "openingCommonHealth": 0.7668,
+            "healing": 518.4519,
+            "protection": 679.964,
+            "firstDeath": 19.0021,
+            "hpFraction": 0.1225
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 136.9547,
+            "openingCommonHealth": 0.7428,
+            "healing": 606.9304,
+            "protection": 446.4399,
+            "firstDeath": 12.5569,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 4,
+            "timeouts": 0,
+            "openingDps": 152.7793,
+            "openingCommonHealth": 0.7709,
+            "healing": 647.9699,
+            "protection": 535.9478,
+            "firstDeath": 13.2666,
+            "hpFraction": 0.0536
+          },
+          "gainedWins": 0,
+          "lostWins": 8
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 218.0605,
+            "openingCommonHealth": 0.8285,
+            "healing": 261.7377,
+            "protection": 535.3449,
+            "firstDeath": 48.017,
+            "hpFraction": 0.642
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 218.7918,
+            "openingCommonHealth": 0.7515,
+            "healing": 410.1237,
+            "protection": 382.7961,
+            "firstDeath": 10.8056,
+            "hpFraction": 0.384
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 235.7603,
+            "openingCommonHealth": 0.7691,
+            "healing": 397.8794,
+            "protection": 447.7802,
+            "firstDeath": 22.3208,
+            "hpFraction": 0.5699
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 215.0129,
+            "openingCommonHealth": 0.8193,
+            "healing": 256.0066,
+            "protection": 339.8468,
+            "firstDeath": 35.1458,
+            "hpFraction": 0.6701
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 207.9074,
+            "openingCommonHealth": 0.8004,
+            "healing": 380.8711,
+            "protection": 291.26,
+            "firstDeath": 31.9986,
+            "hpFraction": 0.6349
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 218.6689,
+            "openingCommonHealth": 0.8387,
+            "healing": 379.9966,
+            "protection": 346.35,
+            "firstDeath": 52.9722,
+            "hpFraction": 0.7986
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 42,
+            "timeouts": 0,
+            "openingDps": 213.4069,
+            "openingCommonHealth": 0.8096,
+            "healing": 456.635,
+            "protection": 659.6312,
+            "firstDeath": 34.0555,
+            "hpFraction": 0.4862
+          },
+          "combined": {
+            "wins": 16,
+            "timeouts": 0,
+            "openingDps": 215.1275,
+            "openingCommonHealth": 0.7179,
+            "healing": 434.2308,
+            "protection": 387.1977,
+            "firstDeath": 10.5347,
+            "hpFraction": 0.0611
+          },
+          "refilled": {
+            "wins": 40,
+            "timeouts": 0,
+            "openingDps": 221.5898,
+            "openingCommonHealth": 0.7384,
+            "healing": 522.2262,
+            "protection": 490.806,
+            "firstDeath": 10.7458,
+            "hpFraction": 0.2258
+          },
+          "gainedWins": 6,
+          "lostWins": 8
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 8,
+            "openingDps": 179.7569,
+            "openingCommonHealth": 0.7836,
+            "healing": 962.1813,
+            "protection": 859.4578,
+            "firstDeath": 26.5109,
+            "hpFraction": 0.078
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 16,
+            "openingDps": 182.1777,
+            "openingCommonHealth": 0.7851,
+            "healing": 1855.3833,
+            "protection": 899.8255,
+            "firstDeath": 41.1832,
+            "hpFraction": 0.2533
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 16,
+            "openingDps": 184.512,
+            "openingCommonHealth": 0.7644,
+            "healing": 1799.9337,
+            "protection": 956.7069,
+            "firstDeath": 17.5068,
+            "hpFraction": 0.2223
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 152.5635,
+            "openingCommonHealth": 0.7771,
+            "healing": 147.2659,
+            "protection": 551.7501,
+            "firstDeath": 46.9116,
+            "hpFraction": 0.4862
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 142.3278,
+            "openingCommonHealth": 0.7754,
+            "healing": 550.4426,
+            "protection": 472.0215,
+            "firstDeath": 38.0791,
+            "hpFraction": 0.3884
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 0,
+            "openingDps": 149.9132,
+            "openingCommonHealth": 0.7827,
+            "healing": 548.7538,
+            "protection": 551.6981,
+            "firstDeath": 38.1958,
+            "hpFraction": 0.4589
+          },
+          "gainedWins": 4,
+          "lostWins": 8
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 83,
+            "timeouts": 0,
+            "openingDps": 194.8131,
+            "openingCommonHealth": 0.78,
+            "healing": 121.2569,
+            "protection": 190.1955,
+            "firstDeath": 23.7522,
+            "hpFraction": 0.3354
+          },
+          "combined": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 200.1878,
+            "openingCommonHealth": 0.7367,
+            "healing": 279.8713,
+            "protection": 104.505,
+            "firstDeath": 25.7511,
+            "hpFraction": 0.3148
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 204.9268,
+            "openingCommonHealth": 0.7707,
+            "healing": 285.7546,
+            "protection": 192.6045,
+            "firstDeath": 28.1932,
+            "hpFraction": 0.3917
+          },
+          "gainedWins": 15,
+          "lostWins": 2
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 92,
+            "timeouts": 8,
+            "openingDps": 150.5656,
+            "openingCommonHealth": 0.8501,
+            "healing": 870.0941,
+            "protection": 766.317,
+            "firstDeath": 45.8673,
+            "hpFraction": 0.5779
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 16,
+            "openingDps": 143.812,
+            "openingCommonHealth": 0.8245,
+            "healing": 913.8109,
+            "protection": 617.8295,
+            "firstDeath": 35.0745,
+            "hpFraction": 0.4559
+          },
+          "refilled": {
+            "wins": 100,
+            "timeouts": 16,
+            "openingDps": 165.7169,
+            "openingCommonHealth": 0.8513,
+            "healing": 907.4769,
+            "protection": 624.8382,
+            "firstDeath": 36.1969,
+            "hpFraction": 0.6159
+          },
+          "gainedWins": 14,
+          "lostWins": 6
+        }
+      },
+      "branchA": {
+        "E-BA-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 128,
+            "timeouts": 5,
+            "openingDps": 162.0132,
+            "openingCommonHealth": 0.8122,
+            "healing": 397.0471,
+            "protection": 526.7885,
+            "firstDeath": 44.3666,
+            "hpFraction": 0.4974
+          },
+          "combined": {
+            "wins": 104,
+            "timeouts": 8,
+            "openingDps": 162.1092,
+            "openingCommonHealth": 0.7789,
+            "healing": 581.3749,
+            "protection": 398.1187,
+            "firstDeath": 32.9682,
+            "hpFraction": 0.3864
+          },
+          "refilled": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 173.5189,
+            "openingCommonHealth": 0.8016,
+            "healing": 580.6618,
+            "protection": 456.3802,
+            "firstDeath": 34.1953,
+            "hpFraction": 0.4888
+          },
+          "gainedWins": 16,
+          "lostWins": 8
+        },
+        "E-BA-A": {
+          "cases": 192,
+          "separate": {
+            "wins": 127,
+            "timeouts": 3,
+            "openingDps": 169.9482,
+            "openingCommonHealth": 0.7926,
+            "healing": 362.0309,
+            "protection": 478.7199,
+            "firstDeath": 33.3207,
+            "hpFraction": 0.4356
+          },
+          "combined": {
+            "wins": 104,
+            "timeouts": 8,
+            "openingDps": 162.1092,
+            "openingCommonHealth": 0.7789,
+            "healing": 581.3749,
+            "protection": 398.1187,
+            "firstDeath": 32.9682,
+            "hpFraction": 0.3864
+          },
+          "refilled": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 173.5189,
+            "openingCommonHealth": 0.8016,
+            "healing": 580.6618,
+            "protection": 456.3802,
+            "firstDeath": 34.1953,
+            "hpFraction": 0.4888
+          },
+          "gainedWins": 17,
+          "lostWins": 8
+        }
+      },
+      "branchB": {
+        "E-PR-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 131,
+            "timeouts": 1,
+            "openingDps": 164.8826,
+            "openingCommonHealth": 0.7889,
+            "healing": 236.0803,
+            "protection": 580.1216,
+            "firstDeath": 38.0126,
+            "hpFraction": 0.4354
+          },
+          "combined": {
+            "wins": 104,
+            "timeouts": 8,
+            "openingDps": 162.1092,
+            "openingCommonHealth": 0.7789,
+            "healing": 581.3749,
+            "protection": 398.1187,
+            "firstDeath": 32.9682,
+            "hpFraction": 0.3864
+          },
+          "refilled": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 173.5189,
+            "openingCommonHealth": 0.8016,
+            "healing": 580.6618,
+            "protection": 456.3802,
+            "firstDeath": 34.1953,
+            "hpFraction": 0.4888
+          },
+          "gainedWins": 14,
+          "lostWins": 9
+        },
+        "E-PR-H": {
+          "cases": 192,
+          "separate": {
+            "wins": 124,
+            "timeouts": 7,
+            "openingDps": 167.0788,
+            "openingCommonHealth": 0.8158,
+            "healing": 522.9977,
+            "protection": 425.3868,
+            "firstDeath": 39.6748,
+            "hpFraction": 0.4975
+          },
+          "combined": {
+            "wins": 104,
+            "timeouts": 8,
+            "openingDps": 162.1092,
+            "openingCommonHealth": 0.7789,
+            "healing": 581.3749,
+            "protection": 398.1187,
+            "firstDeath": 32.9682,
+            "hpFraction": 0.3864
+          },
+          "refilled": {
+            "wins": 136,
+            "timeouts": 8,
+            "openingDps": 173.5189,
+            "openingCommonHealth": 0.8016,
+            "healing": 580.6618,
+            "protection": 456.3802,
+            "firstDeath": 34.1953,
+            "hpFraction": 0.4888
+          },
+          "gainedWins": 19,
+          "lostWins": 7
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 255,
+            "timeouts": 8,
+            "openingDps": 165.9807,
+            "openingCommonHealth": 0.8024,
+            "healing": 379.539,
+            "protection": 502.7542,
+            "firstDeath": 38.8437,
+            "hpFraction": 0.4665
+          },
+          "combined": {
+            "wins": 208,
+            "timeouts": 16,
+            "openingDps": 162.1092,
+            "openingCommonHealth": 0.7789,
+            "healing": 581.3749,
+            "protection": 398.1187,
+            "firstDeath": 32.9682,
+            "hpFraction": 0.3864
+          },
+          "refilled": {
+            "wins": 272,
+            "timeouts": 16,
+            "openingDps": 173.5189,
+            "openingCommonHealth": 0.8016,
+            "healing": 580.6618,
+            "protection": 456.3802,
+            "firstDeath": 34.1953,
+            "hpFraction": 0.4888
+          },
+          "gainedWins": 33,
+          "lostWins": 16
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 59,
+            "timeouts": 2,
+            "openingDps": 156.8367,
+            "openingCommonHealth": 0.7969,
+            "healing": 380.2522,
+            "protection": 509.2285,
+            "firstDeath": 37.1774,
+            "hpFraction": 0.4316
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 4,
+            "openingDps": 153.5886,
+            "openingCommonHealth": 0.7735,
+            "healing": 585.6988,
+            "protection": 392.3574,
+            "firstDeath": 32.7055,
+            "hpFraction": 0.3655
+          },
+          "refilled": {
+            "wins": 64,
+            "timeouts": 4,
+            "openingDps": 162.7653,
+            "openingCommonHealth": 0.7923,
+            "healing": 583.5044,
+            "protection": 472.2729,
+            "firstDeath": 32.7555,
+            "hpFraction": 0.4343
+          },
+          "gainedWins": 10,
+          "lostWins": 5
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 63,
+            "timeouts": 3,
+            "openingDps": 163.611,
+            "openingCommonHealth": 0.8069,
+            "healing": 388.0065,
+            "protection": 522.6589,
+            "firstDeath": 41.5706,
+            "hpFraction": 0.4812
+          },
+          "combined": {
+            "wins": 52,
+            "timeouts": 4,
+            "openingDps": 159.6108,
+            "openingCommonHealth": 0.784,
+            "healing": 620.2441,
+            "protection": 436.0498,
+            "firstDeath": 33.6583,
+            "hpFraction": 0.395
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 4,
+            "openingDps": 171.1002,
+            "openingCommonHealth": 0.8082,
+            "healing": 615.4075,
+            "protection": 459.9232,
+            "firstDeath": 32.9132,
+            "hpFraction": 0.5196
+          },
+          "gainedWins": 13,
+          "lostWins": 0
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 66,
+            "timeouts": 2,
+            "openingDps": 172.3234,
+            "openingCommonHealth": 0.8021,
+            "healing": 385.851,
+            "protection": 497.6844,
+            "firstDeath": 38.785,
+            "hpFraction": 0.4782
+          },
+          "combined": {
+            "wins": 56,
+            "timeouts": 4,
+            "openingDps": 166.76,
+            "openingCommonHealth": 0.7789,
+            "healing": 562.3153,
+            "protection": 381.5343,
+            "firstDeath": 32.7264,
+            "hpFraction": 0.3959
+          },
+          "refilled": {
+            "wins": 68,
+            "timeouts": 4,
+            "openingDps": 181.7718,
+            "openingCommonHealth": 0.8046,
+            "healing": 565.4971,
+            "protection": 447.9467,
+            "firstDeath": 35.5097,
+            "hpFraction": 0.514
+          },
+          "gainedWins": 4,
+          "lostWins": 2
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 67,
+            "timeouts": 1,
+            "openingDps": 171.1519,
+            "openingCommonHealth": 0.8037,
+            "healing": 364.0462,
+            "protection": 481.4449,
+            "firstDeath": 37.8416,
+            "hpFraction": 0.475
+          },
+          "combined": {
+            "wins": 52,
+            "timeouts": 4,
+            "openingDps": 168.4773,
+            "openingCommonHealth": 0.7791,
+            "healing": 557.2415,
+            "protection": 382.5332,
+            "firstDeath": 32.7826,
+            "hpFraction": 0.3892
+          },
+          "refilled": {
+            "wins": 64,
+            "timeouts": 4,
+            "openingDps": 178.4384,
+            "openingCommonHealth": 0.8012,
+            "healing": 558.2382,
+            "protection": 445.3783,
+            "firstDeath": 35.6028,
+            "hpFraction": 0.4875
+          },
+          "gainedWins": 6,
+          "lostWins": 9
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 8,
+          "openingDps": 179.7569,
+          "openingCommonHealth": 0.7836,
+          "healing": 962.1813,
+          "protection": 859.4578,
+          "firstDeath": 26.5109,
+          "hpFraction": 0.078
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 16,
+          "openingDps": 182.1777,
+          "openingCommonHealth": 0.7851,
+          "healing": 1855.3833,
+          "protection": 899.8255,
+          "firstDeath": 41.1832,
+          "hpFraction": 0.2533
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 16,
+          "openingDps": 184.512,
+          "openingCommonHealth": 0.7644,
+          "healing": 1799.9337,
+          "protection": 956.7069,
+          "firstDeath": 17.5068,
+          "hpFraction": 0.2223
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 255,
+          "timeouts": 0,
+          "openingDps": 164.0127,
+          "openingCommonHealth": 0.8051,
+          "healing": 296.3044,
+          "protection": 451.7965,
+          "firstDeath": 40.6055,
+          "hpFraction": 0.522
+        },
+        "combined": {
+          "wins": 208,
+          "timeouts": 0,
+          "openingDps": 159.2423,
+          "openingCommonHealth": 0.778,
+          "healing": 399.3737,
+          "protection": 326.4463,
+          "firstDeath": 31.7946,
+          "hpFraction": 0.4054
+        },
+        "refilled": {
+          "wins": 272,
+          "timeouts": 0,
+          "openingDps": 171.9485,
+          "openingCommonHealth": 0.8069,
+          "healing": 406.4801,
+          "protection": 384.905,
+          "firstDeath": 36.5794,
+          "hpFraction": 0.5269
+        },
+        "gainedWins": 33,
+        "lostWins": 16
+      }
+    },
+    "H-06": {
+      "total": {
+        "cases": 384,
+        "separate": {
+          "wins": 261,
+          "timeouts": 0,
+          "openingDps": 190.485,
+          "openingCommonHealth": 0.7547,
+          "healing": 164.0387,
+          "protection": 303.2359,
+          "firstDeath": 32.2462,
+          "hpFraction": 0.407
+        },
+        "combined": {
+          "wins": 256,
+          "timeouts": 0,
+          "openingDps": 188.3957,
+          "openingCommonHealth": 0.7362,
+          "healing": 177.3223,
+          "protection": 259.4292,
+          "firstDeath": 30.2149,
+          "hpFraction": 0.3924
+        },
+        "refilled": {
+          "wins": 312,
+          "timeouts": 0,
+          "openingDps": 201.018,
+          "openingCommonHealth": 0.7591,
+          "healing": 184.4003,
+          "protection": 294.102,
+          "firstDeath": 31.6873,
+          "hpFraction": 0.4948
+        },
+        "gainedWins": 51,
+        "lostWins": 0
+      },
+      "wave": {
+        "8": {
+          "cases": 48,
+          "separate": {
+            "wins": 36,
+            "timeouts": 0,
+            "openingDps": 96.4348,
+            "openingCommonHealth": 0.6427,
+            "healing": 0,
+            "protection": 259.213,
+            "firstDeath": 7.1941,
+            "hpFraction": 0.2272
+          },
+          "combined": {
+            "wins": 20,
+            "timeouts": 0,
+            "openingDps": 87.145,
+            "openingCommonHealth": 0.5764,
+            "healing": 69.7167,
+            "protection": 115.504,
+            "firstDeath": 6.0847,
+            "hpFraction": 0.1002
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 115.7018,
+            "openingCommonHealth": 0.6812,
+            "healing": 92.4333,
+            "protection": 176.134,
+            "firstDeath": 6.9334,
+            "hpFraction": 0.445
+          },
+          "gainedWins": 12,
+          "lostWins": 0
+        },
+        "12": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 158.1327,
+            "openingCommonHealth": 0.8582,
+            "healing": 70.2,
+            "protection": 230.1492,
+            "firstDeath": 57.9601,
+            "hpFraction": 0.7416
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 155.672,
+            "openingCommonHealth": 0.8826,
+            "healing": 113.6125,
+            "protection": 253.7135,
+            "firstDeath": 69.8514,
+            "hpFraction": 0.7982
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 166.9843,
+            "openingCommonHealth": 0.9004,
+            "healing": 120.6625,
+            "protection": 265.8435,
+            "firstDeath": 75,
+            "hpFraction": 0.8629
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "16": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 189.0987,
+            "openingCommonHealth": 0.9153,
+            "healing": 111.9823,
+            "protection": 179.404,
+            "firstDeath": 75,
+            "hpFraction": 0.869
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 191.9572,
+            "openingCommonHealth": 0.8882,
+            "healing": 149.2444,
+            "protection": 186.3568,
+            "firstDeath": 75,
+            "hpFraction": 0.8333
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 199.8648,
+            "openingCommonHealth": 0.9002,
+            "healing": 139.2554,
+            "protection": 197.8462,
+            "firstDeath": 75,
+            "hpFraction": 0.8691
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "18": {
+          "cases": 48,
+          "separate": {
+            "wins": 3,
+            "timeouts": 0,
+            "openingDps": 165.3086,
+            "openingCommonHealth": 0.6928,
+            "healing": 236.9365,
+            "protection": 356.3186,
+            "firstDeath": 10.9622,
+            "hpFraction": 0.0268
+          },
+          "combined": {
+            "wins": 4,
+            "timeouts": 0,
+            "openingDps": 162.2893,
+            "openingCommonHealth": 0.6872,
+            "healing": 225.6882,
+            "protection": 330.3927,
+            "firstDeath": 10.8889,
+            "hpFraction": 0.0395
+          },
+          "refilled": {
+            "wins": 28,
+            "timeouts": 0,
+            "openingDps": 179.0804,
+            "openingCommonHealth": 0.6991,
+            "healing": 299.7094,
+            "protection": 362.4732,
+            "firstDeath": 10.8778,
+            "hpFraction": 0.1803
+          },
+          "gainedWins": 25,
+          "lostWins": 0
+        },
+        "22": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 241.241,
+            "openingCommonHealth": 0.7306,
+            "healing": 117.2995,
+            "protection": 290.8733,
+            "firstDeath": 12.3108,
+            "hpFraction": 0.4526
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 241.9136,
+            "openingCommonHealth": 0.7428,
+            "healing": 120.5835,
+            "protection": 279.2136,
+            "firstDeath": 10.2236,
+            "hpFraction": 0.4944
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 252.182,
+            "openingCommonHealth": 0.7453,
+            "healing": 116.7368,
+            "protection": 322.5732,
+            "firstDeath": 10.075,
+            "hpFraction": 0.5596
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "26": {
+          "cases": 48,
+          "separate": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 245.8476,
+            "openingCommonHealth": 0.8621,
+            "healing": 132.5442,
+            "protection": 240.9742,
+            "firstDeath": 67.0951,
+            "hpFraction": 0.7812
+          },
+          "combined": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 245.2893,
+            "openingCommonHealth": 0.796,
+            "healing": 153.6945,
+            "protection": 232.7579,
+            "firstDeath": 42.357,
+            "hpFraction": 0.6791
+          },
+          "refilled": {
+            "wins": 48,
+            "timeouts": 0,
+            "openingDps": 261.1682,
+            "openingCommonHealth": 0.8229,
+            "healing": 176.4444,
+            "protection": 246.9567,
+            "firstDeath": 53.3861,
+            "hpFraction": 0.7681
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        },
+        "27": {
+          "cases": 48,
+          "separate": {
+            "wins": 30,
+            "timeouts": 0,
+            "openingDps": 226.3393,
+            "openingCommonHealth": 0.6818,
+            "healing": 197.1348,
+            "protection": 352.1949,
+            "firstDeath": 10.3316,
+            "hpFraction": 0.1575
+          },
+          "combined": {
+            "wins": 40,
+            "timeouts": 0,
+            "openingDps": 223.0546,
+            "openingCommonHealth": 0.6952,
+            "healing": 217.5557,
+            "protection": 318.1794,
+            "firstDeath": 9.9333,
+            "hpFraction": 0.1944
+          },
+          "refilled": {
+            "wins": 44,
+            "timeouts": 0,
+            "openingDps": 230.7782,
+            "openingCommonHealth": 0.705,
+            "healing": 180.3319,
+            "protection": 376.8928,
+            "firstDeath": 9.9139,
+            "hpFraction": 0.2733
+          },
+          "gainedWins": 14,
+          "lostWins": 0
+        },
+        "30": {
+          "cases": 48,
+          "separate": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 201.4773,
+            "openingCommonHealth": 0.6539,
+            "healing": 446.2126,
+            "protection": 516.7602,
+            "firstDeath": 17.1159,
+            "hpFraction": 0
+          },
+          "combined": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 199.845,
+            "openingCommonHealth": 0.6215,
+            "healing": 368.4833,
+            "protection": 359.3154,
+            "firstDeath": 17.3805,
+            "hpFraction": 0
+          },
+          "refilled": {
+            "wins": 0,
+            "timeouts": 0,
+            "openingDps": 202.3844,
+            "openingCommonHealth": 0.6188,
+            "healing": 349.6283,
+            "protection": 404.0967,
+            "firstDeath": 12.3125,
+            "hpFraction": 0
+          },
+          "gainedWins": 0,
+          "lostWins": 0
+        }
+      },
+      "team": {
+        "KN+BA+IC": {
+          "cases": 128,
+          "separate": {
+            "wins": 87,
+            "timeouts": 0,
+            "openingDps": 174.2788,
+            "openingCommonHealth": 0.7089,
+            "healing": 0,
+            "protection": 425.8979,
+            "firstDeath": 34.7206,
+            "hpFraction": 0.3957
+          },
+          "combined": {
+            "wins": 88,
+            "timeouts": 0,
+            "openingDps": 171.9105,
+            "openingCommonHealth": 0.7052,
+            "healing": 57.1737,
+            "protection": 407.1822,
+            "firstDeath": 33.7052,
+            "hpFraction": 0.3901
+          },
+          "refilled": {
+            "wins": 96,
+            "timeouts": 0,
+            "openingDps": 179.5645,
+            "openingCommonHealth": 0.7189,
+            "healing": 62.8518,
+            "protection": 458.7163,
+            "firstDeath": 35.625,
+            "hpFraction": 0.4738
+          },
+          "gainedWins": 9,
+          "lostWins": 0
+        },
+        "BA+AR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 75,
+            "timeouts": 0,
+            "openingDps": 222.7876,
+            "openingCommonHealth": 0.7166,
+            "healing": 0,
+            "protection": 69.3999,
+            "firstDeath": 24.9572,
+            "hpFraction": 0.3157
+          },
+          "combined": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 222.1,
+            "openingCommonHealth": 0.6882,
+            "healing": 35.8239,
+            "protection": 51.72,
+            "firstDeath": 22.1761,
+            "hpFraction": 0.3233
+          },
+          "refilled": {
+            "wins": 104,
+            "timeouts": 0,
+            "openingDps": 232.7044,
+            "openingCommonHealth": 0.7211,
+            "healing": 41.4188,
+            "protection": 105.0304,
+            "firstDeath": 24.6391,
+            "hpFraction": 0.4223
+          },
+          "gainedWins": 29,
+          "lostWins": 0
+        },
+        "KN+PR+FI": {
+          "cases": 128,
+          "separate": {
+            "wins": 99,
+            "timeouts": 0,
+            "openingDps": 174.3886,
+            "openingCommonHealth": 0.8385,
+            "healing": 492.1162,
+            "protection": 414.41,
+            "firstDeath": 37.0609,
+            "hpFraction": 0.5096
+          },
+          "combined": {
+            "wins": 88,
+            "timeouts": 0,
+            "openingDps": 171.1766,
+            "openingCommonHealth": 0.8153,
+            "healing": 438.9694,
+            "protection": 319.3852,
+            "firstDeath": 34.7635,
+            "hpFraction": 0.4638
+          },
+          "refilled": {
+            "wins": 112,
+            "timeouts": 0,
+            "openingDps": 190.7851,
+            "openingCommonHealth": 0.8373,
+            "healing": 448.9302,
+            "protection": 318.5593,
+            "firstDeath": 34.7979,
+            "hpFraction": 0.5883
+          },
+          "gainedWins": 13,
+          "lostWins": 0
+        }
+      },
+      "branchA": {
+        "E-AR-P": {
+          "cases": 192,
+          "separate": {
+            "wins": 131,
+            "timeouts": 0,
+            "openingDps": 188.2245,
+            "openingCommonHealth": 0.7523,
+            "healing": 164.4665,
+            "protection": 306.0529,
+            "firstDeath": 31.6066,
+            "hpFraction": 0.3991
+          },
+          "combined": {
+            "wins": 128,
+            "timeouts": 0,
+            "openingDps": 188.3957,
+            "openingCommonHealth": 0.7362,
+            "healing": 177.3223,
+            "protection": 259.4292,
+            "firstDeath": 30.2149,
+            "hpFraction": 0.3924
+          },
+          "refilled": {
+            "wins": 156,
+            "timeouts": 0,
+            "openingDps": 201.018,
+            "openingCommonHealth": 0.7591,
+            "healing": 184.4003,
+            "protection": 294.102,
+            "firstDeath": 31.6873,
+            "hpFraction": 0.4948
+          },
+          "gainedWins": 25,
+          "lostWins": 0
+        },
+        "E-AR-T": {
+          "cases": 192,
+          "separate": {
+            "wins": 130,
+            "timeouts": 0,
+            "openingDps": 192.7455,
+            "openingCommonHealth": 0.7571,
+            "healing": 163.611,
+            "protection": 300.419,
+            "firstDeath": 32.8858,
+            "hpFraction": 0.4149
+          },
+          "combined": {
+            "wins": 128,
+            "timeouts": 0,
+            "openingDps": 188.3957,
+            "openingCommonHealth": 0.7362,
+            "healing": 177.3223,
+            "protection": 259.4292,
+            "firstDeath": 30.2149,
+            "hpFraction": 0.3924
+          },
+          "refilled": {
+            "wins": 156,
+            "timeouts": 0,
+            "openingDps": 201.018,
+            "openingCommonHealth": 0.7591,
+            "healing": 184.4003,
+            "protection": 294.102,
+            "firstDeath": 31.6873,
+            "hpFraction": 0.4948
+          },
+          "gainedWins": 26,
+          "lostWins": 0
+        }
+      },
+      "branchB": {
+        "E-BA-G": {
+          "cases": 192,
+          "separate": {
+            "wins": 135,
+            "timeouts": 0,
+            "openingDps": 186.146,
+            "openingCommonHealth": 0.7629,
+            "healing": 171.1091,
+            "protection": 306.453,
+            "firstDeath": 34.8425,
+            "hpFraction": 0.4233
+          },
+          "combined": {
+            "wins": 128,
+            "timeouts": 0,
+            "openingDps": 188.3957,
+            "openingCommonHealth": 0.7362,
+            "healing": 177.3223,
+            "protection": 259.4292,
+            "firstDeath": 30.2149,
+            "hpFraction": 0.3924
+          },
+          "refilled": {
+            "wins": 156,
+            "timeouts": 0,
+            "openingDps": 201.018,
+            "openingCommonHealth": 0.7591,
+            "healing": 184.4003,
+            "protection": 294.102,
+            "firstDeath": 31.6873,
+            "hpFraction": 0.4948
+          },
+          "gainedWins": 21,
+          "lostWins": 0
+        },
+        "E-BA-A": {
+          "cases": 192,
+          "separate": {
+            "wins": 126,
+            "timeouts": 0,
+            "openingDps": 194.8239,
+            "openingCommonHealth": 0.7465,
+            "healing": 156.9684,
+            "protection": 300.0188,
+            "firstDeath": 29.6499,
+            "hpFraction": 0.3907
+          },
+          "combined": {
+            "wins": 128,
+            "timeouts": 0,
+            "openingDps": 188.3957,
+            "openingCommonHealth": 0.7362,
+            "healing": 177.3223,
+            "protection": 259.4292,
+            "firstDeath": 30.2149,
+            "hpFraction": 0.3924
+          },
+          "refilled": {
+            "wins": 156,
+            "timeouts": 0,
+            "openingDps": 201.018,
+            "openingCommonHealth": 0.7591,
+            "healing": 184.4003,
+            "protection": 294.102,
+            "firstDeath": 31.6873,
+            "hpFraction": 0.4948
+          },
+          "gainedWins": 30,
+          "lostWins": 0
+        }
+      },
+      "layout": {
+        "forward": {
+          "cases": 384,
+          "separate": {
+            "wins": 261,
+            "timeouts": 0,
+            "openingDps": 190.485,
+            "openingCommonHealth": 0.7547,
+            "healing": 164.0387,
+            "protection": 303.2359,
+            "firstDeath": 32.2462,
+            "hpFraction": 0.407
+          },
+          "combined": {
+            "wins": 256,
+            "timeouts": 0,
+            "openingDps": 188.3957,
+            "openingCommonHealth": 0.7362,
+            "healing": 177.3223,
+            "protection": 259.4292,
+            "firstDeath": 30.2149,
+            "hpFraction": 0.3924
+          },
+          "refilled": {
+            "wins": 312,
+            "timeouts": 0,
+            "openingDps": 201.018,
+            "openingCommonHealth": 0.7591,
+            "healing": 184.4003,
+            "protection": 294.102,
+            "firstDeath": 31.6873,
+            "hpFraction": 0.4948
+          },
+          "gainedWins": 51,
+          "lostWins": 0
+        }
+      },
+      "effects": {
+        "none": {
+          "cases": 96,
+          "separate": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 179.1498,
+            "openingCommonHealth": 0.7498,
+            "healing": 165.6059,
+            "protection": 310.2408,
+            "firstDeath": 30.3637,
+            "hpFraction": 0.3756
+          },
+          "combined": {
+            "wins": 60,
+            "timeouts": 0,
+            "openingDps": 175.6126,
+            "openingCommonHealth": 0.7267,
+            "healing": 173.7386,
+            "protection": 262.8651,
+            "firstDeath": 24.2785,
+            "hpFraction": 0.3385
+          },
+          "refilled": {
+            "wins": 72,
+            "timeouts": 0,
+            "openingDps": 186.5273,
+            "openingCommonHealth": 0.7439,
+            "healing": 196.2189,
+            "protection": 307.2224,
+            "firstDeath": 31.5438,
+            "hpFraction": 0.4427
+          },
+          "gainedWins": 12,
+          "lostWins": 0
+        },
+        "defense": {
+          "cases": 96,
+          "separate": {
+            "wins": 62,
+            "timeouts": 0,
+            "openingDps": 185.0278,
+            "openingCommonHealth": 0.7578,
+            "healing": 172.3708,
+            "protection": 310.9225,
+            "firstDeath": 30.9984,
+            "hpFraction": 0.404
+          },
+          "combined": {
+            "wins": 64,
+            "timeouts": 0,
+            "openingDps": 183.3887,
+            "openingCommonHealth": 0.7412,
+            "healing": 185.7616,
+            "protection": 265.9219,
+            "firstDeath": 32.6257,
+            "hpFraction": 0.3979
+          },
+          "refilled": {
+            "wins": 76,
+            "timeouts": 0,
+            "openingDps": 191.4369,
+            "openingCommonHealth": 0.7619,
+            "healing": 172.6835,
+            "protection": 298.5666,
+            "firstDeath": 31.784,
+            "hpFraction": 0.4747
+          },
+          "gainedWins": 14,
+          "lostWins": 0
+        },
+        "precision": {
+          "cases": 96,
+          "separate": {
+            "wins": 69,
+            "timeouts": 0,
+            "openingDps": 201.3942,
+            "openingCommonHealth": 0.7551,
+            "healing": 160.2517,
+            "protection": 292.8672,
+            "firstDeath": 34.4118,
+            "hpFraction": 0.4262
+          },
+          "combined": {
+            "wins": 68,
+            "timeouts": 0,
+            "openingDps": 201.9077,
+            "openingCommonHealth": 0.7409,
+            "healing": 183.8777,
+            "protection": 244.2887,
+            "firstDeath": 31.9125,
+            "hpFraction": 0.4264
+          },
+          "refilled": {
+            "wins": 84,
+            "timeouts": 0,
+            "openingDps": 221.8439,
+            "openingCommonHealth": 0.7673,
+            "healing": 175.1505,
+            "protection": 277.1612,
+            "firstDeath": 31.716,
+            "hpFraction": 0.549
+          },
+          "gainedWins": 15,
+          "lostWins": 0
+        },
+        "arcana": {
+          "cases": 96,
+          "separate": {
+            "wins": 70,
+            "timeouts": 0,
+            "openingDps": 196.3682,
+            "openingCommonHealth": 0.756,
+            "healing": 157.9265,
+            "protection": 298.9132,
+            "firstDeath": 33.2109,
+            "hpFraction": 0.4222
+          },
+          "combined": {
+            "wins": 64,
+            "timeouts": 0,
+            "openingDps": 192.6739,
+            "openingCommonHealth": 0.7361,
+            "healing": 165.9115,
+            "protection": 264.641,
+            "firstDeath": 32.0431,
+            "hpFraction": 0.4068
+          },
+          "refilled": {
+            "wins": 80,
+            "timeouts": 0,
+            "openingDps": 204.2639,
+            "openingCommonHealth": 0.7633,
+            "healing": 193.5481,
+            "protection": 293.4579,
+            "firstDeath": 31.7056,
+            "hpFraction": 0.5127
+          },
+          "gainedWins": 10,
+          "lostWins": 0
+        }
+      },
+      "boss": {
+        "cases": 48,
+        "separate": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 201.4773,
+          "openingCommonHealth": 0.6539,
+          "healing": 446.2126,
+          "protection": 516.7602,
+          "firstDeath": 17.1159,
+          "hpFraction": 0
+        },
+        "combined": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 199.845,
+          "openingCommonHealth": 0.6215,
+          "healing": 368.4833,
+          "protection": 359.3154,
+          "firstDeath": 17.3805,
+          "hpFraction": 0
+        },
+        "refilled": {
+          "wins": 0,
+          "timeouts": 0,
+          "openingDps": 202.3844,
+          "openingCommonHealth": 0.6188,
+          "healing": 349.6283,
+          "protection": 404.0967,
+          "firstDeath": 12.3125,
+          "hpFraction": 0
+        },
+        "gainedWins": 0,
+        "lostWins": 0
+      },
+      "regular": {
+        "cases": 336,
+        "separate": {
+          "wins": 261,
+          "timeouts": 0,
+          "openingDps": 188.9147,
+          "openingCommonHealth": 0.7691,
+          "healing": 123.7282,
+          "protection": 272.7325,
+          "firstDeath": 34.4077,
+          "hpFraction": 0.4651
+        },
+        "combined": {
+          "wins": 256,
+          "timeouts": 0,
+          "openingDps": 186.7601,
+          "openingCommonHealth": 0.7526,
+          "healing": 150.0136,
+          "protection": 245.1597,
+          "firstDeath": 32.0484,
+          "hpFraction": 0.4485
+        },
+        "refilled": {
+          "wins": 312,
+          "timeouts": 0,
+          "openingDps": 200.8228,
+          "openingCommonHealth": 0.7791,
+          "healing": 160.7962,
+          "protection": 278.3885,
+          "firstDeath": 34.4552,
+          "hpFraction": 0.5655
+        },
+        "gainedWins": 51,
+        "lostWins": 0
+      }
+    }
+  }
+}

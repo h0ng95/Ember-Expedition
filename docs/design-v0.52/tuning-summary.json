@@ -1,0 +1,101 @@
+{
+  "firstSeed": 51101,
+  "seeds": 4,
+  "routes": 672,
+  "actualBattles": 14080,
+  "isolatedBattles": 1320,
+  "summary": [
+    {
+      "id": "current",
+      "n": 220,
+      "wins": 112,
+      "lost": 0,
+      "gained": 0,
+      "timeouts": 0
+    },
+    {
+      "id": "power90",
+      "n": 220,
+      "wins": 139,
+      "lost": 0,
+      "gained": 27,
+      "timeouts": 4
+    },
+    {
+      "id": "power80",
+      "n": 220,
+      "wins": 165,
+      "lost": 0,
+      "gained": 53,
+      "timeouts": 1
+    },
+    {
+      "id": "interval21",
+      "n": 220,
+      "wins": 189,
+      "lost": 0,
+      "gained": 77,
+      "timeouts": 2
+    },
+    {
+      "id": "interval24",
+      "n": 220,
+      "wins": 182,
+      "lost": 0,
+      "gained": 70,
+      "timeouts": 2
+    },
+    {
+      "id": "power90_interval21",
+      "n": 220,
+      "wins": 208,
+      "lost": 0,
+      "gained": 96,
+      "timeouts": 0
+    }
+  ],
+  "groups": [
+    {
+      "policy": "final",
+      "n": 71,
+      "current": 31,
+      "power90": 45
+    },
+    {
+      "policy": "H-01",
+      "n": 27,
+      "current": 16,
+      "power90": 18
+    },
+    {
+      "policy": "H-02",
+      "n": 31,
+      "current": 11,
+      "power90": 11
+    },
+    {
+      "policy": "H-03",
+      "n": 21,
+      "current": 14,
+      "power90": 15
+    },
+    {
+      "policy": "H-04",
+      "n": 30,
+      "current": 18,
+      "power90": 22
+    },
+    {
+      "policy": "H-06",
+      "n": 33,
+      "current": 15,
+      "power90": 21
+    },
+    {
+      "policy": "H-05",
+      "n": 7,
+      "current": 7,
+      "power90": 7
+    }
+  ]
+}

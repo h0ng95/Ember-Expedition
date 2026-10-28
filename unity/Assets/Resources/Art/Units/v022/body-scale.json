@@ -5,35 +5,35 @@
   "entries": [
     {
       "id": "B-AR",
-      "bodyHeight": 188,
-      "sourceWidth": 1536,
-      "sourceHeight": 1024,
-      "bodyTop": 57,
-      "footY": 245
-    },
-    {
-      "id": "B-BA",
-      "bodyHeight": 124,
-      "sourceWidth": 1536,
-      "sourceHeight": 1024,
-      "bodyTop": 114,
-      "footY": 238
-    },
-    {
-      "id": "B-FI",
       "bodyHeight": 192,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 69,
-      "footY": 261
+      "bodyTop": 56,
+      "footY": 248
+    },
+    {
+      "id": "B-BA",
+      "bodyHeight": 156,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 98,
+      "footY": 254
+    },
+    {
+      "id": "B-FI",
+      "bodyHeight": 201,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 62,
+      "footY": 263
     },
     {
       "id": "B-IC",
-      "bodyHeight": 153,
+      "bodyHeight": 191,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 83,
-      "footY": 236
+      "bodyTop": 70,
+      "footY": 261
     },
     {
       "id": "B-KN",
@@ -45,11 +45,11 @@
     },
     {
       "id": "B-PR",
-      "bodyHeight": 195,
+      "bodyHeight": 196,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 84,
-      "footY": 279
+      "bodyTop": 80,
+      "footY": 276
     },
     {
       "id": "E-AR-P",
@@ -133,18 +133,18 @@
     },
     {
       "id": "E-PR-G",
-      "bodyHeight": 188,
+      "bodyHeight": 201,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 59,
-      "footY": 247
+      "bodyTop": 54,
+      "footY": 255
     },
     {
       "id": "E-PR-H",
-      "bodyHeight": 193,
+      "bodyHeight": 191,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 74,
+      "bodyTop": 76,
       "footY": 267
     },
     {
@@ -181,19 +181,19 @@
     },
     {
       "id": "F-KN",
-      "bodyHeight": 160,
+      "bodyHeight": 181,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 90,
-      "footY": 250
+      "bodyTop": 73,
+      "footY": 254
     },
     {
       "id": "F-PR",
-      "bodyHeight": 160,
+      "bodyHeight": 189,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 88,
-      "footY": 248
+      "bodyTop": 72,
+      "footY": 261
     },
     {
       "id": "H-01",
@@ -205,11 +205,11 @@
     },
     {
       "id": "H-02",
-      "bodyHeight": 157,
+      "bodyHeight": 173,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 98,
-      "footY": 255
+      "bodyTop": 79,
+      "footY": 252
     },
     {
       "id": "H-03",
@@ -229,11 +229,11 @@
     },
     {
       "id": "H-05",
-      "bodyHeight": 134,
+      "bodyHeight": 148,
       "sourceWidth": 1536,
       "sourceHeight": 1024,
-      "bodyTop": 118,
-      "footY": 252
+      "bodyTop": 112,
+      "footY": 260
     },
     {
       "id": "H-06",

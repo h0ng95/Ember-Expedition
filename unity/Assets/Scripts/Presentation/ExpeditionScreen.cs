@@ -346,7 +346,7 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
             GUI.Label(new Rect(content.x, content.y + 104, content.width, 64),
                 "이그니스가 흩어진 밤, 왕국의 결계가 무너지고 수호자들이 뒤틀렸습니다.\n" +
-                "마지막 불씨를 등불에 담아, 빼앗긴 불씨 조각을 되찾으세요.", dialogBody);
+                "동료들과 원정대를 꾸려, 빼앗긴 이그니스의 조각을 되찾으세요.", dialogBody);
             if (run != null)
                 GUI.Label(new Rect(content.x, content.y + 176, content.width, 33),
                     "이어할 원정  ·  " + DifficultyLabel(run.Difficulty) + "  ·  전투 " + run.Wave +
@@ -385,8 +385,9 @@ namespace Expedition.Presentation
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
             GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
-            GUI.Label(new Rect(505, 18, 365, 43), DifficultyLabel(run.Difficulty) + " · 전투 " +
-                run.Wave + " / " + run.ContentWaves + "   등불 " + run.Lantern, body);
+            GUI.Label(new Rect(505, 5, 365, 34), DifficultyLabel(run.Difficulty) + " · 전투 " +
+                run.Wave + " / " + run.ContentWaves, body);
+            GUI.Label(new Rect(505, 41, 365, 28), "남은 기회 " + run.Lantern + " / 3", small);
             GUI.Label(new Rect(880, 6, 170, 38), run.Gold + " G", heading);
             if (!run.HasEnded)
                 GUI.Label(new Rect(880, 44, 170, 28), run.UsesLegacyRules ? "이전 규칙" : "현재 " + run.Score.ToString("N0") + "점", small);
@@ -410,8 +411,11 @@ namespace Expedition.Presentation
             DrawTutorialReplayButton();
             DrawPreparationRange();
             GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
-            GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
-            DrawTutorialAdvice();
+            if (!DrawPreparationSupportSummary())
+            {
+                GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
+                DrawTutorialAdvice();
+            }
             if (GUI.Button(new Rect(735, 270, 154, 48), showHelp ? "도움말 접기" : "배치 도움말", button))
                 showHelp = !showHelp;
             if (GUI.Button(new Rect(905, 270, 154, 48), "지역 이야기", button))
@@ -597,13 +601,13 @@ namespace Expedition.Presentation
             string outcome = run.Phase == ExpeditionPhase.Completed ? "이번 원정의 길을 돌파했습니다." :
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
-                "등불을 모두 소진했습니다." : victory ?
+                "남은 기회를 모두 소진했습니다." : victory ?
                 (run.Wave == ExpeditionRun.TotalWaves ? "이그니스의 불이 왕궁 결계에 돌아왔습니다." :
                 "다음 길을 준비하세요.") :
-                "등불 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
+                "남은 기회 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
             GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
                 new Rect(content.x, 232, content.width, 68),
-                "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     등불 " + run.Lantern +
+                "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     남은 기회 " + run.Lantern +
                 "\n" + outcome, body);
             if (clearStory != null)
                 GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Body, body);
@@ -897,7 +901,7 @@ namespace Expedition.Presentation
                 string warning = savePresent ?
                     "현재 원정을 끝내고 새로 시작합니다. 동료·골드·연구는 이월되지 않습니다." :
                     legacySave ? "이전 6전투 원정은 별도로 보관됩니다." :
-                    "동료 3명 · 40G · 등불 3개 · 연구 0개로 출발합니다.";
+                    "동료 3명 · 40G · 남은 기회 3회 · 연구 0개로 출발합니다.";
                 GUI.Label(new Rect(content.x, 152, content.width, 50),
                     "현재 공개 " + ExpeditionRun.TotalWaves + "전투 · 전체 목표 30전투\n" + warning, small);
                 Rect normal = new Rect(content.x, 216, content.width, 62);

@@ -54,6 +54,7 @@ namespace Expedition.Presentation
         }
         sealed class View
         {
+            public readonly CombatHud.HealthTrail Health = new CombatHud.HealthTrail();
             public CatalogBattleUnit Unit;
             public Vector2 LastPosition;
             public float StateTime, HitTime, WindupAge, ReleaseAge, ReleaseRemaining;
@@ -86,14 +87,21 @@ namespace Expedition.Presentation
 
         public static class HudRules
         {
-            public static readonly Rect BossPanel = new Rect(337f, 5f, 405f, 66f);
-            public static readonly Rect BossName = new Rect(351f, 7f, 173f, 34f);
-            public static readonly Rect BossHealth = new Rect(598f, 39f, 130f, 26f);
-            public static Rect Encounter(bool boss) { return new Rect(26f, 14f, boss ? 302f : 690f, 48f); }
-            public static readonly Rect Clock = new Rect(758f, 14f, 135f, 48f);
+            public static readonly Rect BossPanel = new Rect(374f, 4f, 532f, 84f);
+            public static readonly Rect BossName = new Rect(414f, 4f, 452f, 30f);
+            public static readonly Rect BossHealth = new Rect(404f, 36f, 472f, 24f);
+            public static Rect Encounter(bool boss) { return new Rect(26f, 6f, boss ? 310f : 820f, 32f); }
+            public static string EncounterLabel(string name,int wave,int total,bool boss)
+            { return boss ? "보스 전투  " + wave + " / " + total : name + "   " + wave + "/" + total; }
+            public static readonly Rect Clock = new Rect(26f, 40f, 310f, 28f);
             public static readonly Rect Notice = new Rect(28f, 670f, 936f, 42f);
             public static readonly Rect UnitCount = new Rect(1000f, 670f, 254f, 42f);
-            public static Rect BossChip(int index) { return new Rect(531f + index * 50f, 12f, 47f, 26f); }
+            public static readonly Rect BattleArena = new Rect(204f,92f,1052f,560f);
+            public static Rect PartyPanel(int count) { return new Rect(20,108,174,36+86*Mathf.Clamp(count,1,5)); }
+            public static Rect PartyRow(int index) { return new Rect(26,142+index*86,162,78); }
+            public static Rect PartyName(int index) { Rect r=PartyRow(index);return new Rect(r.x+5,r.y+3,152,19); }
+            public static Rect PartyHealth(int index) { Rect r=PartyRow(index);return new Rect(r.x+58,r.y+41,98,17); }
+            public static Rect BossChip(int index,int total=4) { return new Rect(640f-total*28f+index*56f+2f, 67f, 52f, 20f); }
             public static GUIStyle HeaderText(Font font, int size, TextAnchor alignment, bool bold = false)
             {
                 // Compact HUD labels must not inherit the skin's padding or wrapping.
@@ -129,8 +137,10 @@ namespace Expedition.Presentation
             {
                 string prefix = kind == BattleFloatKind.Burn ? "화상 " :
                     kind == BattleFloatKind.Poison ? "중독 " : "";
-                return prefix + "−" + amount.ToString("0.##");
+                return prefix + "−" + NumberText(amount);
             }
+            public static string NumberText(float amount)
+            { return amount < 1f ? amount.ToString("0.#") : Mathf.RoundToInt(amount).ToString(); }
         }
 
         [Serializable] sealed class ArtManifest { public ArtEntry[] entries; }
@@ -192,6 +202,9 @@ namespace Expedition.Presentation
         GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
         GUIStyle bossNameText, bossHealthText, bossBadgeText, bossStatusText;
         GUIStyle encounterText, bossEncounterText, clockText, noticeText, unitCountText;
+        GUIStyle partyNameText, partyHealthText;
+        string partyFocusId;
+        float partyFocusUntil;
         Font uiFont;
         Rect viewport;
 
@@ -318,6 +331,7 @@ namespace Expedition.Presentation
             paused = false;
             latestSkill = null;
             bossNoticeUntil = 0;
+            partyFocusId=null;partyFocusUntil=0;
         }
 
         void StartBattle()
@@ -422,7 +436,8 @@ namespace Expedition.Presentation
                 AddDamageFloat(target.Unit, kind, e.Amount);
             }
             if ((e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield) && target != null && floating.Count < 24)
-                floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + e.Amount.ToString("0.##"),
+                floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + HudRules.NumberText(e.Amount),
+                    TargetId = target.Unit.Id,
                     Kind = e.Kind == CatalogEventKind.Heal ? BattleFloatKind.Heal : BattleFloatKind.Shield,
                     Position = new Vector2(target.Unit.X, target.Unit.Y), Color = e.Kind == CatalogEventKind.Heal ?
                     new Color(.55f, 1f, .64f) : new Color(.5f, .84f, 1f), Lift = FloatLift(target.Unit) });
@@ -457,6 +472,10 @@ namespace Expedition.Presentation
 
         void AddDamageFloat(CatalogBattleUnit target, BattleFloatKind kind, float amount)
         {
+            if(kind==BattleFloatKind.Direct)
+                for(int i=floating.Count-1;i>=0;i--)
+                    if(floating[i].Kind==kind && floating[i].TargetId==target.Id && floating[i].Age<=.10f)
+                    { floating[i].Amount+=amount;floating[i].Text=HudRules.DamageText(kind,floating[i].Amount);return; }
             if (kind == BattleFloatKind.Burn || kind == BattleFloatKind.Poison)
                 for (int i = floating.Count - 1; i >= 0; i--)
                     if (HudRules.MergeDot(floating[i].Kind, floating[i].TargetId, floating[i].Age,
@@ -482,7 +501,11 @@ namespace Expedition.Presentation
                         if (active.Age > oldestAge) { oldestAge = active.Age; oldestLane = active.Lane; }
                     }
                 lane = HudRules.FirstFreeDirectLane(used);
-                if (lane < 0) lane = oldestLane; // At most six readable slots per target.
+                if (lane < 0)
+                {
+                    lane = oldestLane;
+                    floating.RemoveAll(t=>t.Kind==BattleFloatKind.Direct && t.TargetId==target.Id && t.Lane==lane);
+                }
             }
             floating.Add(new FloatText {
                 Kind = kind, TargetId = target.Id, Amount = amount, Lane = lane,
@@ -535,6 +558,7 @@ namespace Expedition.Presentation
             float visualDt = settling ? dt : gameDt;
             foreach (View view in combatViews)
             {
+                view.Health.Tick(view.Unit.Hp / view.Unit.MaxHp, dt, GamePreferences.Current.ReduceMotion);
                 float actorDt = view.Unit.IsAlive && view.Unit.FrozenRemaining > 0f ? 0f : visualDt;
                 if (view.Unit.FrozenRemaining > 0f) view.HitTime = 0f;
                 if (!view.NewHit) view.HitTime = Mathf.Max(0, view.HitTime - Mathf.Min(actorDt, .08f));
@@ -588,16 +612,18 @@ namespace Expedition.Presentation
             label = new GUIStyle(GUI.skin.label) { fontSize = 17, normal = { textColor = ExpeditionUiTheme.Cream } };
             small = new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = ExpeditionUiTheme.Muted } };
             tiny = new GUIStyle(small) { fontSize = 12 };
-            bossNameText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleLeft, true);
-            bossHealthText = HudRules.HeaderText(uiFont, 14, TextAnchor.MiddleRight);
+            bossNameText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleCenter, true);
+            bossHealthText = HudRules.HeaderText(uiFont, 15, TextAnchor.MiddleCenter, true);
             bossBadgeText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleCenter, true);
-            bossStatusText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleLeft, true);
-            encounterText = HudRules.HeaderText(uiFont, 29, TextAnchor.MiddleLeft, true);
+            bossStatusText = HudRules.HeaderText(uiFont, 11, TextAnchor.MiddleLeft, true);
+            encounterText = HudRules.HeaderText(uiFont, 23, TextAnchor.MiddleLeft, true);
             encounterText.normal.textColor = Gold;
             bossEncounterText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleLeft, true);
             clockText = HudRules.HeaderText(uiFont, 17, TextAnchor.MiddleLeft);
             noticeText = HudRules.HeaderText(uiFont, 17, TextAnchor.MiddleLeft);
             unitCountText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleRight, true);
+            partyNameText=HudRules.HeaderText(uiFont,12,TextAnchor.MiddleLeft,true);
+            partyHealthText=HudRules.HeaderText(uiFont,11,TextAnchor.MiddleCenter);
             centered = new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             dotText = new GUIStyle(centered) { fontSize = 13 };
             statusText = new GUIStyle(tiny) { alignment = TextAnchor.MiddleLeft,
@@ -710,7 +736,7 @@ namespace Expedition.Presentation
             Fill(new Rect(0, 68, Width, 652), new Color(.02f, .025f, .045f, .24f));
             if (battle == null) { DrawBattleHeader(null); return; }
 
-            Rect arena = new Rect(24, 92, 1232, 560);
+            Rect arena = HudRules.BattleArena;
             if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
             foreach (View view in combatViews)
                 if (view.Unit.IsAlive && IsDimRegionalEnemy(view.Unit))
@@ -732,6 +758,13 @@ namespace Expedition.Presentation
                     hiddenEscortsMarked = true;
                 }
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
+                if(unit.Id==partyFocusId && Time.unscaledTime<partyFocusUntil && unit.IsAlive)
+                {
+                    Color cue=new Color(1f,.79f,.38f,.85f);
+                    Fill(new Rect(point.x-28,point.y+3,56,2),cue);
+                    Fill(new Rect(point.x-28,point.y-5,2,10),cue);
+                    Fill(new Rect(point.x+26,point.y-5,2,10),cue);
+                }
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
                     point.y -= PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, battle.Time);
                 Color previous = GUI.color;
@@ -755,48 +788,37 @@ namespace Expedition.Presentation
             if (!hiddenEscortsMarked) MarkHiddenEscorts(drawn);
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena),
                 id => DrawnBreathMouth(drawn, id));
-            // HUD is painted after every silhouette.
+            // Allocate compact health/status blocks before damage labels.
+            var occupiedHud = new List<Rect>();
             foreach (DrawnCombatant painted in drawn)
             {
-                View view = painted.View;
-                CatalogBattleUnit unit = view.Unit;
-                Vector2 point = painted.Point;
-                if (!unit.IsAlive || unit.IsBoss) continue;
-                float width = 74f;
-                float barHeight = painted.RegionalArtLoaded ? painted.Height + 12f :
-                    unit.Team == CatalogTeam.Ally ? AllyHudHeight(unit.FormId) :
-                    unit.Team == CatalogTeam.Enemy &&
-                    unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0 ? 176f : 134f;
-                float barY = Mathf.Max(arena.y + 10, point.y - barHeight);
-                float barX = Mathf.Clamp(point.x - width * .5f, arena.x + 3, arena.xMax - width - 3);
-                Fill(new Rect(barX - 1, barY - 1, width + 2, 8), new Color(.02f, .035f, .035f, .9f));
-                Fill(new Rect(barX, barY, width * Mathf.Clamp01(unit.Hp / unit.MaxHp), 6),
-                    unit.Team == CatalogTeam.Ally ? new Color(.45f, .94f, .55f) : new Color(1f, .45f, .39f));
-                if (unit.Shield > 0) Fill(new Rect(barX, barY + 9,
-                    width * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), new Color(.5f, .84f, 1f));
-                float statusY = barY + 16f;
-                if (unit.FrozenRemaining > 0f)
+                View view=painted.View;CatalogBattleUnit unit=view.Unit;Vector2 point=painted.Point;
+                if(!unit.IsAlive || unit.IsBoss)continue;
+                bool ally=unit.Team==CatalogTeam.Ally;
+                if(ally && unit.Hp>=unit.MaxHp*.995f && unit.Shield<=0)continue;
+                float barHeight=painted.RegionalArtLoaded?painted.Height+12f:
+                    unit.Team==CatalogTeam.Ally?AllyHudHeight(unit.FormId):unit.Id.IndexOf("elite",StringComparison.Ordinal)>=0?176f:134f;
+                int statuses=ally?0:(unit.FrozenRemaining>0?1:0)+(unit.BurnRemaining>0?1:0)+(unit.PoisonRemaining>0?1:0);
+                float blockWidth=ally?62:88;
+                Rect wanted=new Rect(point.x-blockWidth*.5f,Mathf.Max(arena.y+12,point.y-barHeight),blockWidth,statuses>0?36:14);
+                Rect block=CombatHud.PlaceNearby(wanted,occupiedHud,new Rect(arena.x+4,arena.y+10,arena.width-8,arena.height-20));
+                occupiedHud.Add(block);
+                if(Vector2.Distance(block.position,wanted.position)>5f)
                 {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "빙", unit.FrozenRemaining,
-                        new Color(.035f, .18f, .27f, .87f), new Color(.68f, .91f, 1f));
-                    statusY += 21f;
+                    Color tether=new Color(.75f,.72f,.63f,.38f);
+                    Vector2 anchor=new Vector2(wanted.center.x,wanted.y+9);
+                    Fill(new Rect(Mathf.Min(anchor.x,block.center.x),block.y+9,Mathf.Abs(anchor.x-block.center.x),1),tether);
+                    Fill(new Rect(anchor.x,Mathf.Min(anchor.y,block.y+9),1,Mathf.Abs(anchor.y-block.y-9)),tether);
                 }
-                if (unit.BurnRemaining > 0f)
-                {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "화", unit.BurnRemaining,
-                        new Color(.32f, .095f, .035f, .87f), new Color(1f, .72f, .43f));
-                    statusY += 21f;
-                }
-                if (unit.PoisonRemaining > 0f)
-                {
-                    DrawStatus(new Rect(barX, statusY, width, 20), "독", unit.PoisonRemaining,
-                        new Color(.12f, .16f, .075f, .87f), new Color(.78f, 1f, .48f));
-                    statusY += 21f;
-                }
-                if (IsDimRegionalEnemy(unit) && !painted.CoveredByBoss)
-                    DrawRegionalNameplate(new Rect(barX - 29, barY - 23, width + 58, 20), UnitName(unit));
-                else if (paused) GUI.Label(new Rect(point.x - 78, point.y + 5, 156, 24), UnitName(unit), centered);
+                CombatHud.Meter(new Rect(block.x+10,block.y+3,ally?48:74,ally?4:7),unit.Hp/unit.MaxHp,
+                    Mathf.Max(unit.Hp/unit.MaxHp,view.Health.Value),unit.Shield/unit.MaxHp,unit.Team==CatalogTeam.Ally);
+                int index=0;float left=block.center.x-statuses*11;
+                if(!ally && unit.FrozenRemaining>0)CombatHud.StatusIcon(new Rect(left+index++*22,block.y+16,20,20),0,unit.FrozenRemaining);
+                if(!ally && unit.BurnRemaining>0)CombatHud.StatusIcon(new Rect(left+index++*22,block.y+16,20,20),1,unit.BurnRemaining);
+                if(!ally && unit.PoisonRemaining>0)CombatHud.StatusIcon(new Rect(left+index++*22,block.y+16,20,20),2,unit.PoisonRemaining);
+                if(paused)DrawRegionalNameplate(new Rect(point.x-78,point.y+5,156,24),UnitName(unit));
             }
+            var numberSlots=new List<Rect>(occupiedHud);
             foreach (FloatText text in floating)
             {
                 Vector2 point = ExpeditionPoint(text.Position, arena);
@@ -814,7 +836,9 @@ namespace Expedition.Presentation
                 float textX = Mathf.Clamp(point.x + lane.x - width * .5f,
                     arena.x + 2f, arena.xMax - width - 2f);
                 GUIStyle style = dot ? dotText : centered;
-                Rect number = new Rect(textX, textY, width, 28);
+                Rect number = CombatHud.PlaceNearby(new Rect(textX, textY, width, 28),numberSlots,
+                    new Rect(arena.x+2,arena.y+14,arena.width-4,arena.height-30));
+                numberSlots.Add(number);
                 float opacity = Mathf.Clamp01(1f - text.Age / .75f);
                 GUI.color = new Color(.015f, .02f, .025f, opacity * .82f);
                 GUI.Label(new Rect(number.x + 1.5f, number.y + 2f, width, 28), text.Text, style);
@@ -822,6 +846,7 @@ namespace Expedition.Presentation
                 GUI.Label(number, text.Text, style);
                 GUI.color = previous;
             }
+            DrawPartyRoster();
             DrawBattleHeader(BattleBoss());
             Color hudPanel = ExpeditionUiTheme.Panel;
             Fill(new Rect(0, 664, Width, 56), new Color(hudPanel.r, hudPanel.g, hudPanel.b, .96f));
@@ -849,6 +874,49 @@ namespace Expedition.Presentation
                 Rect footer = ExpeditionUiTheme.FooterRect(pauseWindow);
                 if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "계속하기", button)) SetPaused(false);
                 if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "거점으로", button)) Close();
+            }
+        }
+
+        void DrawPartyRoster()
+        {
+            int count=0,alive=0;
+            foreach(View view in combatViews)if(view.Unit.Team==CatalogTeam.Ally){count++;if(view.Unit.IsAlive)alive++;}
+            if(count==0)return;
+            Rect panel=HudRules.PartyPanel(count);
+            Fill(panel,new Color(.055f,.065f,.085f,.94f));
+            ExpeditionUiTheme.Rule(new Rect(panel.x,panel.y,2,panel.height));
+            GUI.Label(new Rect(panel.x+12,panel.y+5,panel.width-24,25),"원정대 · "+alive+" / "+count,small);
+            int index=0;
+            foreach(View view in combatViews)
+            {
+                CatalogBattleUnit unit=view.Unit;if(unit.Team!=CatalogTeam.Ally)continue;
+                if(index>=5)break;
+                Rect row=HudRules.PartyRow(index);
+                bool focused=unit.Id==partyFocusId && Time.unscaledTime<partyFocusUntil;
+                Fill(row,focused?new Color(.25f,.21f,.14f,.95f):new Color(.105f,.115f,.14f,.95f));
+                Fill(new Rect(row.x,row.y+row.height-1,row.width,1),new Color(.38f,.32f,.23f,.55f));
+                Color prior=GUI.color;
+                if(!unit.IsAlive)GUI.color=new Color(.65f,.65f,.65f,.52f);
+                GUI.Label(HudRules.PartyName(index),UnitName(unit),partyNameText);
+                Rect portrait=new Rect(row.x+5,row.y+23,46,52);
+                Fill(portrait,new Color(.035f,.045f,.065f));
+                GUI.BeginGroup(portrait);
+                // Use the actual idle sprite and body calibration; crop legs and long props.
+                DrawSheet(unit.FormId,0,0,new Rect(-32,-42,110,132),false);
+                GUI.EndGroup();
+                GUI.color=prior;
+                float ratio=unit.Hp/unit.MaxHp;
+                CombatHud.Meter(new Rect(row.x+58,row.y+28,98,8),ratio,
+                    Mathf.Max(ratio,view.Health.Value),unit.Shield/unit.MaxHp,true);
+                GUI.Label(HudRules.PartyHealth(index),unit.IsAlive?
+                    Mathf.CeilToInt(unit.Hp)+" / "+Mathf.CeilToInt(unit.MaxHp):"전투 불능",partyHealthText);
+                int status=0;
+                if(unit.IsAlive && unit.FrozenRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),0,unit.FrozenRemaining);
+                if(unit.IsAlive && unit.BurnRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),1,unit.BurnRemaining);
+                if(unit.IsAlive && unit.PoisonRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),2,unit.PoisonRemaining);
+                if(GUI.Button(row,GUIContent.none,GUIStyle.none))
+                {partyFocusId=unit.Id;partyFocusUntil=Time.unscaledTime+2.2f;}
+                index++;
             }
         }
 
@@ -887,54 +955,43 @@ namespace Expedition.Presentation
 
         void DrawBattleHeader(CatalogBattleUnit boss)
         {
-            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 76));
-            GUI.Label(HudRules.Encounter(boss != null),
-                expeditionEncounter + "   " + expeditionWave + "/" + expeditionTotal,
-                boss == null ? encounterText : bossEncounterText);
-            if (boss != null)
+            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0,0,Width,boss!=null?92:76));
+            GUI.Label(HudRules.Encounter(boss!=null),HudRules.EncounterLabel(expeditionEncounter,expeditionWave,expeditionTotal,boss!=null),
+                boss==null?encounterText:bossEncounterText);
+            GUI.Label(HudRules.Clock,clock.ToString("0.0")+" / 75초",clockText);
+            if(boss!=null)
             {
-                Rect panel = HudRules.BossPanel;
-                ExpeditionUiTheme.PanelBox(panel);
-                GUI.Label(HudRules.BossName, UnitName(boss), bossNameText);
-                int chip = 0;
-                if (boss.BossEnraged)
+                GUI.Label(HudRules.BossName,UnitName(boss),bossNameText);
+                CombatHud.Crest(new Vector2(392,18),true);
+                float trail=boss.Hp/boss.MaxHp;
+                foreach(View view in combatViews)if(view.Unit==boss){trail=Mathf.Max(trail,view.Health.Value);break;}
+                CombatHud.Meter(HudRules.BossHealth,boss.Hp/boss.MaxHp,trail,boss.Shield/boss.MaxHp,false,true);
+                string hp=boss.Hp.ToString("0")+" / "+boss.MaxHp.ToString("0");
+                Rect shadow=HudRules.BossHealth;shadow.y+=1;Color old=bossHealthText.normal.textColor;
+                bossHealthText.normal.textColor=Color.black;GUI.Label(shadow,hp,bossHealthText);
+                bossHealthText.normal.textColor=old;GUI.Label(HudRules.BossHealth,hp,bossHealthText);
+                int total=(boss.BossEnraged?1:0)+(boss.FrozenRemaining>0?1:0)+(boss.BurnRemaining>0?1:0)+(boss.PoisonRemaining>0?1:0),chip=0;
+                if(boss.BossEnraged)
                 {
-                    Fill(HudRules.BossChip(chip), new Color(.43f, .13f, .1f));
-                    GUI.Label(HudRules.BossChip(chip), "분노", bossBadgeText);
-                    chip++;
+                    Rect r=HudRules.BossChip(chip++,total);Fill(r,new Color(.28f,.08f,.07f));
+                    GUI.Label(r,"분노",bossBadgeText);
                 }
-                if (boss.FrozenRemaining > 0f)
-                    DrawBossStatusChip(chip++, "빙", boss.FrozenRemaining,
-                        new Color(.07f, .25f, .34f), new Color(.67f, .89f, 1f));
-                if (boss.BurnRemaining > 0f)
-                    DrawBossStatusChip(chip++, "화", boss.BurnRemaining,
-                        new Color(.37f, .13f, .06f), new Color(1f, .68f, .35f));
-                if (boss.PoisonRemaining > 0f)
-                    DrawBossStatusChip(chip++, "독", boss.PoisonRemaining,
-                        new Color(.17f, .22f, .08f), new Color(.72f, .96f, .4f));
-                Fill(new Rect(351, 46, 236, 12), new Color(.06f, .07f, .09f));
-                Fill(new Rect(353, 48, 232 * Mathf.Clamp01(boss.Hp / boss.MaxHp), 8),
-                    new Color(.9f, .37f, .29f));
-                if (boss.Shield > 0f)
-                    Fill(new Rect(353, 61, 232 * Mathf.Clamp01(boss.Shield / boss.MaxHp), 3),
-                        new Color(.5f, .84f, 1f));
-                GUI.Label(HudRules.BossHealth,
-                    boss.Hp.ToString("0") + " / " + boss.MaxHp.ToString("0"), bossHealthText);
+                if(boss.FrozenRemaining>0)DrawBossStatusChip(chip++,total,0,boss.FrozenRemaining);
+                if(boss.BurnRemaining>0)DrawBossStatusChip(chip++,total,1,boss.BurnRemaining);
+                if(boss.PoisonRemaining>0)DrawBossStatusChip(chip++,total,2,boss.PoisonRemaining);
             }
-            GUI.Label(HudRules.Clock, clock.ToString("0.0") + " / 75초", clockText);
-            GUI.enabled = !battleSettingsOpen;
-            if (GUI.Button(new Rect(904, 14, 125, 49), speed == 1f ? "1×" : "2×", button))
-                ToggleSpeed();
-            if (GUI.Button(new Rect(1043, 14, 211, 49), paused ? "계속하기" : "일시정지", button))
-                SetPaused(!paused);
-            GUI.enabled = true;
+            GUI.enabled=!battleSettingsOpen;
+            if(GUI.Button(new Rect(928,14,108,49),speed==1f?"1×":"2×",button))ToggleSpeed();
+            if(GUI.Button(new Rect(1050,14,204,49),paused?"계속하기":"일시정지",button))SetPaused(!paused);
+            GUI.enabled=true;
         }
 
-        void DrawBossStatusChip(int index, string symbol, float remaining, Color background, Color foreground)
+        void DrawBossStatusChip(int index,int total,int kind,float remaining)
         {
-            if (index >= 4) return;
-            DrawStatus(HudRules.BossChip(index), symbol, remaining,
-                background, foreground, bossStatusText);
+            Rect r=HudRules.BossChip(index,total);
+            Fill(r,new Color(.08f,.075f,.08f));
+            CombatHud.StatusIcon(new Rect(r.x,r.y,20,20),kind,remaining);
+            GUI.Label(new Rect(r.x+22,r.y,r.width-22,r.height),remaining.ToString("0.0"),bossStatusText);
         }
 
         static bool IsDimRegionalEnemy(CatalogBattleUnit unit)
@@ -1029,7 +1086,7 @@ namespace Expedition.Presentation
 
         static Vector2 ExpeditionPoint(Vector2 position, Rect arena)
         {
-            return new Vector2(Mathf.Clamp(arena.center.x + position.x * 83f, arena.x + 75, arena.xMax - 75),
+            return new Vector2(Mathf.Clamp(arena.center.x + position.x * (arena.width-150f)/12.8f, arena.x + 75, arena.xMax - 75),
                 Mathf.Clamp(arena.y + 405f - position.y * 48f, arena.y + 285, arena.yMax - 35));
         }
 

@@ -19,12 +19,12 @@ namespace Expedition.EditorTools
         public static void Validate()
         {
             Rect boss = CatalogCombatLab.HudRules.BossPanel;
-            Check(boss.x >= 0f && boss.y >= 0f && boss.xMax <= 1280f && boss.yMax <= 76f,
+            Check(boss.x >= 0f && boss.y >= 0f && boss.xMax <= 1280f && boss.yMax <= 92f,
                 "boss status stays in the fixed safe header");
-            Check(!boss.Overlaps(new Rect(26, 17, 302, 40)) &&
-                !boss.Overlaps(new Rect(758, 14, 135, 49)) &&
-                !boss.Overlaps(new Rect(904, 14, 125, 49)) &&
-                !boss.Overlaps(new Rect(1043, 14, 211, 49)),
+            Check(!boss.Overlaps(CatalogCombatLab.HudRules.Encounter(true)) &&
+                !boss.Overlaps(CatalogCombatLab.HudRules.Clock) &&
+                !boss.Overlaps(new Rect(928, 14, 108, 49)) &&
+                !boss.Overlaps(new Rect(1050, 14, 204, 49)),
                 "boss panel leaves encounter, timer, speed and pause controls clear");
             ValidateHeaderText();
 
@@ -38,10 +38,10 @@ namespace Expedition.EditorTools
                 !CatalogCombatLab.HudRules.MergeDot(CatalogCombatLab.BattleFloatKind.Direct, "unit", .1f,
                     CatalogCombatLab.BattleFloatKind.Direct, "unit"),
                 "different ticks, targets, and direct hits remain separate");
-            Check(CatalogCombatLab.HudRules.DamageText(kind, 2.25f + 3.5f) == "화상 −5.75" &&
+            Check(CatalogCombatLab.HudRules.DamageText(kind, 2.25f + 3.5f) == "화상 −6" &&
                 CatalogCombatLab.HudRules.DamageText(CatalogCombatLab.BattleFloatKind.Poison, 6f) == "중독 −6" &&
                 CatalogCombatLab.HudRules.DamageText(CatalogCombatLab.BattleFloatKind.Direct, 4f) == "−4",
-                "display uses the accumulated raw event amount and identifies damage source");
+                "display rounds only the accumulated number and identifies damage source");
             int occupied = 0;
             for (int i = 0; i < 6; i++)
             {
@@ -106,9 +106,9 @@ namespace Expedition.EditorTools
             try
             {
                 var name = CatalogCombatLab.HudRules.HeaderText(font, 21, TextAnchor.MiddleLeft, true);
-                var health = CatalogCombatLab.HudRules.HeaderText(font, 14, TextAnchor.MiddleRight);
+                var health = CatalogCombatLab.HudRules.HeaderText(font, 15, TextAnchor.MiddleCenter);
                 var badge = CatalogCombatLab.HudRules.HeaderText(font, 12, TextAnchor.MiddleCenter, true);
-                var timer = CatalogCombatLab.HudRules.HeaderText(font, 12, TextAnchor.MiddleLeft, true);
+                var timer = CatalogCombatLab.HudRules.HeaderText(font, 11, TextAnchor.MiddleLeft, true);
                 MethodInfo unitName = typeof(CatalogCombatLab).GetMethod("UnitName", BindingFlags.Instance | BindingFlags.NonPublic);
                 var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
                 var run = ExpeditionRun.New(db, 43030);
@@ -118,8 +118,8 @@ namespace Expedition.EditorTools
                 int bosses = 0;
                 for (int wave = 1; wave <= 30; wave++)
                 {
-                    var encounterStyle = CatalogCombatLab.HudRules.HeaderText(font, wave % 5 == 0 ? 21 : 29, TextAnchor.MiddleLeft, true);
-                    Fits(encounterStyle, CatalogCombatLab.HudRules.Encounter(wave % 5 == 0), run.EncounterName + "   " + wave + "/30");
+                    var encounterStyle = CatalogCombatLab.HudRules.HeaderText(font, wave % 5 == 0 ? 21 : 23, TextAnchor.MiddleLeft, true);
+                    Fits(encounterStyle, CatalogCombatLab.HudRules.Encounter(wave % 5 == 0), CatalogCombatLab.HudRules.EncounterLabel(run.EncounterName,wave,30,wave%5==0));
                     hudProgress.Observe(run); hudJournal.Observe(run);
                     var snapshot = new ExpeditionAccountSave { Version = 1, Run = run.Capture(), Progress = hudProgress.Capture(),
                         Journal = hudJournal.Capture(), TutorialMask = 3, LessonMask = 7 };
@@ -156,13 +156,13 @@ namespace Expedition.EditorTools
                 for (int i = 0; i < 4; i++)
                 {
                     Rect chip = CatalogCombatLab.HudRules.BossChip(i);
-                    Check(chip.xMin > CatalogCombatLab.HudRules.BossName.xMax &&
+                    Check(chip.yMin > CatalogCombatLab.HudRules.BossHealth.yMax &&
                         chip.xMax <= CatalogCombatLab.HudRules.BossPanel.xMax - 10 &&
-                        chip.yMax <= CatalogCombatLab.HudRules.BossHealth.yMin,
+                        chip.yMax <= CatalogCombatLab.HudRules.BossPanel.yMax,
                         "four status chips stay separate from name, health and border");
                     if (i > 0) Check(!chip.Overlaps(CatalogCombatLab.HudRules.BossChip(i - 1)), "status chips overlap");
                     Fits(badge, chip, "분노");
-                    Fits(timer, new Rect(chip.x + 17, chip.y, chip.width - 17, chip.height), "10.0");
+                    Fits(timer, new Rect(chip.x + 22, chip.y, chip.width - 22, chip.height), "10.0");
                 }
                 Debug.Log("Battle HUD validated: 30 encounter titles, clock, 78 ally/enemy counts, notices, 6 boss names/HP, rage and 4 status slots.");
             }

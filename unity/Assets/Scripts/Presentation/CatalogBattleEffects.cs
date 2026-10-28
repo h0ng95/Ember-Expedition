@@ -209,6 +209,7 @@ namespace Expedition.Presentation
 
         public void DrawGround(CatalogBattle battle, Func<Vector2, Vector2> project)
         {
+            float scaleX=Mathf.Abs(project(Vector2.right).x-project(Vector2.zero).x);
             foreach (CatalogBattleUnit unit in battle.Units)
             {
                 if (!unit.IsAlive) continue;
@@ -241,9 +242,9 @@ namespace Expedition.Presentation
                         Line(a, b, 4, fireLine); Line(b, c, 4, fireLine);
                         Line(c, d, 4, fireLine); Line(d, a, 4, fireLine);
                         // Core tests a capsule around the segment, including both rounded ends.
-                        Ring(project(origin), unit.BreathHalfWidth * 83f,
+                        Ring(project(origin), unit.BreathHalfWidth * scaleX,
                             unit.BreathHalfWidth * 48f, fireLine, 3f);
-                        Ring(project(end), unit.BreathHalfWidth * 83f,
+                        Ring(project(end), unit.BreathHalfWidth * scaleX,
                             unit.BreathHalfWidth * 48f, fireLine, 3f);
                         for (int i = 0; i < 7; i++)
                             Line(Vector2.Lerp(project(origin), project(end), i / 7f),
@@ -266,8 +267,8 @@ namespace Expedition.Presentation
                         new Color(1f, .46f, .1f, .9f) :
                         unit.SlamIsAftershock ? new Color(1f, .2f, .1f, .9f) :
                         new Color(1f, .65f, .2f, .8f);
-                    Ring(center, unit.SlamRadius * 83, unit.SlamRadius * 48, warning, 4);
-                    Ring(center, unit.SlamRadius * 83 * .92f, unit.SlamRadius * 48 * .92f,
+                    Ring(center, unit.SlamRadius * scaleX, unit.SlamRadius * 48, warning, 4);
+                    Ring(center, unit.SlamRadius * scaleX * .92f, unit.SlamRadius * 48 * .92f,
                         unit.EnemyRole == CatalogEnemyRole.GardenLord ?
                         new Color(.65f, .36f, .78f, .9f) : warning, 1);
                     Line(center - new Vector2(10, 0), center + new Vector2(10, 0), 3, warning);
@@ -287,8 +288,8 @@ namespace Expedition.Presentation
                     Vector2 c = project(end - side), d = project(start - side);
                     Line(a, b, 3, color); Line(b, c, 3, color); Line(c, d, 3, color); Line(d, a, 3, color);
                     from = project(start); to = project(end);
-                    Ring(from, unit.ChargeWidth * 83, unit.ChargeWidth * 48, color, 2);
-                    Ring(to, unit.ChargeWidth * 83, unit.ChargeWidth * 48, color, 2);
+                    Ring(from, unit.ChargeWidth * scaleX, unit.ChargeWidth * 48, color, 2);
+                    Ring(to, unit.ChargeWidth * scaleX, unit.ChargeWidth * 48, color, 2);
                 }
                 for (int i = 0; i < 8; i++)
                     Line(Vector2.Lerp(from, to, i / 8f), Vector2.Lerp(from, to, (i + .55f) / 8f), 3, color);
@@ -312,6 +313,7 @@ namespace Expedition.Presentation
         public void Draw(CatalogBattle battle, Func<Vector2, Vector2> project,
             Func<string, Vector2?> breathMouth)
         {
+            float scaleX=Mathf.Abs(project(Vector2.right).x-project(Vector2.zero).x);
             foreach (CatalogBattleUnit unit in battle.Units)
             {
                 if (!unit.IsAlive || unit.EnemyRole != CatalogEnemyRole.CrownDrake ||
@@ -395,7 +397,7 @@ namespace Expedition.Presentation
                     Color impactColor = effect.Color;
                     if (GamePreferences.Current.ReduceFlashes) impactColor *= new Color(.65f, .65f, .65f, 1f);
                     impactColor.a = 1 - t;
-                    Ring(project(effect.Point), effect.Size * 83 * (.6f + .4f * t),
+                    Ring(project(effect.Point), effect.Size * scaleX * (.6f + .4f * t),
                         effect.Size * 48 * (.6f + .4f * t), impactColor, 6 * (1 - t) + 1);
                     continue;
                 }
@@ -435,7 +437,7 @@ namespace Expedition.Presentation
                 if (effect.Kind == EffectKind.DrakeLand)
                 {
                     Vector2 ground = project(effect.Point);
-                    spriteEffects.DrawFireImpact(ground, t, effect.Size * 83f * 1.55f, .85f);
+                    spriteEffects.DrawFireImpact(ground, t, effect.Size * scaleX * 1.55f, .85f);
                     spriteEffects.DrawCharge(ground, .55f, t);
                     continue;
                 }
@@ -453,7 +455,7 @@ namespace Expedition.Presentation
                 {
                     bool ember = effect.Kind == EffectKind.FurnaceEmber;
                     spriteEffects.DrawFireImpact(project(effect.Point), t,
-                        effect.Size * 83f * (ember ? 1.3f : 1.55f), ember ? .7f : 1.3f);
+                        effect.Size * scaleX * (ember ? 1.3f : 1.55f), ember ? .7f : 1.3f);
                     continue;
                 }
                 if (effect.Kind == EffectKind.FrostSpire)

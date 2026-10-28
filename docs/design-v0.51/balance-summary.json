@@ -1,0 +1,163 @@
+{
+  "rules": "normal-050",
+  "firstSeed": 51101,
+  "seedsPerPolicy": 4,
+  "runs": 672,
+  "completed": 128,
+  "actualBattles": 14080,
+  "isolatedBattles": 1254,
+  "summary": [
+    {
+      "wave": 15,
+      "n": 407,
+      "currentWins": 210,
+      "compactWins": 358,
+      "previousWins": 406,
+      "timeouts": 15,
+      "meanSeconds": 57.76568,
+      "meanBossHpOnTimeout": 0.07760981,
+      "newlyLost": 196,
+      "newlyWon": 0
+    },
+    {
+      "wave": 30,
+      "n": 220,
+      "currentWins": 112,
+      "compactWins": 121,
+      "previousWins": 146,
+      "timeouts": 0,
+      "meanSeconds": 49.8215752,
+      "meanBossHpOnTimeout": 0,
+      "newlyLost": 44,
+      "newlyWon": 10
+    }
+  ],
+  "policies": [
+    {
+      "wave": 15,
+      "policy": "final",
+      "n": 91,
+      "wins": 34,
+      "compact": 89,
+      "previous": 91,
+      "timeouts": 10
+    },
+    {
+      "wave": 15,
+      "policy": "H-01",
+      "n": 67,
+      "wins": 34,
+      "compact": 48,
+      "previous": 67,
+      "timeouts": 0
+    },
+    {
+      "wave": 15,
+      "policy": "H-02",
+      "n": 48,
+      "wins": 26,
+      "compact": 47,
+      "previous": 47,
+      "timeouts": 0
+    },
+    {
+      "wave": 15,
+      "policy": "H-03",
+      "n": 37,
+      "wins": 18,
+      "compact": 27,
+      "previous": 37,
+      "timeouts": 0
+    },
+    {
+      "wave": 15,
+      "policy": "H-04",
+      "n": 62,
+      "wins": 24,
+      "compact": 48,
+      "previous": 62,
+      "timeouts": 0
+    },
+    {
+      "wave": 15,
+      "policy": "H-05",
+      "n": 54,
+      "wins": 49,
+      "compact": 54,
+      "previous": 54,
+      "timeouts": 5
+    },
+    {
+      "wave": 15,
+      "policy": "H-06",
+      "n": 48,
+      "wins": 25,
+      "compact": 45,
+      "previous": 48,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "final",
+      "n": 71,
+      "wins": 31,
+      "compact": 31,
+      "previous": 53,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-01",
+      "n": 27,
+      "wins": 16,
+      "compact": 18,
+      "previous": 16,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-02",
+      "n": 31,
+      "wins": 11,
+      "compact": 11,
+      "previous": 11,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-03",
+      "n": 21,
+      "wins": 14,
+      "compact": 17,
+      "previous": 17,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-04",
+      "n": 30,
+      "wins": 18,
+      "compact": 19,
+      "previous": 19,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-05",
+      "n": 7,
+      "wins": 7,
+      "compact": 7,
+      "previous": 7,
+      "timeouts": 0
+    },
+    {
+      "wave": 30,
+      "policy": "H-06",
+      "n": 33,
+      "wins": 15,
+      "compact": 18,
+      "previous": 23,
+      "timeouts": 0
+    }
+  ]
+}

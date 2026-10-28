@@ -18,7 +18,7 @@ namespace Expedition.EditorTools
         {
             checks=0;
             var manifest=JsonUtility.FromJson<Manifest>(Resources.Load<TextAsset>("Art/Units/v010/art-manifest").text);
-            int refreshed=0;
+            int refreshed=0, continued=0;
             foreach(var s in manifest.entries)
             {
                 var texture=Resources.Load<Texture2D>(s.resourcePath);
@@ -40,9 +40,11 @@ namespace Expedition.EditorTools
                     }
                 }
                 if(s.resourcePath.StartsWith("Art/Units/v054/"))refreshed++;
+                if(s.resourcePath.StartsWith("Art/Units/v055/"))continued++;
                 if(s.id=="B-KN")Check(s.resourcePath=="Art/Units/v010/B-KN","master knight must be preserved");
             }
             Check(refreshed==11,"expected11 refreshed sheets");
+            Check(continued==18,"expected18 advanced sheets");
             Font font=Font.CreateDynamicFontFromOSFont(new[]{"Malgun Gothic","Arial"},19);
             try
             {
@@ -54,22 +56,33 @@ namespace Expedition.EditorTools
             }
             finally { UnityEngine.Object.DestroyImmediate(font); }
             var db=CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
-            Directory.CreateDirectory("Logs/v054-fixtures");
+            Directory.CreateDirectory("Logs/v055-fixtures");
             var state=JsonUtility.FromJson<ExpeditionAccountSave>(File.ReadAllText("Logs/v053-fixtures/wave-15.json"));
             var units=state.Run.Roster.Members;
-            string[] ids={"F-KN","H-02","E-PR-G","B-BA","B-PR"};
-            for(int i=0;i<5;i++){units[i].FormId=ids[i];units[i].InheritedTraitId=null;units[i].BranchId=i==0?"E-KN-G":i==2?"E-PR-G":null;units[i].Growth=i==4?1:0;}
-            // 7+6+3+1+2 = 19 original recruited units; preserve gold and supply accounting.
             state.Run.UndoHistory=new ExpeditionPreparationSave[0];
-            state.Validate(db);File.WriteAllText("Logs/v054-fixtures/art-advanced.json",JsonUtility.ToJson(state));
-            string[] basics={"B-KN","B-AR","B-FI","B-PR","B-BA"};
-            for(int i=0;i<5;i++){units[i].FormId=basics[i];units[i].BranchId=null;units[i].Growth=i==4?2:3;}
-            state.Validate(db);File.WriteAllText("Logs/v054-fixtures/art-base.json",JsonUtility.ToJson(state));
-            units[1].FormId="B-IC";
-            state.Validate(db);File.WriteAllText("Logs/v054-fixtures/art-frost.json",JsonUtility.ToJson(state));
+            // Each fixture retains the original 19-unit investment and five active members.
+            string[][] rosters={
+                new[]{"E-KN-G","E-KN-C","E-AR-P","E-AR-T","F-AR"},
+                new[]{"E-FI-B","E-FI-E","E-IC-F","E-IC-S","F-FI"},
+                new[]{"E-BA-G","E-BA-A","F-BA","B-KN","B-PR"},
+                new[]{"H-01","H-03","B-KN","B-PR","B-BA"},
+                new[]{"H-04","H-06","B-KN","B-PR","B-BA"},
+                new[]{"F-IC","E-KN-G","E-IC-F","E-BA-G","E-FI-B"}
+            };
+            for(int group=0;group<rosters.Length;group++)
+            {
+                for(int i=0;i<5;i++)
+                {
+                    string id=rosters[group][i];units[i].FormId=id;units[i].InheritedTraitId=null;units[i].Growth=0;
+                    units[i].BranchId=id.StartsWith("E-")?id:id=="F-AR"?"E-AR-P":id=="F-FI"?"E-FI-B":id=="F-BA"?"E-BA-G":id=="F-IC"?"E-IC-F":null;
+                    if(group==2 && i>=3)units[i].Growth=2;
+                    if((group==3||group==4) && i>=2)units[i].Growth=i==2?2:1;
+                }
+                state.Validate(db);File.WriteAllText("Logs/v055-fixtures/art-"+group+".json",JsonUtility.ToJson(state));
+            }
             AllyBodyScaleValidation.Validate();
             BattleReadabilityValidation.Validate();
-            Debug.Log("PASS unit art refresh: "+checks+" checks;11 new sheets and30 calibrated forms.");
+            Debug.Log("PASS unit art refresh: "+checks+" checks;18 new +11 previous sheets and30 calibrated forms;6 art fixtures.");
             PrototypeSetup.BuildAndroid();
         }
     }

@@ -1,0 +1,8620 @@
+[
+  {
+    "id": "E-AR-P",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.4948692321777344,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 28252,
+        "bounds": {
+          "label": 4,
+          "owner": 0,
+          "count": 28252,
+          "left": 46,
+          "top": 61,
+          "right": 243,
+          "bottom": 266,
+          "cx": 145.56799518618152,
+          "cy": 165.4033696729435
+        }
+      },
+      {
+        "index": 1,
+        "count": 28261,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 28261,
+          "left": 293,
+          "top": 60,
+          "right": 492,
+          "bottom": 266,
+          "cx": 394.1302855525282,
+          "cy": 165.92233112770248
+        }
+      },
+      {
+        "index": 2,
+        "count": 28120,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 28120,
+          "left": 542,
+          "top": 60,
+          "right": 746,
+          "bottom": 266,
+          "cx": 646.1459103840683,
+          "cy": 165.91550497866288
+        }
+      },
+      {
+        "index": 3,
+        "count": 28619,
+        "bounds": {
+          "label": 1,
+          "owner": 3,
+          "count": 28619,
+          "left": 786,
+          "top": 57,
+          "right": 992,
+          "bottom": 266,
+          "cx": 892.1085292987176,
+          "cy": 165.3309339948985
+        }
+      },
+      {
+        "index": 4,
+        "count": 27033,
+        "bounds": {
+          "label": 6,
+          "owner": 4,
+          "count": 27033,
+          "left": 1054,
+          "top": 64,
+          "right": 1272,
+          "bottom": 266,
+          "cx": 1161.9516146931528,
+          "cy": 172.8451892131839
+        }
+      },
+      {
+        "index": 5,
+        "count": 27210,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 27210,
+          "left": 1325,
+          "top": 61,
+          "right": 1513,
+          "bottom": 266,
+          "cx": 1417.3321205439177,
+          "cy": 165.6598309445057
+        }
+      },
+      {
+        "index": 6,
+        "count": 28451,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 28451,
+          "left": 26,
+          "top": 307,
+          "right": 240,
+          "bottom": 519,
+          "cx": 137.40016168148748,
+          "cy": 417.29461178868934
+        }
+      },
+      {
+        "index": 7,
+        "count": 27955,
+        "bounds": {
+          "label": 12,
+          "owner": 7,
+          "count": 27955,
+          "left": 293,
+          "top": 310,
+          "right": 500,
+          "bottom": 519,
+          "cx": 399.59467000536574,
+          "cy": 418.47808978715796
+        }
+      },
+      {
+        "index": 8,
+        "count": 27122,
+        "bounds": {
+          "label": 11,
+          "owner": 8,
+          "count": 27122,
+          "left": 552,
+          "top": 308,
+          "right": 753,
+          "bottom": 519,
+          "cx": 655.1185015854288,
+          "cy": 417.7427549590738
+        }
+      },
+      {
+        "index": 9,
+        "count": 28098,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 28098,
+          "left": 799,
+          "top": 310,
+          "right": 1013,
+          "bottom": 519,
+          "cx": 910.971101145989,
+          "cy": 418.8472845042352
+        }
+      },
+      {
+        "index": 10,
+        "count": 28256,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 28256,
+          "left": 1061,
+          "top": 310,
+          "right": 1280,
+          "bottom": 519,
+          "cx": 1177.6308748584372,
+          "cy": 418.95926528878823
+        }
+      },
+      {
+        "index": 11,
+        "count": 27071,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 27071,
+          "left": 1313,
+          "top": 311,
+          "right": 1517,
+          "bottom": 519,
+          "cx": 1419.6194082228214,
+          "cy": 419.55941782719515
+        }
+      },
+      {
+        "index": 12,
+        "count": 28762,
+        "bounds": {
+          "label": 21,
+          "owner": 12,
+          "count": 28762,
+          "left": 31,
+          "top": 563,
+          "right": 243,
+          "bottom": 772,
+          "cx": 136.74709686391768,
+          "cy": 669.968534872401
+        }
+      },
+      {
+        "index": 13,
+        "count": 30110,
+        "bounds": {
+          "label": 19,
+          "owner": 13,
+          "count": 30110,
+          "left": 290,
+          "top": 555,
+          "right": 513,
+          "bottom": 772,
+          "cx": 395.6968781135835,
+          "cy": 667.2113915642643
+        }
+      },
+      {
+        "index": 14,
+        "count": 30226,
+        "bounds": {
+          "label": 16,
+          "owner": 14,
+          "count": 30226,
+          "left": 550,
+          "top": 541,
+          "right": 767,
+          "bottom": 772,
+          "cx": 647.3335538939986,
+          "cy": 664.7104148746113
+        }
+      },
+      {
+        "index": 15,
+        "count": 30838,
+        "bounds": {
+          "label": 17,
+          "owner": 15,
+          "count": 30838,
+          "left": 782,
+          "top": 549,
+          "right": 1069,
+          "bottom": 772,
+          "cx": 892.7264738309877,
+          "cy": 667.0195213697386
+        }
+      },
+      {
+        "index": 16,
+        "count": 29802,
+        "bounds": {
+          "label": 18,
+          "owner": 16,
+          "count": 29802,
+          "left": 1061,
+          "top": 550,
+          "right": 1294,
+          "bottom": 772,
+          "cx": 1170.8227300181195,
+          "cy": 668.7351184484263
+        }
+      },
+      {
+        "index": 17,
+        "count": 27525,
+        "bounds": {
+          "label": 20,
+          "owner": 17,
+          "count": 27525,
+          "left": 1315,
+          "top": 561,
+          "right": 1505,
+          "bottom": 772,
+          "cx": 1409.9727520435968,
+          "cy": 669.7695549500454
+        }
+      },
+      {
+        "index": 18,
+        "count": 23834,
+        "bounds": {
+          "label": 25,
+          "owner": 18,
+          "count": 23834,
+          "left": 25,
+          "top": 803,
+          "right": 242,
+          "bottom": 988,
+          "cx": 124.16350591591844,
+          "cy": 899.0869765880675
+        }
+      },
+      {
+        "index": 19,
+        "count": 22746,
+        "bounds": {
+          "label": 27,
+          "owner": 19,
+          "count": 22746,
+          "left": 286,
+          "top": 818,
+          "right": 492,
+          "bottom": 988,
+          "cx": 389.39927899410884,
+          "cy": 916.2801371669744
+        }
+      },
+      {
+        "index": 20,
+        "count": 19797,
+        "bounds": {
+          "label": 30,
+          "owner": 20,
+          "count": 19797,
+          "left": 524,
+          "top": 855,
+          "right": 761,
+          "bottom": 987,
+          "cx": 643.5197757235945,
+          "cy": 932.2713037328888
+        }
+      },
+      {
+        "index": 21,
+        "count": 19129,
+        "bounds": {
+          "label": 31,
+          "owner": 21,
+          "count": 19129,
+          "left": 761,
+          "top": 883,
+          "right": 1044,
+          "bottom": 985,
+          "cx": 899.1653510376915,
+          "cy": 943.1992785822573
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 28252,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 28261,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 28120,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 28619,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 27964,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 27210,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 28451,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 27955,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 27122,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 28098,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 28256,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 27071,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 28762,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 30110,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 30226,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 30965,
+        "foreignPixelsExcluded": 190,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 29836,
+        "foreignPixelsExcluded": 80,
+        "regions": 3
+      },
+      {
+        "frame": 17,
+        "ownPixels": 27525,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 24588,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22746,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 19797,
+        "foreignPixelsExcluded": 9,
+        "regions": 5
+      },
+      {
+        "frame": 21,
+        "ownPixels": 19129,
+        "foreignPixelsExcluded": 8,
+        "regions": 3
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-AR-T",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5912399291992188,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 23215,
+        "bounds": {
+          "label": 2,
+          "owner": 0,
+          "count": 23215,
+          "left": 31,
+          "top": 67,
+          "right": 220,
+          "bottom": 259,
+          "cx": 128.27585612750377,
+          "cy": 166.4703855265992
+        }
+      },
+      {
+        "index": 1,
+        "count": 23178,
+        "bounds": {
+          "label": 3,
+          "owner": 1,
+          "count": 23178,
+          "left": 289,
+          "top": 67,
+          "right": 477,
+          "bottom": 259,
+          "cx": 385.82811286564845,
+          "cy": 166.59746311157133
+        }
+      },
+      {
+        "index": 2,
+        "count": 23255,
+        "bounds": {
+          "label": 4,
+          "owner": 2,
+          "count": 23255,
+          "left": 543,
+          "top": 67,
+          "right": 733,
+          "bottom": 259,
+          "cx": 641.4229198021931,
+          "cy": 166.55751451300796
+        }
+      },
+      {
+        "index": 3,
+        "count": 23272,
+        "bounds": {
+          "label": 5,
+          "owner": 3,
+          "count": 23272,
+          "left": 798,
+          "top": 67,
+          "right": 987,
+          "bottom": 259,
+          "cx": 895.2722155379855,
+          "cy": 166.4868511515985
+        }
+      },
+      {
+        "index": 4,
+        "count": 23012,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 23012,
+          "left": 1077,
+          "top": 65,
+          "right": 1281,
+          "bottom": 259,
+          "cx": 1165.479184773162,
+          "cy": 170.21228054927863
+        }
+      },
+      {
+        "index": 5,
+        "count": 23253,
+        "bounds": {
+          "label": 6,
+          "owner": 5,
+          "count": 23253,
+          "left": 1313,
+          "top": 67,
+          "right": 1503,
+          "bottom": 259,
+          "cx": 1411.1628177009418,
+          "cy": 166.8218294413624
+        }
+      },
+      {
+        "index": 6,
+        "count": 24209,
+        "bounds": {
+          "label": 11,
+          "owner": 6,
+          "count": 24209,
+          "left": 28,
+          "top": 316,
+          "right": 230,
+          "bottom": 512,
+          "cx": 133.48246519889298,
+          "cy": 415.35585939113554
+        }
+      },
+      {
+        "index": 7,
+        "count": 24195,
+        "bounds": {
+          "label": 16,
+          "owner": 7,
+          "count": 24195,
+          "left": 287,
+          "top": 317,
+          "right": 491,
+          "bottom": 512,
+          "cx": 393.8583591651168,
+          "cy": 417.0753461458979
+        }
+      },
+      {
+        "index": 8,
+        "count": 24313,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 24313,
+          "left": 546,
+          "top": 316,
+          "right": 752,
+          "bottom": 512,
+          "cx": 655.2963435199276,
+          "cy": 417.61107226586597
+        }
+      },
+      {
+        "index": 9,
+        "count": 24968,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 24968,
+          "left": 793,
+          "top": 316,
+          "right": 999,
+          "bottom": 512,
+          "cx": 899.5714915091316,
+          "cy": 416.90447773149634
+        }
+      },
+      {
+        "index": 10,
+        "count": 24444,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 24444,
+          "left": 1054,
+          "top": 316,
+          "right": 1262,
+          "bottom": 512,
+          "cx": 1164.2317951235477,
+          "cy": 417.7736458844706
+        }
+      },
+      {
+        "index": 11,
+        "count": 24296,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 24296,
+          "left": 1305,
+          "top": 316,
+          "right": 1514,
+          "bottom": 512,
+          "cx": 1412.8502222588081,
+          "cy": 417.5813302601251
+        }
+      },
+      {
+        "index": 12,
+        "count": 24575,
+        "bounds": {
+          "label": 20,
+          "owner": 12,
+          "count": 24575,
+          "left": 24,
+          "top": 569,
+          "right": 232,
+          "bottom": 761,
+          "cx": 132.22408952187183,
+          "cy": 667.5113326551374
+        }
+      },
+      {
+        "index": 13,
+        "count": 24800,
+        "bounds": {
+          "label": 21,
+          "owner": 13,
+          "count": 24800,
+          "left": 285,
+          "top": 569,
+          "right": 499,
+          "bottom": 761,
+          "cx": 388.6014112903226,
+          "cy": 667.1503225806451
+        }
+      },
+      {
+        "index": 14,
+        "count": 25711,
+        "bounds": {
+          "label": 17,
+          "owner": 14,
+          "count": 25711,
+          "left": 537,
+          "top": 561,
+          "right": 766,
+          "bottom": 761,
+          "cx": 647.1337559799308,
+          "cy": 663.7080626969001
+        }
+      },
+      {
+        "index": 15,
+        "count": 24438,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 24438,
+          "left": 779,
+          "top": 566,
+          "right": 1071,
+          "bottom": 761,
+          "cx": 878.201857762501,
+          "cy": 664.6471888043211
+        }
+      },
+      {
+        "index": 16,
+        "count": 25059,
+        "bounds": {
+          "label": 18,
+          "owner": 16,
+          "count": 25059,
+          "left": 1066,
+          "top": 565,
+          "right": 1278,
+          "bottom": 761,
+          "cx": 1171.9356319086955,
+          "cy": 665.7924498184285
+        }
+      },
+      {
+        "index": 17,
+        "count": 23506,
+        "bounds": {
+          "label": 22,
+          "owner": 17,
+          "count": 23506,
+          "left": 1317,
+          "top": 569,
+          "right": 1510,
+          "bottom": 761,
+          "cx": 1416.0469241895687,
+          "cy": 668.2889900450949
+        }
+      },
+      {
+        "index": 18,
+        "count": 22012,
+        "bounds": {
+          "label": 26,
+          "owner": 18,
+          "count": 22012,
+          "left": 28,
+          "top": 791,
+          "right": 255,
+          "bottom": 981,
+          "cx": 127.28906959840087,
+          "cy": 898.3562147919316
+        }
+      },
+      {
+        "index": 19,
+        "count": 22211,
+        "bounds": {
+          "label": 27,
+          "owner": 19,
+          "count": 22211,
+          "left": 284,
+          "top": 833,
+          "right": 499,
+          "bottom": 984,
+          "cx": 394.60884246544504,
+          "cy": 915.4637341857638
+        }
+      },
+      {
+        "index": 20,
+        "count": 17483,
+        "bounds": {
+          "label": 29,
+          "owner": 20,
+          "count": 17483,
+          "left": 532,
+          "top": 876,
+          "right": 766,
+          "bottom": 980,
+          "cx": 650.8461362466396,
+          "cy": 934.6638448778814
+        }
+      },
+      {
+        "index": 21,
+        "count": 15110,
+        "bounds": {
+          "label": 30,
+          "owner": 21,
+          "count": 15110,
+          "left": 787,
+          "top": 895,
+          "right": 1061,
+          "bottom": 980,
+          "cx": 913.077299801456,
+          "cy": 944.8863666446063
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 23215,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 23178,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 23255,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 23272,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24212,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 23253,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 24209,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24195,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 24313,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 24968,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 24444,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 24296,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 24575,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 24800,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 25711,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 29591,
+        "foreignPixelsExcluded": 104,
+        "regions": 3
+      },
+      {
+        "frame": 16,
+        "ownPixels": 25059,
+        "foreignPixelsExcluded": 121,
+        "regions": 5
+      },
+      {
+        "frame": 17,
+        "ownPixels": 23506,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 23194,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22211,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 17483,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 15110,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-BA-A",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6143468221028646,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24961,
+        "bounds": {
+          "label": 2,
+          "owner": 0,
+          "count": 24961,
+          "left": 40,
+          "top": 25,
+          "right": 259,
+          "bottom": 257,
+          "cx": 140.9201955049878,
+          "cy": 158.15536236528985
+        }
+      },
+      {
+        "index": 1,
+        "count": 24698,
+        "bounds": {
+          "label": 4,
+          "owner": 1,
+          "count": 24698,
+          "left": 298,
+          "top": 26,
+          "right": 514,
+          "bottom": 257,
+          "cx": 397.55798040327153,
+          "cy": 158.76050692363754
+        }
+      },
+      {
+        "index": 2,
+        "count": 24425,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 24425,
+          "left": 552,
+          "top": 25,
+          "right": 769,
+          "bottom": 257,
+          "cx": 653.482988741044,
+          "cy": 159.25477993858752
+        }
+      },
+      {
+        "index": 3,
+        "count": 25137,
+        "bounds": {
+          "label": 1,
+          "owner": 3,
+          "count": 25137,
+          "left": 808,
+          "top": 24,
+          "right": 1029,
+          "bottom": 257,
+          "cx": 909.3102597764251,
+          "cy": 158.33603850897083
+        }
+      },
+      {
+        "index": 4,
+        "count": 24065,
+        "bounds": {
+          "label": 6,
+          "owner": 4,
+          "count": 24065,
+          "left": 1056,
+          "top": 33,
+          "right": 1294,
+          "bottom": 258,
+          "cx": 1174.988738832329,
+          "cy": 171.5243299397465
+        }
+      },
+      {
+        "index": 5,
+        "count": 24580,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 24580,
+          "left": 1316,
+          "top": 27,
+          "right": 1533,
+          "bottom": 258,
+          "cx": 1416.6213181448331,
+          "cy": 159.61041497152155
+        }
+      },
+      {
+        "index": 6,
+        "count": 24314,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 24314,
+          "left": 42,
+          "top": 281,
+          "right": 278,
+          "bottom": 507,
+          "cx": 149.32602615776918,
+          "cy": 409.14419675906885
+        }
+      },
+      {
+        "index": 7,
+        "count": 24605,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 24605,
+          "left": 303,
+          "top": 281,
+          "right": 536,
+          "bottom": 507,
+          "cx": 409.59516358463725,
+          "cy": 410.0276366592156
+        }
+      },
+      {
+        "index": 8,
+        "count": 24302,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 24302,
+          "left": 557,
+          "top": 281,
+          "right": 789,
+          "bottom": 507,
+          "cx": 661.4579046992017,
+          "cy": 408.97547526952513
+        }
+      },
+      {
+        "index": 9,
+        "count": 24316,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 24316,
+          "left": 812,
+          "top": 281,
+          "right": 1044,
+          "bottom": 507,
+          "cx": 918.3717305477875,
+          "cy": 409.3121812798158
+        }
+      },
+      {
+        "index": 10,
+        "count": 24250,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 24250,
+          "left": 1078,
+          "top": 281,
+          "right": 1306,
+          "bottom": 507,
+          "cx": 1183.3484948453608,
+          "cy": 410.31488659793814
+        }
+      },
+      {
+        "index": 11,
+        "count": 23338,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 23338,
+          "left": 1324,
+          "top": 281,
+          "right": 1535,
+          "bottom": 507,
+          "cx": 1423.304310566458,
+          "cy": 409.7960836404148
+        }
+      },
+      {
+        "index": 12,
+        "count": 26064,
+        "bounds": {
+          "label": 17,
+          "owner": 12,
+          "count": 26064,
+          "left": 22,
+          "top": 532,
+          "right": 254,
+          "bottom": 756,
+          "cx": 130.5897022713321,
+          "cy": 658.9367326580724
+        }
+      },
+      {
+        "index": 13,
+        "count": 24536,
+        "bounds": {
+          "label": 20,
+          "owner": 13,
+          "count": 24536,
+          "left": 287,
+          "top": 587,
+          "right": 534,
+          "bottom": 757,
+          "cx": 407.1348223019237,
+          "cy": 674.9859390283665
+        }
+      },
+      {
+        "index": 14,
+        "count": 22434,
+        "bounds": {
+          "label": 18,
+          "owner": 14,
+          "count": 22434,
+          "left": 546,
+          "top": 580,
+          "right": 799,
+          "bottom": 757,
+          "cx": 646.7061602924133,
+          "cy": 670.103503610591
+        }
+      },
+      {
+        "index": 15,
+        "count": 25190,
+        "bounds": {
+          "label": 21,
+          "owner": 15,
+          "count": 25190,
+          "left": 774,
+          "top": 592,
+          "right": 1064,
+          "bottom": 757,
+          "cx": 904.0861452957523,
+          "cy": 678.6445811830091
+        }
+      },
+      {
+        "index": 16,
+        "count": 24666,
+        "bounds": {
+          "label": 19,
+          "owner": 16,
+          "count": 24666,
+          "left": 1072,
+          "top": 583,
+          "right": 1324,
+          "bottom": 757,
+          "cx": 1191.3777669666747,
+          "cy": 671.9761209762426
+        }
+      },
+      {
+        "index": 17,
+        "count": 24294,
+        "bounds": {
+          "label": 16,
+          "owner": 17,
+          "count": 24294,
+          "left": 1327,
+          "top": 531,
+          "right": 1535,
+          "bottom": 757,
+          "cx": 1423.8877500617436,
+          "cy": 659.1438215197168
+        }
+      },
+      {
+        "index": 18,
+        "count": 24001,
+        "bounds": {
+          "label": 26,
+          "owner": 18,
+          "count": 24001,
+          "left": 23,
+          "top": 774,
+          "right": 251,
+          "bottom": 991,
+          "cx": 133.82579892504478,
+          "cy": 899.6030165409775
+        }
+      },
+      {
+        "index": 19,
+        "count": 20870,
+        "bounds": {
+          "label": 27,
+          "owner": 19,
+          "count": 20870,
+          "left": 279,
+          "top": 808,
+          "right": 498,
+          "bottom": 990,
+          "cx": 391.73694298035457,
+          "cy": 920.6660757067561
+        }
+      },
+      {
+        "index": 20,
+        "count": 14500,
+        "bounds": {
+          "label": 32,
+          "owner": 20,
+          "count": 14500,
+          "left": 512,
+          "top": 887,
+          "right": 768,
+          "bottom": 991,
+          "cx": 629.8638620689655,
+          "cy": 951.5753103448276
+        }
+      },
+      {
+        "index": 21,
+        "count": 13243,
+        "bounds": {
+          "label": 33,
+          "owner": 21,
+          "count": 13243,
+          "left": 769,
+          "top": 910,
+          "right": 1028,
+          "bottom": 987,
+          "cx": 899.2358226987843,
+          "cy": 952.6653326285585
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24961,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24698,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 24425,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 25137,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24817,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 24580,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 24314,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24605,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 24302,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 24316,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 24250,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 23338,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 26064,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 24536,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 22434,
+        "foreignPixelsExcluded": 1447,
+        "regions": 4
+      },
+      {
+        "frame": 15,
+        "ownPixels": 25418,
+        "foreignPixelsExcluded": 467,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 24666,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 24294,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 24615,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 20870,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 14500,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 13243,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-BA-G",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.6227423350016276,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 20283,
+        "bounds": {
+          "label": 4,
+          "owner": 0,
+          "count": 20283,
+          "left": 53,
+          "top": 29,
+          "right": 236,
+          "bottom": 256,
+          "cx": 147.5024404673865,
+          "cy": 164.550460977173
+        }
+      },
+      {
+        "index": 1,
+        "count": 21619,
+        "bounds": {
+          "label": 5,
+          "owner": 1,
+          "count": 21619,
+          "left": 302,
+          "top": 29,
+          "right": 496,
+          "bottom": 256,
+          "cx": 400.8151163328554,
+          "cy": 162.51061566214904
+        }
+      },
+      {
+        "index": 2,
+        "count": 21617,
+        "bounds": {
+          "label": 2,
+          "owner": 2,
+          "count": 21617,
+          "left": 555,
+          "top": 27,
+          "right": 750,
+          "bottom": 256,
+          "cx": 653.5763519452283,
+          "cy": 161.84197622241754
+        }
+      },
+      {
+        "index": 3,
+        "count": 21805,
+        "bounds": {
+          "label": 3,
+          "owner": 3,
+          "count": 21805,
+          "left": 810,
+          "top": 27,
+          "right": 1006,
+          "bottom": 256,
+          "cx": 908.8355423068103,
+          "cy": 161.91566154551708
+        }
+      },
+      {
+        "index": 4,
+        "count": 20987,
+        "bounds": {
+          "label": 1,
+          "owner": 4,
+          "count": 20987,
+          "left": 1072,
+          "top": 24,
+          "right": 1253,
+          "bottom": 256,
+          "cx": 1163.492066517368,
+          "cy": 169.2234716729404
+        }
+      },
+      {
+        "index": 5,
+        "count": 20484,
+        "bounds": {
+          "label": 6,
+          "owner": 5,
+          "count": 20484,
+          "left": 1304,
+          "top": 29,
+          "right": 1500,
+          "bottom": 256,
+          "cx": 1409.5584358523727,
+          "cy": 170.14933606717437
+        }
+      },
+      {
+        "index": 6,
+        "count": 20347,
+        "bounds": {
+          "label": 13,
+          "owner": 6,
+          "count": 20347,
+          "left": 48,
+          "top": 280,
+          "right": 241,
+          "bottom": 495,
+          "cx": 150.0479186120804,
+          "cy": 406.989089300634
+        }
+      },
+      {
+        "index": 7,
+        "count": 20049,
+        "bounds": {
+          "label": 14,
+          "owner": 7,
+          "count": 20049,
+          "left": 307,
+          "top": 280,
+          "right": 497,
+          "bottom": 495,
+          "cx": 408.5174322908873,
+          "cy": 408.1480373085939
+        }
+      },
+      {
+        "index": 8,
+        "count": 20440,
+        "bounds": {
+          "label": 9,
+          "owner": 8,
+          "count": 20440,
+          "left": 564,
+          "top": 279,
+          "right": 753,
+          "bottom": 495,
+          "cx": 662.9772015655577,
+          "cy": 405.5883072407045
+        }
+      },
+      {
+        "index": 9,
+        "count": 19726,
+        "bounds": {
+          "label": 10,
+          "owner": 9,
+          "count": 19726,
+          "left": 821,
+          "top": 279,
+          "right": 1001,
+          "bottom": 495,
+          "cx": 913.6611578627193,
+          "cy": 405.8689039845889
+        }
+      },
+      {
+        "index": 10,
+        "count": 20956,
+        "bounds": {
+          "label": 11,
+          "owner": 10,
+          "count": 20956,
+          "left": 1060,
+          "top": 279,
+          "right": 1263,
+          "bottom": 495,
+          "cx": 1166.8039225042946,
+          "cy": 407.7115861805688
+        }
+      },
+      {
+        "index": 11,
+        "count": 20205,
+        "bounds": {
+          "label": 12,
+          "owner": 11,
+          "count": 20205,
+          "left": 1322,
+          "top": 279,
+          "right": 1509,
+          "bottom": 495,
+          "cx": 1419.9084879980203,
+          "cy": 407.5891610987379
+        }
+      },
+      {
+        "index": 12,
+        "count": 20591,
+        "bounds": {
+          "label": 17,
+          "owner": 12,
+          "count": 20591,
+          "left": 29,
+          "top": 533,
+          "right": 234,
+          "bottom": 746,
+          "cx": 134.61759992229614,
+          "cy": 659.216988004468
+        }
+      },
+      {
+        "index": 13,
+        "count": 19890,
+        "bounds": {
+          "label": 20,
+          "owner": 13,
+          "count": 19890,
+          "left": 253,
+          "top": 572,
+          "right": 472,
+          "bottom": 746,
+          "cx": 366.75872297637005,
+          "cy": 671.8067873303168
+        }
+      },
+      {
+        "index": 14,
+        "count": 21101,
+        "bounds": {
+          "label": 18,
+          "owner": 14,
+          "count": 21101,
+          "left": 515,
+          "top": 548,
+          "right": 751,
+          "bottom": 746,
+          "cx": 636.1936875029619,
+          "cy": 664.6081228377802
+        }
+      },
+      {
+        "index": 15,
+        "count": 23835,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 23835,
+          "left": 773,
+          "top": 569,
+          "right": 1056,
+          "bottom": 746,
+          "cx": 916.3667715544368,
+          "cy": 672.6289909796518
+        }
+      },
+      {
+        "index": 16,
+        "count": 23652,
+        "bounds": {
+          "label": 15,
+          "owner": 16,
+          "count": 23652,
+          "left": 1070,
+          "top": 520,
+          "right": 1279,
+          "bottom": 748,
+          "cx": 1175.6507272112294,
+          "cy": 662.3711736851006
+        }
+      },
+      {
+        "index": 17,
+        "count": 20527,
+        "bounds": {
+          "label": 16,
+          "owner": 17,
+          "count": 20527,
+          "left": 1321,
+          "top": 523,
+          "right": 1510,
+          "bottom": 746,
+          "cx": 1419.1573537292347,
+          "cy": 656.638476153359
+        }
+      },
+      {
+        "index": 18,
+        "count": 18537,
+        "bounds": {
+          "label": 24,
+          "owner": 18,
+          "count": 18537,
+          "left": 56,
+          "top": 777,
+          "right": 226,
+          "bottom": 984,
+          "cx": 151.29298160435886,
+          "cy": 901.075686464908
+        }
+      },
+      {
+        "index": 19,
+        "count": 19759,
+        "bounds": {
+          "label": 25,
+          "owner": 19,
+          "count": 19759,
+          "left": 283,
+          "top": 786,
+          "right": 495,
+          "bottom": 984,
+          "cx": 399.73455134369146,
+          "cy": 913.1790576446176
+        }
+      },
+      {
+        "index": 20,
+        "count": 18538,
+        "bounds": {
+          "label": 26,
+          "owner": 20,
+          "count": 18538,
+          "left": 516,
+          "top": 804,
+          "right": 749,
+          "bottom": 986,
+          "cx": 647.3500377602762,
+          "cy": 925.9875391088575
+        }
+      },
+      {
+        "index": 21,
+        "count": 14143,
+        "bounds": {
+          "label": 29,
+          "owner": 21,
+          "count": 14143,
+          "left": 763,
+          "top": 909,
+          "right": 1060,
+          "bottom": 999,
+          "cx": 903.779466874072,
+          "cy": 958.2095029343138
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 20283,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 21619,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 21617,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 21805,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 21374,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 20484,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 20347,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 20049,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 20440,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 19726,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 20956,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 20205,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 20591,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 19890,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 21101,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 24160,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 23835,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 20527,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 18990,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 19759,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 18538,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 14143,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {
+      "20": 21
+    },
+    "issues": []
+  },
+  {
+    "id": "E-FI-B",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5924288431803385,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24536,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 24536,
+          "left": 55,
+          "top": 72,
+          "right": 245,
+          "bottom": 283,
+          "cx": 138.45435278774048,
+          "cy": 176.71604988588197
+        }
+      },
+      {
+        "index": 1,
+        "count": 24018,
+        "bounds": {
+          "label": 3,
+          "owner": 1,
+          "count": 24018,
+          "left": 316,
+          "top": 73,
+          "right": 500,
+          "bottom": 283,
+          "cx": 396.05171121658753,
+          "cy": 177.5746107086352
+        }
+      },
+      {
+        "index": 2,
+        "count": 23965,
+        "bounds": {
+          "label": 4,
+          "owner": 2,
+          "count": 23965,
+          "left": 570,
+          "top": 73,
+          "right": 751,
+          "bottom": 283,
+          "cx": 648.9885249321928,
+          "cy": 178.20630085541416
+        }
+      },
+      {
+        "index": 3,
+        "count": 24177,
+        "bounds": {
+          "label": 5,
+          "owner": 3,
+          "count": 24177,
+          "left": 820,
+          "top": 73,
+          "right": 1001,
+          "bottom": 283,
+          "cx": 898.05377011209,
+          "cy": 178.24829383298177
+        }
+      },
+      {
+        "index": 4,
+        "count": 24686,
+        "bounds": {
+          "label": 7,
+          "owner": 4,
+          "count": 24686,
+          "left": 1059,
+          "top": 74,
+          "right": 1262,
+          "bottom": 283,
+          "cx": 1160.1637365308272,
+          "cy": 184.14101109940856
+        }
+      },
+      {
+        "index": 5,
+        "count": 24115,
+        "bounds": {
+          "label": 2,
+          "owner": 5,
+          "count": 24115,
+          "left": 1328,
+          "top": 72,
+          "right": 1512,
+          "bottom": 283,
+          "cx": 1408.4803234501348,
+          "cy": 177.99295044578062
+        }
+      },
+      {
+        "index": 6,
+        "count": 25413,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 25413,
+          "left": 48,
+          "top": 321,
+          "right": 243,
+          "bottom": 527,
+          "cx": 136.4549246448668,
+          "cy": 425.46303073230234
+        }
+      },
+      {
+        "index": 7,
+        "count": 24044,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 24044,
+          "left": 314,
+          "top": 321,
+          "right": 501,
+          "bottom": 527,
+          "cx": 397.07195142239226,
+          "cy": 424.96506404924304
+        }
+      },
+      {
+        "index": 8,
+        "count": 24860,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 24860,
+          "left": 561,
+          "top": 321,
+          "right": 756,
+          "bottom": 527,
+          "cx": 647.9265888978279,
+          "cy": 425.5508849557522
+        }
+      },
+      {
+        "index": 9,
+        "count": 24910,
+        "bounds": {
+          "label": 9,
+          "owner": 9,
+          "count": 24910,
+          "left": 812,
+          "top": 319,
+          "right": 1010,
+          "bottom": 527,
+          "cx": 902.1204737053392,
+          "cy": 425.24552388598954
+        }
+      },
+      {
+        "index": 10,
+        "count": 24971,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 24971,
+          "left": 1074,
+          "top": 322,
+          "right": 1266,
+          "bottom": 527,
+          "cx": 1160.8420968323255,
+          "cy": 426.2203355892836
+        }
+      },
+      {
+        "index": 11,
+        "count": 25063,
+        "bounds": {
+          "label": 13,
+          "owner": 11,
+          "count": 25063,
+          "left": 1320,
+          "top": 321,
+          "right": 1512,
+          "bottom": 527,
+          "cx": 1405.4547739695965,
+          "cy": 426.0142042054024
+        }
+      },
+      {
+        "index": 12,
+        "count": 23488,
+        "bounds": {
+          "label": 17,
+          "owner": 12,
+          "count": 23488,
+          "left": 43,
+          "top": 568,
+          "right": 259,
+          "bottom": 754,
+          "cx": 142.61495231607628,
+          "cy": 664.7964918256131
+        }
+      },
+      {
+        "index": 13,
+        "count": 23473,
+        "bounds": {
+          "label": 21,
+          "owner": 13,
+          "count": 23473,
+          "left": 283,
+          "top": 573,
+          "right": 512,
+          "bottom": 756,
+          "cx": 384.455587270481,
+          "cy": 666.9829165424104
+        }
+      },
+      {
+        "index": 14,
+        "count": 23031,
+        "bounds": {
+          "label": 19,
+          "owner": 14,
+          "count": 23031,
+          "left": 527,
+          "top": 563,
+          "right": 764,
+          "bottom": 756,
+          "cx": 623.6634101862707,
+          "cy": 664.9760757240241
+        }
+      },
+      {
+        "index": 15,
+        "count": 31114,
+        "bounds": {
+          "label": 22,
+          "owner": 15,
+          "count": 31114,
+          "left": 757,
+          "top": 573,
+          "right": 1072,
+          "bottom": 756,
+          "cx": 901.0527736710162,
+          "cy": 665.4136080221123
+        }
+      },
+      {
+        "index": 16,
+        "count": 23236,
+        "bounds": {
+          "label": 20,
+          "owner": 16,
+          "count": 23236,
+          "left": 1062,
+          "top": 570,
+          "right": 1310,
+          "bottom": 756,
+          "cx": 1163.731365123085,
+          "cy": 666.7743587536581
+        }
+      },
+      {
+        "index": 17,
+        "count": 23496,
+        "bounds": {
+          "label": 16,
+          "owner": 17,
+          "count": 23496,
+          "left": 1320,
+          "top": 563,
+          "right": 1515,
+          "bottom": 756,
+          "cx": 1407.387683009874,
+          "cy": 662.1896493020089
+        }
+      },
+      {
+        "index": 18,
+        "count": 22739,
+        "bounds": {
+          "label": 38,
+          "owner": 18,
+          "count": 22739,
+          "left": 45,
+          "top": 785,
+          "right": 254,
+          "bottom": 971,
+          "cx": 138.81679053608337,
+          "cy": 882.8587009103303
+        }
+      },
+      {
+        "index": 19,
+        "count": 21155,
+        "bounds": {
+          "label": 40,
+          "owner": 19,
+          "count": 21155,
+          "left": 282,
+          "top": 818,
+          "right": 506,
+          "bottom": 968,
+          "cx": 394.1642637674309,
+          "cy": 896.048688253368
+        }
+      },
+      {
+        "index": 20,
+        "count": 18323,
+        "bounds": {
+          "label": 42,
+          "owner": 20,
+          "count": 18323,
+          "left": 515,
+          "top": 856,
+          "right": 772,
+          "bottom": 970,
+          "cx": 645.4540195382853,
+          "cy": 920.8740380941986
+        }
+      },
+      {
+        "index": 21,
+        "count": 16529,
+        "bounds": {
+          "label": 43,
+          "owner": 21,
+          "count": 16529,
+          "left": 784,
+          "top": 873,
+          "right": 1053,
+          "bottom": 973,
+          "cx": 916.5587149857826,
+          "cy": 927.8252767862544
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24536,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24018,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 23965,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 24177,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 25283,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 24115,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 25413,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24044,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 24860,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 24910,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 24971,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 25063,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 23488,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 23760,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 25056,
+        "foreignPixelsExcluded": 252,
+        "regions": 4
+      },
+      {
+        "frame": 15,
+        "ownPixels": 31609,
+        "foreignPixelsExcluded": 496,
+        "regions": 5
+      },
+      {
+        "frame": 16,
+        "ownPixels": 23984,
+        "foreignPixelsExcluded": 316,
+        "regions": 5
+      },
+      {
+        "frame": 17,
+        "ownPixels": 23496,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 23263,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 21155,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 18323,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 16529,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-FI-E",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5508047739664713,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 26401,
+        "bounds": {
+          "label": 2,
+          "owner": 0,
+          "count": 26401,
+          "left": 28,
+          "top": 35,
+          "right": 226,
+          "bottom": 255,
+          "cx": 123.97659179576532,
+          "cy": 148.04359683345328
+        }
+      },
+      {
+        "index": 1,
+        "count": 26078,
+        "bounds": {
+          "label": 3,
+          "owner": 1,
+          "count": 26078,
+          "left": 288,
+          "top": 35,
+          "right": 481,
+          "bottom": 255,
+          "cx": 378.7150471661937,
+          "cy": 147.78476110131146
+        }
+      },
+      {
+        "index": 2,
+        "count": 26670,
+        "bounds": {
+          "label": 4,
+          "owner": 2,
+          "count": 26670,
+          "left": 541,
+          "top": 35,
+          "right": 741,
+          "bottom": 255,
+          "cx": 637.1011623547057,
+          "cy": 148.12632170978628
+        }
+      },
+      {
+        "index": 3,
+        "count": 26343,
+        "bounds": {
+          "label": 5,
+          "owner": 3,
+          "count": 26343,
+          "left": 797,
+          "top": 35,
+          "right": 996,
+          "bottom": 255,
+          "cx": 892.7682496298827,
+          "cy": 148.12010780852597
+        }
+      },
+      {
+        "index": 4,
+        "count": 26196,
+        "bounds": {
+          "label": 7,
+          "owner": 4,
+          "count": 26196,
+          "left": 1054,
+          "top": 59,
+          "right": 1258,
+          "bottom": 255,
+          "cx": 1154.3896778134067,
+          "cy": 157.99331959077722
+        }
+      },
+      {
+        "index": 5,
+        "count": 26197,
+        "bounds": {
+          "label": 1,
+          "owner": 5,
+          "count": 26197,
+          "left": 1307,
+          "top": 34,
+          "right": 1503,
+          "bottom": 255,
+          "cx": 1401.1553994732221,
+          "cy": 147.99450318738786
+        }
+      },
+      {
+        "index": 6,
+        "count": 26835,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 26835,
+          "left": 24,
+          "top": 287,
+          "right": 234,
+          "bottom": 508,
+          "cx": 122.39660890627911,
+          "cy": 398.48839202534003
+        }
+      },
+      {
+        "index": 7,
+        "count": 26177,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 26177,
+          "left": 289,
+          "top": 288,
+          "right": 489,
+          "bottom": 508,
+          "cx": 382.5526607327043,
+          "cy": 397.36803300607403
+        }
+      },
+      {
+        "index": 8,
+        "count": 26671,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 26671,
+          "left": 541,
+          "top": 288,
+          "right": 743,
+          "bottom": 508,
+          "cx": 637.9684301301039,
+          "cy": 399.8590229087773
+        }
+      },
+      {
+        "index": 9,
+        "count": 26390,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 26390,
+          "left": 796,
+          "top": 288,
+          "right": 997,
+          "bottom": 507,
+          "cx": 891.5651383099658,
+          "cy": 399.6558544903373
+        }
+      },
+      {
+        "index": 10,
+        "count": 26527,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 26527,
+          "left": 1051,
+          "top": 288,
+          "right": 1253,
+          "bottom": 508,
+          "cx": 1147.0392807328383,
+          "cy": 400.2830700795416
+        }
+      },
+      {
+        "index": 11,
+        "count": 26568,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 26568,
+          "left": 1308,
+          "top": 288,
+          "right": 1510,
+          "bottom": 507,
+          "cx": 1404.0377521830774,
+          "cy": 399.77472899728997
+        }
+      },
+      {
+        "index": 12,
+        "count": 26721,
+        "bounds": {
+          "label": 21,
+          "owner": 12,
+          "count": 26721,
+          "left": 21,
+          "top": 524,
+          "right": 323,
+          "bottom": 759,
+          "cx": 122.23367388945024,
+          "cy": 661.682571760039
+        }
+      },
+      {
+        "index": 13,
+        "count": 30692,
+        "bounds": {
+          "label": 16,
+          "owner": 13,
+          "count": 30692,
+          "left": 277,
+          "top": 513,
+          "right": 487,
+          "bottom": 759,
+          "cx": 376.8041835005865,
+          "cy": 642.7156262218167
+        }
+      },
+      {
+        "index": 14,
+        "count": 28586,
+        "bounds": {
+          "label": 20,
+          "owner": 14,
+          "count": 28586,
+          "left": 523,
+          "top": 550,
+          "right": 747,
+          "bottom": 760,
+          "cx": 625.5482753795565,
+          "cy": 654.6207933953683
+        }
+      },
+      {
+        "index": 15,
+        "count": 30055,
+        "bounds": {
+          "label": 22,
+          "owner": 15,
+          "count": 30055,
+          "left": 763,
+          "top": 559,
+          "right": 1097,
+          "bottom": 759,
+          "cx": 888.5280652137748,
+          "cy": 663.2767592746632
+        }
+      },
+      {
+        "index": 16,
+        "count": 25070,
+        "bounds": {
+          "label": 19,
+          "owner": 16,
+          "count": 25070,
+          "left": 1075,
+          "top": 547,
+          "right": 1287,
+          "bottom": 759,
+          "cx": 1175.260949341843,
+          "cy": 660.5227363382529
+        }
+      },
+      {
+        "index": 17,
+        "count": 26008,
+        "bounds": {
+          "label": 18,
+          "owner": 17,
+          "count": 26008,
+          "left": 1310,
+          "top": 544,
+          "right": 1508,
+          "bottom": 760,
+          "cx": 1404.275569055675,
+          "cy": 653.7526914795448
+        }
+      },
+      {
+        "index": 18,
+        "count": 24509,
+        "bounds": {
+          "label": 29,
+          "owner": 18,
+          "count": 24509,
+          "left": 28,
+          "top": 797,
+          "right": 250,
+          "bottom": 993,
+          "cx": 124.38153331429271,
+          "cy": 900.6895426169979
+        }
+      },
+      {
+        "index": 19,
+        "count": 24277,
+        "bounds": {
+          "label": 30,
+          "owner": 19,
+          "count": 24277,
+          "left": 274,
+          "top": 803,
+          "right": 492,
+          "bottom": 993,
+          "cx": 383.3550273921819,
+          "cy": 911.5874696214524
+        }
+      },
+      {
+        "index": 20,
+        "count": 21373,
+        "bounds": {
+          "label": 34,
+          "owner": 20,
+          "count": 21373,
+          "left": 512,
+          "top": 855,
+          "right": 770,
+          "bottom": 994,
+          "cx": 641.0039769803022,
+          "cy": 935.678051747532
+        }
+      },
+      {
+        "index": 21,
+        "count": 18183,
+        "bounds": {
+          "label": 35,
+          "owner": 21,
+          "count": 18183,
+          "left": 773,
+          "top": 897,
+          "right": 1059,
+          "bottom": 991,
+          "cx": 904.6685365451245,
+          "cy": 948.2057416267943
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 26401,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 26078,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 26670,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 26343,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 26510,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 26197,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 26835,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 26177,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 26671,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 26390,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 26527,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 26568,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 27372,
+        "foreignPixelsExcluded": 4828,
+        "regions": 19
+      },
+      {
+        "frame": 13,
+        "ownPixels": 31338,
+        "foreignPixelsExcluded": 651,
+        "regions": 20
+      },
+      {
+        "frame": 14,
+        "ownPixels": 28586,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 31292,
+        "foreignPixelsExcluded": 750,
+        "regions": 9
+      },
+      {
+        "frame": 16,
+        "ownPixels": 25215,
+        "foreignPixelsExcluded": 666,
+        "regions": 8
+      },
+      {
+        "frame": 17,
+        "ownPixels": 26008,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 25116,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 24277,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 21373,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 18183,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {
+      "16": 17,
+      "19": 20
+    },
+    "issues": []
+  },
+  {
+    "id": "E-IC-F",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5700492858886719,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24477,
+        "bounds": {
+          "label": 2,
+          "owner": 0,
+          "count": 24477,
+          "left": 37,
+          "top": 63,
+          "right": 241,
+          "bottom": 265,
+          "cx": 139.86722229031335,
+          "cy": 168.44237447399598
+        }
+      },
+      {
+        "index": 1,
+        "count": 24162,
+        "bounds": {
+          "label": 4,
+          "owner": 1,
+          "count": 24162,
+          "left": 295,
+          "top": 64,
+          "right": 491,
+          "bottom": 265,
+          "cx": 394.5071186160086,
+          "cy": 169.22638854399472
+        }
+      },
+      {
+        "index": 2,
+        "count": 24841,
+        "bounds": {
+          "label": 5,
+          "owner": 2,
+          "count": 24841,
+          "left": 547,
+          "top": 64,
+          "right": 748,
+          "bottom": 266,
+          "cx": 649.5298901010426,
+          "cy": 169.2379936395475
+        }
+      },
+      {
+        "index": 3,
+        "count": 24481,
+        "bounds": {
+          "label": 3,
+          "owner": 3,
+          "count": 24481,
+          "left": 800,
+          "top": 63,
+          "right": 1004,
+          "bottom": 265,
+          "cx": 902.5553694702014,
+          "cy": 168.8669580490993
+        }
+      },
+      {
+        "index": 4,
+        "count": 23802,
+        "bounds": {
+          "label": 7,
+          "owner": 4,
+          "count": 23802,
+          "left": 1056,
+          "top": 65,
+          "right": 1276,
+          "bottom": 265,
+          "cx": 1159.3672380472228,
+          "cy": 174.06453239223595
+        }
+      },
+      {
+        "index": 5,
+        "count": 26568,
+        "bounds": {
+          "label": 1,
+          "owner": 5,
+          "count": 26568,
+          "left": 1302,
+          "top": 61,
+          "right": 1531,
+          "bottom": 265,
+          "cx": 1419.2451445347788,
+          "cy": 171.5753914483589
+        }
+      },
+      {
+        "index": 6,
+        "count": 25551,
+        "bounds": {
+          "label": 11,
+          "owner": 6,
+          "count": 25551,
+          "left": 40,
+          "top": 310,
+          "right": 251,
+          "bottom": 508,
+          "cx": 141.95162615944582,
+          "cy": 408.0458690462213
+        }
+      },
+      {
+        "index": 7,
+        "count": 24977,
+        "bounds": {
+          "label": 12,
+          "owner": 7,
+          "count": 24977,
+          "left": 297,
+          "top": 310,
+          "right": 505,
+          "bottom": 508,
+          "cx": 394.19173639748567,
+          "cy": 407.62081114625454
+        }
+      },
+      {
+        "index": 8,
+        "count": 26121,
+        "bounds": {
+          "label": 13,
+          "owner": 8,
+          "count": 26121,
+          "left": 546,
+          "top": 310,
+          "right": 755,
+          "bottom": 508,
+          "cx": 642.748248535661,
+          "cy": 410.4163316871483
+        }
+      },
+      {
+        "index": 9,
+        "count": 25883,
+        "bounds": {
+          "label": 14,
+          "owner": 9,
+          "count": 25883,
+          "left": 799,
+          "top": 310,
+          "right": 1016,
+          "bottom": 509,
+          "cx": 902.496426225708,
+          "cy": 409.3763474094966
+        }
+      },
+      {
+        "index": 10,
+        "count": 25660,
+        "bounds": {
+          "label": 10,
+          "owner": 10,
+          "count": 25660,
+          "left": 1067,
+          "top": 309,
+          "right": 1273,
+          "bottom": 510,
+          "cx": 1161.7690179267343,
+          "cy": 409.72256430241623
+        }
+      },
+      {
+        "index": 11,
+        "count": 24716,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 24716,
+          "left": 1315,
+          "top": 310,
+          "right": 1517,
+          "bottom": 510,
+          "cx": 1411.7569590548633,
+          "cy": 408.26654798511083
+        }
+      },
+      {
+        "index": 12,
+        "count": 27463,
+        "bounds": {
+          "label": 18,
+          "owner": 12,
+          "count": 27463,
+          "left": 30,
+          "top": 548,
+          "right": 250,
+          "bottom": 750,
+          "cx": 138.5875905764119,
+          "cy": 652.2823435167317
+        }
+      },
+      {
+        "index": 13,
+        "count": 26847,
+        "bounds": {
+          "label": 17,
+          "owner": 13,
+          "count": 26847,
+          "left": 289,
+          "top": 542,
+          "right": 507,
+          "bottom": 750,
+          "cx": 395.7099117219801,
+          "cy": 652.8909747830297
+        }
+      },
+      {
+        "index": 14,
+        "count": 27131,
+        "bounds": {
+          "label": 20,
+          "owner": 14,
+          "count": 27131,
+          "left": 525,
+          "top": 560,
+          "right": 797,
+          "bottom": 750,
+          "cx": 639.5759463344514,
+          "cy": 659.7696362095021
+        }
+      },
+      {
+        "index": 15,
+        "count": 27150,
+        "bounds": {
+          "label": 21,
+          "owner": 15,
+          "count": 27150,
+          "left": 787,
+          "top": 562,
+          "right": 1065,
+          "bottom": 751,
+          "cx": 900.9817679558012,
+          "cy": 659.7447513812155
+        }
+      },
+      {
+        "index": 16,
+        "count": 25784,
+        "bounds": {
+          "label": 19,
+          "owner": 16,
+          "count": 25784,
+          "left": 1071,
+          "top": 553,
+          "right": 1291,
+          "bottom": 750,
+          "cx": 1173.409323611542,
+          "cy": 656.3396680111697
+        }
+      },
+      {
+        "index": 17,
+        "count": 26298,
+        "bounds": {
+          "label": 16,
+          "owner": 17,
+          "count": 26298,
+          "left": 1316,
+          "top": 539,
+          "right": 1525,
+          "bottom": 751,
+          "cx": 1419.2045022435166,
+          "cy": 651.2417294090806
+        }
+      },
+      {
+        "index": 18,
+        "count": 25843,
+        "bounds": {
+          "label": 34,
+          "owner": 18,
+          "count": 25843,
+          "left": 34,
+          "top": 773,
+          "right": 242,
+          "bottom": 986,
+          "cx": 138.05351545873157,
+          "cy": 898.6549162248965
+        }
+      },
+      {
+        "index": 19,
+        "count": 25236,
+        "bounds": {
+          "label": 36,
+          "owner": 19,
+          "count": 25236,
+          "left": 265,
+          "top": 796,
+          "right": 510,
+          "bottom": 991,
+          "cx": 398.906126168965,
+          "cy": 908.2859407196069
+        }
+      },
+      {
+        "index": 20,
+        "count": 18940,
+        "bounds": {
+          "label": 37,
+          "owner": 20,
+          "count": 18940,
+          "left": 509,
+          "top": 862,
+          "right": 744,
+          "bottom": 993,
+          "cx": 642.1824709609292,
+          "cy": 935.2566525871172
+        }
+      },
+      {
+        "index": 21,
+        "count": 22868,
+        "bounds": {
+          "label": 38,
+          "owner": 21,
+          "count": 22868,
+          "left": 750,
+          "top": 878,
+          "right": 1075,
+          "bottom": 991,
+          "cx": 908.9061133461606,
+          "cy": 942.4215060346336
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24477,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24162,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 24841,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 24481,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24488,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 26799,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 25551,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24977,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 26121,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 25883,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 25660,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 24716,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 27463,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 26847,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 27131,
+        "foreignPixelsExcluded": 165,
+        "regions": 4
+      },
+      {
+        "frame": 15,
+        "ownPixels": 28195,
+        "foreignPixelsExcluded": 128,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 26305,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 26298,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 26679,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 25236,
+        "foreignPixelsExcluded": 24,
+        "regions": 2
+      },
+      {
+        "frame": 20,
+        "ownPixels": 18940,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 22868,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-IC-S",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.549279530843099,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 21955,
+        "bounds": {
+          "label": 6,
+          "owner": 0,
+          "count": 21955,
+          "left": 30,
+          "top": 76,
+          "right": 221,
+          "bottom": 261,
+          "cx": 125.88371669323617,
+          "cy": 170.3364153951264
+        }
+      },
+      {
+        "index": 1,
+        "count": 21894,
+        "bounds": {
+          "label": 7,
+          "owner": 1,
+          "count": 21894,
+          "left": 277,
+          "top": 76,
+          "right": 470,
+          "bottom": 261,
+          "cx": 373.5114643281264,
+          "cy": 170.3540696081118
+        }
+      },
+      {
+        "index": 2,
+        "count": 22089,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 22089,
+          "left": 534,
+          "top": 75,
+          "right": 731,
+          "bottom": 261,
+          "cx": 632.0555027389198,
+          "cy": 169.9519670424193
+        }
+      },
+      {
+        "index": 3,
+        "count": 22931,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 22931,
+          "left": 792,
+          "top": 75,
+          "right": 992,
+          "bottom": 261,
+          "cx": 890.6371723867254,
+          "cy": 170.60603549779773
+        }
+      },
+      {
+        "index": 4,
+        "count": 21721,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 21721,
+          "left": 1059,
+          "top": 58,
+          "right": 1270,
+          "bottom": 261,
+          "cx": 1166.4185350582386,
+          "cy": 177.59122508171816
+        }
+      },
+      {
+        "index": 5,
+        "count": 21904,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 21904,
+          "left": 1318,
+          "top": 75,
+          "right": 1505,
+          "bottom": 261,
+          "cx": 1412.7327428780131,
+          "cy": 170.35135135135135
+        }
+      },
+      {
+        "index": 6,
+        "count": 22782,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 22782,
+          "left": 33,
+          "top": 309,
+          "right": 236,
+          "bottom": 504,
+          "cx": 130.2534895970503,
+          "cy": 406.4755947677991
+        }
+      },
+      {
+        "index": 7,
+        "count": 22460,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 22460,
+          "left": 289,
+          "top": 309,
+          "right": 487,
+          "bottom": 504,
+          "cx": 382.2421638468388,
+          "cy": 406.47439893143365
+        }
+      },
+      {
+        "index": 8,
+        "count": 22953,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 22953,
+          "left": 542,
+          "top": 309,
+          "right": 750,
+          "bottom": 506,
+          "cx": 639.1263015727792,
+          "cy": 406.6312900274474
+        }
+      },
+      {
+        "index": 9,
+        "count": 22828,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 22828,
+          "left": 799,
+          "top": 309,
+          "right": 997,
+          "bottom": 506,
+          "cx": 895.4411687401437,
+          "cy": 406.0182670404766
+        }
+      },
+      {
+        "index": 10,
+        "count": 22946,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 22946,
+          "left": 1069,
+          "top": 309,
+          "right": 1265,
+          "bottom": 505,
+          "cx": 1163.271376274732,
+          "cy": 406.7701560184782
+        }
+      },
+      {
+        "index": 11,
+        "count": 22344,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 22344,
+          "left": 1318,
+          "top": 309,
+          "right": 1509,
+          "bottom": 505,
+          "cx": 1411.3707035445757,
+          "cy": 406.1814804869316
+        }
+      },
+      {
+        "index": 12,
+        "count": 23818,
+        "bounds": {
+          "label": 18,
+          "owner": 12,
+          "count": 23818,
+          "left": 29,
+          "top": 560,
+          "right": 225,
+          "bottom": 749,
+          "cx": 128.62448568309682,
+          "cy": 658.8761021076497
+        }
+      },
+      {
+        "index": 13,
+        "count": 24967,
+        "bounds": {
+          "label": 16,
+          "owner": 13,
+          "count": 24967,
+          "left": 279,
+          "top": 544,
+          "right": 482,
+          "bottom": 749,
+          "cx": 369.7889213762166,
+          "cy": 651.1869267433011
+        }
+      },
+      {
+        "index": 14,
+        "count": 23919,
+        "bounds": {
+          "label": 20,
+          "owner": 14,
+          "count": 23919,
+          "left": 509,
+          "top": 561,
+          "right": 755,
+          "bottom": 749,
+          "cx": 622.3310757138677,
+          "cy": 649.1682344579623
+        }
+      },
+      {
+        "index": 15,
+        "count": 24709,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 24709,
+          "left": 769,
+          "top": 560,
+          "right": 1068,
+          "bottom": 749,
+          "cx": 869.8443077421183,
+          "cy": 654.0309603788094
+        }
+      },
+      {
+        "index": 16,
+        "count": 25358,
+        "bounds": {
+          "label": 21,
+          "owner": 16,
+          "count": 25358,
+          "left": 1060,
+          "top": 561,
+          "right": 1293,
+          "bottom": 749,
+          "cx": 1166.7127139364304,
+          "cy": 656.1147172489945
+        }
+      },
+      {
+        "index": 17,
+        "count": 23612,
+        "bounds": {
+          "label": 17,
+          "owner": 17,
+          "count": 23612,
+          "left": 1313,
+          "top": 556,
+          "right": 1510,
+          "bottom": 748,
+          "cx": 1406.6190496357783,
+          "cy": 654.608122988311
+        }
+      },
+      {
+        "index": 18,
+        "count": 22371,
+        "bounds": {
+          "label": 25,
+          "owner": 18,
+          "count": 22371,
+          "left": 32,
+          "top": 793,
+          "right": 248,
+          "bottom": 972,
+          "cx": 135.88047025166512,
+          "cy": 889.1199320548925
+        }
+      },
+      {
+        "index": 19,
+        "count": 22065,
+        "bounds": {
+          "label": 28,
+          "owner": 19,
+          "count": 22065,
+          "left": 283,
+          "top": 822,
+          "right": 505,
+          "bottom": 973,
+          "cx": 386.7720371629277,
+          "cy": 907.4000906412871
+        }
+      },
+      {
+        "index": 20,
+        "count": 16958,
+        "bounds": {
+          "label": 30,
+          "owner": 20,
+          "count": 16958,
+          "left": 518,
+          "top": 866,
+          "right": 769,
+          "bottom": 970,
+          "cx": 644.814954593702,
+          "cy": 924.986142233754
+        }
+      },
+      {
+        "index": 21,
+        "count": 15629,
+        "bounds": {
+          "label": 31,
+          "owner": 21,
+          "count": 15629,
+          "left": 774,
+          "top": 880,
+          "right": 1045,
+          "bottom": 967,
+          "cx": 906.3352101861923,
+          "cy": 928.2872864546677
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 21955,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 21894,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 22089,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 22931,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 23301,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 21904,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 22782,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 22460,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 22953,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 22828,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 22946,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 22344,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 23818,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 24967,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 23919,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 28453,
+        "foreignPixelsExcluded": 162,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 25526,
+        "foreignPixelsExcluded": 188,
+        "regions": 3
+      },
+      {
+        "frame": 17,
+        "ownPixels": 23612,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 22799,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22065,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 16958,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 15629,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {
+      "12": 0
+    },
+    "issues": []
+  },
+  {
+    "id": "E-KN-C",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.48670705159505206,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 32022,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 32022,
+          "left": 13,
+          "top": 42,
+          "right": 236,
+          "bottom": 256,
+          "cx": 132.92139778902006,
+          "cy": 160.11420273561927
+        }
+      },
+      {
+        "index": 1,
+        "count": 32591,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 32591,
+          "left": 263,
+          "top": 42,
+          "right": 492,
+          "bottom": 256,
+          "cx": 388.2730815255745,
+          "cy": 160.0354699150072
+        }
+      },
+      {
+        "index": 2,
+        "count": 32490,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 32490,
+          "left": 520,
+          "top": 42,
+          "right": 748,
+          "bottom": 256,
+          "cx": 643.7337334564481,
+          "cy": 160.122837796245
+        }
+      },
+      {
+        "index": 3,
+        "count": 32466,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 32466,
+          "left": 775,
+          "top": 42,
+          "right": 1002,
+          "bottom": 256,
+          "cx": 898.7857142857143,
+          "cy": 160.14984907287624
+        }
+      },
+      {
+        "index": 4,
+        "count": 29919,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 29919,
+          "left": 1055,
+          "top": 57,
+          "right": 1278,
+          "bottom": 257,
+          "cx": 1167.8301413817308,
+          "cy": 170.00284100404426
+        }
+      },
+      {
+        "index": 5,
+        "count": 31781,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 31781,
+          "left": 1296,
+          "top": 42,
+          "right": 1515,
+          "bottom": 257,
+          "cx": 1413.132657877348,
+          "cy": 160.32698782291305
+        }
+      },
+      {
+        "index": 6,
+        "count": 32988,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 32988,
+          "left": 10,
+          "top": 292,
+          "right": 244,
+          "bottom": 509,
+          "cx": 136.64517400266763,
+          "cy": 410.8771371407785
+        }
+      },
+      {
+        "index": 7,
+        "count": 33354,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 33354,
+          "left": 258,
+          "top": 292,
+          "right": 501,
+          "bottom": 507,
+          "cx": 389.63977334052885,
+          "cy": 410.14289140732745
+        }
+      },
+      {
+        "index": 8,
+        "count": 33438,
+        "bounds": {
+          "label": 12,
+          "owner": 8,
+          "count": 33438,
+          "left": 516,
+          "top": 292,
+          "right": 758,
+          "bottom": 508,
+          "cx": 646.6159758358754,
+          "cy": 410.66265924995514
+        }
+      },
+      {
+        "index": 9,
+        "count": 33253,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 33253,
+          "left": 773,
+          "top": 292,
+          "right": 1012,
+          "bottom": 509,
+          "cx": 901.3667939734761,
+          "cy": 411.1567678104231
+        }
+      },
+      {
+        "index": 10,
+        "count": 33393,
+        "bounds": {
+          "label": 14,
+          "owner": 10,
+          "count": 33393,
+          "left": 1030,
+          "top": 292,
+          "right": 1270,
+          "bottom": 509,
+          "cx": 1160.3928368220884,
+          "cy": 411.73389632557723
+        }
+      },
+      {
+        "index": 11,
+        "count": 32759,
+        "bounds": {
+          "label": 15,
+          "owner": 11,
+          "count": 32759,
+          "left": 1284,
+          "top": 292,
+          "right": 1521,
+          "bottom": 509,
+          "cx": 1413.3797734973596,
+          "cy": 411.5087151622455
+        }
+      },
+      {
+        "index": 12,
+        "count": 34631,
+        "bounds": {
+          "label": 18,
+          "owner": 12,
+          "count": 34631,
+          "left": 11,
+          "top": 545,
+          "right": 251,
+          "bottom": 760,
+          "cx": 137.49216020328606,
+          "cy": 667.2184459010713
+        }
+      },
+      {
+        "index": 13,
+        "count": 37649,
+        "bounds": {
+          "label": 16,
+          "owner": 13,
+          "count": 37649,
+          "left": 271,
+          "top": 508,
+          "right": 509,
+          "bottom": 760,
+          "cx": 390.8951100958857,
+          "cy": 657.2935801747723
+        }
+      },
+      {
+        "index": 14,
+        "count": 36113,
+        "bounds": {
+          "label": 17,
+          "owner": 14,
+          "count": 36113,
+          "left": 520,
+          "top": 543,
+          "right": 765,
+          "bottom": 760,
+          "cx": 653.1071082435687,
+          "cy": 661.0392379475535
+        }
+      },
+      {
+        "index": 15,
+        "count": 34698,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 34698,
+          "left": 767,
+          "top": 547,
+          "right": 1020,
+          "bottom": 761,
+          "cx": 897.8326992910254,
+          "cy": 664.1581935558246
+        }
+      },
+      {
+        "index": 16,
+        "count": 33008,
+        "bounds": {
+          "label": 22,
+          "owner": 16,
+          "count": 33008,
+          "left": 1053,
+          "top": 560,
+          "right": 1316,
+          "bottom": 762,
+          "cx": 1186.0328405235095,
+          "cy": 679.0991577799322
+        }
+      },
+      {
+        "index": 17,
+        "count": 32654,
+        "bounds": {
+          "label": 20,
+          "owner": 17,
+          "count": 32654,
+          "left": 1296,
+          "top": 547,
+          "right": 1521,
+          "bottom": 762,
+          "cx": 1414.938047406137,
+          "cy": 666.956360629632
+        }
+      },
+      {
+        "index": 18,
+        "count": 31153,
+        "bounds": {
+          "label": 29,
+          "owner": 18,
+          "count": 31153,
+          "left": 17,
+          "top": 783,
+          "right": 247,
+          "bottom": 992,
+          "cx": 129.3721631945559,
+          "cy": 901.6756973646197
+        }
+      },
+      {
+        "index": 19,
+        "count": 27447,
+        "bounds": {
+          "label": 30,
+          "owner": 19,
+          "count": 27447,
+          "left": 256,
+          "top": 813,
+          "right": 505,
+          "bottom": 990,
+          "cx": 390.5495682588261,
+          "cy": 917.6884541115604
+        }
+      },
+      {
+        "index": 20,
+        "count": 19281,
+        "bounds": {
+          "label": 32,
+          "owner": 20,
+          "count": 19281,
+          "left": 510,
+          "top": 879,
+          "right": 779,
+          "bottom": 986,
+          "cx": 647.3245163632591,
+          "cy": 940.3993568798298
+        }
+      },
+      {
+        "index": 21,
+        "count": 18707,
+        "bounds": {
+          "label": 33,
+          "owner": 21,
+          "count": 18707,
+          "left": 781,
+          "top": 893,
+          "right": 1061,
+          "bottom": 990,
+          "cx": 915.8042444004918,
+          "cy": 944.1135403859518
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 32022,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 32591,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 32490,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 32466,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 30842,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 31781,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 32988,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 33354,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 33438,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 33253,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 33393,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 32759,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 34631,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 37649,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 36113,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 34970,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 33008,
+        "foreignPixelsExcluded": 703,
+        "regions": 8
+      },
+      {
+        "frame": 17,
+        "ownPixels": 32654,
+        "foreignPixelsExcluded": 374,
+        "regions": 13
+      },
+      {
+        "frame": 18,
+        "ownPixels": 31929,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 27447,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 19281,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 18707,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "E-KN-G",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5886783599853516,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 25275,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 25275,
+          "left": 32,
+          "top": 55,
+          "right": 221,
+          "bottom": 253,
+          "cx": 135.0588328387735,
+          "cy": 168.64771513353116
+        }
+      },
+      {
+        "index": 1,
+        "count": 25320,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 25320,
+          "left": 287,
+          "top": 56,
+          "right": 477,
+          "bottom": 253,
+          "cx": 390.72219589257503,
+          "cy": 168.5632701421801
+        }
+      },
+      {
+        "index": 2,
+        "count": 25276,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 25276,
+          "left": 543,
+          "top": 56,
+          "right": 733,
+          "bottom": 253,
+          "cx": 646.9887244817218,
+          "cy": 168.86453552777337
+        }
+      },
+      {
+        "index": 3,
+        "count": 25284,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 25284,
+          "left": 799,
+          "top": 56,
+          "right": 989,
+          "bottom": 253,
+          "cx": 902.9399620313242,
+          "cy": 168.70835310868534
+        }
+      },
+      {
+        "index": 4,
+        "count": 23392,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 23392,
+          "left": 1058,
+          "top": 62,
+          "right": 1254,
+          "bottom": 253,
+          "cx": 1153.9295485636114,
+          "cy": 172.31737346101232
+        }
+      },
+      {
+        "index": 5,
+        "count": 25302,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 25302,
+          "left": 1311,
+          "top": 56,
+          "right": 1501,
+          "bottom": 253,
+          "cx": 1414.8939609517033,
+          "cy": 168.71124812267806
+        }
+      },
+      {
+        "index": 6,
+        "count": 27255,
+        "bounds": {
+          "label": 11,
+          "owner": 6,
+          "count": 27255,
+          "left": 27,
+          "top": 292,
+          "right": 231,
+          "bottom": 494,
+          "cx": 139.1175197211521,
+          "cy": 403.7972482113374
+        }
+      },
+      {
+        "index": 7,
+        "count": 27147,
+        "bounds": {
+          "label": 12,
+          "owner": 7,
+          "count": 27147,
+          "left": 283,
+          "top": 292,
+          "right": 487,
+          "bottom": 494,
+          "cx": 394.9808081924338,
+          "cy": 403.8207168379563
+        }
+      },
+      {
+        "index": 8,
+        "count": 27185,
+        "bounds": {
+          "label": 13,
+          "owner": 8,
+          "count": 27185,
+          "left": 540,
+          "top": 292,
+          "right": 743,
+          "bottom": 494,
+          "cx": 650.7970939856539,
+          "cy": 403.93290417509655
+        }
+      },
+      {
+        "index": 9,
+        "count": 27140,
+        "bounds": {
+          "label": 14,
+          "owner": 9,
+          "count": 27140,
+          "left": 792,
+          "top": 292,
+          "right": 998,
+          "bottom": 494,
+          "cx": 906.6893883566692,
+          "cy": 403.51160648489315
+        }
+      },
+      {
+        "index": 10,
+        "count": 27317,
+        "bounds": {
+          "label": 15,
+          "owner": 10,
+          "count": 27317,
+          "left": 1053,
+          "top": 292,
+          "right": 1260,
+          "bottom": 494,
+          "cx": 1167.5012995570523,
+          "cy": 404.2873302339203
+        }
+      },
+      {
+        "index": 11,
+        "count": 26968,
+        "bounds": {
+          "label": 16,
+          "owner": 11,
+          "count": 26968,
+          "left": 1308,
+          "top": 292,
+          "right": 1508,
+          "bottom": 494,
+          "cx": 1417.6733906852567,
+          "cy": 403.9032927914565
+        }
+      },
+      {
+        "index": 12,
+        "count": 25185,
+        "bounds": {
+          "label": 21,
+          "owner": 12,
+          "count": 25185,
+          "left": 37,
+          "top": 549,
+          "right": 227,
+          "bottom": 737,
+          "cx": 137.02688108000794,
+          "cy": 656.3203891205083
+        }
+      },
+      {
+        "index": 13,
+        "count": 27538,
+        "bounds": {
+          "label": 18,
+          "owner": 13,
+          "count": 27538,
+          "left": 283,
+          "top": 539,
+          "right": 507,
+          "bottom": 737,
+          "cx": 397.4789381944949,
+          "cy": 640.9567869852567
+        }
+      },
+      {
+        "index": 14,
+        "count": 27288,
+        "bounds": {
+          "label": 23,
+          "owner": 14,
+          "count": 27288,
+          "left": 539,
+          "top": 550,
+          "right": 757,
+          "bottom": 737,
+          "cx": 659.6370932277924,
+          "cy": 653.6631119906186
+        }
+      },
+      {
+        "index": 15,
+        "count": 29996,
+        "bounds": {
+          "label": 20,
+          "owner": 15,
+          "count": 29996,
+          "left": 782,
+          "top": 538,
+          "right": 1051,
+          "bottom": 737,
+          "cx": 913.0122683024404,
+          "cy": 645.6830910788105
+        }
+      },
+      {
+        "index": 16,
+        "count": 26229,
+        "bounds": {
+          "label": 24,
+          "owner": 16,
+          "count": 26229,
+          "left": 1066,
+          "top": 550,
+          "right": 1279,
+          "bottom": 737,
+          "cx": 1179.5538526058942,
+          "cy": 652.6688398337718
+        }
+      },
+      {
+        "index": 17,
+        "count": 25767,
+        "bounds": {
+          "label": 19,
+          "owner": 17,
+          "count": 25767,
+          "left": 1311,
+          "top": 540,
+          "right": 1503,
+          "bottom": 737,
+          "cx": 1415.2573058563278,
+          "cy": 652.0155625412349
+        }
+      },
+      {
+        "index": 18,
+        "count": 22983,
+        "bounds": {
+          "label": 32,
+          "owner": 18,
+          "count": 22983,
+          "left": 34,
+          "top": 787,
+          "right": 230,
+          "bottom": 978,
+          "cx": 129.45912195970936,
+          "cy": 899.8126006178479
+        }
+      },
+      {
+        "index": 19,
+        "count": 21748,
+        "bounds": {
+          "label": 35,
+          "owner": 19,
+          "count": 21748,
+          "left": 283,
+          "top": 813,
+          "right": 489,
+          "bottom": 978,
+          "cx": 393.2197443443075,
+          "cy": 909.0537060879161
+        }
+      },
+      {
+        "index": 20,
+        "count": 17368,
+        "bounds": {
+          "label": 37,
+          "owner": 20,
+          "count": 17368,
+          "left": 512,
+          "top": 874,
+          "right": 756,
+          "bottom": 972,
+          "cx": 647.390085214187,
+          "cy": 924.185628742515
+        }
+      },
+      {
+        "index": 21,
+        "count": 16221,
+        "bounds": {
+          "label": 38,
+          "owner": 21,
+          "count": 16221,
+          "left": 780,
+          "top": 882,
+          "right": 1027,
+          "bottom": 970,
+          "cx": 917.438012452993,
+          "cy": 928.901362431416
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 25275,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 25320,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 25276,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 25284,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24582,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 25302,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 27255,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 27147,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 27185,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 27140,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 27317,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 26968,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 25185,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 27538,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 27288,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 31434,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 26229,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 25767,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 24298,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 21748,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 17368,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 16221,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {
+      "21": 20
+    },
+    "issues": []
+  },
+  {
+    "id": "F-AR",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5577704111735026,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24271,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 24271,
+          "left": 34,
+          "top": 64,
+          "right": 232,
+          "bottom": 256,
+          "cx": 132.70767582711878,
+          "cy": 166.0645626467801
+        }
+      },
+      {
+        "index": 1,
+        "count": 24168,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 24168,
+          "left": 293,
+          "top": 64,
+          "right": 489,
+          "bottom": 256,
+          "cx": 390.14299900695136,
+          "cy": 165.55416252896393
+        }
+      },
+      {
+        "index": 2,
+        "count": 23865,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 23865,
+          "left": 552,
+          "top": 64,
+          "right": 745,
+          "bottom": 256,
+          "cx": 647.2035617012361,
+          "cy": 165.67182065786716
+        }
+      },
+      {
+        "index": 3,
+        "count": 24223,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 24223,
+          "left": 805,
+          "top": 64,
+          "right": 998,
+          "bottom": 256,
+          "cx": 900.1614994013954,
+          "cy": 165.43347231969616
+        }
+      },
+      {
+        "index": 4,
+        "count": 23566,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 23566,
+          "left": 1070,
+          "top": 66,
+          "right": 1264,
+          "bottom": 256,
+          "cx": 1159.99792073326,
+          "cy": 174.2574896036663
+        }
+      },
+      {
+        "index": 5,
+        "count": 23618,
+        "bounds": {
+          "label": 9,
+          "owner": 5,
+          "count": 23618,
+          "left": 1321,
+          "top": 67,
+          "right": 1515,
+          "bottom": 256,
+          "cx": 1416.251630112626,
+          "cy": 171.83948683207723
+        }
+      },
+      {
+        "index": 6,
+        "count": 24106,
+        "bounds": {
+          "label": 11,
+          "owner": 6,
+          "count": 24106,
+          "left": 38,
+          "top": 311,
+          "right": 240,
+          "bottom": 505,
+          "cx": 139.6530739235045,
+          "cy": 411.964158300838
+        }
+      },
+      {
+        "index": 7,
+        "count": 23211,
+        "bounds": {
+          "label": 13,
+          "owner": 7,
+          "count": 23211,
+          "left": 299,
+          "top": 312,
+          "right": 492,
+          "bottom": 505,
+          "cx": 396.6982034380251,
+          "cy": 411.5257421050364
+        }
+      },
+      {
+        "index": 8,
+        "count": 23792,
+        "bounds": {
+          "label": 14,
+          "owner": 8,
+          "count": 23792,
+          "left": 553,
+          "top": 312,
+          "right": 752,
+          "bottom": 505,
+          "cx": 652.7192753866846,
+          "cy": 411.93989576328175
+        }
+      },
+      {
+        "index": 9,
+        "count": 23399,
+        "bounds": {
+          "label": 15,
+          "owner": 9,
+          "count": 23399,
+          "left": 805,
+          "top": 312,
+          "right": 1002,
+          "bottom": 505,
+          "cx": 904.8790119235865,
+          "cy": 412.26193427069535
+        }
+      },
+      {
+        "index": 10,
+        "count": 23416,
+        "bounds": {
+          "label": 16,
+          "owner": 10,
+          "count": 23416,
+          "left": 1070,
+          "top": 312,
+          "right": 1264,
+          "bottom": 505,
+          "cx": 1167.2718226853433,
+          "cy": 411.4964554151008
+        }
+      },
+      {
+        "index": 11,
+        "count": 23314,
+        "bounds": {
+          "label": 12,
+          "owner": 11,
+          "count": 23314,
+          "left": 1327,
+          "top": 311,
+          "right": 1516,
+          "bottom": 505,
+          "cx": 1421.6599039203911,
+          "cy": 410.4949815561465
+        }
+      },
+      {
+        "index": 12,
+        "count": 24659,
+        "bounds": {
+          "label": 21,
+          "owner": 12,
+          "count": 24659,
+          "left": 34,
+          "top": 561,
+          "right": 227,
+          "bottom": 759,
+          "cx": 130.79326006731822,
+          "cy": 663.9290725495762
+        }
+      },
+      {
+        "index": 13,
+        "count": 26827,
+        "bounds": {
+          "label": 17,
+          "owner": 13,
+          "count": 26827,
+          "left": 285,
+          "top": 553,
+          "right": 508,
+          "bottom": 759,
+          "cx": 389.49554553248595,
+          "cy": 661.3286241473143
+        }
+      },
+      {
+        "index": 14,
+        "count": 28249,
+        "bounds": {
+          "label": 18,
+          "owner": 14,
+          "count": 28249,
+          "left": 527,
+          "top": 553,
+          "right": 782,
+          "bottom": 759,
+          "cx": 643.9587596021098,
+          "cy": 660.3604375376119
+        }
+      },
+      {
+        "index": 15,
+        "count": 30057,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 30057,
+          "left": 798,
+          "top": 553,
+          "right": 1061,
+          "bottom": 759,
+          "cx": 912.7320091825532,
+          "cy": 658.7561300196294
+        }
+      },
+      {
+        "index": 16,
+        "count": 25929,
+        "bounds": {
+          "label": 20,
+          "owner": 16,
+          "count": 25929,
+          "left": 1057,
+          "top": 559,
+          "right": 1266,
+          "bottom": 759,
+          "cx": 1169.1065216552895,
+          "cy": 665.4098499749315
+        }
+      },
+      {
+        "index": 17,
+        "count": 24847,
+        "bounds": {
+          "label": 22,
+          "owner": 17,
+          "count": 24847,
+          "left": 1325,
+          "top": 561,
+          "right": 1517,
+          "bottom": 759,
+          "cx": 1419.5081901235562,
+          "cy": 664.00712359641
+        }
+      },
+      {
+        "index": 18,
+        "count": 22251,
+        "bounds": {
+          "label": 25,
+          "owner": 18,
+          "count": 22251,
+          "left": 40,
+          "top": 799,
+          "right": 222,
+          "bottom": 988,
+          "cx": 128.89766752056087,
+          "cy": 904.9331266010516
+        }
+      },
+      {
+        "index": 19,
+        "count": 20580,
+        "bounds": {
+          "label": 27,
+          "owner": 19,
+          "count": 20580,
+          "left": 282,
+          "top": 819,
+          "right": 485,
+          "bottom": 981,
+          "cx": 385.4254616132167,
+          "cy": 911.4319727891157
+        }
+      },
+      {
+        "index": 20,
+        "count": 20796,
+        "bounds": {
+          "label": 29,
+          "owner": 20,
+          "count": 20796,
+          "left": 510,
+          "top": 842,
+          "right": 752,
+          "bottom": 980,
+          "cx": 630.0633775726101,
+          "cy": 922.7318234275822
+        }
+      },
+      {
+        "index": 21,
+        "count": 16244,
+        "bounds": {
+          "label": 30,
+          "owner": 21,
+          "count": 16244,
+          "left": 776,
+          "top": 887,
+          "right": 1050,
+          "bottom": 988,
+          "cx": 912.6305712878601,
+          "cy": 944.6903472051218
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24271,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24168,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 23865,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 24223,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24295,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 23934,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 24106,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 23211,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 23792,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 23399,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 23416,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 23314,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 24659,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 26827,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 28249,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 30149,
+        "foreignPixelsExcluded": 74,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 25929,
+        "foreignPixelsExcluded": 53,
+        "regions": 3
+      },
+      {
+        "frame": 17,
+        "ownPixels": 24847,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 23105,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 20580,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 20796,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 16244,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "F-BA",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5303726196289062,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 27001,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 27001,
+          "left": 15,
+          "top": 15,
+          "right": 211,
+          "bottom": 255,
+          "cx": 126.08610792192881,
+          "cy": 150.14647605644237
+        }
+      },
+      {
+        "index": 1,
+        "count": 26150,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 26150,
+          "left": 264,
+          "top": 15,
+          "right": 453,
+          "bottom": 255,
+          "cx": 372.34887189292544,
+          "cy": 151.73606118546846
+        }
+      },
+      {
+        "index": 2,
+        "count": 26750,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 26750,
+          "left": 511,
+          "top": 15,
+          "right": 706,
+          "bottom": 255,
+          "cx": 622.3989158878504,
+          "cy": 148.6337570093458
+        }
+      },
+      {
+        "index": 3,
+        "count": 27092,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 27092,
+          "left": 768,
+          "top": 15,
+          "right": 961,
+          "bottom": 255,
+          "cx": 876.3457109109701,
+          "cy": 150.80256164181307
+        }
+      },
+      {
+        "index": 4,
+        "count": 26849,
+        "bounds": {
+          "label": 6,
+          "owner": 4,
+          "count": 26849,
+          "left": 1022,
+          "top": 16,
+          "right": 1262,
+          "bottom": 255,
+          "cx": 1142.4156206935081,
+          "cy": 151.64747290401877
+        }
+      },
+      {
+        "index": 5,
+        "count": 26439,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 26439,
+          "left": 1294,
+          "top": 15,
+          "right": 1515,
+          "bottom": 255,
+          "cx": 1407.3348462498582,
+          "cy": 150.54067854306138
+        }
+      },
+      {
+        "index": 6,
+        "count": 28476,
+        "bounds": {
+          "label": 14,
+          "owner": 6,
+          "count": 28476,
+          "left": 20,
+          "top": 262,
+          "right": 223,
+          "bottom": 504,
+          "cx": 132.03167579716253,
+          "cy": 396.20986093552466
+        }
+      },
+      {
+        "index": 7,
+        "count": 27745,
+        "bounds": {
+          "label": 15,
+          "owner": 7,
+          "count": 27745,
+          "left": 272,
+          "top": 262,
+          "right": 476,
+          "bottom": 506,
+          "cx": 389.03312308524056,
+          "cy": 395.65428005045953
+        }
+      },
+      {
+        "index": 8,
+        "count": 27878,
+        "bounds": {
+          "label": 16,
+          "owner": 8,
+          "count": 27878,
+          "left": 522,
+          "top": 262,
+          "right": 721,
+          "bottom": 506,
+          "cx": 636.3579525073535,
+          "cy": 396.7825166798192
+        }
+      },
+      {
+        "index": 9,
+        "count": 26881,
+        "bounds": {
+          "label": 17,
+          "owner": 9,
+          "count": 26881,
+          "left": 785,
+          "top": 262,
+          "right": 978,
+          "bottom": 506,
+          "cx": 895.3993899036494,
+          "cy": 397.3476433168409
+        }
+      },
+      {
+        "index": 10,
+        "count": 27891,
+        "bounds": {
+          "label": 18,
+          "owner": 10,
+          "count": 27891,
+          "left": 1036,
+          "top": 262,
+          "right": 1243,
+          "bottom": 506,
+          "cx": 1157.2845003764655,
+          "cy": 395.66462299666557
+        }
+      },
+      {
+        "index": 11,
+        "count": 27822,
+        "bounds": {
+          "label": 19,
+          "owner": 11,
+          "count": 27822,
+          "left": 1303,
+          "top": 262,
+          "right": 1504,
+          "bottom": 506,
+          "cx": 1420.5467256128243,
+          "cy": 396.95359787218746
+        }
+      },
+      {
+        "index": 12,
+        "count": 28648,
+        "bounds": {
+          "label": 25,
+          "owner": 12,
+          "count": 28648,
+          "left": 16,
+          "top": 539,
+          "right": 262,
+          "bottom": 763,
+          "cx": 134.96963138788047,
+          "cy": 656.2674881318068
+        }
+      },
+      {
+        "index": 13,
+        "count": 30120,
+        "bounds": {
+          "label": 24,
+          "owner": 13,
+          "count": 30120,
+          "left": 278,
+          "top": 531,
+          "right": 517,
+          "bottom": 762,
+          "cx": 385.9851593625498,
+          "cy": 648.5164342629482
+        }
+      },
+      {
+        "index": 14,
+        "count": 27263,
+        "bounds": {
+          "label": 23,
+          "owner": 14,
+          "count": 27263,
+          "left": 523,
+          "top": 528,
+          "right": 735,
+          "bottom": 762,
+          "cx": 623.8537578402963,
+          "cy": 650.654183325386
+        }
+      },
+      {
+        "index": 15,
+        "count": 41937,
+        "bounds": {
+          "label": 21,
+          "owner": 15,
+          "count": 41937,
+          "left": 752,
+          "top": 523,
+          "right": 1072,
+          "bottom": 770,
+          "cx": 905.6247227984834,
+          "cy": 669.3353840284236
+        }
+      },
+      {
+        "index": 16,
+        "count": 28606,
+        "bounds": {
+          "label": 22,
+          "owner": 16,
+          "count": 28606,
+          "left": 1073,
+          "top": 527,
+          "right": 1297,
+          "bottom": 762,
+          "cx": 1181.1815003845347,
+          "cy": 654.9661259875551
+        }
+      },
+      {
+        "index": 17,
+        "count": 29220,
+        "bounds": {
+          "label": 20,
+          "owner": 17,
+          "count": 29220,
+          "left": 1303,
+          "top": 519,
+          "right": 1495,
+          "bottom": 764,
+          "cx": 1410.11704312115,
+          "cy": 656.7801163586585
+        }
+      },
+      {
+        "index": 18,
+        "count": 26256,
+        "bounds": {
+          "label": 27,
+          "owner": 18,
+          "count": 26256,
+          "left": 39,
+          "top": 765,
+          "right": 229,
+          "bottom": 991,
+          "cx": 130.26051188299817,
+          "cy": 887.7888863497867
+        }
+      },
+      {
+        "index": 19,
+        "count": 26174,
+        "bounds": {
+          "label": 28,
+          "owner": 19,
+          "count": 26174,
+          "left": 270,
+          "top": 778,
+          "right": 477,
+          "bottom": 992,
+          "cx": 379.59944983571484,
+          "cy": 903.836478948575
+        }
+      },
+      {
+        "index": 20,
+        "count": 23986,
+        "bounds": {
+          "label": 29,
+          "owner": 20,
+          "count": 23986,
+          "left": 517,
+          "top": 801,
+          "right": 751,
+          "bottom": 992,
+          "cx": 632.8672975902609,
+          "cy": 923.1070624530977
+        }
+      },
+      {
+        "index": 21,
+        "count": 17155,
+        "bounds": {
+          "label": 32,
+          "owner": 21,
+          "count": 17155,
+          "left": 736,
+          "top": 900,
+          "right": 1047,
+          "bottom": 986,
+          "cx": 880.6493150684931,
+          "cy": 950.7495773826872
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 27001,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 26150,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 26750,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 27092,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 27936,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 26899,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 28476,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 27745,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 27878,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 26881,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 27891,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 27822,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 28648,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 30120,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 27263,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 42041,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 28606,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 29220,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 26471,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 26174,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 23986,
+        "foreignPixelsExcluded": 353,
+        "regions": 3
+      },
+      {
+        "frame": 21,
+        "ownPixels": 17155,
+        "foreignPixelsExcluded": 24,
+        "regions": 3
+      }
+    ],
+    "frameSelection": {
+      "14": 13,
+      "20": 21
+    },
+    "issues": []
+  },
+  {
+    "id": "F-FI",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5203361511230469,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 27707,
+        "bounds": {
+          "label": 2,
+          "owner": 0,
+          "count": 27707,
+          "left": 16,
+          "top": 20,
+          "right": 255,
+          "bottom": 255,
+          "cx": 132.60421554119898,
+          "cy": 153.5732125455661
+        }
+      },
+      {
+        "index": 1,
+        "count": 27369,
+        "bounds": {
+          "label": 3,
+          "owner": 1,
+          "count": 27369,
+          "left": 273,
+          "top": 20,
+          "right": 511,
+          "bottom": 255,
+          "cx": 390.4849282034418,
+          "cy": 153.41715079104097
+        }
+      },
+      {
+        "index": 2,
+        "count": 27173,
+        "bounds": {
+          "label": 1,
+          "owner": 2,
+          "count": 27173,
+          "left": 530,
+          "top": 19,
+          "right": 766,
+          "bottom": 255,
+          "cx": 646.7779045375925,
+          "cy": 152.85923527030508
+        }
+      },
+      {
+        "index": 3,
+        "count": 27366,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 27366,
+          "left": 785,
+          "top": 20,
+          "right": 1023,
+          "bottom": 255,
+          "cx": 902.3362566688592,
+          "cy": 153.68022363516772
+        }
+      },
+      {
+        "index": 4,
+        "count": 23788,
+        "bounds": {
+          "label": 6,
+          "owner": 4,
+          "count": 23788,
+          "left": 1055,
+          "top": 58,
+          "right": 1268,
+          "bottom": 254,
+          "cx": 1157.1940053808644,
+          "cy": 168.62926685723895
+        }
+      },
+      {
+        "index": 5,
+        "count": 27037,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 27037,
+          "left": 1295,
+          "top": 34,
+          "right": 1533,
+          "bottom": 255,
+          "cx": 1411.9823205237267,
+          "cy": 155.8249066094611
+        }
+      },
+      {
+        "index": 6,
+        "count": 27632,
+        "bounds": {
+          "label": 9,
+          "owner": 6,
+          "count": 27632,
+          "left": 17,
+          "top": 287,
+          "right": 264,
+          "bottom": 511,
+          "cx": 140.10306890561668,
+          "cy": 411.57270555877244
+        }
+      },
+      {
+        "index": 7,
+        "count": 27528,
+        "bounds": {
+          "label": 10,
+          "owner": 7,
+          "count": 27528,
+          "left": 266,
+          "top": 291,
+          "right": 512,
+          "bottom": 511,
+          "cx": 388.99164487067713,
+          "cy": 411.6960912525429
+        }
+      },
+      {
+        "index": 8,
+        "count": 27095,
+        "bounds": {
+          "label": 11,
+          "owner": 8,
+          "count": 27095,
+          "left": 522,
+          "top": 291,
+          "right": 767,
+          "bottom": 511,
+          "cx": 643.6999077320539,
+          "cy": 411.7672264255398
+        }
+      },
+      {
+        "index": 9,
+        "count": 26821,
+        "bounds": {
+          "label": 12,
+          "owner": 9,
+          "count": 26821,
+          "left": 782,
+          "top": 294,
+          "right": 1024,
+          "bottom": 511,
+          "cx": 901.2276201483912,
+          "cy": 413.4415569889266
+        }
+      },
+      {
+        "index": 10,
+        "count": 27302,
+        "bounds": {
+          "label": 13,
+          "owner": 10,
+          "count": 27302,
+          "left": 1036,
+          "top": 296,
+          "right": 1281,
+          "bottom": 511,
+          "cx": 1159.543586550436,
+          "cy": 411.4462310453447
+        }
+      },
+      {
+        "index": 11,
+        "count": 26375,
+        "bounds": {
+          "label": 14,
+          "owner": 11,
+          "count": 26375,
+          "left": 1291,
+          "top": 296,
+          "right": 1527,
+          "bottom": 511,
+          "cx": 1407.8364360189573,
+          "cy": 412.8828056872038
+        }
+      },
+      {
+        "index": 12,
+        "count": 24931,
+        "bounds": {
+          "label": 19,
+          "owner": 12,
+          "count": 24931,
+          "left": 16,
+          "top": 557,
+          "right": 259,
+          "bottom": 763,
+          "cx": 136.62283903573865,
+          "cy": 673.6692070113513
+        }
+      },
+      {
+        "index": 13,
+        "count": 25551,
+        "bounds": {
+          "label": 15,
+          "owner": 13,
+          "count": 25551,
+          "left": 265,
+          "top": 542,
+          "right": 518,
+          "bottom": 763,
+          "cx": 388.4312159993738,
+          "cy": 666.030762005401
+        }
+      },
+      {
+        "index": 14,
+        "count": 28028,
+        "bounds": {
+          "label": 20,
+          "owner": 14,
+          "count": 28028,
+          "left": 513,
+          "top": 545,
+          "right": 789,
+          "bottom": 763,
+          "cx": 648.6270158413015,
+          "cy": 667.5380690737834
+        }
+      },
+      {
+        "index": 15,
+        "count": 34962,
+        "bounds": {
+          "label": 17,
+          "owner": 15,
+          "count": 34962,
+          "left": 744,
+          "top": 549,
+          "right": 1056,
+          "bottom": 764,
+          "cx": 912.6323150849494,
+          "cy": 665.5983353355072
+        }
+      },
+      {
+        "index": 16,
+        "count": 26650,
+        "bounds": {
+          "label": 24,
+          "owner": 16,
+          "count": 26650,
+          "left": 1034,
+          "top": 566,
+          "right": 1310,
+          "bottom": 764,
+          "cx": 1168.233358348968,
+          "cy": 676.0562851782364
+        }
+      },
+      {
+        "index": 17,
+        "count": 24251,
+        "bounds": {
+          "label": 18,
+          "owner": 17,
+          "count": 24251,
+          "left": 1296,
+          "top": 552,
+          "right": 1527,
+          "bottom": 764,
+          "cx": 1413.1026761783019,
+          "cy": 674.1107583192446
+        }
+      },
+      {
+        "index": 18,
+        "count": 24289,
+        "bounds": {
+          "label": 26,
+          "owner": 18,
+          "count": 24289,
+          "left": 16,
+          "top": 788,
+          "right": 255,
+          "bottom": 980,
+          "cx": 133.92445139775208,
+          "cy": 893.7695664704187
+        }
+      },
+      {
+        "index": 19,
+        "count": 22755,
+        "bounds": {
+          "label": 27,
+          "owner": 19,
+          "count": 22755,
+          "left": 261,
+          "top": 793,
+          "right": 506,
+          "bottom": 980,
+          "cx": 391.05502087453306,
+          "cy": 908.6399912107229
+        }
+      },
+      {
+        "index": 20,
+        "count": 17450,
+        "bounds": {
+          "label": 28,
+          "owner": 20,
+          "count": 17450,
+          "left": 512,
+          "top": 871,
+          "right": 770,
+          "bottom": 980,
+          "cx": 638.7466475644699,
+          "cy": 935.6814899713467
+        }
+      },
+      {
+        "index": 21,
+        "count": 14936,
+        "bounds": {
+          "label": 29,
+          "owner": 21,
+          "count": 14936,
+          "left": 773,
+          "top": 897,
+          "right": 1049,
+          "bottom": 984,
+          "cx": 910.5918585966791,
+          "cy": 944.5427155865024
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 27707,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 27369,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 27173,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 27366,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24754,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 27037,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 27632,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 27528,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 27095,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 26821,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 27302,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 26375,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 24931,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 25989,
+        "foreignPixelsExcluded": 167,
+        "regions": 4
+      },
+      {
+        "frame": 14,
+        "ownPixels": 28244,
+        "foreignPixelsExcluded": 2516,
+        "regions": 6
+      },
+      {
+        "frame": 15,
+        "ownPixels": 35379,
+        "foreignPixelsExcluded": 3705,
+        "regions": 7
+      },
+      {
+        "frame": 16,
+        "ownPixels": 26812,
+        "foreignPixelsExcluded": 2270,
+        "regions": 5
+      },
+      {
+        "frame": 17,
+        "ownPixels": 24251,
+        "foreignPixelsExcluded": 432,
+        "regions": 4
+      },
+      {
+        "frame": 18,
+        "ownPixels": 24289,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22755,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 17450,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 14936,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "F-IC",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5145657857259115,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 26513,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 26513,
+          "left": 31,
+          "top": 39,
+          "right": 247,
+          "bottom": 265,
+          "cx": 136.8987289254328,
+          "cy": 167.62467468788896
+        }
+      },
+      {
+        "index": 1,
+        "count": 26529,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 26529,
+          "left": 288,
+          "top": 39,
+          "right": 503,
+          "bottom": 265,
+          "cx": 394.38606807644464,
+          "cy": 167.89234422707227
+        }
+      },
+      {
+        "index": 2,
+        "count": 26716,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 26716,
+          "left": 542,
+          "top": 39,
+          "right": 757,
+          "bottom": 266,
+          "cx": 648.4322129061237,
+          "cy": 166.84679592753406
+        }
+      },
+      {
+        "index": 3,
+        "count": 26360,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 26360,
+          "left": 801,
+          "top": 39,
+          "right": 1018,
+          "bottom": 265,
+          "cx": 908.999430955994,
+          "cy": 167.10193474962063
+        }
+      },
+      {
+        "index": 4,
+        "count": 26343,
+        "bounds": {
+          "label": 5,
+          "owner": 4,
+          "count": 26343,
+          "left": 1047,
+          "top": 50,
+          "right": 1298,
+          "bottom": 265,
+          "cx": 1161.5894545040428,
+          "cy": 170.09801465284895
+        }
+      },
+      {
+        "index": 5,
+        "count": 24420,
+        "bounds": {
+          "label": 6,
+          "owner": 5,
+          "count": 24420,
+          "left": 1320,
+          "top": 57,
+          "right": 1527,
+          "bottom": 265,
+          "cx": 1418.8555692055693,
+          "cy": 171.32407862407862
+        }
+      },
+      {
+        "index": 6,
+        "count": 28565,
+        "bounds": {
+          "label": 9,
+          "owner": 6,
+          "count": 28565,
+          "left": 26,
+          "top": 277,
+          "right": 263,
+          "bottom": 500,
+          "cx": 143.42163486784526,
+          "cy": 398.46535970593385
+        }
+      },
+      {
+        "index": 7,
+        "count": 27910,
+        "bounds": {
+          "label": 13,
+          "owner": 7,
+          "count": 27910,
+          "left": 284,
+          "top": 282,
+          "right": 515,
+          "bottom": 501,
+          "cx": 395.51992117520604,
+          "cy": 400.119742027947
+        }
+      },
+      {
+        "index": 8,
+        "count": 27642,
+        "bounds": {
+          "label": 14,
+          "owner": 8,
+          "count": 27642,
+          "left": 542,
+          "top": 282,
+          "right": 772,
+          "bottom": 501,
+          "cx": 653.5295202952029,
+          "cy": 401.4282251646046
+        }
+      },
+      {
+        "index": 9,
+        "count": 28589,
+        "bounds": {
+          "label": 12,
+          "owner": 9,
+          "count": 28589,
+          "left": 791,
+          "top": 280,
+          "right": 1026,
+          "bottom": 501,
+          "cx": 906.4932316625276,
+          "cy": 401.97355626289834
+        }
+      },
+      {
+        "index": 10,
+        "count": 27912,
+        "bounds": {
+          "label": 11,
+          "owner": 10,
+          "count": 27912,
+          "left": 1047,
+          "top": 279,
+          "right": 1283,
+          "bottom": 501,
+          "cx": 1164.1082688449412,
+          "cy": 401.09175265118944
+        }
+      },
+      {
+        "index": 11,
+        "count": 28163,
+        "bounds": {
+          "label": 10,
+          "owner": 11,
+          "count": 28163,
+          "left": 1295,
+          "top": 278,
+          "right": 1527,
+          "bottom": 501,
+          "cx": 1408.9269253985726,
+          "cy": 402.5230621737741
+        }
+      },
+      {
+        "index": 12,
+        "count": 26482,
+        "bounds": {
+          "label": 16,
+          "owner": 12,
+          "count": 26482,
+          "left": 28,
+          "top": 524,
+          "right": 247,
+          "bottom": 747,
+          "cx": 136.13960425949702,
+          "cy": 649.8306019182842
+        }
+      },
+      {
+        "index": 13,
+        "count": 29433,
+        "bounds": {
+          "label": 15,
+          "owner": 13,
+          "count": 29433,
+          "left": 270,
+          "top": 523,
+          "right": 503,
+          "bottom": 747,
+          "cx": 390.6631671932864,
+          "cy": 648.3186559304182
+        }
+      },
+      {
+        "index": 14,
+        "count": 27659,
+        "bounds": {
+          "label": 17,
+          "owner": 14,
+          "count": 27659,
+          "left": 518,
+          "top": 524,
+          "right": 745,
+          "bottom": 747,
+          "cx": 630.513648360389,
+          "cy": 650.3483495426443
+        }
+      },
+      {
+        "index": 15,
+        "count": 36274,
+        "bounds": {
+          "label": 19,
+          "owner": 15,
+          "count": 36274,
+          "left": 754,
+          "top": 529,
+          "right": 1037,
+          "bottom": 747,
+          "cx": 901.9740309863814,
+          "cy": 652.6505486023046
+        }
+      },
+      {
+        "index": 16,
+        "count": 27439,
+        "bounds": {
+          "label": 20,
+          "owner": 16,
+          "count": 27439,
+          "left": 1040,
+          "top": 530,
+          "right": 1315,
+          "bottom": 747,
+          "cx": 1145.996136885455,
+          "cy": 651.7425926600823
+        }
+      },
+      {
+        "index": 17,
+        "count": 26058,
+        "bounds": {
+          "label": 18,
+          "owner": 17,
+          "count": 26058,
+          "left": 1320,
+          "top": 524,
+          "right": 1527,
+          "bottom": 747,
+          "cx": 1419.4332258807276,
+          "cy": 648.8583544400951
+        }
+      },
+      {
+        "index": 18,
+        "count": 25070,
+        "bounds": {
+          "label": 23,
+          "owner": 18,
+          "count": 25070,
+          "left": 22,
+          "top": 771,
+          "right": 240,
+          "bottom": 978,
+          "cx": 128.6049062624651,
+          "cy": 884.8552054248105
+        }
+      },
+      {
+        "index": 19,
+        "count": 24704,
+        "bounds": {
+          "label": 24,
+          "owner": 19,
+          "count": 24704,
+          "left": 269,
+          "top": 771,
+          "right": 505,
+          "bottom": 979,
+          "cx": 395.8555294689119,
+          "cy": 900.2655035621761
+        }
+      },
+      {
+        "index": 20,
+        "count": 17339,
+        "bounds": {
+          "label": 25,
+          "owner": 20,
+          "count": 17339,
+          "left": 499,
+          "top": 881,
+          "right": 766,
+          "bottom": 987,
+          "cx": 630.0040371417036,
+          "cy": 935.0615952477075
+        }
+      },
+      {
+        "index": 21,
+        "count": 15887,
+        "bounds": {
+          "label": 26,
+          "owner": 21,
+          "count": 15887,
+          "left": 773,
+          "top": 889,
+          "right": 1044,
+          "bottom": 986,
+          "cx": 906.8269024988984,
+          "cy": 936.8744256310191
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 26513,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 26529,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 26716,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 26360,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 28291,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 24420,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 28565,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 27910,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 27642,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 28589,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 27912,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 28163,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 26482,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 29433,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 27659,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 36274,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 32921,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 26058,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 25070,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 24704,
+        "foreignPixelsExcluded": 126,
+        "regions": 2
+      },
+      {
+        "frame": 20,
+        "ownPixels": 17339,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 15887,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {
+      "15": 16
+    },
+    "issues": []
+  },
+  {
+    "id": "H-01",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.4953905741373698,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 31533,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 31533,
+          "left": 13,
+          "top": 42,
+          "right": 234,
+          "bottom": 255,
+          "cx": 132.3658706751657,
+          "cy": 159.69184663685664
+        }
+      },
+      {
+        "index": 1,
+        "count": 32253,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 32253,
+          "left": 263,
+          "top": 42,
+          "right": 492,
+          "bottom": 255,
+          "cx": 388.05990140452053,
+          "cy": 159.57755867671224
+        }
+      },
+      {
+        "index": 2,
+        "count": 32133,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 32133,
+          "left": 519,
+          "top": 42,
+          "right": 747,
+          "bottom": 255,
+          "cx": 643.3341113497028,
+          "cy": 159.67410450315876
+        }
+      },
+      {
+        "index": 3,
+        "count": 32063,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 32063,
+          "left": 774,
+          "top": 42,
+          "right": 1001,
+          "bottom": 255,
+          "cx": 898.3353709883667,
+          "cy": 159.59941365436796
+        }
+      },
+      {
+        "index": 4,
+        "count": 29434,
+        "bounds": {
+          "label": 8,
+          "owner": 4,
+          "count": 29434,
+          "left": 1055,
+          "top": 56,
+          "right": 1276,
+          "bottom": 256,
+          "cx": 1167.4685397839235,
+          "cy": 169.6393966161582
+        }
+      },
+      {
+        "index": 5,
+        "count": 31342,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 31342,
+          "left": 1297,
+          "top": 42,
+          "right": 1514,
+          "bottom": 256,
+          "cx": 1412.8286644119712,
+          "cy": 159.98194116520963
+        }
+      },
+      {
+        "index": 6,
+        "count": 32545,
+        "bounds": {
+          "label": 12,
+          "owner": 6,
+          "count": 32545,
+          "left": 10,
+          "top": 291,
+          "right": 242,
+          "bottom": 508,
+          "cx": 136.07180826547858,
+          "cy": 410.48824704255645
+        }
+      },
+      {
+        "index": 7,
+        "count": 33070,
+        "bounds": {
+          "label": 13,
+          "owner": 7,
+          "count": 33070,
+          "left": 258,
+          "top": 291,
+          "right": 500,
+          "bottom": 506,
+          "cx": 389.11230722709405,
+          "cy": 409.8358028424554
+        }
+      },
+      {
+        "index": 8,
+        "count": 33124,
+        "bounds": {
+          "label": 14,
+          "owner": 8,
+          "count": 33124,
+          "left": 516,
+          "top": 291,
+          "right": 757,
+          "bottom": 508,
+          "cx": 646.3026204564666,
+          "cy": 410.31991909189713
+        }
+      },
+      {
+        "index": 9,
+        "count": 32896,
+        "bounds": {
+          "label": 15,
+          "owner": 9,
+          "count": 32896,
+          "left": 773,
+          "top": 292,
+          "right": 1010,
+          "bottom": 508,
+          "cx": 900.815874270428,
+          "cy": 410.8128647859922
+        }
+      },
+      {
+        "index": 10,
+        "count": 32986,
+        "bounds": {
+          "label": 17,
+          "owner": 10,
+          "count": 32986,
+          "left": 1030,
+          "top": 293,
+          "right": 1269,
+          "bottom": 508,
+          "cx": 1160.029618626084,
+          "cy": 411.4224822652034
+        }
+      },
+      {
+        "index": 11,
+        "count": 32439,
+        "bounds": {
+          "label": 16,
+          "owner": 11,
+          "count": 32439,
+          "left": 1284,
+          "top": 292,
+          "right": 1520,
+          "bottom": 508,
+          "cx": 1413.0643361385985,
+          "cy": 411.1292579919233
+        }
+      },
+      {
+        "index": 12,
+        "count": 34172,
+        "bounds": {
+          "label": 20,
+          "owner": 12,
+          "count": 34172,
+          "left": 10,
+          "top": 545,
+          "right": 249,
+          "bottom": 759,
+          "cx": 137.0187287837996,
+          "cy": 667.0340922392602
+        }
+      },
+      {
+        "index": 13,
+        "count": 37040,
+        "bounds": {
+          "label": 18,
+          "owner": 13,
+          "count": 37040,
+          "left": 271,
+          "top": 508,
+          "right": 507,
+          "bottom": 760,
+          "cx": 390.24268358531316,
+          "cy": 657.0957073434125
+        }
+      },
+      {
+        "index": 14,
+        "count": 35651,
+        "bounds": {
+          "label": 19,
+          "owner": 14,
+          "count": 35651,
+          "left": 520,
+          "top": 543,
+          "right": 764,
+          "bottom": 759,
+          "cx": 652.7738913354464,
+          "cy": 660.7061513001038
+        }
+      },
+      {
+        "index": 15,
+        "count": 34424,
+        "bounds": {
+          "label": 21,
+          "owner": 15,
+          "count": 34424,
+          "left": 767,
+          "top": 547,
+          "right": 1020,
+          "bottom": 760,
+          "cx": 897.921333953056,
+          "cy": 663.7015454334186
+        }
+      },
+      {
+        "index": 16,
+        "count": 32540,
+        "bounds": {
+          "label": 24,
+          "owner": 16,
+          "count": 32540,
+          "left": 1054,
+          "top": 560,
+          "right": 1315,
+          "bottom": 761,
+          "cx": 1185.7241548862937,
+          "cy": 678.9570374923171
+        }
+      },
+      {
+        "index": 17,
+        "count": 32252,
+        "bounds": {
+          "label": 22,
+          "owner": 17,
+          "count": 32252,
+          "left": 1296,
+          "top": 547,
+          "right": 1520,
+          "bottom": 761,
+          "cx": 1414.7543718219026,
+          "cy": 666.6601141014511
+        }
+      },
+      {
+        "index": 18,
+        "count": 30441,
+        "bounds": {
+          "label": 31,
+          "owner": 18,
+          "count": 30441,
+          "left": 17,
+          "top": 784,
+          "right": 244,
+          "bottom": 992,
+          "cx": 128.16129562103743,
+          "cy": 901.8151834696627
+        }
+      },
+      {
+        "index": 19,
+        "count": 27060,
+        "bounds": {
+          "label": 32,
+          "owner": 19,
+          "count": 27060,
+          "left": 256,
+          "top": 813,
+          "right": 504,
+          "bottom": 989,
+          "cx": 390.0280487804878,
+          "cy": 917.4946415373245
+        }
+      },
+      {
+        "index": 20,
+        "count": 19016,
+        "bounds": {
+          "label": 36,
+          "owner": 20,
+          "count": 19016,
+          "left": 510,
+          "top": 879,
+          "right": 778,
+          "bottom": 985,
+          "cx": 646.7348022717712,
+          "cy": 939.9763883045856
+        }
+      },
+      {
+        "index": 21,
+        "count": 18432,
+        "bounds": {
+          "label": 37,
+          "owner": 21,
+          "count": 18432,
+          "left": 781,
+          "top": 893,
+          "right": 1060,
+          "bottom": 988,
+          "cx": 915.2788628472222,
+          "cy": 943.5597873263889
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 31533,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 32253,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 32133,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 32063,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 30464,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 31342,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 32545,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 33070,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 33124,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 32896,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 32986,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 32439,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 34172,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 37040,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 35651,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 34723,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 32540,
+        "foreignPixelsExcluded": 631,
+        "regions": 7
+      },
+      {
+        "frame": 17,
+        "ownPixels": 32252,
+        "foreignPixelsExcluded": 347,
+        "regions": 10
+      },
+      {
+        "frame": 18,
+        "ownPixels": 31374,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 27060,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 19016,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 18432,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "H-03",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5853417714436849,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24696,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 24696,
+          "left": 27,
+          "top": 59,
+          "right": 222,
+          "bottom": 256,
+          "cx": 132.30511013929382,
+          "cy": 162.37479753806284
+        }
+      },
+      {
+        "index": 1,
+        "count": 24713,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 24713,
+          "left": 284,
+          "top": 59,
+          "right": 477,
+          "bottom": 255,
+          "cx": 387.75344960142434,
+          "cy": 162.69117468538826
+        }
+      },
+      {
+        "index": 2,
+        "count": 24713,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 24713,
+          "left": 540,
+          "top": 59,
+          "right": 734,
+          "bottom": 255,
+          "cx": 643.7990531299316,
+          "cy": 162.68822077449116
+        }
+      },
+      {
+        "index": 3,
+        "count": 24723,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 24723,
+          "left": 796,
+          "top": 59,
+          "right": 989,
+          "bottom": 255,
+          "cx": 899.8236055494883,
+          "cy": 162.65141770820694
+        }
+      },
+      {
+        "index": 4,
+        "count": 24792,
+        "bounds": {
+          "label": 7,
+          "owner": 4,
+          "count": 24792,
+          "left": 1062,
+          "top": 68,
+          "right": 1257,
+          "bottom": 256,
+          "cx": 1153.68873023556,
+          "cy": 170.11475475959986
+        }
+      },
+      {
+        "index": 5,
+        "count": 24472,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 24472,
+          "left": 1309,
+          "top": 59,
+          "right": 1501,
+          "bottom": 256,
+          "cx": 1412.5246812683883,
+          "cy": 162.34639588100686
+        }
+      },
+      {
+        "index": 6,
+        "count": 24135,
+        "bounds": {
+          "label": 8,
+          "owner": 6,
+          "count": 24135,
+          "left": 30,
+          "top": 311,
+          "right": 221,
+          "bottom": 510,
+          "cx": 131.41222291278225,
+          "cy": 413.3634141288585
+        }
+      },
+      {
+        "index": 7,
+        "count": 24356,
+        "bounds": {
+          "label": 9,
+          "owner": 7,
+          "count": 24356,
+          "left": 283,
+          "top": 311,
+          "right": 477,
+          "bottom": 510,
+          "cx": 386.3824519625554,
+          "cy": 414.1959681392675
+        }
+      },
+      {
+        "index": 8,
+        "count": 23954,
+        "bounds": {
+          "label": 10,
+          "owner": 8,
+          "count": 23954,
+          "left": 543,
+          "top": 311,
+          "right": 733,
+          "bottom": 510,
+          "cx": 643.5218752609168,
+          "cy": 413.10816565083076
+        }
+      },
+      {
+        "index": 9,
+        "count": 24211,
+        "bounds": {
+          "label": 11,
+          "owner": 9,
+          "count": 24211,
+          "left": 797,
+          "top": 311,
+          "right": 989,
+          "bottom": 510,
+          "cx": 898.8142166783693,
+          "cy": 413.6491264301351
+        }
+      },
+      {
+        "index": 10,
+        "count": 24167,
+        "bounds": {
+          "label": 12,
+          "owner": 10,
+          "count": 24167,
+          "left": 1051,
+          "top": 311,
+          "right": 1245,
+          "bottom": 510,
+          "cx": 1155.28497537965,
+          "cy": 413.7683618156991
+        }
+      },
+      {
+        "index": 11,
+        "count": 24087,
+        "bounds": {
+          "label": 13,
+          "owner": 11,
+          "count": 24087,
+          "left": 1312,
+          "top": 311,
+          "right": 1501,
+          "bottom": 510,
+          "cx": 1411.5285838834227,
+          "cy": 413.43870137418526
+        }
+      },
+      {
+        "index": 12,
+        "count": 26078,
+        "bounds": {
+          "label": 18,
+          "owner": 12,
+          "count": 26078,
+          "left": 27,
+          "top": 561,
+          "right": 230,
+          "bottom": 765,
+          "cx": 132.62351407316513,
+          "cy": 666.8366439144106
+        }
+      },
+      {
+        "index": 13,
+        "count": 27786,
+        "bounds": {
+          "label": 16,
+          "owner": 13,
+          "count": 27786,
+          "left": 284,
+          "top": 547,
+          "right": 512,
+          "bottom": 765,
+          "cx": 393.26495357374216,
+          "cy": 665.2604189160008
+        }
+      },
+      {
+        "index": 14,
+        "count": 29180,
+        "bounds": {
+          "label": 14,
+          "owner": 14,
+          "count": 29180,
+          "left": 527,
+          "top": 543,
+          "right": 775,
+          "bottom": 765,
+          "cx": 643.7926319396847,
+          "cy": 663.9384509938313
+        }
+      },
+      {
+        "index": 15,
+        "count": 30450,
+        "bounds": {
+          "label": 15,
+          "owner": 15,
+          "count": 30450,
+          "left": 779,
+          "top": 544,
+          "right": 1062,
+          "bottom": 765,
+          "cx": 898.479802955665,
+          "cy": 662.8115599343186
+        }
+      },
+      {
+        "index": 16,
+        "count": 27043,
+        "bounds": {
+          "label": 17,
+          "owner": 16,
+          "count": 27043,
+          "left": 1060,
+          "top": 553,
+          "right": 1259,
+          "bottom": 765,
+          "cx": 1162.4496912324817,
+          "cy": 667.2316680841623
+        }
+      },
+      {
+        "index": 17,
+        "count": 24841,
+        "bounds": {
+          "label": 19,
+          "owner": 17,
+          "count": 24841,
+          "left": 1304,
+          "top": 566,
+          "right": 1502,
+          "bottom": 765,
+          "cx": 1410.5408799967795,
+          "cy": 669.4845618131316
+        }
+      },
+      {
+        "index": 18,
+        "count": 23465,
+        "bounds": {
+          "label": 21,
+          "owner": 18,
+          "count": 23465,
+          "left": 27,
+          "top": 805,
+          "right": 221,
+          "bottom": 997,
+          "cx": 128.77690176859153,
+          "cy": 904.1070104410825
+        }
+      },
+      {
+        "index": 19,
+        "count": 22401,
+        "bounds": {
+          "label": 22,
+          "owner": 19,
+          "count": 22401,
+          "left": 278,
+          "top": 837,
+          "right": 489,
+          "bottom": 998,
+          "cx": 389.4331056649257,
+          "cy": 926.3314137761707
+        }
+      },
+      {
+        "index": 20,
+        "count": 17182,
+        "bounds": {
+          "label": 23,
+          "owner": 20,
+          "count": 17182,
+          "left": 512,
+          "top": 893,
+          "right": 773,
+          "bottom": 998,
+          "cx": 641.6970666977069,
+          "cy": 956.3070073332557
+        }
+      },
+      {
+        "index": 21,
+        "count": 15203,
+        "bounds": {
+          "label": 24,
+          "owner": 21,
+          "count": 15203,
+          "left": 774,
+          "top": 916,
+          "right": 1052,
+          "bottom": 997,
+          "cx": 911.2491613497336,
+          "cy": 963.9821087943169
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24696,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24713,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 24713,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 24723,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 25151,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 24472,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 24135,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24356,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 23954,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 24211,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 24167,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 24087,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 26078,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 27786,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 29180,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 30602,
+        "foreignPixelsExcluded": 23,
+        "regions": 4
+      },
+      {
+        "frame": 16,
+        "ownPixels": 27043,
+        "foreignPixelsExcluded": 7,
+        "regions": 3
+      },
+      {
+        "frame": 17,
+        "ownPixels": 24841,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 23465,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22401,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 17182,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 15203,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "H-04",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5309480031331381,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 26553,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 26553,
+          "left": 26,
+          "top": 53,
+          "right": 238,
+          "bottom": 264,
+          "cx": 133.80849621511695,
+          "cy": 162.66482130079464
+        }
+      },
+      {
+        "index": 1,
+        "count": 26417,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 26417,
+          "left": 272,
+          "top": 53,
+          "right": 493,
+          "bottom": 263,
+          "cx": 388.3262671764394,
+          "cy": 163.83238066396638
+        }
+      },
+      {
+        "index": 2,
+        "count": 26600,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 26600,
+          "left": 529,
+          "top": 53,
+          "right": 748,
+          "bottom": 263,
+          "cx": 643.2529323308271,
+          "cy": 163.9446992481203
+        }
+      },
+      {
+        "index": 3,
+        "count": 26460,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 26460,
+          "left": 788,
+          "top": 53,
+          "right": 1004,
+          "bottom": 263,
+          "cx": 899.8133030990174,
+          "cy": 163.6201058201058
+        }
+      },
+      {
+        "index": 4,
+        "count": 25685,
+        "bounds": {
+          "label": 5,
+          "owner": 4,
+          "count": 25685,
+          "left": 1052,
+          "top": 53,
+          "right": 1286,
+          "bottom": 263,
+          "cx": 1155.7959509441307,
+          "cy": 167.7959120109013
+        }
+      },
+      {
+        "index": 5,
+        "count": 25007,
+        "bounds": {
+          "label": 6,
+          "owner": 5,
+          "count": 25007,
+          "left": 1316,
+          "top": 53,
+          "right": 1511,
+          "bottom": 263,
+          "cx": 1410.4239213020355,
+          "cy": 166.33118726756507
+        }
+      },
+      {
+        "index": 6,
+        "count": 26446,
+        "bounds": {
+          "label": 17,
+          "owner": 6,
+          "count": 26446,
+          "left": 24,
+          "top": 303,
+          "right": 245,
+          "bottom": 511,
+          "cx": 138.96925811086743,
+          "cy": 412.65881418740076
+        }
+      },
+      {
+        "index": 7,
+        "count": 26736,
+        "bounds": {
+          "label": 13,
+          "owner": 7,
+          "count": 26736,
+          "left": 273,
+          "top": 301,
+          "right": 493,
+          "bottom": 511,
+          "cx": 388.65806403351286,
+          "cy": 412.826039796529
+        }
+      },
+      {
+        "index": 8,
+        "count": 26737,
+        "bounds": {
+          "label": 14,
+          "owner": 8,
+          "count": 26737,
+          "left": 528,
+          "top": 301,
+          "right": 749,
+          "bottom": 511,
+          "cx": 644.2566480906609,
+          "cy": 412.60388226053783
+        }
+      },
+      {
+        "index": 9,
+        "count": 26815,
+        "bounds": {
+          "label": 15,
+          "owner": 9,
+          "count": 26815,
+          "left": 785,
+          "top": 301,
+          "right": 1005,
+          "bottom": 511,
+          "cx": 900.4385232146187,
+          "cy": 412.739996270744
+        }
+      },
+      {
+        "index": 10,
+        "count": 26759,
+        "bounds": {
+          "label": 16,
+          "owner": 10,
+          "count": 26759,
+          "left": 1040,
+          "top": 301,
+          "right": 1261,
+          "bottom": 511,
+          "cx": 1157.0313913075975,
+          "cy": 412.9704772226167
+        }
+      },
+      {
+        "index": 11,
+        "count": 26562,
+        "bounds": {
+          "label": 18,
+          "owner": 11,
+          "count": 26562,
+          "left": 1299,
+          "top": 303,
+          "right": 1517,
+          "bottom": 511,
+          "cx": 1414.1212634590768,
+          "cy": 413.16967848806564
+        }
+      },
+      {
+        "index": 12,
+        "count": 28848,
+        "bounds": {
+          "label": 19,
+          "owner": 12,
+          "count": 28848,
+          "left": 17,
+          "top": 544,
+          "right": 251,
+          "bottom": 756,
+          "cx": 138.73083056017748,
+          "cy": 658.7146075984471
+        }
+      },
+      {
+        "index": 13,
+        "count": 30246,
+        "bounds": {
+          "label": 20,
+          "owner": 13,
+          "count": 30246,
+          "left": 271,
+          "top": 545,
+          "right": 519,
+          "bottom": 756,
+          "cx": 395.9413806784368,
+          "cy": 658.9412153673213
+        }
+      },
+      {
+        "index": 14,
+        "count": 34144,
+        "bounds": {
+          "label": 21,
+          "owner": 14,
+          "count": 34144,
+          "left": 527,
+          "top": 545,
+          "right": 806,
+          "bottom": 756,
+          "cx": 662.6673500468604,
+          "cy": 657.3267631208997
+        }
+      },
+      {
+        "index": 15,
+        "count": 35140,
+        "bounds": {
+          "label": 22,
+          "owner": 15,
+          "count": 35140,
+          "left": 783,
+          "top": 545,
+          "right": 1068,
+          "bottom": 756,
+          "cx": 917.8351735913488,
+          "cy": 657.6506260671599
+        }
+      },
+      {
+        "index": 16,
+        "count": 28552,
+        "bounds": {
+          "label": 23,
+          "owner": 16,
+          "count": 28552,
+          "left": 1041,
+          "top": 545,
+          "right": 1303,
+          "bottom": 756,
+          "cx": 1152.1074880919025,
+          "cy": 659.2845685065845
+        }
+      },
+      {
+        "index": 17,
+        "count": 26383,
+        "bounds": {
+          "label": 24,
+          "owner": 17,
+          "count": 26383,
+          "left": 1298,
+          "top": 545,
+          "right": 1514,
+          "bottom": 756,
+          "cx": 1411.8231815942083,
+          "cy": 659.2096046696737
+        }
+      },
+      {
+        "index": 18,
+        "count": 26860,
+        "bounds": {
+          "label": 40,
+          "owner": 18,
+          "count": 26860,
+          "left": 24,
+          "top": 779,
+          "right": 246,
+          "bottom": 981,
+          "cx": 133.9523082650782,
+          "cy": 892.8934102755026
+        }
+      },
+      {
+        "index": 19,
+        "count": 25279,
+        "bounds": {
+          "label": 42,
+          "owner": 19,
+          "count": 25279,
+          "left": 253,
+          "top": 798,
+          "right": 492,
+          "bottom": 983,
+          "cx": 378.2958582222398,
+          "cy": 905.5719767395863
+        }
+      },
+      {
+        "index": 20,
+        "count": 23394,
+        "bounds": {
+          "label": 44,
+          "owner": 20,
+          "count": 23394,
+          "left": 499,
+          "top": 827,
+          "right": 758,
+          "bottom": 984,
+          "cx": 635.5115841668804,
+          "cy": 918.8517568607335
+        }
+      },
+      {
+        "index": 21,
+        "count": 18626,
+        "bounds": {
+          "label": 48,
+          "owner": 21,
+          "count": 18626,
+          "left": 746,
+          "top": 894,
+          "right": 1056,
+          "bottom": 991,
+          "cx": 897.1643401696554,
+          "cy": 945.8498335659831
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 26553,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 26417,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 26600,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 26460,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 28062,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 25169,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 26446,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 26736,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 26737,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 26815,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 26759,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 26562,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 28964,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 30246,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 34232,
+        "foreignPixelsExcluded": 789,
+        "regions": 5
+      },
+      {
+        "frame": 15,
+        "ownPixels": 35528,
+        "foreignPixelsExcluded": 2295,
+        "regions": 20
+      },
+      {
+        "frame": 16,
+        "ownPixels": 29377,
+        "foreignPixelsExcluded": 814,
+        "regions": 16
+      },
+      {
+        "frame": 17,
+        "ownPixels": 26383,
+        "foreignPixelsExcluded": 34,
+        "regions": 5
+      },
+      {
+        "frame": 18,
+        "ownPixels": 27838,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 25279,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 23394,
+        "foreignPixelsExcluded": 287,
+        "regions": 2
+      },
+      {
+        "frame": 21,
+        "ownPixels": 18626,
+        "foreignPixelsExcluded": 2,
+        "regions": 6
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  },
+  {
+    "id": "H-06",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentFraction": 0.5888760884602865,
+    "bodyCount": 22,
+    "cells": [
+      {
+        "index": 0,
+        "count": 24436,
+        "bounds": {
+          "label": 1,
+          "owner": 0,
+          "count": 24436,
+          "left": 33,
+          "top": 54,
+          "right": 237,
+          "bottom": 256,
+          "cx": 126.25077754133245,
+          "cy": 161.36900474709446
+        }
+      },
+      {
+        "index": 1,
+        "count": 24188,
+        "bounds": {
+          "label": 2,
+          "owner": 1,
+          "count": 24188,
+          "left": 289,
+          "top": 58,
+          "right": 491,
+          "bottom": 256,
+          "cx": 381.89862741855467,
+          "cy": 162.15954192161402
+        }
+      },
+      {
+        "index": 2,
+        "count": 24269,
+        "bounds": {
+          "label": 3,
+          "owner": 2,
+          "count": 24269,
+          "left": 544,
+          "top": 58,
+          "right": 748,
+          "bottom": 256,
+          "cx": 637.8734599695084,
+          "cy": 162.19518727594874
+        }
+      },
+      {
+        "index": 3,
+        "count": 24385,
+        "bounds": {
+          "label": 4,
+          "owner": 3,
+          "count": 24385,
+          "left": 800,
+          "top": 58,
+          "right": 1003,
+          "bottom": 256,
+          "cx": 893.2132048390404,
+          "cy": 162.17494361287677
+        }
+      },
+      {
+        "index": 4,
+        "count": 23618,
+        "bounds": {
+          "label": 7,
+          "owner": 4,
+          "count": 23618,
+          "left": 1051,
+          "top": 71,
+          "right": 1267,
+          "bottom": 256,
+          "cx": 1148.4831061055127,
+          "cy": 170.69781522567533
+        }
+      },
+      {
+        "index": 5,
+        "count": 24157,
+        "bounds": {
+          "label": 5,
+          "owner": 5,
+          "count": 24157,
+          "left": 1313,
+          "top": 58,
+          "right": 1514,
+          "bottom": 256,
+          "cx": 1405.1511777124642,
+          "cy": 161.88549902719708
+        }
+      },
+      {
+        "index": 6,
+        "count": 24627,
+        "bounds": {
+          "label": 10,
+          "owner": 6,
+          "count": 24627,
+          "left": 34,
+          "top": 298,
+          "right": 239,
+          "bottom": 506,
+          "cx": 127.37280220895765,
+          "cy": 407.2040443415763
+        }
+      },
+      {
+        "index": 7,
+        "count": 24674,
+        "bounds": {
+          "label": 11,
+          "owner": 7,
+          "count": 24674,
+          "left": 290,
+          "top": 298,
+          "right": 495,
+          "bottom": 507,
+          "cx": 382.8207424819648,
+          "cy": 407.3686066304612
+        }
+      },
+      {
+        "index": 8,
+        "count": 24321,
+        "bounds": {
+          "label": 14,
+          "owner": 8,
+          "count": 24321,
+          "left": 551,
+          "top": 301,
+          "right": 751,
+          "bottom": 506,
+          "cx": 640.2516755067637,
+          "cy": 407.87775996052795
+        }
+      },
+      {
+        "index": 9,
+        "count": 24439,
+        "bounds": {
+          "label": 13,
+          "owner": 9,
+          "count": 24439,
+          "left": 805,
+          "top": 300,
+          "right": 1007,
+          "bottom": 506,
+          "cx": 895.6394697000695,
+          "cy": 407.944392160072
+        }
+      },
+      {
+        "index": 10,
+        "count": 24640,
+        "bounds": {
+          "label": 15,
+          "owner": 10,
+          "count": 24640,
+          "left": 1062,
+          "top": 302,
+          "right": 1264,
+          "bottom": 506,
+          "cx": 1153.1491477272727,
+          "cy": 408.34517045454544
+        }
+      },
+      {
+        "index": 11,
+        "count": 24330,
+        "bounds": {
+          "label": 12,
+          "owner": 11,
+          "count": 24330,
+          "left": 1319,
+          "top": 299,
+          "right": 1516,
+          "bottom": 507,
+          "cx": 1407.8157829839704,
+          "cy": 408.0208795725442
+        }
+      },
+      {
+        "index": 12,
+        "count": 25042,
+        "bounds": {
+          "label": 20,
+          "owner": 12,
+          "count": 25042,
+          "left": 33,
+          "top": 549,
+          "right": 245,
+          "bottom": 747,
+          "cx": 127.72462263397492,
+          "cy": 655.7626786997844
+        }
+      },
+      {
+        "index": 13,
+        "count": 26256,
+        "bounds": {
+          "label": 16,
+          "owner": 13,
+          "count": 26256,
+          "left": 280,
+          "top": 542,
+          "right": 503,
+          "bottom": 747,
+          "cx": 377.68353900060936,
+          "cy": 648.5523308957952
+        }
+      },
+      {
+        "index": 14,
+        "count": 26379,
+        "bounds": {
+          "label": 18,
+          "owner": 14,
+          "count": 26379,
+          "left": 545,
+          "top": 546,
+          "right": 777,
+          "bottom": 747,
+          "cx": 643.7080253231737,
+          "cy": 649.6183327646992
+        }
+      },
+      {
+        "index": 15,
+        "count": 26698,
+        "bounds": {
+          "label": 21,
+          "owner": 15,
+          "count": 26698,
+          "left": 797,
+          "top": 549,
+          "right": 1057,
+          "bottom": 745,
+          "cx": 899.9713461682524,
+          "cy": 651.445576447674
+        }
+      },
+      {
+        "index": 16,
+        "count": 25359,
+        "bounds": {
+          "label": 19,
+          "owner": 16,
+          "count": 25359,
+          "left": 1063,
+          "top": 547,
+          "right": 1278,
+          "bottom": 747,
+          "cx": 1159.6716747505816,
+          "cy": 653.996727000276
+        }
+      },
+      {
+        "index": 17,
+        "count": 24784,
+        "bounds": {
+          "label": 17,
+          "owner": 17,
+          "count": 24784,
+          "left": 1313,
+          "top": 545,
+          "right": 1515,
+          "bottom": 748,
+          "cx": 1405.0822304712717,
+          "cy": 654.9669948353777
+        }
+      },
+      {
+        "index": 18,
+        "count": 25592,
+        "bounds": {
+          "label": 22,
+          "owner": 18,
+          "count": 25592,
+          "left": 29,
+          "top": 779,
+          "right": 247,
+          "bottom": 979,
+          "cx": 125.79102844638949,
+          "cy": 889.6012035010941
+        }
+      },
+      {
+        "index": 19,
+        "count": 22334,
+        "bounds": {
+          "label": 23,
+          "owner": 19,
+          "count": 22334,
+          "left": 284,
+          "top": 799,
+          "right": 481,
+          "bottom": 976,
+          "cx": 382.5227455896839,
+          "cy": 904.7509178830483
+        }
+      },
+      {
+        "index": 20,
+        "count": 21216,
+        "bounds": {
+          "label": 25,
+          "owner": 20,
+          "count": 21216,
+          "left": 525,
+          "top": 828,
+          "right": 747,
+          "bottom": 976,
+          "cx": 631.6231617647059,
+          "cy": 918.251508295626
+        }
+      },
+      {
+        "index": 21,
+        "count": 18787,
+        "bounds": {
+          "label": 27,
+          "owner": 21,
+          "count": 18787,
+          "left": 771,
+          "top": 862,
+          "right": 1053,
+          "bottom": 975,
+          "cx": 907.9273433757386,
+          "cy": 932.7942194070367
+        }
+      }
+    ],
+    "trims": [],
+    "isolation": [
+      {
+        "frame": 0,
+        "ownPixels": 24436,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 1,
+        "ownPixels": 24188,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 2,
+        "ownPixels": 24269,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 3,
+        "ownPixels": 24385,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 4,
+        "ownPixels": 24418,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 5,
+        "ownPixels": 24157,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 6,
+        "ownPixels": 24627,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 7,
+        "ownPixels": 24674,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 8,
+        "ownPixels": 24321,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 9,
+        "ownPixels": 24439,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 10,
+        "ownPixels": 24640,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 11,
+        "ownPixels": 24330,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 12,
+        "ownPixels": 25042,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 13,
+        "ownPixels": 26256,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 14,
+        "ownPixels": 26379,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 15,
+        "ownPixels": 26698,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 16,
+        "ownPixels": 25359,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 17,
+        "ownPixels": 24784,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 18,
+        "ownPixels": 26455,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 19,
+        "ownPixels": 22334,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 20,
+        "ownPixels": 21216,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      },
+      {
+        "frame": 21,
+        "ownPixels": 18787,
+        "foreignPixelsExcluded": 0,
+        "regions": 1
+      }
+    ],
+    "frameSelection": {},
+    "issues": []
+  }
+]

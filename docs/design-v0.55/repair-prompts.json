@@ -1,0 +1,45 @@
+{
+  "tool": "builtin image_gen",
+  "common": "Use case: precise-object-edit. Repair this transparent sprite atlas without changing character design, palette, human size, grid placement or animation slot count. 1536x1024,6columns4rows,22complete right-facing poses,last2cells empty. Preserve alpha transparency; no background haze, shadows, labels. Change ONLY equipment continuity errors specified. Keep bright intended attack effects. Keep every body and all death poses. ",
+  "repairs": [
+    {
+      "id": "E-KN-C",
+      "detail": "Fix sword/shield duplication AND hand swapping. Re-stage ALL poses with the SAME grip as the ATTACK row: exactly ONE sword held by the visible near arm (screen-left shoulder), ONE round teal gold-star shield held by far arm on screen-right. Match this layout in idle, walk, hit and death too. Row3col1 currently has two swords: delete extra far-side sword, keep single lower near-hand sword. Row1col5 currently two shields: retain only screen-right shield and one near-hand sword. Shield never disappears during sword thrust. No floating limb."
+    },
+    {
+      "id": "E-AR-T",
+      "detail": "Repair only row3 attack. Row3col1 remove sword/dagger completely: near hand just reaches toward quiver/string, other hand holds original bow. Row3col2 nock ONE thin wooden arrow with white FEATHERS at rear, one gold POINT only at forward/right tip, not two points. Bow stays in forward hand, rearhand drawsstring then releases. Keep all other poses and existing gold/ivory bow, bright releasedarrow."
+    },
+    {
+      "id": "E-FI-B",
+      "detail": "Repair row3 attack only: do not raise staff into opposite hand. All6attack frames keep ONE copper-ring orange-orb staff in SAME forward hand as idle, staff stays visible. Frame13 (row3col2) replace overhead swing with forward same-hand gatherpose. Frame15 (row3col4) restore visible COPPER RING AND ORANGE ORB at end of staff infrontofhand, fireburst BEYOND orb not replacing it. Distinct visible shaft and ring in everyframe. Same body positions and sizes."
+    },
+    {
+      "id": "E-FI-E",
+      "detail": "Repair six attack poses in row3 and kneeling row4col2. In row3col4, show same solid pointed AMBER CRYSTAL attached to end of long blackwood staff just before the flame, not a hollow nozzle. In row3col5, restore the missing staff held in same forwardhand at20degree diagonal matching row3col6; freehandis empty. In row4col2 the old staff floats behind shoulders: move that one staff into clearly visible forwardhand beside knee. Absolutelyno lantern. Keep allotherposeandcolors."
+    },
+    {
+      "id": "E-IC-F",
+      "detail": "Fix equipment continuity in these cells only. Row1col5: restore one crystalstaff to forwardhand matching row1col6, oppositehandempty. Row3col4: extend darkstaff shaft through hand, keep cyan crystalheadvisible before frostburst, clearlyonecontinuouslongstaff. Row4col3 currently TWO staffs (one behind head and one horizontal): REMOVE rear elevatedstaff/crystal completely, keep only one horizontalstaff onfloor withhands. Leave cyan hair accessory. Keepallotherposes."
+    },
+    {
+      "id": "H-03",
+      "detail": "Bow crystal tips must persist in EVERY pose. Row1col5 hit AND row4cols1and2 stagger/kneel currently have plain woodenbow: restore both pointed CYAN CRYSTAL tips exactly as idle bow, attached at eachend. Nootherchanges. Sameonebow+onequiver, samehands. Keep existing attackfrostFX."
+    },
+    {
+      "id": "E-KN-C",
+      "source": "H-01",
+      "detail": "Create CounterKnight variant from THIS structurally consistent EmberSwordguard atlas. Preserve EXACT same anatomy, grips, sword and shield sides, everypose and all22cells. Recolor plume and cape from red to DARKTEAL. Remove orange fire vein and orangeglowingrivets; blade plain silver. Replace oval shield with slightly smaller ROUND teal buckler, gold faceted DIAMOND boss insteadofsun. Less ornate gold shoulders thanfinalhero. Attack FX compact GOLD sparkle/slash no fire, confined tosame256pxcell: row3col4 rightmostx1005, leave20pxtransparent before nextcharacter. No extra weapons, no hand swapping. Matchidlehold swordnear-screenleft/shieldfar-screenright inALLposes."
+    },
+    {
+      "id": "H-01",
+      "source": "H-01",
+      "detail": "One surgical correction only: in row3col4 the large orange sword-slash arc touches neighboring character in row3col5. Make this SAME bright firearc about HALF its width, tighttofrontblade and inside itsowncell, endingx1005orless. Keep visible orange glow, blade, both characters entirely unchanged. Atleast16px transparentgap between arc and nextcharacter; nohaze there. No otherposechanges."
+    },
+    {
+      "id": "E-BA-A",
+      "source": "E-BA-A",
+      "detail": "Fix row3 only. Character has ONE redflag on spear and one TEAL cape on back. In row3cols2,4,5 redfabric behindhead/back is wronglyduplicatedflag: replace that rearfabric with shortTEALcape withgoldhem attachedtoshoulders. PreserveONE redpennant below actualspeartip. Row3col4 goldenattackarc currentlytouches nextsprite: narrow it tightlyaroundtip, rightmostx1004 max, transparentgapbefore nextsprite. Keep all22bodies, allotherposes and original equipmentgrips."
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "referenceBodyHeight": 179.2,
+  "measurement": "First idle pose, manually reviewed head/helmet crown to manifest foot pivot in original pixels. Excludes separate plumes, ponytails, buns, flags, staff ornaments and padding.",
+  "entries": [
+    {
+      "id": "B-AR",
+      "bodyHeight": 192,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 56,
+      "footY": 248
+    },
+    {
+      "id": "B-BA",
+      "bodyHeight": 156,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 98,
+      "footY": 254
+    },
+    {
+      "id": "B-FI",
+      "bodyHeight": 201,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 62,
+      "footY": 263
+    },
+    {
+      "id": "B-IC",
+      "bodyHeight": 191,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 70,
+      "footY": 261
+    },
+    {
+      "id": "B-KN",
+      "bodyHeight": 148,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 99,
+      "footY": 247
+    },
+    {
+      "id": "B-PR",
+      "bodyHeight": 196,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 80,
+      "footY": 276
+    },
+    {
+      "id": "E-AR-P",
+      "bodyHeight": 190,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 266
+    },
+    {
+      "id": "E-AR-T",
+      "bodyHeight": 192,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 67,
+      "footY": 259
+    },
+    {
+      "id": "E-BA-A",
+      "bodyHeight": 157,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 100,
+      "footY": 257
+    },
+    {
+      "id": "E-BA-G",
+      "bodyHeight": 147,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 109,
+      "footY": 256
+    },
+    {
+      "id": "E-FI-B",
+      "bodyHeight": 211,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 72,
+      "footY": 283
+    },
+    {
+      "id": "E-FI-E",
+      "bodyHeight": 188,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 67,
+      "footY": 255
+    },
+    {
+      "id": "E-IC-F",
+      "bodyHeight": 189,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 265
+    },
+    {
+      "id": "E-IC-S",
+      "bodyHeight": 185,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 261
+    },
+    {
+      "id": "E-KN-C",
+      "bodyHeight": 183,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 73,
+      "footY": 256
+    },
+    {
+      "id": "E-KN-G",
+      "bodyHeight": 169,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 84,
+      "footY": 253
+    },
+    {
+      "id": "E-PR-G",
+      "bodyHeight": 201,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 54,
+      "footY": 255
+    },
+    {
+      "id": "E-PR-H",
+      "bodyHeight": 191,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 267
+    },
+    {
+      "id": "F-AR",
+      "bodyHeight": 166,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 90,
+      "footY": 256
+    },
+    {
+      "id": "F-BA",
+      "bodyHeight": 154,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 101,
+      "footY": 255
+    },
+    {
+      "id": "F-FI",
+      "bodyHeight": 202,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 53,
+      "footY": 255
+    },
+    {
+      "id": "F-IC",
+      "bodyHeight": 182,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 83,
+      "footY": 265
+    },
+    {
+      "id": "F-KN",
+      "bodyHeight": 181,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 73,
+      "footY": 254
+    },
+    {
+      "id": "F-PR",
+      "bodyHeight": 189,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 72,
+      "footY": 261
+    },
+    {
+      "id": "H-01",
+      "bodyHeight": 182,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 73,
+      "footY": 255
+    },
+    {
+      "id": "H-02",
+      "bodyHeight": 173,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 79,
+      "footY": 252
+    },
+    {
+      "id": "H-03",
+      "bodyHeight": 197,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 59,
+      "footY": 256
+    },
+    {
+      "id": "H-04",
+      "bodyHeight": 199,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 65,
+      "footY": 264
+    },
+    {
+      "id": "H-05",
+      "bodyHeight": 148,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 112,
+      "footY": 260
+    },
+    {
+      "id": "H-06",
+      "bodyHeight": 180,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bodyTop": 76,
+      "footY": 256
+    }
+  ]
+}

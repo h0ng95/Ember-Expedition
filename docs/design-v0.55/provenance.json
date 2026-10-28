@@ -1,0 +1,128 @@
+{
+  "tool": "builtin image_gen",
+  "sources": [
+    {
+      "id": "E-KN-G",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-714d2231-2ad4-44b2-b95c-ad58c6853de6.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-0e101f70-b160-46ca-b6f4-76060c363bbd.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-KN-G.png"
+    },
+    {
+      "id": "E-KN-C",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-e4445f3a-298b-4cf3-899a-cd18eb9f05ad.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-27ca8025-6872-4084-b5c7-1ce5eaa25686.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-KN-C.png"
+    },
+    {
+      "id": "E-AR-P",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-9d07c5af-0f16-4a9d-a656-c3bf95ebc8e1.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-9d07c5af-0f16-4a9d-a656-c3bf95ebc8e1.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-AR-P.png"
+    },
+    {
+      "id": "E-AR-T",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-7ded88a6-5be0-4560-827b-f8d7f777b3eb.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-eaeaa9cd-b0e0-43e6-83f6-3f19ddfbeed9.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-AR-T.png"
+    },
+    {
+      "id": "E-FI-B",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-69246299-9c59-4ea8-ae71-65aad5e4815b.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-2e0c38fe-23b4-4603-8676-fd8fa3b972b2.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-FI-B.png"
+    },
+    {
+      "id": "E-FI-E",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-991365c5-e909-46fc-b533-afa38eab7a87.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-d3704fd9-e7b5-4f52-92da-44bd38e94965.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-FI-E.png"
+    },
+    {
+      "id": "E-IC-F",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-2ebe7517-aeb8-47b0-936c-3f488ab971be.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-38252267-8abf-4eb8-a024-45c94026522c.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-IC-F.png"
+    },
+    {
+      "id": "E-IC-S",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-a4c2b379-0108-4ca9-aaad-0fb97081bf4f.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-a4c2b379-0108-4ca9-aaad-0fb97081bf4f.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-IC-S.png"
+    },
+    {
+      "id": "E-BA-G",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-59065062-be24-4ef6-bc7e-5cfca17ab344.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-59065062-be24-4ef6-bc7e-5cfca17ab344.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-BA-G.png"
+    },
+    {
+      "id": "E-BA-A",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-f6c82b5f-470c-4314-bd2c-dcc3e06fa4e2.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-1481e4aa-9536-44a3-9690-f80dd42759c2.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/E-BA-A.png"
+    },
+    {
+      "id": "F-AR",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-86f48a8f-653f-453d-9701-ef9655a1395e.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-86f48a8f-653f-453d-9701-ef9655a1395e.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/F-AR.png"
+    },
+    {
+      "id": "F-FI",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-23f37a28-9d26-4668-a109-3a6f9604776c.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-23f37a28-9d26-4668-a109-3a6f9604776c.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/F-FI.png"
+    },
+    {
+      "id": "F-IC",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-4be6c9da-c8de-4bf3-824a-14f2c8d652e0.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-4be6c9da-c8de-4bf3-824a-14f2c8d652e0.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/F-IC.png"
+    },
+    {
+      "id": "F-BA",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-93e4b947-0dfd-4910-86e7-bcb6b6fe9efd.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-93e4b947-0dfd-4910-86e7-bcb6b6fe9efd.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/F-BA.png"
+    },
+    {
+      "id": "H-01",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-9d396a00-e0e2-47e2-9207-362fd0e6295f.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-2829f2a1-18e1-46af-b5a5-c6bff14cc936.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/H-01.png"
+    },
+    {
+      "id": "H-03",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-b8b5681d-228c-4a2f-94d2-624f6908a5f1.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-75c5847c-320f-4ab9-87bb-5383b5dfce04.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/H-03.png"
+    },
+    {
+      "id": "H-04",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-ad7d5dd4-8400-4866-b946-75cd23437cc0.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-7b7e7d45-9b39-4f9a-af3a-077d82bcc7de.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/H-04.png"
+    },
+    {
+      "id": "H-06",
+      "generatedCandidate": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-f7dc4692-28b6-43cb-8b89-111dee4a8300.png",
+      "selected": "C:\\Users\\whwog\\.codex\\generated_images\\01a14e3b-5142-7871-8565-822e92917bb8\\exec-f7dc4692-28b6-43cb-8b89-111dee4a8300.png",
+      "runtime": "unity/Assets/Resources/Art/Units/v055/H-06.png"
+    }
+  ],
+  "finalCounterKnightPrompt": "Use case: precise-object-edit. COLOR AND EMBLEM VARIANT ONLY of this exact transparent22-pose sprite atlas. Preserve ALL silhouettes, pixel positions, pose spacing, weapon length, width, body shape, shield size, hands, faces and source1536x1024 layout EXACTLY. Change RED plume and cape to DARKTEAL in all22poses; change sword blade orangevein to plain SILVER; change orange glowingarmor rivets to GOLD; change shield amber sun symbol to a small faceted gold DIAMOND. Row3col4 narrow existing firearc becomes same narrow goldenarc, DO NOT expand! This is CounterKnight, single sword and ovalbuckler held consistently asreference. Never enlarge ormove anysprite. Transparent gutters separate all22figures, including fourlyingposesrow4. Absolutely no other changes.",
+  "additionalRepairs": [
+    {
+      "id": "E-KN-C",
+      "detail": "Change ONLY the attack effect in ROW3 COLUMN4 (x768..1023,y512..767). Remove the oversized golden crescent completely and replace with a small GOLD SPARK attached to swordpoint, within x980..1015. Crucial NO visible or translucent pixels from this pose beyondx1018. Preserve all body,sword,shield pixels and everyother21pose. Cleartransparentgap to nextpose."
+    },
+    {
+      "id": "H-04",
+      "detail": "Repair ONLY row3 attack arm anatomy. Keep the staff UPRIGHT and VISIBLE with its same crescenthead throughout. Far arm must wrap fingers firmly around shaft nearwaist, clearlyvisible grip onrightsidebody. Near arm extends across chest tocast orange-cyanburst. TWO arms only, both connectedtoshoulders. Row3col2 currently opens the handholdingstaff and makesstafffloat: gripstaffagain, use otherhandforspell. Row3col3,4,5 ensure staffholdinghand visible atwaist. Allotherposes and FX preserved."
+    },
+    {
+      "id": "E-KN-G",
+      "detail": "Fix weapon continuity only. ExactlyONElowshortsword in neararm on screenleft and ONEtealtowershield in fararm on screenright. In row3cols3and5 (attack) sword missing: restore ONE blade heldlow bysameoriginalswordarm whileotherarmbracesshield; do not addthirdarm. Row4col3 shieldmissing: putsame towershield flatonbody foreground while original swordliesinhand. Row4col4 swordmissing: restoreONEshortsilverblade flatinfloorinoriginalhand nexttoshield. Preserveallotherposes, colors, humanpixelheight and gridpositions."
+    }
+  ]
+}

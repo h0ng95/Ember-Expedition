@@ -1,0 +1,29 @@
+{
+  "artifact": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "sha256": "559a9028573471d54715c3ea8ff8e7b70452d99efed58dd9e6ba048317e562b7",
+  "bytes": 287988491,
+  "builtAt": "2026-10-28T18:18:10.676Z",
+  "unity": "6000.3.24f1",
+  "checks": {
+    "art": 2709,
+    "bodyScale": 460,
+    "pixelSheets": 18,
+    "pixelIssues": 0,
+    "battleReadability": "passed"
+  },
+  "device": {
+    "model": "Galaxy Buddy2",
+    "fixtures": 6,
+    "newFormsCovered": 18,
+    "scope": "Preparation and short combat smoke checks, not full-run balance or endurance",
+    "logFilesChecked": 5,
+    "exceptionMatches": 0,
+    "finalPivotRetested": "F-BA / art-2",
+    "saveRestore": "Existing save slots and PlayerPrefs restored and verified byte-for-byte"
+  },
+  "poseHolds": {
+    "newSlots": 396,
+    "heldSlots": 8,
+    "previousHeldSlots": 4
+  }
+}

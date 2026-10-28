@@ -1,0 +1,66 @@
+{
+  "tool": "builtin image_gen",
+  "common": "Use case: style-transfer. Production transparent pixel-art animation sprite sheet for ONE original medieval mobile autobattler character. Image1 is the APPROVED SAME-FACTION style reference; image2 is EDIT TARGET existing advanced character. Redesign target equipment to make its tier visibly stronger, keeping its class identity and human features. Remove every lantern, hanging lamp and cage-shaped light; use class weapons only. Match master's compact 2.5-head adult proportions, chunky crisp dark outline, discrete pixel clusters, broad metal highlights; matte cloth/leather. Do not copy any franchise. TRUE TRANSPARENT alpha outside the sprites; ignore the reference's dark/brown background. NO background haze, smoke, ground shadows, checkerboard, labels, text, borders or watermark. Warm gold/teal faction trim but retain class color. Exactly1536x1024,6 columns x4 rows,256px cells. Exactly22 COMPLETE full-body drawings, all facing RIGHT. Four idle + two hit on row1; six alternating-foot walking on row2; six attack anticipation/action/recovery on row3; row4 first4 show stagger,kneel,collapse,lie still, last2cells EMPTY transparent. NEVER OMIT DEATH POSES. Human crown-to-sole height150px, foot baseline220 within each cell, centerx128. Weapons/flags may rise above head but human size stays constant. Every pose AND compact attack FX contained within cell x16..240,y12..240, separated by clear transparent gutters. Do not overlap neighboring cells. Same clothing and exactly same equipment count every frame, no hand swaps, no detached arms, no extra weapons/books. Arms stay connected to torso. Preserve bright intentional attack sparkle/arcs localized in FRONT of character; do not remove effects. ",
+  "characters": [
+    {
+      "id": "E-IC-F",
+      "base": "B-IC",
+      "detail": "Frostbinder: silver-white braided hair, fur collar, deep blue heavy mage coat with gold angular shoulder plates and three-ice-crystal crown motif. Exactly ONE long staff with solid cyan faceted tip and gold collar; NO offhand weapon/book. Staff remains in forward/right-side hand throughout; free hand channels. Row3: ready, draw staff toward chest, aim forward, extend with compact cyan frost flash, retract, rest. Never swing staff over head or change hands. Visible material/armor upgrade from base frost caster; all faces and proportions compact like first image."
+    },
+    {
+      "id": "E-IC-S",
+      "base": "B-IC",
+      "detail": "Frost scout: silver braided ponytail, navy short leather coat, blue-gold reinforced bracers, white scarf and knee plates. Exactly TWO SHORT CYAN CRYSTAL DAGGERS, ONE PER HAND in ALL frames. No staff or books. Attack is a low crossed windup then forward rightward stabbing/slashing with compact cyan arc, two blades always countable and attached; recovery. No lantern."
+    },
+    {
+      "id": "E-BA-G",
+      "base": "B-BA",
+      "detail": "Defender standard bearer: gold enclosed helmet, small teal plume, reinforced gold shoulders, teal-and-ivory tabard, stout boots. Exactly ONE long pennant spear, dark shaft, gold/white spear point, teal square banner with gold diamond sigil attached below point. No sword or shield and NO lantern. Holds spear in forward hand, supports with second hand during attack. Attack continuous two-hand brace, tilt forward, short thrust then plant with tiny protection rune flash. Keep flag cloth attached to same pole; only one flag. Human body size same as other knights, flag not counted."
+    },
+    {
+      "id": "E-BA-A",
+      "base": "B-BA",
+      "detail": "Vanguard banner knight: open gold helmet showing face, teal plume, broader angular shoulder plates, teal short tabard, gold armguards. ONE spear with a RED twin-tail long pennant and gold diamond sigil. Flag always attaches to same spear below white metal point. ONE pole only. Attack is short TWO-HAND FORWARD thrust, keep both hands in same relative order; no overhead twirl. No sword, no shield, no lamps. Clear rank upgrade from base bearer, body150px crown-to-sole independently of tall pole."
+    },
+    {
+      "id": "F-AR",
+      "base": "B-AR",
+      "detail": "FINAL TIER Twilight Marksman: chestnut ponytail, layered green leather and gold angular shoulder armor, long red cape, ivory cuff details, ONE large ornate GOLD RECURE BOW with green limbs and ONE back quiver. Arrow tip amber light. Highest-tier silhouette through large bow and high collar; keep compact human body. Forward hand always holds bow; rear hand always draws string to cheek and releases; never swap hands; no sword/dagger at all. Row3 ready/nock/draw/release/followthrough/rest. Keep empty waist without lantern medallion. Full22bodies with full deathposes."
+    },
+    {
+      "id": "F-FI",
+      "base": "B-FI",
+      "detail": "FINAL TIER Ember Archmage: mature red-haired man with neat short red beard, cream layered mantle with fiery orange lining, ornate gold shoulder armor and teal gauntlets, embroidered long rust robe. ONE tall staff with SOLID faceted amber orb secured in gold angular crown. NO lantern, no book, no shield. Staff remains in forward hand every frame. Casting: lower stance, angle staff slightly forward, push same staff forward with free hand supporting shaft, compact orange fire burst just in FRONT OF still visible amber orb, retract and rest. NEVER overhead arm swing or exchanging weapon hands. Same staff shaft and orb shape and length throughout. More powerful than base by silhouette and mantle, not larger human."
+    },
+    {
+      "id": "F-IC",
+      "base": "B-IC",
+      "detail": "FINAL TIER Frost Sentinel: silver braided hair, navy hood pulled back, high blue scarf, broad silver-and-gold lamellar shoulders, thick blue coat, ivory skirt and boots. ONE long navy staff ending in a large six-point cyan crystal encased by a gold circular astrolabe. NO other weapons. Staff stays upright in forward hand throughout EVERY frame even during attack; FREE hand in front of chest charges then extends forward to release a compact cyan shard fan. Thus identical staff count/grip/material remain visible and no staff swing across torso. Full death poses with one staff laid flat beside body."
+    },
+    {
+      "id": "F-BA",
+      "base": "B-BA",
+      "detail": "FINAL TIER Oath Marshal: mature short black hair and black beard, ornate full gold plate shoulder armor, ivory tabard, long teal mantle. ONE tall dark pole topped with spear point, bearing a large rectangular TEAL banner with gold four-diamond crest and TWO gold tails attached to the banner. IMPORTANT all flag fabric stays at tip of SAME pole throughout; no extra banner behind head, no fabric teleport. Standing staff held in forward hand. Attack simply brace, tilt pole diagonally forward20degrees, plant down with small gold ground pulse, reset; NO horizontal swing. This is one weapon, never sword, lantern or shield. Human full150px tall not shrunk to fit flag."
+    },
+    {
+      "id": "H-01",
+      "base": "F-KN",
+      "detail": "HYBRID Ember Swordguard, knight+firemage: closed gold helmet with rust-red plume, gold plate with blackened copper edges and glowing orange rivets, teal tabard, short red cape. ONE broad sword engraved with glowing ember channel in far/right arm and ONE ROUND teal/gold shield with amber centralboss strapped on near/left forearm. Never hold two swords or two shields. Keep shield visibly ON LEFT OF TORSO throughout all six attack poses. Sword stays RIGHT OF TORSO and only moves from high right to extended forward-right to low right; NO crossing behind back, no overhead left windup or changing sides. Orange compact fire arc at blade tip duringattack. Same human size asbase. No lantern."
+    },
+    {
+      "id": "H-03",
+      "base": "B-AR",
+      "detail": "HYBRID Frozen Tracker, archer+icecaster: spiky silver hair, blue eyes, deep-blue scarf and cape, green leather armor with silver-gold shoulder plates. ONE back quiver with cyan arrows and ONE curved wood/gold bow with solid cyan crystal limb tips. Forward hand always holds bow, rear hand draws arrowstring; no hand swaps and NO sword/staff/dagger. Draw, release small icyarrow RIGHT, recoil and rest. Visible frost+archer hybrid silhouette, no lanterns."
+    },
+    {
+      "id": "H-04",
+      "base": "B-FI",
+      "detail": "HYBRID Melter, fire+frost mage: short dark brown hair, teal-and-copper high collar, ivory robe with alternating fire-orange and navy-blue panels, gold shoulders. ONE long staff with one fixed crescent head: orange left prong, cyan right prong and amber orb center. Same head geometry in every pose; no changing colors or weapon shapes. Hold staff upright in forward hand all22 frames; free rear hand raises from chest then extends IN FRONT OF TORSO producing small orange/cyan double burst aimed RIGHT; keep staffshaft visible, donotrotate/swing or change hands. No lantern/book/extraweapon."
+    },
+    {
+      "id": "H-06",
+      "base": "B-AR",
+      "detail": "HYBRID Expedition Ranger Commander, archer+standard bearer: short dark-brown hair, red scarf and shortredcape, reinforced green leather with gold shoulders, teal tabard. ONE compact wooden crossbow with silver curved bowlimbs held with both hands at waist/chest throughoutidlewalkattack. ONE small TEAL command pennant with gold diamond permanently FIXED on backpack, never held in hand, no spear. No beltlantern or hangingroundmedallion. Attack: raise SAME crossbow horizontally to shoulder, aim, fire ONE small amberbolt toRIGHT, lower, rest. Crossbow never transforms into sword/pistol or ordinary bow; stock attached, hands maintaingrip. All22fullposes, human same size asbaseranger regardlessbackbanner."
+    }
+  ]
+}

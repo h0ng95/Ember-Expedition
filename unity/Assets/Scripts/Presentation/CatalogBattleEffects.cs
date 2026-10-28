@@ -19,6 +19,8 @@ namespace Expedition.Presentation
             public EffectKind Kind;
             public float Age, Duration, Size, BodyOffset, HalfWidth;
             public int Direction;
+            public bool HasBreathAnchor;
+            public Vector2 BreathMouthOffset;
         }
 
         readonly List<Effect> effects = new List<Effect>(24);
@@ -131,7 +133,7 @@ namespace Expedition.Presentation
                     Size = breath ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
                     HalfWidth = breath ? source.BreathHalfWidth : 0f,
                     Duration = e.AbilityId == "GARDEN_BRIARS" ? .6f :
-                        breath ? PalaceEnemyArt.BreathVisualDuration : .5f });
+                        breath ? PalaceEnemyArt.BreathVisualDuration + DragonBreathArt.AfterglowDuration : .5f });
                 Play(hit, 1f);
             }
             if (e.Kind == CatalogEventKind.ChargeHit && source != null && target != null)
@@ -297,9 +299,10 @@ namespace Expedition.Presentation
         public bool TryGetBreathProgress(string sourceId, out float progress)
         {
             foreach (Effect effect in effects)
-                if (effect.Kind == EffectKind.Breath && effect.SourceId == sourceId)
+                if (effect.Kind == EffectKind.Breath && effect.SourceId == sourceId &&
+                    effect.Age < PalaceEnemyArt.BreathVisualDuration)
                 {
-                    progress = Mathf.Clamp01(effect.Age / effect.Duration);
+                    progress = Mathf.Clamp01(effect.Age / PalaceEnemyArt.BreathVisualDuration);
                     return true;
                 }
             progress = 0f;
@@ -361,6 +364,12 @@ namespace Expedition.Presentation
                 Vector2 to = project(new Vector2(target.X, target.Y)) +
                     new Vector2(0, -targetBodyOffset);
                 float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);
+                if (unit.DrakeRangedBasic)
+                {
+                    Vector2? mouth = breathMouth(unit.Id);
+                    if (mouth.HasValue) spriteEffects.DrawDrakeFirebolt(mouth.Value,to,progress);
+                    continue;
+                }
                 Vector2 point = Vector2.Lerp(from, to, progress);
                 Vector2 direction = (to - from).normalized;
                 Color color = AttackColor(unit);
@@ -397,11 +406,25 @@ namespace Expedition.Presentation
                 }
                 if (effect.Kind == EffectKind.Breath)
                 {
-                    Vector2? mouth = breathMouth(effect.SourceId);
-                    // Follow the rendered jaw, but keep the warned ground endpoint locked.
-                    // A dead or absent source has no mouth and must not leave detached fire.
-                    if (mouth.HasValue)
-                        spriteEffects.DrawBreath(mouth.Value, project(effect.EndPoint), effect.HalfWidth, t);
+                    CatalogBattleUnit source = battle.Get(effect.SourceId);
+                    if (source == null || !source.IsAlive) continue;
+                    if (effect.Age < PalaceEnemyArt.BreathVisualDuration)
+                    {
+                        Vector2? mouth = breathMouth(effect.SourceId);
+                        // Follow the jaw during emission, and lock the last emitted
+                        // cloud in place when the dragon closes its mouth or moves.
+                        if (mouth.HasValue)
+                        {
+                            effect.HasBreathAnchor = true;
+                            effect.BreathMouthOffset = mouth.Value - project(effect.Point);
+                            spriteEffects.DrawBreath(mouth.Value, project(effect.EndPoint), effect.HalfWidth,
+                                effect.Age / PalaceEnemyArt.BreathVisualDuration);
+                        }
+                    }
+                    else if (effect.HasBreathAnchor)
+                        spriteEffects.DrawBreath(project(effect.Point) + effect.BreathMouthOffset,
+                            project(effect.EndPoint), effect.HalfWidth,
+                            (effect.Age - PalaceEnemyArt.BreathVisualDuration) / DragonBreathArt.AfterglowDuration, true);
                     continue;
                 }
                 if (effect.Kind == EffectKind.BombBurst)

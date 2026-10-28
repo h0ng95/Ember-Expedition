@@ -59,7 +59,7 @@ namespace Expedition.EditorTools
                     Check(fresh != null && fresh.StartFormationId == form && !fresh.UsesLegacyRules && fresh.LegacyResearchIds.Count == 0, "fresh start ignores archived nodes");
                     var saved = JsonUtility.FromJson<ExpeditionAccountSave>(((ExpeditionSaveStore)Get(screen, "accountStore")).Load().Payload);
                     saved.Validate(db); checks++;
-                    Check(saved.Version == 2 && saved.Run.Version == 10 && saved.Progress.ResearchIds.Length == 6, "migration archive retained");
+                    Check(saved.Version == 2 && saved.Run.Version == CatalogBalance.CurrentSaveVersion && saved.Progress.ResearchIds.Length == 6, "migration archive retained");
                 }
                 var run = (ExpeditionRun)Get(screen, "run");
                 Advance(run, 30); Call(screen, "Save", "battle_win", null, 0f);

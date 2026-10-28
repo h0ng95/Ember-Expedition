@@ -84,7 +84,7 @@ static class ResearchRegionsTests
         for(uint seed=1;seed<40;seed++) history.Observe(ExpeditionRun.New(db,seed),true);
         history=Reload(history);
         Check(history.Recent.Count==30 && history.Best.Score==332000 && history.ArchivedBest.Score==333000,"best evicted with recent history");
-        var broken=history.Capture();broken.ArchivedBest.BalanceVersion="normal-046";
+        var broken=history.Capture();broken.ArchivedBests[0].BalanceVersion="normal-046";
         bool rejected=false;try{ExpeditionHistory.Restore(db,broken);}catch(ArgumentException){rejected=true;}
         Check(rejected,"cross-version score tamper");
     }

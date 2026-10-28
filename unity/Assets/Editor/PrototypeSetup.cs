@@ -127,7 +127,8 @@ namespace Expedition.EditorTools
             if (!assetPath.StartsWith("Assets/Resources/Art/", StringComparison.Ordinal)) return;
             var importer = (TextureImporter)assetImporter;
             bool startup = assetPath == StartupArtSetup.ImagePath;
-            bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal);
+            bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal) ||
+                assetPath.StartsWith("Assets/Resources/Art/Effects/v049/", StringComparison.Ordinal);
             bool frostFloating = assetPath.StartsWith("Assets/Resources/Art/Enemies/v039/frost-boss-floating", StringComparison.Ordinal) ||
                 assetPath == "Assets/Resources/Art/Enemies/v039/frost-boss-full-motion.png";
             importer.textureType = startup ? TextureImporterType.Sprite : TextureImporterType.Default;

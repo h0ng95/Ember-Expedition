@@ -9,7 +9,7 @@ namespace Expedition.EditorTools
     {
         static readonly string[] Sheets = {
             "Assets/Resources/Art/Effects/v039/garden-roots.png",
-            "Assets/Resources/Art/Effects/v039/dragon-breath.png",
+            "Assets/Resources/Art/Effects/v049/dragon-breath.png",
             "Assets/Resources/Art/Effects/v039/dragon-firefall.png",
             "Assets/Resources/Art/Effects/v039/golem-shatter.png",
             "Assets/Resources/Art/Effects/v039/frost-eruption.png",

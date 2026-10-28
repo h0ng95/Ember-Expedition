@@ -1,7 +1,7 @@
 const fs = require('fs'), path = require('path'), {spawn} = require('child_process');
 const [binary, output, firstText, countText, rules] = process.argv.slice(2);
 const first = Number(firstText), count = Number(countText);
-if (!binary || !output || !Number.isInteger(first) || first < 1 || !Number.isInteger(count) || count < 1 || count > 1000 || !['current','v045'].includes(rules)) throw Error('Invalid matrix arguments');
+if (!binary || !output || !Number.isInteger(first) || first < 1 || !Number.isInteger(count) || count < 1 || count > 1000 || !['current','v045','v046'].includes(rules)) throw Error('Invalid matrix arguments');
 fs.mkdirSync(output, {recursive:true});
 const jobs = [];
 for (const starter of ['standard','tactical','ember','frost'])

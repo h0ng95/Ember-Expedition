@@ -357,7 +357,7 @@ internal static class Program
     static void EnemyWavesAndRoles()
     {
         var run = ExpeditionRun.New(catalog, 31);
-        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 3, 4, 5, 5, 4, 4, 5, 6, 5, 3,
+        int[] expected = { 2, 3, 4, 4, 3, 3, 4, 5, 6, 3, 4, 5, 5, 5, 4, 4, 5, 6, 5, 3,
             4, 5, 6, 5, 3, 4, 5, 6, 5, 3 };
         for (int wave = 1; wave <= ExpeditionRun.TotalWaves; wave++)
         {

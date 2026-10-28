@@ -1,0 +1,34 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v0.49 · 수호룡 브레스</title><style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#11151e;color:#eee5d6;font:17px/1.8 'Malgun Gothic',sans-serif}main{max-width:1150px;margin:auto;padding:52px 36px 90px}h1{font-size:36px;line-height:1.4;color:#efc77f}h2{margin-top:56px;padding-bottom:10px;border-bottom:1px solid #5d4c35;color:#efc77f}h3{margin-top:36px}a{color:#d9b976}p,li{overflow-wrap:anywhere}img{display:block;width:100%;height:auto;border:1px solid #5d4c35;border-radius:8px}table{width:100%;border-collapse:collapse;font-size:15px}td,th{border:1px solid #45454c;padding:13px;text-align:left;vertical-align:top}th{background:#2a2b34}code{font-size:14px;overflow-wrap:anywhere}pre{padding:20px;background:#222630;overflow:auto}strong{color:#f2d8a8}@media(max-width:700px){main{padding:25px 16px}h1{font-size:27px}table{font-size:12px}td,th{padding:8px}}
+.table-scroll{overflow-x:auto;margin:18px 0} .table-scroll table{margin:0;min-width:650px} a{overflow-wrap:anywhere} @media(max-width:600px){main{padding:22px 16px}h1{font-size:27px}h2{font-size:22px}}
+pre{overflow-x:auto}img{max-width:100%;height:auto}th:first-child,td:first-child{white-space:nowrap;min-width:54px}</style><main><h1>v0.49 · 수호룡 브레스의 화염과 잔불</h1>
+<p>2026-10-28 · IGNIS: ASHEN OATH</p>
+<p>사용자가 제시한 <a href="https://www.youtube.com/watch?v=Kbf8yqauzF0">영상의 첫 용 장면</a>을 직접 재생하고 프레임 단위로 확인했다. 작은 입구에서 크게 퍼지는 불꽃, 밝은 내부와 주황색 외곽, 분출 뒤 검붉은 연기라는 특징을 새 효과에 반영했다. 영상 속 이미지나 캐릭터를 게임 자산으로 가져오지는 않았다.</p>
+<p><a href="breath-preview.html">애니메이션·실기기 영상 보기</a> · <a href="../../unity/Assets/Resources/Art/Effects/v049/dragon-breath.png">원본 도트 시트</a> · <a href="asset-prompt.txt">생성 프롬프트</a></p>
+<h2>적용한 변경</h2>
+<ul>
+<li>브레스 전용 8프레임 투명 시트를 새로 제작했다. 기존보다 불꽃 내부를 조밀하게 채우고, 끝부분이 큰 덩어리로 부풀도록 했다.</li>
+<li>기존 높이 135<del>180 기준의 납작한 표현을 250</del>320 기준으로 바꿨다. 이는 여백을 포함한 시트의 표시 높이이며 실제 보이는 불꽃 높이와는 다르다.</li>
+<li><strong>0.44초 분출 → 0.32초 잔불·연기</strong>로 나눴다. 분출 중에는 6개의 불꽃 프레임, 종료 뒤에는 2개의 연기 프레임을 사용한다.</li>
+<li>프레임마다 다른 불꽃의 시작점을 측정해서 용의 실제 턱에 붙였다. 완전히 퍼진 불꽃 끝은 예고했던 목표 지점에 맞춘다.</li>
+<li>연기는 마지막 분출 위치에 남고, 용의 이동을 따라다니지 않는다. 연기 프레임에 남아 있던 입구 쪽 밝은 점은 UV 잘라내기로 숨긴다.</li>
+<li>용이 죽거나 없어지면 효과를 그리지 않는다. 번쩍임 감소 설정도 적용한다.</li>
+</ul>
+<p>브레스의 피해량·화상·공격 범위·예고 시간·공격 주기는 변경하지 않았다. 위로 솟는 불꽃의 높이는 지면 판정 폭을 의미하지 않으며 기존 바닥 예고를 유지한다. 전투 규칙은 계속 <code>normal-048</code>이다.</p>
+<h2>검증</h2>
+<p>Unity에서 새 시트를 포함한 6개 효과 시트의 투명 경계·빈 프레임·가져오기 설정을 검사했다. 입 기준점, 3가지 길이·3가지 폭·5가지 조준 각도, 고정된 끝점, 연기와 입 사이 간격 및 QA 편성 생성 등 <strong>1,113개 조건</strong>을 통과했다.</p>
+<p>기존 실제 브레스 이벤트를 사용하는 검사도 통과했다. 분출이 끝나면 용의 입 애니메이션을 강제로 유지하지 않으며, 기존 3개 턱 자세·3개 깊이의 위치 검사와 비행 크기·높이 검사도 통과했다.</p>
+<p>Buddy2에 새 APK를 설치하고 24초 전투를 녹화했다. 1배속과 2배속의 분출 전후를 각각 0.1초 간격으로 추출해, 입 연결·화염 확대·연기 분리·소멸을 확인했다. 녹화 구간의 Unity/AndroidRuntime 로그에서 Exception·FATAL·Error는 발견하지 않았다. 장시간 성능이나 평균 FPS를 측정한 결과는 아니다.</p>
+<p><img src="images/breath-1x.jpg" alt="Buddy2 1배속 화염 분출"></p>
+<p><img src="images/breath-2x.jpg" alt="Buddy2 2배속 화염 분출"></p>
+<p><img src="images/afterglow.jpg" alt="분출 종료 후 입에서 떨어진 잔불과 연기"></p>
+<p>APK 빌드 성공 및 체크섬은 <a href="build-info.json">빌드 정보</a>에 남겼다. 실기기 확인 후 기존 저장 슬롯·손상 백업 슬롯·PlayerPrefs를 원래 바이트와 일치하도록 복원하고 앱을 종료했다.</p>
+<p>실기기 영상은 30전투로 강제 진행한 별도 QA 편성이다. 정상 플레이의 난도나 클리어 가능성을 입증하는 자료가 아니다.</p>
+<h2>구현 메모</h2>
+<ul>
+<li>이미지 생성: built-in <code>image_gen</code>, 실제 투명 알파 유지. 최초 생성 뒤 프레임 가장자리와 여백을 한 번 수정했다. 프롬프트는 위 링크에 보관했다.</li>
+<li>원본: <code>unity/Assets/Resources/Art/Effects/v049/dragon-breath.png</code>, 1774×887. 모바일 가져오기 최대 변 1024, Point 필터, 밉맵 없음.</li>
+<li>매 프레임 텍스처를 생성하지 않고 시트 UV를 선택한다. 불꽃과 연기는 순서대로 한 장씩 그린다.</li>
+<li>검사·빌드 진입점: <code>Expedition.EditorTools.DragonBreathPlumeValidation.ValidateAndBuild</code>.</li>
+<li>v0.47·v0.48 작업과 별개로 이번 변경은 공격 연출만 다뤘다. 대규모 난도 시뮬레이션을 다시 수행하지 않았다.</li>
+</ul>
+</main></html>

@@ -7,7 +7,7 @@ param([int]$FirstSeed = 1, [int]$Count = 20,
     [ValidateSet('standard', 'tactical', 'ember', 'frost')][string]$Starter = 'standard',
     [switch]$Interruptions,
     [ValidateSet('defense', 'precision', 'arcana')][string]$ResearchBranch = 'defense',
-    [ValidateSet('current', 'v045')][string]$Rules = 'current')
+    [ValidateSet('current', 'v045', 'v046')][string]$Rules = 'current')
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'

@@ -7,10 +7,12 @@ namespace Expedition.Presentation
     public sealed partial class ExpeditionScreen
     {
         int recordsPage;
+        bool showArchivedRecords;
         ExpeditionRecord selectedRecord;
         static string RecordStatus(ExpeditionRecord record)
         {
-            return (record.FinalRun.Version < 9 ? "이전 규칙 · " : record.FinalRun.Version == 9 ? "v0.45 · " : "") +
+            return (record.FinalRun.Version < 9 ? "이전 규칙 · " : record.BalanceVersion == ExpeditionHistory.BalanceVersion ? "" :
+                record.BalanceVersion.Replace("normal-0", "v0.") + " · ") +
                 (record.Abandoned ? "포기" : record.FinalRun.Victories == 30 ? "완주" : "패배");
         }
         static string RecordDate(ExpeditionRecord record)
@@ -22,17 +24,19 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(content.x, 66, content.width, 48), "개인 기록", title);
             if (selectedRecord != null) { DrawRecordDetail(panel, content); return; }
             if (recordHistory.ArchivedBest != null && GUI.Button(new Rect(content.xMax - 290, 72, 290, 44),
-                "v0.45 최고 기록 보기", button)) selectedRecord = recordHistory.ArchivedBest;
+                showArchivedRecords ? "최근 원정 보기" : "이전 버전 최고 기록", button))
+            { showArchivedRecords = !showArchivedRecords; recordsPage = 0; }
             ExpeditionRecord best = recordHistory.Best;
             GUI.enabled = best != null;
             if (GUI.Button(new Rect(content.x, 130, content.width, 66), best == null ?
-                "첫 기록에 도전하세요 · Normal v0.46" :
+                "첫 기록에 도전하세요 · Normal v0.48" :
                 "개인 최고  " + best.Score.ToString("N0") + "점  ·  " + best.FinalRun.Victories + "/30 격파  ·  자세히", primary) && best != null)
                 selectedRecord = best;
             GUI.enabled = true;
             GUI.Label(new Rect(content.x, 202, content.width, 36),
-                "현재 밸런스의 최고 기록 · 최근 30개 보관 · v0.45 점수는 별도 비교", small);
-            var records = recordHistory.Recent;
+                showArchivedRecords ? "이전 밸런스별 최고 기록 · 현재 점수와 분리해서 보관" :
+                "현재 밸런스의 최고 기록 · 최근 30개 보관 · 이전 버전은 별도 비교", small);
+            var records = showArchivedRecords ? recordHistory.ArchivedBests : recordHistory.Recent;
             int pages = Math.Max(1, (records.Count + 4) / 5);
             recordsPage = Mathf.Clamp(recordsPage, 0, pages - 1);
             if (records.Count == 0) GUI.Label(new Rect(content.x, 270, content.width, 95),

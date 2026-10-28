@@ -379,7 +379,8 @@ namespace Expedition.Presentation
 
         void DrawHeader(string phase)
         {
-            if (run.UsesPreviousBalance) phase = run.UsesLegacyRules ? "이전 규칙 원정" : "v0.45 원정";
+            if (run.UsesPreviousBalance) phase = run.UsesLegacyRules ? "이전 규칙 원정" :
+                CatalogBalance.Version(run.RulesVersion).Replace("normal-0", "v0.") + " 원정";
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
             if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
@@ -489,7 +490,9 @@ namespace Expedition.Presentation
                 case 17: return "근위병 셋이 앞줄을 압박합니다.\n후열의 공격 각도와 전열의 생존을 점검하세요.";
                 case 18: return "시종 셋이 약한 동료를 함께 노립니다.\n보호와 회복을 나누어 배치하세요.";
                 case 19: return "찬송 감시자는 가까운 적 둘에게 보호막을 줍니다.\n보호막에 막히기 전에 목표를 고르세요.";
-                case 20: return "서리 원형 공격은 먼 동료 위치를 예고합니다.\n맞은 동료는 잠시 얼어 공격과 이동이 멈춥니다.";
+                case 20: return run.RulesVersion >= 3 ?
+                    "후열 다음 앞열에 빙결 원형 공격이 이어집니다.\n동료 간격을 벌리세요 · 각 공격 전에 원이 표시됩니다." :
+                    "서리 원형 공격은 먼 동료 위치를 예고합니다.\n맞은 동료는 잠시 얼어 공격과 이동이 멈춥니다.";
                 case 21: return "가시 근위병이 전열을 지킵니다.\n독침 사냥꾼의 사격을 받을 후열을 살피세요.";
                 case 22: return "독침 사냥꾼은 세 번째 명중에 독을 남깁니다.\n중독된 동료는 회복 효과가 줄어듭니다.";
                 case 23: return "사냥꾼의 독과 근위병의 전열 압박이 겹칩니다.\n해로운 상태가 걸린 동료의 체력을 살피세요.";

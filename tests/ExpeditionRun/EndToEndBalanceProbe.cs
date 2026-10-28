@@ -157,9 +157,10 @@ internal static class EndToEndBalanceProbe
             CatalogLegacyResearch.Nodes.Select(n => n.Id).ToArray() : account == "unlocked" ?
             CatalogLegacyResearch.Nodes.Where(n => n.Tier == 1).Select(n => n.Id).ToArray() : new string[0];
         var run = ExpeditionRun.New(db, (uint)seed, ExpeditionDifficulty.Normal, legacy, starter);
-        if (rulesProfile == "v045")
+        if (rulesProfile == "v045" || rulesProfile == "v046")
         {
-            var previous = run.Capture(); previous.Version = 9; previous.RulesVersion = 1;
+            var previous = run.Capture(); previous.RulesVersion = rulesProfile == "v045" ? 1 : 2;
+            previous.Version = previous.RulesVersion + 8;
             run = ExpeditionRun.Restore(db, previous);
         }
         var accountProgress = ExpeditionProgress.New();
@@ -333,7 +334,7 @@ internal static class EndToEndBalanceProbe
         interruptions = args.Length >= 10 && bool.Parse(args[9]);
         researchBranch = args.Length >= 11 ? args[10] : "defense";
         rulesProfile = args.Length >= 12 ? args[11] : "current";
-        if (rulesProfile != "current" && rulesProfile != "v045") throw new ArgumentException("Unknown rules profile.");
+        if (rulesProfile != "current" && rulesProfile != "v045" && rulesProfile != "v046") throw new ArgumentException("Unknown rules profile.");
         if (researchBranch != "defense" && researchBranch != "precision" && researchBranch != "arcana")
             throw new ArgumentException("Unsupported research branch.");
         int first = int.Parse(args[2]), count = int.Parse(args[3]);

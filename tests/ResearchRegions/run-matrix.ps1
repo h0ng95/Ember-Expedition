@@ -1,5 +1,5 @@
 param([int]$FirstSeed=46001, [int]$Count=20,
-    [ValidateSet('current','v045')][string]$Rules='current',
+    [ValidateSet('current','v045','v046')][string]$Rules='current',
     [string]$Output='.local-tools/research-matrix')
 $ErrorActionPreference='Stop'
 $taskRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))

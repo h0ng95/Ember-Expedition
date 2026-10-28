@@ -46,6 +46,7 @@ namespace Expedition.Core
         public float AttackInterval { get; internal set; }
         public float Range { get; internal set; }
         public float MoveSpeed { get; internal set; }
+        public bool DrakeRangedBasic { get; internal set; }
         public bool IsBoss { get; internal set; }
         public bool BossPatternsEnabled { get; internal set; }
         public bool BossEnraged { get; internal set; }
@@ -110,6 +111,8 @@ namespace Expedition.Core
             ChargeEndX, ChargeEndY, ChargeStartAt;
         internal bool ChargeMoving;
         internal float NextSlamAt, SlamAimX, SlamAimY, SlamRadiusValue;
+        internal bool FrostFollowup;
+        public bool IsFrostFollowup { get { return FrostFollowup && SlamWarningRemaining > 0; } }
         internal float GardenNextWarningAt;
         internal int GardenStrikeCount, GardenStrikeIndex;
         internal float[] GardenAimXs, GardenAimYs;
@@ -222,6 +225,11 @@ namespace Expedition.Core
                 hp, power, defense, attackInterval, range, moveSpeed, null, boss);
             enemy.EnemyRole = role;
             enemy.BossPatternsEnabled = bossPatterns;
+            // A large dragon fights from outside the party instead of entering
+            // melee range. Keep its existing power/cadence; the basic is a short
+            // firebolt now. Older expeditions retain their melee behavior.
+            if (balanceRules >= 4 && bossPatterns && role == CatalogEnemyRole.CrownDrake)
+            { enemy.Range = Math.Max(range, 3.2f); enemy.DrakeRangedBasic = true; }
             enemy.NextChargeAt = role == CatalogEnemyRole.Beast ?
                 bossPatterns ? 7f : 1.35f : float.PositiveInfinity;
             enemy.NextSlamAt = bossPatterns && role == CatalogEnemyRole.Golem ? 2f : float.PositiveInfinity;
@@ -713,13 +721,36 @@ namespace Expedition.Core
                     float dx = candidate.X - actor.SlamAimX, dy = candidate.Y - actor.SlamAimY;
                     if (dx * dx + dy * dy <= actor.SlamRadiusValue * actor.SlamRadiusValue)
                     {
-                        Damage(actor, candidate, EffectivePower(actor) * 1.5f,
+                        Damage(actor, candidate, EffectivePower(actor) * (balanceRules >= 3 ? 1.8f : 1.5f),
                             "FROST_NOVA", false, false);
-                        if (candidate.IsAlive) Freeze(actor, candidate, 1.1f);
+                        if (candidate.IsAlive) Freeze(actor, candidate, balanceRules >= 3 ? .9f : 1.1f);
                     }
                 }
+                // The second, separately telegraphed circle pressures the front line.
+                // Do not retarget the same unit or track its movement after warning.
+                if (balanceRules >= 3 && !actor.FrostFollowup && actor.IsAlive)
+                {
+                    CatalogBattleUnit nearest = null;
+                    float distance = float.PositiveInfinity;
+                    foreach (CatalogBattleUnit candidate in units)
+                    {
+                        if (!candidate.IsAlive || candidate.Team == actor.Team || candidate.Id == actor.PendingTargetId) continue;
+                        float value = Distance(actor, candidate);
+                        if (value < distance) { nearest = candidate; distance = value; }
+                    }
+                    if (nearest != null)
+                    {
+                        actor.FrostFollowup = true;
+                        actor.PendingTargetId = nearest.Id;
+                        actor.SlamAimX = nearest.X; actor.SlamAimY = nearest.Y;
+                        actor.ReleaseAt = Time + 1.1f;
+                        Emit(CatalogEventKind.BossTelegraph, actor, nearest, "FROST_NOVA", actor.SlamRadiusValue);
+                        return;
+                    }
+                }
+                actor.FrostFollowup = false;
                 actor.NextBasicAt = Math.Max(actor.NextBasicAt, Time + .45f);
-                actor.NextSlamAt = Time + (actor.BossEnraged ? 6f : 8f);
+                actor.NextSlamAt = Time + (balanceRules >= 3 ? (actor.BossEnraged ? 5f : 7f) : (actor.BossEnraged ? 6f : 8f));
                 actor.PendingSkillId = null;
                 actor.AttackPhase = CatalogAttackPhase.Ready;
                 return;
@@ -911,6 +942,7 @@ namespace Expedition.Core
                 target.ZoneTicksLeft = 0;
                 target.GardenStrikeCount = target.GardenStrikeIndex = 0;
                 target.GardenNextWarningAt = 0f;
+                target.FrostFollowup = false;
                 target.DrakePhase = CrownDrakePhase.Grounded;
                 target.BurnTicksLeft = target.PoisonTicksLeft = 0;
                 target.BurnUntil = target.PoisonUntil = 0f;

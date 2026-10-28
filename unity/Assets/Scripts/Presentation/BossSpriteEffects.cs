@@ -6,7 +6,7 @@ namespace Expedition.Presentation
     internal sealed class BossSpriteEffects
     {
         internal const string RootsPath = "Art/Effects/v039/garden-roots";
-        internal const string BreathPath = "Art/Effects/v039/dragon-breath";
+        internal const string BreathPath = DragonBreathArt.Path;
         internal const string FirefallPath = "Art/Effects/v039/dragon-firefall";
         internal const string GolemPath = "Art/Effects/v039/golem-shatter";
         internal const string FrostPath = "Art/Effects/v039/frost-eruption";
@@ -37,7 +37,7 @@ namespace Expedition.Presentation
         }
 
         static bool Frame(Texture2D sheet, int index, Rect destination, float opacity,
-            bool dustTopCuts = false)
+            bool dustTopCuts = false, float rightCrop = 1f)
         {
             if (sheet == null || destination.width <= 0f || destination.height <= 0f) return false;
             index = Mathf.Clamp(index, 0, 7);
@@ -54,6 +54,8 @@ namespace Expedition.Presentation
             int bottom = Mathf.RoundToInt((row + 1) * sheet.height / 2f);
             Rect uv = new Rect(left / (float)sheet.width, 1f - bottom / (float)sheet.height,
                 (right - left) / (float)sheet.width, (bottom - top) / (float)sheet.height);
+            uv.width *= rightCrop;
+            destination.width *= rightCrop;
             Color previous = GUI.color;
             GUI.color = previous * new Color(1f, 1f, 1f, Mathf.Clamp01(opacity));
             if (GamePreferences.Current.ReduceFlashes) GUI.color *= new Color(.65f, .65f, .65f, 1f);
@@ -99,24 +101,41 @@ namespace Expedition.Presentation
         }
 
         internal bool DrawBreath(Vector2 mouth, Vector2 groundTarget,
-            float halfWidth, float progress)
+            float halfWidth, float progress, bool afterglow = false)
         {
             Load();
             if (breath == null) return false;
             Vector2 delta = mouth - groundTarget;
             float length = delta.magnitude;
             if (length < 1f) return false;
-            float width = length / .937f;
-            float height = Mathf.Clamp(halfWidth * 48f * 4.5f, 135f, 180f);
-            int frame = Mathf.Min(7, Mathf.FloorToInt(progress * 8f));
+            progress = Mathf.Clamp01(progress);
+            int frame = afterglow ? (progress < .45f ? 6 : 7) : DragonBreathArt.EmissionFrame(progress);
+            Rect destination = DragonBreathArt.LocalBounds(frame, length, halfWidth);
+            if (afterglow) destination.y -= 16f * progress;
             Matrix4x4 previous = GUI.matrix;
             GUI.matrix = previous * Matrix4x4.TRS(new Vector3(mouth.x, mouth.y, 0f),
                 Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg),
                 Vector3.one);
-            // Sheet is right-to-left; the measured nozzle pivot is (.937, .53).
-            bool drawn = Frame(breath, frame,
-                new Rect(-width * .937f, -height * .53f, width, height),
-                1f - Mathf.Clamp01((progress - .82f) / .18f));
+            bool drawn = Frame(breath, frame, destination,
+                afterglow ? .78f * (1f - progress) : 1f, false,
+                afterglow ? DragonBreathArt.SmokeCrop(frame) : 1f);
+            GUI.matrix = previous;
+            return drawn;
+        }
+
+        internal bool DrawDrakeFirebolt(Vector2 mouth, Vector2 target, float progress)
+        {
+            Load();
+            if (firefall == null) return false;
+            Vector2 direction = target - mouth;
+            if (direction.sqrMagnitude < 1f) return false;
+            Vector2 point = Vector2.Lerp(mouth, target, Mathf.Clamp01(progress));
+            float width = 47f, height = width * CellAspect(firefall);
+            Matrix4x4 previous = GUI.matrix;
+            GUI.matrix = previous * Matrix4x4.TRS(new Vector3(point.x,point.y,0f),
+                Quaternion.Euler(0f,0f,Mathf.Atan2(direction.y,direction.x)*Mathf.Rad2Deg-90f),Vector3.one);
+            bool drawn = Frame(firefall, Mathf.Min(3,Mathf.FloorToInt(progress*4f)),
+                new Rect(-width*.5f,-height*.82f,width,height),1f);
             GUI.matrix = previous;
             return drawn;
         }

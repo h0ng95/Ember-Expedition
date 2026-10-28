@@ -379,7 +379,8 @@ namespace Expedition.Presentation
                     e.AbilityId == "FURNACE_BLAST" ?
                     "용광로 폭발 · 표시된 범위에 화상을 남깁니다" :
                     e.AbilityId == "FROST_NOVA" ?
-                    "서리 폭발 · 먼 동료 위치에 빙결 원형 공격" :
+                    (source.Unit.IsFrostFollowup ? "서리 연쇄 · 앞열 위치에 두 번째 빙결 공격" :
+                    "서리 폭발 · 먼 동료 위치에 빙결 원형 공격") :
                     e.AbilityId == "GARDEN_BRIARS" ?
                     "가시뿌리 · 먼 동료 최대 셋 발밑을 차례로 공격" :
                     e.AbilityId == "DRACONIC_BREATH" ?
@@ -1099,6 +1100,9 @@ namespace Expedition.Presentation
                 if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && battleEffects != null &&
                     battleEffects.TryGetBreathProgress(view.Unit.Id, out breathProgress))
                     frame = PalaceEnemyArt.BreathFrame(breathProgress);
+                else if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && view.Unit.DrakeRangedBasic &&
+                    view.Unit.AttackPhase == CatalogAttackPhase.WindingBasic && view.Unit.AttackWindupRemaining <= .18f)
+                    frame = PalaceEnemyArt.BreathFrame(1f - view.Unit.AttackWindupRemaining / .18f);
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);

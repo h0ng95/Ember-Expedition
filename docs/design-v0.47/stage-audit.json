@@ -1,0 +1,697 @@
+{
+  "source": "docs/design-v0.46/balance-results.json",
+  "countPerVersion": 8960,
+  "conditionalOnReaching": true,
+  "rows": [
+    {
+      "wave": 1,
+      "validationBefore": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 2.3325000000000005,
+        "meanHealthFraction": 0.9935000000000045
+      },
+      "validationAfter": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 2.3325000000000005,
+        "meanHealthFraction": 0.9935000000000045
+      }
+    },
+    {
+      "wave": 2,
+      "validationBefore": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 3.977499999999991,
+        "meanHealthFraction": 0.9867499999999962
+      },
+      "validationAfter": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 3.947499999999996,
+        "meanHealthFraction": 0.9867499999999962
+      }
+    },
+    {
+      "wave": 3,
+      "validationBefore": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 9.96785714285714,
+        "meanHealthFraction": 0.9085357142857152
+      },
+      "validationAfter": {
+        "reached": 8960,
+        "firstWins": 8960,
+        "firstWinRate": 100,
+        "attempts": 8960,
+        "wins": 8960,
+        "timeouts": 0,
+        "meanSeconds": 9.895357142857138,
+        "meanHealthFraction": 0.9089642857142867
+      }
+    },
+    {
+      "wave": 4,
+      "validationBefore": {
+        "reached": 8960,
+        "firstWins": 8312,
+        "firstWinRate": 92.76785714285714,
+        "attempts": 10024,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 18.093439744612994,
+        "meanHealthFraction": 0.5633782920989595
+      },
+      "validationAfter": {
+        "reached": 8960,
+        "firstWins": 8312,
+        "firstWinRate": 92.76785714285714,
+        "attempts": 10024,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 17.931859537110967,
+        "meanHealthFraction": 0.5670167597765355
+      }
+    },
+    {
+      "wave": 5,
+      "validationBefore": {
+        "reached": 8544,
+        "firstWins": 8544,
+        "firstWinRate": 100,
+        "attempts": 8544,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 34.71449438202243,
+        "meanHealthFraction": 0.8307808988764046
+      },
+      "validationAfter": {
+        "reached": 8544,
+        "firstWins": 8544,
+        "firstWinRate": 100,
+        "attempts": 8544,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 34.35103932584273,
+        "meanHealthFraction": 0.8350355805243446
+      }
+    },
+    {
+      "wave": 6,
+      "validationBefore": {
+        "reached": 8544,
+        "firstWins": 8544,
+        "firstWinRate": 100,
+        "attempts": 8544,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 12.039763576779023,
+        "meanHealthFraction": 0.9129411282771529
+      },
+      "validationAfter": {
+        "reached": 8544,
+        "firstWins": 8544,
+        "firstWinRate": 100,
+        "attempts": 8544,
+        "wins": 8544,
+        "timeouts": 0,
+        "meanSeconds": 11.850514981273403,
+        "meanHealthFraction": 0.9153155430711608
+      }
+    },
+    {
+      "wave": 7,
+      "validationBefore": {
+        "reached": 8544,
+        "firstWins": 8373,
+        "firstWinRate": 97.99859550561797,
+        "attempts": 8768,
+        "wins": 8467,
+        "timeouts": 0,
+        "meanSeconds": 15.650496122262785,
+        "meanHealthFraction": 0.7878080520072999
+      },
+      "validationAfter": {
+        "reached": 8544,
+        "firstWins": 8383,
+        "firstWinRate": 98.11563670411985,
+        "attempts": 8758,
+        "wins": 8467,
+        "timeouts": 0,
+        "meanSeconds": 15.440870061657922,
+        "meanHealthFraction": 0.7945723909568402
+      }
+    },
+    {
+      "wave": 8,
+      "validationBefore": {
+        "reached": 8467,
+        "firstWins": 6362,
+        "firstWinRate": 75.13877406401323,
+        "attempts": 11818,
+        "wins": 7068,
+        "timeouts": 0,
+        "meanSeconds": 21.330314774073457,
+        "meanHealthFraction": 0.31279353528515796
+      },
+      "validationAfter": {
+        "reached": 8467,
+        "firstWins": 6555,
+        "firstWinRate": 77.418211881422,
+        "attempts": 11463,
+        "wins": 7260,
+        "timeouts": 0,
+        "meanSeconds": 21.172579603943095,
+        "meanHealthFraction": 0.3380546104859115
+      }
+    },
+    {
+      "wave": 9,
+      "validationBefore": {
+        "reached": 7068,
+        "firstWins": 5092,
+        "firstWinRate": 72.04301075268818,
+        "attempts": 9578,
+        "wins": 6194,
+        "timeouts": 0,
+        "meanSeconds": 26.470736061808317,
+        "meanHealthFraction": 0.33184339110461475
+      },
+      "validationAfter": {
+        "reached": 7260,
+        "firstWins": 5374,
+        "firstWinRate": 74.02203856749311,
+        "attempts": 9601,
+        "wins": 6532,
+        "timeouts": 0,
+        "meanSeconds": 26.390202062285173,
+        "meanHealthFraction": 0.350333402770545
+      }
+    },
+    {
+      "wave": 10,
+      "validationBefore": {
+        "reached": 6194,
+        "firstWins": 4246,
+        "firstWinRate": 68.55020988052955,
+        "attempts": 9294,
+        "wins": 4511,
+        "timeouts": 23,
+        "meanSeconds": 45.51244889175811,
+        "meanHealthFraction": 0.34831676350333546
+      },
+      "validationAfter": {
+        "reached": 6532,
+        "firstWins": 4515,
+        "firstWinRate": 69.12124923453766,
+        "attempts": 9740,
+        "wins": 4806,
+        "timeouts": 26,
+        "meanSeconds": 45.449637577002086,
+        "meanHealthFraction": 0.3529182751540038
+      }
+    },
+    {
+      "wave": 11,
+      "validationBefore": {
+        "reached": 4511,
+        "firstWins": 4511,
+        "firstWinRate": 100,
+        "attempts": 4511,
+        "wins": 4511,
+        "timeouts": 0,
+        "meanSeconds": 12.569671913101306,
+        "meanHealthFraction": 0.9821052981600534
+      },
+      "validationAfter": {
+        "reached": 4806,
+        "firstWins": 4806,
+        "firstWinRate": 100,
+        "attempts": 4806,
+        "wins": 4806,
+        "timeouts": 0,
+        "meanSeconds": 12.423789013732836,
+        "meanHealthFraction": 0.9817315855181026
+      }
+    },
+    {
+      "wave": 12,
+      "validationBefore": {
+        "reached": 4511,
+        "firstWins": 4511,
+        "firstWinRate": 100,
+        "attempts": 4511,
+        "wins": 4511,
+        "timeouts": 0,
+        "meanSeconds": 16.95243848370649,
+        "meanHealthFraction": 0.9498044779428068
+      },
+      "validationAfter": {
+        "reached": 4806,
+        "firstWins": 4806,
+        "firstWinRate": 100,
+        "attempts": 4806,
+        "wins": 4806,
+        "timeouts": 0,
+        "meanSeconds": 16.83865584685811,
+        "meanHealthFraction": 0.949242613399917
+      }
+    },
+    {
+      "wave": 13,
+      "validationBefore": {
+        "reached": 4511,
+        "firstWins": 4451,
+        "firstWinRate": 98.66991797827532,
+        "attempts": 4554,
+        "wins": 4474,
+        "timeouts": 0,
+        "meanSeconds": 24.55424462011419,
+        "meanHealthFraction": 0.8335101010101009
+      },
+      "validationAfter": {
+        "reached": 4806,
+        "firstWins": 4733,
+        "firstWinRate": 98.48106533499792,
+        "attempts": 4862,
+        "wins": 4769,
+        "timeouts": 0,
+        "meanSeconds": 24.382322089675036,
+        "meanHealthFraction": 0.8345279720279719
+      }
+    },
+    {
+      "wave": 14,
+      "validationBefore": {
+        "reached": 4474,
+        "firstWins": 4447,
+        "firstWinRate": 99.39651318730442,
+        "attempts": 4502,
+        "wins": 4462,
+        "timeouts": 0,
+        "meanSeconds": 30.19452465570858,
+        "meanHealthFraction": 0.8841183918258553
+      },
+      "validationAfter": {
+        "reached": 4769,
+        "firstWins": 4748,
+        "firstWinRate": 99.55965611239253,
+        "attempts": 4791,
+        "wins": 4759,
+        "timeouts": 0,
+        "meanSeconds": 29.958860363180957,
+        "meanHealthFraction": 0.8852636192861619
+      }
+    },
+    {
+      "wave": 15,
+      "validationBefore": {
+        "reached": 4462,
+        "firstWins": 2433,
+        "firstWinRate": 54.52711788435679,
+        "attempts": 7125,
+        "wins": 3542,
+        "timeouts": 1752,
+        "meanSeconds": 61.119382456140364,
+        "meanHealthFraction": 0.5695762807017541
+      },
+      "validationAfter": {
+        "reached": 4759,
+        "firstWins": 2696,
+        "firstWinRate": 56.6505568396722,
+        "attempts": 7380,
+        "wins": 3821,
+        "timeouts": 1620,
+        "meanSeconds": 60.46970460704604,
+        "meanHealthFraction": 0.5674162601626017
+      }
+    },
+    {
+      "wave": 16,
+      "validationBefore": {
+        "reached": 3542,
+        "firstWins": 3542,
+        "firstWinRate": 100,
+        "attempts": 3542,
+        "wins": 3542,
+        "timeouts": 0,
+        "meanSeconds": 16.695310559006206,
+        "meanHealthFraction": 0.9595248447204968
+      },
+      "validationAfter": {
+        "reached": 3821,
+        "firstWins": 3821,
+        "firstWinRate": 100,
+        "attempts": 3821,
+        "wins": 3821,
+        "timeouts": 0,
+        "meanSeconds": 16.49919654540696,
+        "meanHealthFraction": 0.9613601151531018
+      }
+    },
+    {
+      "wave": 17,
+      "validationBefore": {
+        "reached": 3542,
+        "firstWins": 3542,
+        "firstWinRate": 100,
+        "attempts": 3542,
+        "wins": 3542,
+        "timeouts": 0,
+        "meanSeconds": 23.50967250141163,
+        "meanHealthFraction": 0.8995739695087519
+      },
+      "validationAfter": {
+        "reached": 3821,
+        "firstWins": 3821,
+        "firstWinRate": 100,
+        "attempts": 3821,
+        "wins": 3821,
+        "timeouts": 0,
+        "meanSeconds": 23.169097095001323,
+        "meanHealthFraction": 0.9025236848992414
+      }
+    },
+    {
+      "wave": 18,
+      "validationBefore": {
+        "reached": 3542,
+        "firstWins": 2381,
+        "firstWinRate": 67.22190852625636,
+        "attempts": 5014,
+        "wins": 2769,
+        "timeouts": 3,
+        "meanSeconds": 33.084162345432766,
+        "meanHealthFraction": 0.28772417231751096
+      },
+      "validationAfter": {
+        "reached": 3821,
+        "firstWins": 2623,
+        "firstWinRate": 68.64695105993195,
+        "attempts": 5366,
+        "wins": 3021,
+        "timeouts": 6,
+        "meanSeconds": 33.080991427506525,
+        "meanHealthFraction": 0.29786693999254543
+      }
+    },
+    {
+      "wave": 19,
+      "validationBefore": {
+        "reached": 2769,
+        "firstWins": 2364,
+        "firstWinRate": 85.37378114842903,
+        "attempts": 3024,
+        "wins": 2536,
+        "timeouts": 0,
+        "meanSeconds": 33.509050925925926,
+        "meanHealthFraction": 0.582669312169312
+      },
+      "validationAfter": {
+        "reached": 3021,
+        "firstWins": 2613,
+        "firstWinRate": 86.49453823237339,
+        "attempts": 3291,
+        "wins": 2789,
+        "timeouts": 3,
+        "meanSeconds": 32.982348830142804,
+        "meanHealthFraction": 0.5926563354603465
+      }
+    },
+    {
+      "wave": 20,
+      "validationBefore": {
+        "reached": 2536,
+        "firstWins": 2532,
+        "firstWinRate": 99.84227129337539,
+        "attempts": 2540,
+        "wins": 2532,
+        "timeouts": 8,
+        "meanSeconds": 41.70086614173229,
+        "meanHealthFraction": 0.8850196850393697
+      },
+      "validationAfter": {
+        "reached": 2789,
+        "firstWins": 2785,
+        "firstWinRate": 99.85657941914664,
+        "attempts": 2793,
+        "wins": 2785,
+        "timeouts": 8,
+        "meanSeconds": 41.22656641604008,
+        "meanHealthFraction": 0.8844475474400287
+      }
+    },
+    {
+      "wave": 21,
+      "validationBefore": {
+        "reached": 2532,
+        "firstWins": 2532,
+        "firstWinRate": 100,
+        "attempts": 2532,
+        "wins": 2532,
+        "timeouts": 0,
+        "meanSeconds": 12.74862164296998,
+        "meanHealthFraction": 0.9482207740916273
+      },
+      "validationAfter": {
+        "reached": 2785,
+        "firstWins": 2785,
+        "firstWinRate": 100,
+        "attempts": 2785,
+        "wins": 2785,
+        "timeouts": 0,
+        "meanSeconds": 12.481012567324948,
+        "meanHealthFraction": 0.9519335727109515
+      }
+    },
+    {
+      "wave": 22,
+      "validationBefore": {
+        "reached": 2532,
+        "firstWins": 2532,
+        "firstWinRate": 100,
+        "attempts": 2532,
+        "wins": 2532,
+        "timeouts": 0,
+        "meanSeconds": 18.146157187993687,
+        "meanHealthFraction": 0.8558045023696682
+      },
+      "validationAfter": {
+        "reached": 2785,
+        "firstWins": 2785,
+        "firstWinRate": 100,
+        "attempts": 2785,
+        "wins": 2785,
+        "timeouts": 0,
+        "meanSeconds": 17.62133931777379,
+        "meanHealthFraction": 0.8579077199281863
+      }
+    },
+    {
+      "wave": 23,
+      "validationBefore": {
+        "reached": 2532,
+        "firstWins": 2421,
+        "firstWinRate": 95.61611374407583,
+        "attempts": 2654,
+        "wins": 2509,
+        "timeouts": 0,
+        "meanSeconds": 24.355218538055777,
+        "meanHealthFraction": 0.5695599095704597
+      },
+      "validationAfter": {
+        "reached": 2785,
+        "firstWins": 2680,
+        "firstWinRate": 96.22980251346499,
+        "attempts": 2899,
+        "wins": 2762,
+        "timeouts": 0,
+        "meanSeconds": 23.637871679889614,
+        "meanHealthFraction": 0.5890948602966541
+      }
+    },
+    {
+      "wave": 24,
+      "validationBefore": {
+        "reached": 2509,
+        "firstWins": 2404,
+        "firstWinRate": 95.81506576325229,
+        "attempts": 2571,
+        "wins": 2444,
+        "timeouts": 0,
+        "meanSeconds": 27.40716841695837,
+        "meanHealthFraction": 0.7114356281602494
+      },
+      "validationAfter": {
+        "reached": 2762,
+        "firstWins": 2661,
+        "firstWinRate": 96.34322954380883,
+        "attempts": 2820,
+        "wins": 2699,
+        "timeouts": 0,
+        "meanSeconds": 26.711840425531914,
+        "meanHealthFraction": 0.7319790780141847
+      }
+    },
+    {
+      "wave": 25,
+      "validationBefore": {
+        "reached": 2444,
+        "firstWins": 1755,
+        "firstWinRate": 71.80851063829788,
+        "attempts": 3203,
+        "wins": 1884,
+        "timeouts": 95,
+        "meanSeconds": 48.835797689665945,
+        "meanHealthFraction": 0.2970043709022792
+      },
+      "validationAfter": {
+        "reached": 2699,
+        "firstWins": 2035,
+        "firstWinRate": 75.39829566506113,
+        "attempts": 3429,
+        "wins": 2180,
+        "timeouts": 49,
+        "meanSeconds": 48.19232137649461,
+        "meanHealthFraction": 0.30927646544181997
+      }
+    },
+    {
+      "wave": 26,
+      "validationBefore": {
+        "reached": 1884,
+        "firstWins": 1884,
+        "firstWinRate": 100,
+        "attempts": 1884,
+        "wins": 1884,
+        "timeouts": 0,
+        "meanSeconds": 15.721613588110412,
+        "meanHealthFraction": 0.9343943736730361
+      },
+      "validationAfter": {
+        "reached": 2180,
+        "firstWins": 2180,
+        "firstWinRate": 100,
+        "attempts": 2180,
+        "wins": 2180,
+        "timeouts": 0,
+        "meanSeconds": 15.250417431192663,
+        "meanHealthFraction": 0.9364986238532113
+      }
+    },
+    {
+      "wave": 27,
+      "validationBefore": {
+        "reached": 1884,
+        "firstWins": 1884,
+        "firstWinRate": 100,
+        "attempts": 1884,
+        "wins": 1884,
+        "timeouts": 0,
+        "meanSeconds": 23.239469214437374,
+        "meanHealthFraction": 0.825519108280255
+      },
+      "validationAfter": {
+        "reached": 2180,
+        "firstWins": 2180,
+        "firstWinRate": 100,
+        "attempts": 2180,
+        "wins": 2180,
+        "timeouts": 0,
+        "meanSeconds": 22.56933027522936,
+        "meanHealthFraction": 0.8266082568807342
+      }
+    },
+    {
+      "wave": 28,
+      "validationBefore": {
+        "reached": 1884,
+        "firstWins": 1375,
+        "firstWinRate": 72.98301486199576,
+        "attempts": 2441,
+        "wins": 1575,
+        "timeouts": 0,
+        "meanSeconds": 30.598222040147483,
+        "meanHealthFraction": 0.3313289635395332
+      },
+      "validationAfter": {
+        "reached": 2180,
+        "firstWins": 1614,
+        "firstWinRate": 74.03669724770643,
+        "attempts": 2864,
+        "wins": 1849,
+        "timeouts": 0,
+        "meanSeconds": 29.99638268156423,
+        "meanHealthFraction": 0.33478002793296097
+      }
+    },
+    {
+      "wave": 29,
+      "validationBefore": {
+        "reached": 1575,
+        "firstWins": 1250,
+        "firstWinRate": 79.36507936507937,
+        "attempts": 1764,
+        "wins": 1385,
+        "timeouts": 4,
+        "meanSeconds": 34.009671201814065,
+        "meanHealthFraction": 0.5151037414965988
+      },
+      "validationAfter": {
+        "reached": 1849,
+        "firstWins": 1494,
+        "firstWinRate": 80.80043266630611,
+        "attempts": 2058,
+        "wins": 1645,
+        "timeouts": 4,
+        "meanSeconds": 33.20962585034014,
+        "meanHealthFraction": 0.5309149659863944
+      }
+    },
+    {
+      "wave": 30,
+      "validationBefore": {
+        "reached": 1385,
+        "firstWins": 944,
+        "firstWinRate": 68.15884476534296,
+        "attempts": 1739,
+        "wins": 1084,
+        "timeouts": 235,
+        "meanSeconds": 57.91737780333526,
+        "meanHealthFraction": 0.44482748706152947
+      },
+      "validationAfter": {
+        "reached": 1645,
+        "firstWins": 1143,
+        "firstWinRate": 69.48328267477204,
+        "attempts": 2066,
+        "wins": 1293,
+        "timeouts": 233,
+        "meanSeconds": 57.131655372700884,
+        "meanHealthFraction": 0.42314036786060016
+      }
+    }
+  ]
+}

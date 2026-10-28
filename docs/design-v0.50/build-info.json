@@ -1,0 +1,20 @@
+{
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 202371097,
+  "lastWriteUtc": "2026-10-28T11:19:01.833Z",
+  "sha256": "d9287f2fc6ac15e1afa00bf9adcc88a949a2a92f35de1875e46e1fab5abbd8a4",
+  "rulesVersion": 4,
+  "saveVersion": 12,
+  "balanceVersion": "normal-050",
+  "assertions": 8769,
+  "pairedBattles": 36,
+  "device": "Galaxy Buddy2 SM-M236L",
+  "apkInstalled": true,
+  "deviceRecordingSeconds": 24,
+  "speedsInspected": [
+    1,
+    2
+  ],
+  "originalDeviceSavesRestored": true,
+  "runtimeErrorsFound": 0
+}

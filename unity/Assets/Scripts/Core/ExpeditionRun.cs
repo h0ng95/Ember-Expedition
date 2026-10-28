@@ -146,7 +146,11 @@ namespace Expedition.Core
             return true;
         }
         public string EncounterName { get { return Encounters[Wave - 1]; } }
-        public string EncounterDescription { get { return EncounterDescriptions[Wave - 1]; } }
+        public string EncounterDescription { get {
+            if (RulesVersion >= 3 && Wave == 11) return "채굴병 3 · 불씨 투척병 1";
+            if (RulesVersion >= 3 && Wave == 12) return "채굴병 3 · 불씨 투척병 2";
+            return EncounterDescriptions[Wave - 1];
+        } }
 
         ExpeditionRun(CatalogDatabase catalog)
         {
@@ -461,6 +465,7 @@ namespace Expedition.Core
 
         CatalogBattle CreateBattle()
         {
+            bool revised = RulesVersion >= 3;
             var result = new CatalogBattle(catalog, tacticIds, legacyResearchIds, RulesVersion);
             foreach (string id in deployedIds)
             {
@@ -505,19 +510,19 @@ namespace Expedition.Core
                         true, 4.1f, 0f, CatalogEnemyRole.Golem, true);
                     AddRanged(result, "crossbow-raider", 2, 150f, 15f, true); break;
                 case 11:
-                    AddMineWorkers(result, 2, 550f, 50f, 12f);
+                    AddMineWorkers(result, revised ? 3 : 2, revised ? 480f : 550f, revised ? 45f : 50f, 12f);
                     AddMineSlingers(result, 1, 380f, 42f); break;
                 case 12:
-                    AddMineWorkers(result, 2, 620f, 55f, 15f);
+                    AddMineWorkers(result, revised ? 3 : 2, revised ? 540f : 620f, revised ? 50f : 55f, 15f);
                     AddMineSlingers(result, 2, 410f, 47f); break;
                 case 13:
-                    AddMineWorkers(result, 3, 700f, 60f, 16f);
-                    AddMineSlingers(result, 2, 450f, 51f); break;
+                    AddMineWorkers(result, 3, revised ? 750f : 700f, revised ? 65f : 60f, 16f);
+                    AddMineSlingers(result, 2, revised ? 480f : 450f, revised ? 55f : 51f); break;
                 case 14:
-                    result.AddEnemy("mine-elite", 1200f, 66f, 24f, 1.8f, 1f, .57f,
+                    result.AddEnemy("mine-elite", revised ? 1450f : 1200f, revised ? 80f : 66f, 24f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
-                    AddMineWorkers(result, 2, 660f, 59f, 18f);
-                    AddMineSlingers(result, 2, 450f, 51f); break;
+                    AddMineWorkers(result, 2, revised ? 710f : 660f, revised ? 64f : 59f, 18f);
+                    AddMineSlingers(result, 2, revised ? 500f : 450f, revised ? 57f : 51f); break;
                 case 15:
                     result.AddEnemy("furnace-boss", 6000f, 98f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Furnace, true);
@@ -529,10 +534,10 @@ namespace Expedition.Core
                     AddRanged(result, "frost-acolyte", 2, 500f, 55f); break;
                 case 17:
                     AddFrostGuards(result, 3, 930f, 75f, 17f);
-                    AddRanged(result, "frost-acolyte", 2, 590f, 61f); break;
+                    AddRanged(result, "frost-acolyte", 2, revised ? 650f : 590f, revised ? 75f : 61f); break;
                 case 18:
                     AddFrostGuards(result, 3, 1040f, 82f, 18f);
-                    AddRanged(result, "frost-acolyte", 3, 660f, 67f); break;
+                    AddRanged(result, "frost-acolyte", 3, revised ? 620f : 660f, revised ? 61f : 67f); break;
                 case 19:
                     result.AddEnemy("frost-cantor", 1650f, 90f, 27f, 1.8f, 1f, .57f,
                         false, 3.45f, 0f, CatalogEnemyRole.Supervisor);
@@ -541,7 +546,7 @@ namespace Expedition.Core
                 case 20:
                     result.AddEnemy("frost-boss", 7400f, 110f, 28f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.FrostWarden, true);
-                    AddRanged(result, "frost-acolyte", 2, 380f, 46f, true); break;
+                    AddRanged(result, "frost-acolyte", 2, revised ? 600f : 380f, revised ? 62f : 46f, true); break;
                 case 21:
                     AddGardenGuards(result, 2, 920f, 83f, 20f);
                     AddGardenSpitters(result, 2, 540f, 60f); break;
@@ -700,7 +705,7 @@ namespace Expedition.Core
                 snapshots.Add(new ExpeditionPreparationSave {
                     Roster = CatalogRoster.Restore(catalog, item.Roster).Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
-            return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : RulesVersion == 1 ? 9 : 10, Difficulty = Difficulty,
+            return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : RulesVersion + 8, Difficulty = Difficulty,
                 RulesVersion = RulesVersion, RunId = RunId, InitialSeed = InitialSeed,
                 CombatSeconds = CombatSeconds,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
@@ -739,8 +744,8 @@ namespace Expedition.Core
             int[] rewards = legacy ? LegacyVictoryRewards : current || thirty ? VictoryRewards :
                 twentyFive ? twentyFiveRewards : twenty ? twentyRewards : fifteenRewards;
             Guid parsedId;
-            if (save == null || save.Version < 2 || save.Version > 10 ||
-                fresh && (save.RulesVersion != (save.Version == 9 ? 1 : 2) || !Guid.TryParseExact(save.RunId, "N", out parsedId) ||
+            if (save == null || save.Version < 2 || save.Version > CatalogBalance.CurrentSaveVersion ||
+                fresh && (save.RulesVersion != save.Version - 8 || !Guid.TryParseExact(save.RunId, "N", out parsedId) ||
                     save.InitialSeed == 0 || save.PreviousClearWaves != 0 || save.HasResearchBaseline ||
                     float.IsNaN(save.CombatSeconds) || float.IsInfinity(save.CombatSeconds) || save.CombatSeconds < 0 ||
                     save.LegacyResearchIds == null || save.LegacyResearchIds.Length != 0) ||

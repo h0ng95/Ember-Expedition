@@ -1,0 +1,2526 @@
+{
+  "firstSeed": 49001,
+  "count": 4,
+  "note": "Exploratory enemy-count experiment, not applied to game. Same seeds and policies before/after. Low seed diversity; do not infer human win rates.",
+  "before": {
+    "runs": 896,
+    "complete": 106,
+    "battles": 16047
+  },
+  "after": {
+    "runs": 896,
+    "complete": 21,
+    "battles": 14226
+  },
+  "changed": {
+    "improved": 1,
+    "worsened": 369,
+    "same": 526,
+    "gainedComplete": 0,
+    "lostComplete": 85
+  },
+  "rows": [
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "early",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "none",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 3,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 3,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "none",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "selective",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "selective",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "early",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "ember",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "selective",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 3,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "selective",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "none",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 3,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "early",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "frost",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "none",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "selective",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 2,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "selective",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "selective",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 2,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 3,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "standard",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "arcana",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "none",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "final",
+      "spending": "selective",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "none",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-01",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "none",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-02",
+      "spending": "selective",
+      "before": 1,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-03",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-04",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "none",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-05",
+      "spending": "selective",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "none",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "defense",
+      "policy": "H-06",
+      "spending": "selective",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "delayed",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "delayed",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "delayed",
+      "before": 3,
+      "after": 1,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "final",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-01",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-02",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-03",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-04",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-05",
+      "spending": "early",
+      "before": 1,
+      "after": 0,
+      "count": 4
+    },
+    {
+      "starter": "tactical",
+      "branch": "precision",
+      "policy": "H-06",
+      "spending": "early",
+      "before": 0,
+      "after": 0,
+      "count": 4
+    }
+  ],
+  "waves": {
+    "before": [
+      {
+        "wave": 1,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 2.375,
+        "meanHp": 0.9934999999999975
+      },
+      {
+        "wave": 2,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 4.0625,
+        "meanHp": 0.9867499999999952
+      },
+      {
+        "wave": 3,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 10.5,
+        "meanHp": 0.8981428571428591
+      },
+      {
+        "wave": 4,
+        "reached": 896,
+        "firstWins": 784,
+        "firstWinRate": 87.5,
+        "meanSeconds": 19.609924812030094,
+        "meanHp": 0.49711278195488773
+      },
+      {
+        "wave": 5,
+        "reached": 840,
+        "firstWins": 840,
+        "firstWinRate": 100,
+        "meanSeconds": 35.99933333333344,
+        "meanHp": 0.8170000000000013
+      },
+      {
+        "wave": 6,
+        "reached": 840,
+        "firstWins": 840,
+        "firstWinRate": 100,
+        "meanSeconds": 12.528535714285713,
+        "meanHp": 0.9128333333333327
+      },
+      {
+        "wave": 7,
+        "reached": 840,
+        "firstWins": 812,
+        "firstWinRate": 96.66666666666667,
+        "meanSeconds": 16.045842824601372,
+        "meanHp": 0.7877346241457865
+      },
+      {
+        "wave": 8,
+        "reached": 824,
+        "firstWins": 578,
+        "firstWinRate": 70.14563106796116,
+        "meanSeconds": 21.388393442622952,
+        "meanHp": 0.2827606557377048
+      },
+      {
+        "wave": 9,
+        "reached": 642,
+        "firstWins": 516,
+        "firstWinRate": 80.37383177570094,
+        "meanSeconds": 27.088651685393252,
+        "meanHp": 0.3858614232209743
+      },
+      {
+        "wave": 10,
+        "reached": 589,
+        "firstWins": 439,
+        "firstWinRate": 74.53310696095076,
+        "meanSeconds": 46.05348780487807,
+        "meanHp": 0.401970731707317
+      },
+      {
+        "wave": 11,
+        "reached": 474,
+        "firstWins": 474,
+        "firstWinRate": 100,
+        "meanSeconds": 12.436793248945147,
+        "meanHp": 0.9868502109704648
+      },
+      {
+        "wave": 12,
+        "reached": 474,
+        "firstWins": 474,
+        "firstWinRate": 100,
+        "meanSeconds": 16.75725738396624,
+        "meanHp": 0.9533122362869199
+      },
+      {
+        "wave": 13,
+        "reached": 474,
+        "firstWins": 470,
+        "firstWinRate": 99.15611814345992,
+        "meanSeconds": 24.267118997912316,
+        "meanHp": 0.8615365344467638
+      },
+      {
+        "wave": 14,
+        "reached": 473,
+        "firstWins": 470,
+        "firstWinRate": 99.36575052854123,
+        "meanSeconds": 29.982842105263153,
+        "meanHp": 0.8885789473684209
+      },
+      {
+        "wave": 15,
+        "reached": 472,
+        "firstWins": 275,
+        "firstWinRate": 58.26271186440678,
+        "meanSeconds": 59.527369863013675,
+        "meanHp": 0.5736191780821915
+      },
+      {
+        "wave": 16,
+        "reached": 372,
+        "firstWins": 372,
+        "firstWinRate": 100,
+        "meanSeconds": 16.77438172043011,
+        "meanHp": 0.9663010752688177
+      },
+      {
+        "wave": 17,
+        "reached": 372,
+        "firstWins": 372,
+        "firstWinRate": 100,
+        "meanSeconds": 23.626317204301074,
+        "meanHp": 0.9231881720430111
+      },
+      {
+        "wave": 18,
+        "reached": 372,
+        "firstWins": 242,
+        "firstWinRate": 65.05376344086021,
+        "meanSeconds": 33.631887477313974,
+        "meanHp": 0.2630526315789474
+      },
+      {
+        "wave": 19,
+        "reached": 279,
+        "firstWins": 246,
+        "firstWinRate": 88.17204301075269,
+        "meanSeconds": 33.690200000000004,
+        "meanHp": 0.6227633333333332
+      },
+      {
+        "wave": 20,
+        "reached": 263,
+        "firstWins": 262,
+        "firstWinRate": 99.61977186311788,
+        "meanSeconds": 42.93212121212121,
+        "meanHp": 0.8969848484848484
+      },
+      {
+        "wave": 21,
+        "reached": 262,
+        "firstWins": 262,
+        "firstWinRate": 100,
+        "meanSeconds": 12.732862595419846,
+        "meanHp": 0.9623091603053434
+      },
+      {
+        "wave": 22,
+        "reached": 262,
+        "firstWins": 262,
+        "firstWinRate": 100,
+        "meanSeconds": 18.225381679389315,
+        "meanHp": 0.8744961832061072
+      },
+      {
+        "wave": 23,
+        "reached": 262,
+        "firstWins": 249,
+        "firstWinRate": 95.0381679389313,
+        "meanSeconds": 24.492591240875907,
+        "meanHp": 0.5821861313868616
+      },
+      {
+        "wave": 24,
+        "reached": 259,
+        "firstWins": 250,
+        "firstWinRate": 96.52509652509653,
+        "meanSeconds": 27.628939393939397,
+        "meanHp": 0.7609659090909093
+      },
+      {
+        "wave": 25,
+        "reached": 253,
+        "firstWins": 182,
+        "firstWinRate": 71.93675889328063,
+        "meanSeconds": 50.41651026392962,
+        "meanHp": 0.2942463343108504
+      },
+      {
+        "wave": 26,
+        "reached": 191,
+        "firstWins": 191,
+        "firstWinRate": 100,
+        "meanSeconds": 16.015863874345552,
+        "meanHp": 0.9525916230366495
+      },
+      {
+        "wave": 27,
+        "reached": 191,
+        "firstWins": 191,
+        "firstWinRate": 100,
+        "meanSeconds": 23.753821989528795,
+        "meanHp": 0.854764397905759
+      },
+      {
+        "wave": 28,
+        "reached": 191,
+        "firstWins": 140,
+        "firstWinRate": 73.29842931937172,
+        "meanSeconds": 31.68199233716475,
+        "meanHp": 0.31215708812260534
+      },
+      {
+        "wave": 29,
+        "reached": 161,
+        "firstWins": 127,
+        "firstWinRate": 78.88198757763975,
+        "meanSeconds": 34.26635869565217,
+        "meanHp": 0.5447771739130439
+      },
+      {
+        "wave": 30,
+        "reached": 139,
+        "firstWins": 95,
+        "firstWinRate": 68.34532374100719,
+        "meanSeconds": 59.51445714285715,
+        "meanHp": 0.49510857142857156
+      }
+    ],
+    "after": [
+      {
+        "wave": 1,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 2.375,
+        "meanHp": 0.9934999999999975
+      },
+      {
+        "wave": 2,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 4.0625,
+        "meanHp": 0.9867499999999952
+      },
+      {
+        "wave": 3,
+        "reached": 896,
+        "firstWins": 896,
+        "firstWinRate": 100,
+        "meanSeconds": 10.5,
+        "meanHp": 0.8981428571428591
+      },
+      {
+        "wave": 4,
+        "reached": 896,
+        "firstWins": 784,
+        "firstWinRate": 87.5,
+        "meanSeconds": 19.609924812030094,
+        "meanHp": 0.49711278195488773
+      },
+      {
+        "wave": 5,
+        "reached": 840,
+        "firstWins": 840,
+        "firstWinRate": 100,
+        "meanSeconds": 35.99933333333344,
+        "meanHp": 0.8170000000000013
+      },
+      {
+        "wave": 6,
+        "reached": 840,
+        "firstWins": 783,
+        "firstWinRate": 93.21428571428571,
+        "meanSeconds": 17.990375939849624,
+        "meanHp": 0.6325059076262091
+      },
+      {
+        "wave": 7,
+        "reached": 798,
+        "firstWins": 643,
+        "firstWinRate": 80.57644110275689,
+        "meanSeconds": 20.95577369439072,
+        "meanHp": 0.38299709864603454
+      },
+      {
+        "wave": 8,
+        "reached": 691,
+        "firstWins": 560,
+        "firstWinRate": 81.04196816208393,
+        "meanSeconds": 21.48641891891892,
+        "meanHp": 0.37227927927927923
+      },
+      {
+        "wave": 9,
+        "reached": 597,
+        "firstWins": 507,
+        "firstWinRate": 84.92462311557789,
+        "meanSeconds": 27.029436619718318,
+        "meanHp": 0.42607605633802836
+      },
+      {
+        "wave": 10,
+        "reached": 564,
+        "firstWins": 426,
+        "firstWinRate": 75.53191489361703,
+        "meanSeconds": 46.03619663648126,
+        "meanHp": 0.4117826649417848
+      },
+      {
+        "wave": 11,
+        "reached": 460,
+        "firstWins": 460,
+        "firstWinRate": 100,
+        "meanSeconds": 19.81534782608696,
+        "meanHp": 0.9423282608695652
+      },
+      {
+        "wave": 12,
+        "reached": 460,
+        "firstWins": 460,
+        "firstWinRate": 100,
+        "meanSeconds": 22.043478260869566,
+        "meanHp": 0.9038760869565214
+      },
+      {
+        "wave": 13,
+        "reached": 460,
+        "firstWins": 399,
+        "firstWinRate": 86.73913043478261,
+        "meanSeconds": 29.42909090909091,
+        "meanHp": 0.5214272727272725
+      },
+      {
+        "wave": 14,
+        "reached": 409,
+        "firstWins": 353,
+        "firstWinRate": 86.3080684596577,
+        "meanSeconds": 34.07630573248407,
+        "meanHp": 0.5742738853503186
+      },
+      {
+        "wave": 15,
+        "reached": 398,
+        "firstWins": 263,
+        "firstWinRate": 66.08040201005025,
+        "meanSeconds": 58.351715265866204,
+        "meanHp": 0.5925420240137221
+      },
+      {
+        "wave": 16,
+        "reached": 316,
+        "firstWins": 316,
+        "firstWinRate": 100,
+        "meanSeconds": 21.598101265822784,
+        "meanHp": 0.9510158227848103
+      },
+      {
+        "wave": 17,
+        "reached": 316,
+        "firstWins": 294,
+        "firstWinRate": 93.0379746835443,
+        "meanSeconds": 29.78211764705882,
+        "meanHp": 0.6006264705882352
+      },
+      {
+        "wave": 18,
+        "reached": 311,
+        "firstWins": 229,
+        "firstWinRate": 73.63344051446946,
+        "meanSeconds": 33.550576923076925,
+        "meanHp": 0.3184927884615385
+      },
+      {
+        "wave": 19,
+        "reached": 254,
+        "firstWins": 114,
+        "firstWinRate": 44.881889763779526,
+        "meanSeconds": 31.444387755102042,
+        "meanHp": 0.2069744897959184
+      },
+      {
+        "wave": 20,
+        "reached": 145,
+        "firstWins": 145,
+        "firstWinRate": 100,
+        "meanSeconds": 41.46862068965517,
+        "meanHp": 0.8589931034482756
+      },
+      {
+        "wave": 21,
+        "reached": 145,
+        "firstWins": 145,
+        "firstWinRate": 100,
+        "meanSeconds": 16.26896551724138,
+        "meanHp": 0.9111241379310345
+      },
+      {
+        "wave": 22,
+        "reached": 145,
+        "firstWins": 142,
+        "firstWinRate": 97.93103448275862,
+        "meanSeconds": 22.209391891891894,
+        "meanHp": 0.6772635135135137
+      },
+      {
+        "wave": 23,
+        "reached": 145,
+        "firstWins": 135,
+        "firstWinRate": 93.10344827586206,
+        "meanSeconds": 25.385751633986928,
+        "meanHp": 0.533111111111111
+      },
+      {
+        "wave": 24,
+        "reached": 143,
+        "firstWins": 106,
+        "firstWinRate": 74.12587412587412,
+        "meanSeconds": 34.13944134078212,
+        "meanHp": 0.3589608938547487
+      },
+      {
+        "wave": 25,
+        "reached": 114,
+        "firstWins": 69,
+        "firstWinRate": 60.526315789473685,
+        "meanSeconds": 51.62668674698796,
+        "meanHp": 0.20658433734939763
+      },
+      {
+        "wave": 26,
+        "reached": 75,
+        "firstWins": 75,
+        "firstWinRate": 100,
+        "meanSeconds": 20.439866666666667,
+        "meanHp": 0.8910266666666664
+      },
+      {
+        "wave": 27,
+        "reached": 75,
+        "firstWins": 72,
+        "firstWinRate": 96,
+        "meanSeconds": 27.58961538461538,
+        "meanHp": 0.555628205128205
+      },
+      {
+        "wave": 28,
+        "reached": 75,
+        "firstWins": 50,
+        "firstWinRate": 66.66666666666667,
+        "meanSeconds": 30.067211538461542,
+        "meanHp": 0.290076923076923
+      },
+      {
+        "wave": 29,
+        "reached": 61,
+        "firstWins": 22,
+        "firstWinRate": 36.0655737704918,
+        "meanSeconds": 31.599764705882354,
+        "meanHp": 0.16270588235294114
+      },
+      {
+        "wave": 30,
+        "reached": 28,
+        "firstWins": 18,
+        "firstWinRate": 64.28571428571429,
+        "meanSeconds": 59.34375,
+        "meanHp": 0.35809375000000004
+      }
+    ]
+  }
+}

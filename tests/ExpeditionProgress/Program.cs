@@ -24,7 +24,7 @@ internal static class ExpeditionProgressTests
         var normal = ExpeditionRun.New(catalog, 123);
         var explicitNormal = ExpeditionRun.New(catalog, 123, ExpeditionDifficulty.Normal);
         Check(normal.Difficulty == ExpeditionDifficulty.Normal && normal.ContentWaves == 30 &&
-            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == 10 &&
+            ExpeditionRun.ReleaseWaves == 30 && normal.Capture().Version == CatalogBalance.CurrentSaveVersion &&
             normal.Capture().ContentWaves == 30 && normal.PreviousClearWaves == 0,
             "Default run remains current Normal content.");
         Check(normal.Capture().RandomState == explicitNormal.Capture().RandomState &&

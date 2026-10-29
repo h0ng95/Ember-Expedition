@@ -58,7 +58,8 @@ namespace Expedition.Presentation
             public CatalogBattleUnit Unit;
             public Vector2 LastPosition;
             public float StateTime, HitTime, WindupAge, ReleaseAge, ReleaseRemaining;
-            public string ReleaseAbilityId;
+            public string ReleaseAbilityId, ReleaseTargetId;
+            public float RevealUntil;
             public int State, RenderedEnemyFrame;
             public bool NewHit, NewRelease, WasWinding;
         }
@@ -161,6 +162,7 @@ namespace Expedition.Presentation
         readonly List<FloatText> floating = new List<FloatText>();
         readonly Dictionary<string, Texture2D> sheets = new Dictionary<string, Texture2D>();
         readonly Dictionary<string, RenderTexture> clippedSheets = new Dictionary<string, RenderTexture>();
+        readonly Dictionary<string, RenderTexture> outlineSheets = new Dictionary<string, RenderTexture>();
         readonly Dictionary<string, ArtEntry> artEntries = new Dictionary<string, ArtEntry>();
         readonly HashSet<string> missingSheets = new HashSet<string>();
         readonly HashSet<string> neededSheets = new HashSet<string>();
@@ -171,7 +173,7 @@ namespace Expedition.Presentation
         CatalogDatabase database;
         CatalogBattle battle;
         CatalogBattleEffects battleEffects;
-        Material clippedSpriteMaterial;
+        Material clippedSpriteMaterial, allyOutlineMaterial;
         Texture2D bossConceptSheet;
         Texture2D expeditionBackground, raiderConcept;
         Action standaloneClose, expeditionExit;
@@ -203,7 +205,7 @@ namespace Expedition.Presentation
         GUIStyle title, heading, label, small, button, tiny, centered, dotText, statusText;
         GUIStyle bossNameText, bossHealthText, bossBadgeText, bossStatusText;
         GUIStyle encounterText, bossEncounterText, clockText, noticeText, unitCountText;
-        GUIStyle partyNameText, partyHealthText;
+        GUIStyle partyNameText, partyHealthText, identityText;
         string partyFocusId;
         float partyFocusUntil;
         Font uiFont;
@@ -220,6 +222,11 @@ namespace Expedition.Presentation
             {
                 Shader clipped = Shader.Find("Expedition/CatalogSpriteClip");
                 if (clipped != null && clipped.isSupported) clippedSpriteMaterial = new Material(clipped);
+            }
+            if (allyOutlineMaterial == null)
+            {
+                Shader outline = Resources.Load<Shader>("Shaders/CatalogAllyOutline");
+                if (outline != null && outline.isSupported) allyOutlineMaterial = new Material(outline);
             }
             var json = Resources.Load<TextAsset>("Content/unit-catalog-v010");
             try
@@ -296,6 +303,12 @@ namespace Expedition.Presentation
                 else DestroyImmediate(clippedSpriteMaterial);
             }
             clippedSpriteMaterial = null;
+            if (allyOutlineMaterial != null)
+            {
+                if (Application.isPlaying) Destroy(allyOutlineMaterial);
+                else DestroyImmediate(allyOutlineMaterial);
+            }
+            allyOutlineMaterial = null;
         }
 
         void OnApplicationPause(bool applicationPaused)
@@ -367,9 +380,12 @@ namespace Expedition.Presentation
             if ((e.Kind == CatalogEventKind.SkillUsed || e.Kind == CatalogEventKind.BasicHit ||
                 e.Kind == CatalogEventKind.ChargeHit || e.Kind == CatalogEventKind.BossImpact) && source != null)
             {
-                source.ReleaseRemaining = .18f;
-                source.ReleaseAge = 0;
+                bool projectileArrival = source.Unit.Team == CatalogTeam.Ally &&
+                    e.Kind == CatalogEventKind.BasicHit && AllyAttackPresentation.Projectile(source.Unit);
+                source.ReleaseRemaining = projectileArrival ? .06f : .18f;
+                source.ReleaseAge = projectileArrival ? AllyAttackPresentation.ProjectileFlight : 0;
                 source.ReleaseAbilityId = e.AbilityId;
+                source.ReleaseTargetId = e.TargetId;
                 source.NewRelease = true;
                 if (e.Kind == CatalogEventKind.SkillUsed && clock >= bossNoticeUntil)
                 {
@@ -424,6 +440,13 @@ namespace Expedition.Presentation
             }
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
+                // Volley follow-ups have their own damage events, not another SkillUsed.
+                if (e.AbilityId == "E-AR-T" && source != null && source.Unit.Team == CatalogTeam.Ally)
+                {
+                    source.ReleaseRemaining = .18f; source.ReleaseAge = 0f;
+                    source.ReleaseAbilityId = e.AbilityId; source.ReleaseTargetId = e.TargetId;
+                    source.NewRelease = true;
+                }
                 // Bosses keep their own attack/locomotion pose when hit. HP,
                 // impact effects and damage numbers still communicate damage.
                 // Periodic damage must not restart or cancel an existing direct-hit pose.
@@ -558,9 +581,17 @@ namespace Expedition.Presentation
                 accumulator = 0;
             }
             float visualDt = settling ? dt : gameDt;
+            AdvanceActors(visualDt,dt);
+            for (int i = floating.Count - 1; i >= 0; i--)
+            { floating[i].Age += dt; if (floating[i].Age > .75f) floating.RemoveAt(i); }
+            AdvanceSettlement(dt);
+        }
+
+        void AdvanceActors(float visualDt,float realDt)
+        {
             foreach (View view in combatViews)
             {
-                view.Health.Tick(view.Unit.Hp / view.Unit.MaxHp, dt, GamePreferences.Current.ReduceMotion);
+                view.Health.Tick(view.Unit.Hp / view.Unit.MaxHp, realDt, GamePreferences.Current.ReduceMotion);
                 float actorDt = view.Unit.IsAlive && view.Unit.FrozenRemaining > 0f ? 0f : visualDt;
                 if (view.Unit.FrozenRemaining > 0f) view.HitTime = 0f;
                 if (!view.NewHit) view.HitTime = Mathf.Max(0, view.HitTime - Mathf.Min(actorDt, .08f));
@@ -577,17 +608,17 @@ namespace Expedition.Presentation
                 if (winding) view.WindupAge = view.WasWinding ? Mathf.Min(.25f, view.WindupAge + actorDt) : 0;
                 else view.WindupAge = 0;
                 view.WasWinding = winding;
-                int state = !view.Unit.IsAlive ? 4 : view.Unit.FrozenRemaining > 0f ? 0 :
-                    view.HitTime > 0 && !GamePreferences.Current.ReduceMotion ? 3 :
-                    view.ReleaseRemaining > 0 || winding ? 2 :
-                    (position - view.LastPosition).sqrMagnitude > .00004f ? 1 : 0;
+                bool hitPose = view.HitTime > 0 && !GamePreferences.Current.ReduceMotion;
+                bool moving = (position - view.LastPosition).sqrMagnitude > .00004f;
+                int state = view.Unit.Team == CatalogTeam.Ally ?
+                    AllyAttackPresentation.State(view.Unit.IsAlive, view.Unit.FrozenRemaining > 0f,
+                        view.ReleaseRemaining > 0 || winding, hitPose, moving) :
+                    !view.Unit.IsAlive ? 4 : view.Unit.FrozenRemaining > 0f ? 0 : hitPose ? 3 :
+                    view.ReleaseRemaining > 0 || winding ? 2 : moving ? 1 : 0;
                 if (state != view.State) { view.State = state; view.StateTime = 0; }
                 else view.StateTime += actorDt;
                 view.LastPosition = position;
             }
-            for (int i = floating.Count - 1; i >= 0; i--)
-            { floating[i].Age += dt; if (floating[i].Age > .75f) floating.RemoveAt(i); }
-            AdvanceSettlement(dt);
         }
 
         void AdvanceSettlement(float realDt)
@@ -614,6 +645,7 @@ namespace Expedition.Presentation
             label = new GUIStyle(GUI.skin.label) { fontSize = 17, normal = { textColor = ExpeditionUiTheme.Cream } };
             small = new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = ExpeditionUiTheme.Muted } };
             tiny = new GUIStyle(small) { fontSize = 12 };
+            identityText = HudRules.HeaderText(uiFont,12,TextAnchor.MiddleCenter,true);
             bossNameText = HudRules.HeaderText(uiFont, 21, TextAnchor.MiddleCenter, true);
             bossHealthText = HudRules.HeaderText(uiFont, 15, TextAnchor.MiddleCenter, true);
             bossBadgeText = HudRules.HeaderText(uiFont, 12, TextAnchor.MiddleCenter, true);
@@ -773,7 +805,8 @@ namespace Expedition.Presentation
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
                 else if (view.HitTime > .13f && !GamePreferences.Current.ReduceFlashes) GUI.color = new Color(1f, .62f, .48f, 1f);
-                if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f)
+                if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f &&
+                    !(unit.Team == CatalogTeam.Ally && view.State == 2))
                     point.x += (unit.Team == CatalogTeam.Ally ? -1 : 1) *
                         Mathf.Sin(view.HitTime / .24f * Mathf.PI) * 6;
                 bool regionalArtLoaded = false;
@@ -792,6 +825,7 @@ namespace Expedition.Presentation
                 id => DrawnBreathMouth(drawn, id));
             // Allocate compact health/status blocks before damage labels.
             var occupiedHud = new List<Rect>();
+            DrawAllyIdentity(drawn, occupiedHud, arena);
             foreach (DrawnCombatant painted in drawn)
             {
                 View view=painted.View;CatalogBattleUnit unit=view.Unit;Vector2 point=painted.Point;
@@ -894,6 +928,7 @@ namespace Expedition.Presentation
                 CatalogBattleUnit unit=view.Unit;if(unit.Team!=CatalogTeam.Ally)continue;
                 if(index>=5)break;
                 Rect row=HudRules.PartyRow(index);
+                Color identity=BattleVisibility.AllyColor(index);
                 bool focused=unit.Id==partyFocusId && Time.unscaledTime<partyFocusUntil;
                 Fill(row,focused?new Color(.25f,.21f,.14f,.95f):new Color(.105f,.115f,.14f,.95f));
                 Fill(new Rect(row.x,row.y+row.height-1,row.width,1),new Color(.38f,.32f,.23f,.55f));
@@ -907,6 +942,10 @@ namespace Expedition.Presentation
                 DrawSheet(unit.FormId,0,0,new Rect(-32,-42,110,132),false);
                 GUI.EndGroup();
                 GUI.color=prior;
+                DrawAllyBadge(new Rect(row.x+3,row.y+22,19,20),index,identity);
+                bool acting=unit.IsAlive && unit.FrozenRemaining<=0 &&
+                    (view.ReleaseRemaining>0 || AllyAttackPresentation.InFlight(unit));
+                if(acting)Fill(new Rect(row.x+1,row.y+1,3,row.height-2),identity);
                 float ratio=unit.Hp/unit.MaxHp;
                 CombatHud.Meter(new Rect(row.x+58,row.y+28,98,8),ratio,
                     Mathf.Max(ratio,view.Health.Value),unit.Shield/unit.MaxHp,true);
@@ -919,6 +958,55 @@ namespace Expedition.Presentation
                 if(GUI.Button(row,GUIContent.none,GUIStyle.none))
                 {partyFocusId=unit.Id;partyFocusUntil=Time.unscaledTime+2.2f;}
                 index++;
+            }
+        }
+
+        int AllyIndex(CatalogBattleUnit unit)
+        {
+            int index=0;
+            foreach(View view in combatViews)
+                if(view.Unit.Team==CatalogTeam.Ally) { if(view.Unit==unit)return index; index++; }
+            return 0;
+        }
+
+        void DrawAllyBadge(Rect r,int index,Color color)
+        {
+            Fill(r,new Color(.04f,.05f,.07f,.96f));
+            Fill(new Rect(r.x,r.yMax-2,r.width,2),color);
+            Color old=GUI.color;GUI.color=color;
+            GUI.Label(r,(index+1).ToString(),identityText);GUI.color=old;
+        }
+
+        void DrawAllyIdentity(List<DrawnCombatant> drawn,List<Rect> occupied,Rect arena)
+        {
+            for(int i=0;i<drawn.Count;i++)
+            {
+                DrawnCombatant p=drawn[i];View view=p.View;CatalogBattleUnit unit=view.Unit;
+                if(!unit.IsAlive || unit.Team!=CatalogTeam.Ally)continue;
+                // Fixed person-height proxy: long flags/cast effects never become occluders.
+                float bodyHeight=bodyScale==null?84f:bodyScale.PersonHeight(unit.FormId,120,144);
+                Rect body=BattleVisibility.AllyBody(p.Point,bodyHeight);
+                var foreground=new List<Rect>(4);
+                for(int j=i+1;j<drawn.Count;j++)
+                    if(drawn[j].View.Unit.IsAlive && drawn[j].View.Unit.Team==CatalogTeam.Ally)
+                        foreground.Add(BattleVisibility.AllyBody(drawn[j].Point,
+                            bodyScale==null?84f:bodyScale.PersonHeight(drawn[j].View.Unit.FormId,120,144)));
+                if(BattleVisibility.CoveredFraction(body,foreground)>=.6f) view.RevealUntil=Time.unscaledTime+.2f;
+                bool focused=unit.Id==partyFocusId && Time.unscaledTime<partyFocusUntil;
+                if(!focused && Time.unscaledTime>=view.RevealUntil)continue;
+                int index=AllyIndex(unit);Color color=BattleVisibility.AllyColor(index);
+                Color previous=GUI.color;GUI.color=new Color(color.r,color.g,color.b,focused?.95f:.65f);
+                DrawSheet(unit.FormId,view.State,BattleAnimationFrame(view),
+                    new Rect(p.Point.x-60,p.Point.y-144,120,144),ShouldFlip(view),true);
+                GUI.color=previous;
+                Rect wanted=new Rect(p.Point.x-11,p.Point.y-bodyHeight-26,22,23);
+                Rect badge=CombatHud.PlaceNearby(wanted,occupied,new Rect(arena.x+2,arena.y+16,arena.width-4,arena.height-30));
+                occupied.Add(badge);
+                Color tether=new Color(color.r,color.g,color.b,.5f);
+                Fill(new Rect(p.Point.x,Mathf.Min(badge.yMax,p.Point.y),1,Mathf.Abs(p.Point.y-badge.yMax)),tether);
+                Fill(new Rect(Mathf.Min(badge.center.x,p.Point.x),badge.yMax,Mathf.Abs(badge.center.x-p.Point.x),1),tether);
+                Fill(new Rect(p.Point.x-13,p.Point.y+2,26,2),color);
+                DrawAllyBadge(badge,index,color);
             }
         }
 
@@ -1502,6 +1590,8 @@ namespace Expedition.Presentation
         static int BattleAnimationFrame(View view)
         {
             if (view.State != 2) return AnimationFrame(view.State, view.StateTime);
+            if (view.Unit.Team == CatalogTeam.Ally)
+                return AllyAttackPresentation.AttackFrame(view.Unit,view.WindupAge,view.ReleaseAge,view.ReleaseRemaining);
             if (view.ReleaseRemaining > 0)
                 return 3 + Mathf.Min(2, (int)(view.ReleaseAge / .06f));
             return Mathf.Min(2, (int)(view.WindupAge / .25f * 3f));
@@ -1519,6 +1609,9 @@ namespace Expedition.Presentation
         {
             CatalogBattleUnit unit = view.Unit, nearest = null;
             if (unit.Team == CatalogTeam.Enemy) return true;
+            CatalogBattleUnit aimed = battle.Get(unit.AttackPhase != CatalogAttackPhase.Ready ?
+                unit.AttackTargetId : view.ReleaseRemaining > 0f ? view.ReleaseTargetId : null);
+            if (aimed != null && aimed.Team != unit.Team) return aimed.X < unit.X;
             float distance = float.PositiveInfinity;
             foreach (CatalogBattleUnit other in battle.Units)
             {
@@ -1529,7 +1622,7 @@ namespace Expedition.Presentation
             return nearest == null ? unit.Team == CatalogTeam.Enemy : nearest.X < unit.X;
         }
 
-        Rect DrawSheet(string id, int state, int frame, Rect rect, bool flip)
+        Rect DrawSheet(string id, int state, int frame, Rect rect, bool flip, bool outline = false)
         {
             if (string.IsNullOrEmpty(id)) return rect;
             ArtEntry entry;
@@ -1610,6 +1703,22 @@ namespace Expedition.Presentation
             Rect fitted = CatalogBodyScale.Fit(rect, pivotX, pivotY,
                 cropWidth, cropHeight, scale, multiplier);
             Texture displayed = clippedSheets.TryGetValue(id, out RenderTexture clippedSheet) ? clippedSheet : (Texture)texture;
+            if (outline)
+            {
+                if (!outlineSheets.TryGetValue(id, out RenderTexture contour))
+                {
+                    if (Event.current.type != EventType.Repaint || allyOutlineMaterial == null ||
+                        !SystemInfo.supportsRenderTextures) return fitted;
+                    contour = new RenderTexture(texture.width,texture.height,0,RenderTextureFormat.ARGB32);
+                    contour.filterMode=FilterMode.Point;
+                    if(!contour.Create()){Destroy(contour);return fitted;}
+                    RenderTexture previous=RenderTexture.active;
+                    try{Graphics.Blit(displayed,contour,allyOutlineMaterial);}
+                    finally{RenderTexture.active=previous;}
+                    outlineSheets[id]=contour;
+                }
+                displayed=contour;
+            }
             CatalogAtlasRegions.Draw(fitted, displayed, uv, cropWidth, cropHeight,
                 entry != null && entry.frames != null && index < entry.frames.Length ? entry.frames[index].regions : null);
             return fitted;
@@ -1651,6 +1760,7 @@ namespace Expedition.Presentation
 
         void ReleaseSheets()
         {
+            foreach (string id in new List<string>(outlineSheets.Keys)) ReleaseClippedSheet(id);
             foreach (string id in new List<string>(clippedSheets.Keys)) ReleaseClippedSheet(id);
             foreach (Texture2D texture in sheets.Values) if (texture != null) Resources.UnloadAsset(texture);
             sheets.Clear();
@@ -1659,6 +1769,8 @@ namespace Expedition.Presentation
 
         void ReleaseClippedSheet(string id)
         {
+            if (outlineSheets.TryGetValue(id,out RenderTexture outline))
+            { outlineSheets.Remove(id);if(outline!=null){outline.Release();Destroy(outline);} }
             if (!clippedSheets.TryGetValue(id, out RenderTexture texture)) return;
             clippedSheets.Remove(id);
             if (texture != null) { texture.Release(); Destroy(texture); }

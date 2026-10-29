@@ -101,6 +101,13 @@ namespace Expedition.Presentation
             return idleFrameHeight * baseScale * multiplier + padding;
         }
 
+        public float PersonHeight(string id, float destinationWidth, float destinationHeight)
+        {
+            if (id == null || !entries.TryGetValue(id, out CatalogBodyScaleEntry entry)) return 84f;
+            return referenceBodyHeight * Mathf.Min(destinationWidth / (entry.sourceWidth / 6f),
+                destinationHeight / (entry.sourceHeight / 4f));
+        }
+
         // The manifest pivot remains at the destination's ground point after
         // scaling, flipping, and switching between attack or death frames.
         public static Rect Fit(Rect destination, float pivotX, float pivotY,

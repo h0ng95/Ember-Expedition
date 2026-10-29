@@ -1,0 +1,965 @@
+{
+    "cases": [
+        {
+            "form": "E-PR-H",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-H",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-H",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-H",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "H-05",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-05",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-05",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-05",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-IC",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 20,
+            "projectile": true
+        },
+        {
+            "form": "F-IC",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "F-IC",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 10,
+            "projectile": true
+        },
+        {
+            "form": "F-IC",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 20,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-E",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-E",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-E",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-E",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "F-BA",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-BA",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-BA",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-BA",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-KN",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-KN",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-KN",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-KN",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-AR",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "B-AR",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "B-AR",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "B-AR",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "B-FI",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-FI",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "B-FI",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "B-FI",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-IC",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-IC",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "B-IC",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "B-IC",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-PR",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-PR",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "B-PR",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "B-PR",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "B-BA",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-BA",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-BA",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "B-BA",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-G",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-G",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-G",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-G",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-C",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-C",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-C",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-KN-C",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-AR-P",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 19,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-P",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 40,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-P",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-P",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 19,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-T",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-T",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 47,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-T",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "E-AR-T",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-B",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-B",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-B",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-FI-B",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-F",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-F",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-F",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-F",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-S",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-S",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-S",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "E-IC-S",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-G",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-G",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-G",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "E-PR-G",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "E-BA-G",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-G",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-G",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-G",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-A",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-A",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-A",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "E-BA-A",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-KN",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-KN",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-KN",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-KN",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "F-AR",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "F-AR",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "F-AR",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "F-AR",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "F-FI",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "F-FI",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "F-FI",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "F-FI",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "F-PR",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "F-PR",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "F-PR",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "F-PR",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "H-01",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-01",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-01",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-01",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-02",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-02",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-02",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-02",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 0,
+            "projectile": false
+        },
+        {
+            "form": "H-03",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "H-03",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "H-03",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "H-03",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "H-04",
+            "speed": 1,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "H-04",
+            "speed": 1,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 32,
+            "projectile": true
+        },
+        {
+            "form": "H-04",
+            "speed": 2,
+            "fps": 30,
+            "basic": 3,
+            "flightFrames": 8,
+            "projectile": true
+        },
+        {
+            "form": "H-04",
+            "speed": 2,
+            "fps": 60,
+            "basic": 3,
+            "flightFrames": 16,
+            "projectile": true
+        },
+        {
+            "form": "H-06",
+            "speed": 1,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        },
+        {
+            "form": "H-06",
+            "speed": 1,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 43,
+            "projectile": true
+        },
+        {
+            "form": "H-06",
+            "speed": 2,
+            "fps": 30,
+            "basic": 4,
+            "flightFrames": 11,
+            "projectile": true
+        },
+        {
+            "form": "H-06",
+            "speed": 2,
+            "fps": 60,
+            "basic": 4,
+            "flightFrames": 22,
+            "projectile": true
+        }
+    ],
+    "checks": 2902
+}

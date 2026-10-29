@@ -1,0 +1,35 @@
+{
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "sha256": "0083f129d91ee4cc4a02a6a5c53833e63ce42ec58afe31199f5c1cebc99f2ef0",
+  "bytes": 291364909,
+  "builtAt": "2026-10-29T14:37:42.593Z",
+  "unity": "6000.3.24f1",
+  "checks": {
+    "coreAssertions": 2052,
+    "newPresentationChecks": 2902,
+    "timingCases": 120,
+    "allyBodyAssertions": 460,
+    "enemyDepthAssertions": 18,
+    "existingHud": "passed"
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "installed": true,
+    "completedCases": 16,
+    "scenario": "30 forms in six five-unit groups x1/x2, dense five-melee group x1/x2, dragon group x1/x2; isolated QA health; not balance evidence",
+    "originalSavesRestored": true,
+    "exceptionMatches": 0,
+    "performanceSamples": [
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=426 fps=59.7 p95_ms=16.8 over50ms=0 allocated_mb=60.9\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=415 fps=58.5 p95_ms=16.8 over50ms=1 allocated_mb=68.4\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=423 fps=59.6 p95_ms=16.8 over50ms=1 allocated_mb=75.4\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=419 fps=59.0 p95_ms=16.8 over50ms=2 allocated_mb=82.3\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=420 fps=59.2 p95_ms=16.8 over50ms=0 allocated_mb=89.5\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=420 fps=59.2 p95_ms=16.7 over50ms=2 allocated_mb=96.0\r",
+      "PRESENTATION_PERF context=battle-1x seconds=7.1 frames=422 fps=59.6 p95_ms=16.7 over50ms=1 allocated_mb=102.7\r",
+      "PRESENTATION_PERF context=battle-1x seconds=15.0 frames=891 fps=59.3 p95_ms=16.8 over50ms=2 allocated_mb=106.5\r",
+      "PRESENTATION_PERF context=battle-2x seconds=6.1 frames=353 fps=57.7 p95_ms=16.8 over50ms=1 allocated_mb=111.1\r"
+    ]
+  },
+  "scope": "Presentation only; Core, stats, support ranges, positions and save schema unchanged. Static inspection 180 attack slots; device recording, not exhaustive animation aesthetics or endurance certification."
+}

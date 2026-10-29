@@ -74,7 +74,7 @@ namespace Expedition.Presentation
                 unit.FormId == "H-03" || unit.FormId == "H-06";
         }
 
-        static bool IsProjectile(CatalogBattleUnit unit) { return unit.Range > 2.1f; }
+        static bool IsProjectile(CatalogBattleUnit unit) { return AllyAttackPresentation.Projectile(unit); }
 
         static EffectKind BossEffectKind(string ability)
         {
@@ -110,7 +110,8 @@ namespace Expedition.Presentation
         {
             CatalogBattleUnit source = battle.Get(e.SourceId), target = battle.Get(e.TargetId);
             Color color = AttackColor(source);
-            int direction = source != null && source.Team == CatalogTeam.Enemy ? -1 : 1;
+            int direction = source != null && target != null ? (target.X < source.X ? -1 : 1) :
+                source != null && source.Team == CatalogTeam.Enemy ? -1 : 1;
             if (e.Kind == CatalogEventKind.BossImpact && source != null)
             {
                 if (effects.Count == 24) effects.RemoveAt(0);
@@ -206,8 +207,7 @@ namespace Expedition.Presentation
             {
                 if (unit.AttackPhase == CatalogAttackPhase.Ready || !unit.IsAlive)
                 { launched.Remove(unit.Id); continue; }
-                if (unit.AttackPhase == CatalogAttackPhase.WindingBasic && IsProjectile(unit) &&
-                    unit.AttackTargetId != null && unit.AttackWindupRemaining <= .18f &&
+                if (AllyAttackPresentation.InFlight(unit) && unit.AttackTargetId != null &&
                     launched.Add(unit.Id)) Play(launch, .4f);
             }
         }
@@ -371,17 +371,16 @@ namespace Expedition.Presentation
             }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
-                if (!unit.IsAlive || unit.AttackPhase != CatalogAttackPhase.WindingBasic || !IsProjectile(unit) ||
-                    unit.AttackWindupRemaining > .18f || unit.ChargeWarningRemaining > 0) continue;
+                if (!AllyAttackPresentation.InFlight(unit)) continue;
                 CatalogBattleUnit target = battle.Get(unit.AttackTargetId);
                 if (target == null || !target.IsAlive) continue;
-                Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(unit.Team == CatalogTeam.Ally ? 20 : -20, -65);
+                Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(target.X < unit.X ? -20 : 20, -65);
                 float targetBodyOffset = target.EnemyRole == CatalogEnemyRole.CrownDrake ?
                     150f +
                     PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(target), target.Y, battle.Time) : 58f;
                 Vector2 to = project(new Vector2(target.X, target.Y)) +
                     new Vector2(0, -targetBodyOffset);
-                float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);
+                float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / AllyAttackPresentation.ProjectileFlight);
                 if (unit.DrakeRangedBasic)
                 {
                     Vector2? mouth = breathMouth(unit.Id);

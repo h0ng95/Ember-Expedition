@@ -1,0 +1,245 @@
+{
+    "cases": [
+        {
+            "name": "forms-0",
+            "speed": 1,
+            "forms": [
+                "E-PR-H",
+                "H-05",
+                "F-IC",
+                "E-FI-E",
+                "F-BA"
+            ],
+            "basic": 46,
+            "skill": 8,
+            "damage": 81,
+            "screenshot": "forms-0-1x.png"
+        },
+        {
+            "name": "forms-0",
+            "speed": 2,
+            "forms": [
+                "E-PR-H",
+                "H-05",
+                "F-IC",
+                "E-FI-E",
+                "F-BA"
+            ],
+            "basic": 46,
+            "skill": 8,
+            "damage": 81,
+            "screenshot": "forms-0-2x.png"
+        },
+        {
+            "name": "forms-1",
+            "speed": 1,
+            "forms": [
+                "B-KN",
+                "B-AR",
+                "B-FI",
+                "B-IC",
+                "B-PR"
+            ],
+            "basic": 43,
+            "skill": 10,
+            "damage": 61,
+            "screenshot": "forms-1-1x.png"
+        },
+        {
+            "name": "forms-1",
+            "speed": 2,
+            "forms": [
+                "B-KN",
+                "B-AR",
+                "B-FI",
+                "B-IC",
+                "B-PR"
+            ],
+            "basic": 43,
+            "skill": 10,
+            "damage": 60,
+            "screenshot": "forms-1-2x.png"
+        },
+        {
+            "name": "forms-2",
+            "speed": 1,
+            "forms": [
+                "B-BA",
+                "E-KN-G",
+                "E-KN-C",
+                "E-AR-P",
+                "E-AR-T"
+            ],
+            "basic": 47,
+            "skill": 7,
+            "damage": 55,
+            "screenshot": "forms-2-1x.png"
+        },
+        {
+            "name": "forms-2",
+            "speed": 2,
+            "forms": [
+                "B-BA",
+                "E-KN-G",
+                "E-KN-C",
+                "E-AR-P",
+                "E-AR-T"
+            ],
+            "basic": 47,
+            "skill": 7,
+            "damage": 55,
+            "screenshot": "forms-2-2x.png"
+        },
+        {
+            "name": "forms-3",
+            "speed": 1,
+            "forms": [
+                "E-FI-B",
+                "E-IC-F",
+                "E-IC-S",
+                "E-PR-G",
+                "E-BA-G"
+            ],
+            "basic": 40,
+            "skill": 10,
+            "damage": 62,
+            "screenshot": "forms-3-1x.png"
+        },
+        {
+            "name": "forms-3",
+            "speed": 2,
+            "forms": [
+                "E-FI-B",
+                "E-IC-F",
+                "E-IC-S",
+                "E-PR-G",
+                "E-BA-G"
+            ],
+            "basic": 40,
+            "skill": 9,
+            "damage": 60,
+            "screenshot": "forms-3-2x.png"
+        },
+        {
+            "name": "forms-4",
+            "speed": 1,
+            "forms": [
+                "E-BA-A",
+                "F-KN",
+                "F-AR",
+                "F-FI",
+                "F-PR"
+            ],
+            "basic": 44,
+            "skill": 12,
+            "damage": 86,
+            "screenshot": "forms-4-1x.png"
+        },
+        {
+            "name": "forms-4",
+            "speed": 2,
+            "forms": [
+                "E-BA-A",
+                "F-KN",
+                "F-AR",
+                "F-FI",
+                "F-PR"
+            ],
+            "basic": 42,
+            "skill": 11,
+            "damage": 84,
+            "screenshot": "forms-4-2x.png"
+        },
+        {
+            "name": "forms-5",
+            "speed": 1,
+            "forms": [
+                "H-01",
+                "H-02",
+                "H-03",
+                "H-04",
+                "H-06"
+            ],
+            "basic": 44,
+            "skill": 10,
+            "damage": 70,
+            "screenshot": "forms-5-1x.png"
+        },
+        {
+            "name": "forms-5",
+            "speed": 2,
+            "forms": [
+                "H-01",
+                "H-02",
+                "H-03",
+                "H-04",
+                "H-06"
+            ],
+            "basic": 44,
+            "skill": 9,
+            "damage": 65,
+            "screenshot": "forms-5-2x.png"
+        },
+        {
+            "name": "dense",
+            "speed": 1,
+            "forms": [
+                "F-KN",
+                "H-01",
+                "H-02",
+                "E-KN-G",
+                "E-IC-S"
+            ],
+            "basic": 53,
+            "skill": 11,
+            "damage": 67,
+            "screenshot": "dense-1x.png"
+        },
+        {
+            "name": "dense",
+            "speed": 2,
+            "forms": [
+                "F-KN",
+                "H-01",
+                "H-02",
+                "E-KN-G",
+                "E-IC-S"
+            ],
+            "basic": 52,
+            "skill": 10,
+            "damage": 65,
+            "screenshot": "dense-2x.png"
+        },
+        {
+            "name": "dragon",
+            "speed": 1,
+            "forms": [
+                "F-KN",
+                "H-01",
+                "H-02",
+                "E-KN-G",
+                "E-IC-S"
+            ],
+            "basic": 72,
+            "skill": 18,
+            "damage": 120,
+            "screenshot": "dragon-1x.png"
+        },
+        {
+            "name": "dragon",
+            "speed": 2,
+            "forms": [
+                "F-KN",
+                "H-01",
+                "H-02",
+                "E-KN-G",
+                "E-IC-S"
+            ],
+            "basic": 71,
+            "skill": 18,
+            "damage": 119,
+            "screenshot": "dragon-2x.png"
+        }
+    ],
+    "completed": true
+}

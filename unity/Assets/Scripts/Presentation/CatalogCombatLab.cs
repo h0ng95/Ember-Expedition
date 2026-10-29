@@ -521,6 +521,7 @@ namespace Expedition.Presentation
 
         void Update()
         {
+            PresentationPerformanceProbe.Mark(paused ? "battle-paused" : speed > 1 ? "battle-2x" : "battle-1x");
             float dt = Mathf.Min(Time.unscaledDeltaTime, .1f);
             galleryTime += dt;
             if (screen == 0 && viewport.width > 0) HandlePlacementInput();

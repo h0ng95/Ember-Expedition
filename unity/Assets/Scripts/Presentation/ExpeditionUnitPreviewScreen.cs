@@ -216,7 +216,7 @@ namespace Expedition.Presentation
                 if (UnitChoiceCard(new Rect(content.x, 181 + row * 124, content.width, 112), option.ResultId, recipe))
                 {
                     if (!partner) ChooseCombinationOption(index);
-                    else { pendingOtherId = donor.Id; pendingFormId = option.ResultId; pendingAction = GrowthAction.Combine; combinationFromList = false; modal = Modal.Confirm; }
+                    else { growthPreviewKey = null; pendingOtherId = donor.Id; pendingFormId = option.ResultId; pendingAction = GrowthAction.Combine; combinationFromList = false; modal = Modal.Confirm; }
                     infoTabIndex = 0;
                 }
             }
@@ -242,9 +242,12 @@ namespace Expedition.Presentation
             ExpeditionUnitPreview preview = UnitPreview(member, pendingFormId, combine ? pendingOtherId : null);
             if (preview == null) { modal = Modal.Detail; Notice("지금 진행할 수 없는 성장입니다."); return; }
             EnsureInfoStyles();
+            string viewKey = selectedId + ":" + pendingOtherId + ":" + pendingAction;
+            if (growthPreviewKey != viewKey) { growthPreviewKey = viewKey; growthDetails = false; }
             Rect panel = new Rect(130, 28, 1020, 664), content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 60, content.width, 42), combine ? "결합 결과 확인" : "진화 결과 선택", heading);
+            if (GUI.Button(new Rect(954,62,164,42),growthDetails?"모습 비교":"상세 능력",button)) { growthDetails=!growthDetails; infoScroll=Vector2.zero; }
             bool branch = !combine && member.FormId.StartsWith("B-", StringComparison.Ordinal);
             if (branch)
             {
@@ -265,7 +268,8 @@ namespace Expedition.Presentation
                     "수치 비교는 남는 동료 1명 기준입니다. 두 명의 전투력을 합산한 값이 아닙니다." :
                     "선택했던 분기 기술을 유지하고 최종 기술을 추가합니다.", infoCaption);
             }
-            DrawUnitProfile(new Rect(content.x, 212, content.width, 278), preview, true);
+            if(growthDetails) DrawUnitProfile(new Rect(content.x, 212, content.width, 278), preview, true);
+            else DrawGrowthOverview(new Rect(content.x,212,content.width,278),preview,donor);
             string note;
             if (combine)
                 note = "소모: " + database.Get(donor.FormId).Name + " · 전승 " + TraitName(donor.InheritedTraitId) + "도 사라짐" +
@@ -276,7 +280,13 @@ namespace Expedition.Presentation
                     " · 전승 " + TraitName(member.InheritedTraitId) + " 유지  |  출전 인원 유지\n" +
                     (branch ? "기본 기술이 선택한 분기 기술로 바뀝니다." : "선택한 분기 기술과 새 최종 기술을 함께 사용합니다.") +
                     " 준비 중 되돌리기 가능.\n피해 계수는 현재 공격력 기준 · 일시 강화와 적 방어력은 스탯에 포함하지 않습니다.";
-            GUI.Label(new Rect(content.x, 506, content.width, 76), note, infoCaption);
+            if (!growthDetails)
+            {
+                note = combine ? "출전 " + run.DeployedIds.Count + " → " + preview.DeployedCount + "명  ·  " + database.Get(donor.FormId).Name + " 소모  ·  빈자리는 대기 동료로 보충 가능\n" +
+                    "두 동료의 기존 기술·고유 특성은 교체됩니다. 유지 전승: " + TraitName(member.InheritedTraitId) + " / 사라지는 전승: " + TraitName(donor.InheritedTraitId) :
+                    "출전 인원 유지 · 전승 " + TraitName(member.InheritedTraitId) + " 유지\n" + (branch ? "기본 기술이 선택한 분기 기술로 바뀝니다." : "분기 기술을 유지하고 최종 기술을 추가합니다.");
+            }
+            GUI.Label(new Rect(content.x,506,content.width,76),note,infoCaption);
             ExpeditionUiTheme.FooterRule(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "취소", button))

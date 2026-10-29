@@ -30,7 +30,7 @@ namespace Expedition.EditorTools
         static Vector2 Target(ExpeditionRun run, string id)
         {
             var member = run.Roster.Find(id);
-            return new Vector2(560 + member.X * 75, 380 - member.Y * 50 - 45);
+            return ExpeditionScreen.PreparationLayout.Point(member.X, member.Y) + new Vector2(0, -45);
         }
         static void Drag(ExpeditionScreen screen, Vector2 from, Vector2 to, float hold)
         {
@@ -42,6 +42,7 @@ namespace Expedition.EditorTools
         static void Attach(ExpeditionScreen screen, ExpeditionRun run)
         {
             Call(screen, "CancelPointer");
+            Set(screen, "revealResult", null);
             Set(screen, "run", run);
             Set(screen, "home", false);
             Set(screen, "badSave", false);
@@ -84,11 +85,11 @@ namespace Expedition.EditorTools
                 Snapshot(run) == before, "drag projection clamps to legal placement without changing the save or Undo");
             Check(!(bool)Read(screen, "IsSupportCandidate", priest, knight, support),
                 "dragging support out of reach immediately removes its candidate");
-            Point(screen, new Vector2(455, 335), false, true, false, .2f);
+            Point(screen, Target(run, knight.Id), false, true, false, .2f);
             Check((bool)Read(screen, "IsSupportCandidate", priest, knight, support) && Snapshot(run) == before,
                 "dragging support back into reach updates candidates without committing movement");
             Call(screen, "CancelPointer");
-            Point(screen, new Vector2(455, 335), false, false, true, .8f);
+            Point(screen, Target(run, knight.Id), false, false, true, .8f);
             projected = (Vector2)Read(screen, "PreparationPosition", priest);
             Check(projected == new Vector2(priest.X, priest.Y) && Snapshot(run) == before && !run.CanUndo,
                 "canceled preview and later release restore saved coordinates without a growth or move");
@@ -189,6 +190,11 @@ namespace Expedition.EditorTools
                 Call(screen, "ExecuteGrowth");
                 Check(run.Roster.Find("ally-01").FormId == "H-02" && run.Roster.Find("ally-03") == null &&
                     Get(screen, "modal").ToString() == "None", "explicit confirmed combination executes and returns to board");
+                string combined = Snapshot(run);
+                Call(screen, "ExecuteGrowth");
+                Check(Snapshot(run) == combined, "completion animation blocks repeat confirmation");
+                Set(screen, "revealResult", null);
+                Check(Snapshot(run) == combined, "skipping completion does not alter committed growth");
                 Check(run.Undo() && run.DeployedIds.Count == 3, "explicit combination Undo restores both slots");
 
                 // Five active units: a quick drop swaps, a held drop grows.

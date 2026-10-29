@@ -13,7 +13,7 @@ namespace Expedition.Presentation
         GUIStyle lessonText;
         readonly List<Rect> lessonHoles = new List<Rect>(5);
         readonly List<Rect> lessonDark = new List<Rect>(50);
-        static readonly Rect PreparationLessonCard = new Rect(724, 124, 523, 137);
+        static readonly Rect PreparationLessonCard = new Rect(908, 208, 344, 286);
         static readonly Rect EvolutionLessonCard = new Rect(162, 42, 956, 64);
         static readonly Rect TacticsLessonCard = new Rect(76, 62, 1128, 91);
 
@@ -68,7 +68,7 @@ namespace Expedition.Presentation
         Rect LessonMemberRect(CatalogMember member)
         {
             Vector2 foot = ArenaPoint(member);
-            return new Rect(foot.x - 60, foot.y - 115, 120, 149);
+            return PreparationLayout.Hit(foot);
         }
         void BuildLessonHoles(LessonStage stage)
         {
@@ -85,7 +85,7 @@ namespace Expedition.Presentation
                         index++;
                     }
                 lessonHoles.Add(LessonMemberRect(run.Roster.Find(example.RecipientId)));
-                if (pointerDragging) lessonHoles.Add(new Rect(pointerCurrent.x - 58, pointerCurrent.y - 112, 116, 146));
+                if (pointerDragging) lessonHoles.Add(PreparationLayout.Hit(pointerCurrent));
             }
             else if (stage == LessonStage.EvolutionReady)
             {
@@ -95,13 +95,14 @@ namespace Expedition.Presentation
             else if (stage == LessonStage.EvolutionChoice)
             {
                 lessonHoles.Add(new Rect(162, 112, 956, 88));
+                lessonHoles.Add(new Rect(954, 62, 164, 42));
                 lessonHoles.Add(new Rect(162, 212, 956, 278));
                 lessonHoles.Add(new Rect(162, 506, 956, 154));
             }
             else if (stage == LessonStage.TacticsReady)
             {
-                lessonHoles.Add(new Rect(1075, 270, 154, 48));
-                lessonHoles.Add(new Rect(939, 569, 320, 68));
+                lessonHoles.Add(PreparationLayout.Research);
+                lessonHoles.Add(PreparationLayout.Summon);
             }
             else if (stage == LessonStage.TacticsBoard)
             {
@@ -145,7 +146,7 @@ namespace Expedition.Presentation
             if (stage == LessonStage.EvolutionChoice)
             {
                 GUI.Label(new Rect(card.x + 12, card.y + 8, card.width - 168, 48),
-                    "첫 진화 · 모습과 역할을 비교한 뒤 골라보세요.\n아래 기술·연구 탭도 확인할 수 있어요. 확정 전에는 바뀌지 않습니다.", lessonText);
+                    "첫 진화 · 모습과 역할을 비교한 뒤 골라보세요.\n상세 능력에서 기술·연구를 확인해요. 확정 전에는 바뀌지 않습니다.", lessonText);
                 if (GUI.Button(new Rect(card.xMax - 144, card.y + 11, 132, 42), "알겠어", button)) FinishLesson(ExpeditionLesson.Evolution);
                 return;
             }
@@ -161,15 +162,15 @@ namespace Expedition.Presentation
                 stage == LessonStage.EvolutionReady ?
                 "진화할 동료가 있어요.\n모습·역할·기술을 비교한 뒤 골라보세요.\n미리보기만 열어서는 동료가 변하지 않습니다." :
                 "연구를 선택할 수 있어요.\n소환과 같은 골드를 써서 원정 전체를 강화해요.\n먼저 효과를 살펴보고 지출을 결정하세요.";
-            GUI.Label(new Rect(card.x + 14, card.y + 8, card.width - 28, 78), message, lessonText);
-            if (stage != LessonStage.Growth && GUI.Button(new Rect(card.x + 14, card.y + 90, 330, 42),
+            GUI.Label(new Rect(card.x + 14, card.y + 16, card.width - 28, 126), message, lessonText);
+            if (stage != LessonStage.Growth && GUI.Button(new Rect(card.x + 14, card.y + 160, card.width - 28, 44),
                 stage == LessonStage.EvolutionReady ? "진화 비교하기" : "연구 살펴보기", primary))
             {
                 CancelPointer();
                 if (stage == LessonStage.EvolutionReady) PrepareEvolution(ExpeditionLearning.EvolutionExample(run));
                 else { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
             }
-            if (GUI.Button(new Rect(card.xMax - 149, card.y + 90, 135, 42), "건너뛰기", button))
+            if (GUI.Button(new Rect(card.x + 14, card.y + 220, card.width - 28, 44), "건너뛰기", button))
             { CancelPointer(); FinishLesson(LessonFor(stage)); }
             if (stage == LessonStage.Growth && lessonHoles.Count >= 2 && !pointerDragging)
             {

@@ -1,0 +1,39 @@
+{
+  "artifact": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "sha256": "0bc2ff763d6267849db3726c08281e142128128b3075524d02648e9280fb94d4",
+  "bytes": 287996507,
+  "builtAt": "2026-10-29T13:06:50.392Z",
+  "unity": "6000.3.24f1",
+  "checks": {
+    "preparationLayout": 562,
+    "dragGrowth": 28,
+    "tutorial": 55,
+    "learning": 20,
+    "battleReadability": "passed"
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "fixtures": [
+      "combination",
+      "evolution",
+      "tutorial",
+      "wave-15",
+      "wave-30"
+    ],
+    "finalApkInstalled": true,
+    "finalPreparationRetested": true,
+    "saveRestore": "Fresh backup restored and verified byte-for-byte before relaunching original account",
+    "performance": "performance.json",
+    "scope": "UI flows plus waves15/30; not a 30-battle endurance or balance audit"
+  },
+  "unchanged": [
+    "combat stats",
+    "costs",
+    "random summon rules",
+    "research rules",
+    "fusion recipes",
+    "save/rules version",
+    "unit art"
+  ],
+  "knownFollowup": "Dense formations still overlap; refine combat readability and audit all30 forms at release/impact frames."
+}

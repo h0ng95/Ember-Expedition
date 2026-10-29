@@ -28,8 +28,10 @@ namespace Expedition.EditorTools
             progress.Observe(run);
             File.WriteAllText("Logs/v042-fixtures/" + name + "-progress.json", JsonUtility.ToJson(progress.Capture()));
         }
-        public static void ValidateAndBuild()
+        public static void ValidateAndBuild() { Validate(); PrototypeSetup.BuildAndroid(); }
+        public static void Validate()
         {
+            checks = 0;
             ExpeditionTutorialValidation.Validate();
             var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
             bool hadKey = PlayerPrefs.HasKey(Key); int old = PlayerPrefs.GetInt(Key, 7);
@@ -48,13 +50,14 @@ namespace Expedition.EditorTools
                 Check((bool)Call(screen, "LessonPointerAllowed", new Vector2(222, 630), true, false), "donor blocked");
                 Check(!(bool)Call(screen, "LessonPointerAllowed", new Vector2(1200, 670), true, false), "dimmed battle start accepted");
                 Set(screen, "pointerId", donor); Set(screen, "pointerDragging", true);
-                Check((bool)Call(screen, "LessonPointerAllowed", new Vector2(462, 335), false, true), "recipient drop blocked");
+                var recipient = run.Roster.Find("ally-01");
+                Check((bool)Call(screen, "LessonPointerAllowed", ExpeditionScreen.PreparationLayout.Point(recipient.X, recipient.Y) + new Vector2(0,-45), false, true), "recipient drop blocked");
                 Check(!(bool)Call(screen, "LessonPointerAllowed", new Vector2(200, 470), false, true), "invalid drop accepted");
                 Call(screen, "CancelPointer");
                 Check(before == JsonUtility.ToJson(run.Capture()), "guide read changed run");
                 Export("growth", run, 0);
                 Call(screen, "FinishLesson", ExpeditionLesson.Growth);
-                Check(PlayerPrefs.GetInt(Key, 0) == 1 && Call(screen, "CurrentLessonStage").ToString() == "None", "skip not persisted");
+                Check((int)Get(screen, "lessonMask") == 1 && Call(screen, "CurrentLessonStage").ToString() == "None", "skip not acknowledged");
                 Set(screen, "lessonReplay", ExpeditionLesson.Growth);
                 Check(Call(screen, "CurrentLessonStage").ToString() == "Growth", "replay unavailable");
                 Call(screen, "FinishLesson", ExpeditionLesson.Growth);
@@ -72,7 +75,7 @@ namespace Expedition.EditorTools
                 Check(Call(screen, "CurrentLessonStage").ToString() == "TacticsBoard", "tactics board guide missing");
                 before = JsonUtility.ToJson(run.Capture());
                 Call(screen, "FinishLesson", ExpeditionLesson.Tactics);
-                Check(before == JsonUtility.ToJson(run.Capture()) && PlayerPrefs.GetInt(Key, 0) == 7, "reading tactic bought something");
+                Check(before == JsonUtility.ToJson(run.Capture()) && (int)Get(screen, "lessonMask") == 7, "reading tactic bought something");
                 var tactics = ExpeditionRun.New(db, 42002, researchBaselineBestWave: 0);
                 while (tactics.Wave < 6) Win(tactics);
                 Export("tactics", tactics, 0);
@@ -94,7 +97,7 @@ namespace Expedition.EditorTools
                 Check(observed == 1, "standalone lab changes expedition speed");
                 var text = new GUIStyle { font = font, fontSize = 17, wordWrap = true };
                 string lesson = "첫 성장 · 강조된 대기 동료를\n출전 동료 위에 끌어 잠시 유지한 뒤 놓으세요.\n성장 +1 · 재료는 소모 · 준비 중 되돌리기 가능";
-                Check(text.CalcHeight(new GUIContent(lesson), 495) <= 78, "growth card text clipped");
+                Check(text.CalcHeight(new GUIContent(lesson), 316) <= 126, "growth card text clipped");
                 string tacticsText = "소환과 전술은 같은 골드를 사용합니다. 40G는 소환 2회분 · 현재 1234G\n노드를 눌러 효과와 조건을 비교하세요. 전술은 이번 원정에서만 유지됩니다.\n구매는 선택입니다. 소환할 돈을 남겨두어도 됩니다.";
                 Check(text.CalcHeight(new GUIContent(tacticsText), 938) <= 75, "tactics card text clipped");
                 Debug.Log("PASS: learning UI, " + checks + " assertions; exported QA checkpoints, not balance evidence.");
@@ -104,7 +107,6 @@ namespace Expedition.EditorTools
                 if (hadKey) PlayerPrefs.SetInt(Key, old); else PlayerPrefs.DeleteKey(Key);
                 PlayerPrefs.Save(); UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(font);
             }
-            PrototypeSetup.BuildAndroid();
         }
     }
 }

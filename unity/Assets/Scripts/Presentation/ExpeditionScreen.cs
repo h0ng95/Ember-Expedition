@@ -14,7 +14,7 @@ namespace Expedition.Presentation
         const string JournalSaveKey = "ember.expedition.story.v025";
         const string ProgressSaveKey = "ember.expedition.progress.v027";
         const float Width = 1280f, Height = 720f;
-        const float GroundY = 380f, GroundYScale = 50f;
+        const float GroundY = PreparationLayout.OriginY, GroundYScale = PreparationLayout.ScaleY;
         static readonly Color Background = ExpeditionUiTheme.Background;
         static readonly Color Panel = ExpeditionUiTheme.Panel;
         static readonly Color PanelLight = ExpeditionUiTheme.PanelLight;
@@ -42,7 +42,7 @@ namespace Expedition.Presentation
             "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records }
+            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -298,23 +298,23 @@ namespace Expedition.Presentation
                 GUI.matrix = Matrix4x4.identity;
                 return;
             }
-            FilterTutorialGuiEvent();
-            FilterLessonGuiEvent();
+            if (!GrowthRevealActive) { FilterTutorialGuiEvent(); FilterLessonGuiEvent(); }
             Fill(new Rect(0, 0, Width, Height), Background);
-            GUI.enabled = modal == Modal.None;
+            GUI.enabled = modal == Modal.None && !GrowthRevealActive;
             if (home || run == null) DrawHome();
             else if (run.Phase == ExpeditionPhase.Preparation) DrawPreparation();
             else if (run.Phase == ExpeditionPhase.Battle) DrawBattleResume();
             else DrawResult();
+            GUI.enabled = !GrowthRevealActive;
+            if (modal != Modal.None && !GrowthRevealActive) DrawModal();
             GUI.enabled = true;
-            if (modal != Modal.None) DrawModal();
             if (toast != null && Time.unscaledTime < toastUntil)
             {
                 ExpeditionUiTheme.PanelBox(new Rect(340, 660, 600, 48), true);
                 GUI.Label(new Rect(350, 667, 580, 34), toast, centered);
             }
-            DrawTutorialSpotlight();
-            DrawLessonSpotlight();
+            if (GrowthRevealActive) DrawGrowthReveal();
+            else { DrawTutorialSpotlight(); DrawLessonSpotlight(); }
             GUI.matrix = Matrix4x4.identity;
         }
 
@@ -391,85 +391,15 @@ namespace Expedition.Presentation
             GUI.Label(new Rect(880, 6, 170, 38), run.Gold + " G", heading);
             if (!run.HasEnded)
                 GUI.Label(new Rect(880, 44, 170, 28), run.UsesLegacyRules ? "이전 규칙" : "현재 " + run.Score.ToString("N0") + "점", small);
-            ExpeditionUiTheme.PanelBox(new Rect(1070, 17, 188, 43));
-            GUI.Label(new Rect(1080, 21, 168, 33), phase, centered);
+            if (run.Phase == ExpeditionPhase.Preparation)
+            {
+                if (GUI.Button(PreparationLayout.Research, "원정 연구 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
+                { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
+            }
+            else { ExpeditionUiTheme.PanelBox(new Rect(1070,17,188,43)); GUI.Label(new Rect(1080,21,168,33),phase,centered); }
         }
 
-        void DrawPreparation()
-        {
-            DrawHeader(run.IsBossWave ? "보스전 준비" : "전투 준비");
-            Rect field = new Rect(17, 93, 1246, 449);
-            Texture2D region = run.Wave <= 5 ? battlefield : run.Wave <= 10 ? outpost :
-                run.Wave <= 15 ? furnace : run.Wave <= 20 ? frost :
-                run.Wave <= 25 ? garden : palace;
-            ExpeditionUiTheme.DrawBackdrop(field, region, false);
-            Fill(new Rect(32, 143, 687, 363), new Color(.045f, .05f, .065f, .28f));
-            ExpeditionUiTheme.PanelBox(new Rect(724, 94, 523, 430));
-            ExpeditionUiTheme.Rule(new Rect(48, 185, 615, 1));
-            ExpeditionUiTheme.Rule(new Rect(48, 350, 615, 1));
-            GUI.Label(new Rect(46, 100, 470, 34), "출전 배치  " + run.DeployedIds.Count + " / 5", heading);
-            DrawTutorialReplayButton();
-            DrawPreparationRange();
-            GUI.Label(new Rect(735, 101, 505, 37), run.EncounterName, heading);
-            if (!DrawPreparationSupportSummary())
-            {
-                GUI.Label(new Rect(735, 146, 490, 35), run.EncounterDescription, hint);
-                DrawTutorialAdvice();
-            }
-            if (GUI.Button(new Rect(735, 270, 154, 48), showHelp ? "도움말 접기" : "배치 도움말", button))
-                showHelp = !showHelp;
-            if (GUI.Button(new Rect(905, 270, 154, 48), "지역 이야기", button))
-            {
-                StoryEntry regionStory = ExpeditionStory.ForWave(run.Wave);
-                if (regionStory != null) OpenJournal(regionStory.Id);
-            }
-            if (GUI.Button(new Rect(1075, 270, 154, 48),
-                "원정 연구 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
-            { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
-            if (DrawSelectedPreparation()) { }
-            else if (run.IsBossWave && !showHelp)
-            {
-                GUI.Label(new Rect(735, 326, 490, 28), "보스 준비 점검", hint);
-                string[] checks = ExpeditionPreparationHints.ForBoss(run, database);
-                for (int i = 0; i < checks.Length && i < 3; i++)
-                    GUI.Label(new Rect(735, 358 + i * 30, 495, 29), checks[i], bossChecklist);
-            }
-            else
-                GUI.Label(new Rect(735, 326, 480, 125), showHelp ?
-                    "동료를 겹쳐 잠시 유지한 뒤 놓으면 성장 +1\n결합은 아래 목록에서 결과를 보고 선택\n재료 보호 중인 동료는 소모되지 않습니다\n출전 최대 5명 · 대기 최대 7명" :
-                    "동료를 누르면 사거리·지원 범위 표시\n한 번 더 누르면 상세 · 끌어서 위치 이동\n결합은 가능한 조합 목록에서 선택", body);
-            List<CatalogCombinationOption> combinations = run.GetCombinationOptions();
-            if (combinations.Count > 0 && GUI.Button(new Rect(735, 468, 315, 52),
-                combinations.Count == 1 ? database.Get(combinations[0].ResultId).Name + " 결합 가능" :
-                "결합 가능 " + combinations.Count + "쌍 보기", primary)) OpenCombinationOptions();
-            fieldMembers.Clear();
-            foreach (string id in run.DeployedIds)
-            {
-                CatalogMember member = run.Roster.Find(id);
-                if (member != null) fieldMembers.Add(member);
-            }
-            fieldMembers.Sort((a, b) => b.Y.CompareTo(a.Y));
-            foreach (CatalogMember member in fieldMembers)
-            {
-                Vector2 foot = ArenaPoint(member);
-                DrawUnit(member, new Rect(foot.x - 48, foot.y - 113, 96, 110),
-                    new Rect(foot.x - 64, foot.y, 128, 31));
-                DrawPreparationMarker(member, foot);
-            }
-            DrawDock();
-            if (pointerDragging && pointerId != null)
-            {
-                DrawGrowthPreview();
-                CatalogMember carried = run.Roster.Find(pointerId);
-                if (carried != null && art != null)
-                {
-                    Fill(new Rect(pointerCurrent.x - 52, pointerCurrent.y - 103, 104, 111),
-                        new Color(.88f, .73f, .43f, .25f));
-                    art.Draw(carried.FormId, new Rect(pointerCurrent.x - 48, pointerCurrent.y - 99, 96, 99),
-                        (int)(Time.unscaledTime * 5f) % 4);
-                }
-            }
-        }
+        void DrawPreparation() { DrawPreparationBoard(); }
 
         string PreparationAdvice()
         {
@@ -511,47 +441,7 @@ namespace Expedition.Presentation
             }
         }
 
-        void DrawDock()
-        {
-            ExpeditionUiTheme.PanelBox(new Rect(0, 548, Width, 172));
-            bench.Clear();
-            foreach (CatalogMember member in run.Roster.Members)
-                if (!IsDeployed(member.Id)) bench.Add(member);
-            GUI.Label(new Rect(23, 557, 145, 31), "대기 " + bench.Count + "/7", heading);
-            int pages = Mathf.Max(1, (bench.Count + 4) / 5);
-            benchPage = Mathf.Clamp(benchPage, 0, pages - 1);
-            if (GUI.Button(new Rect(23, 598, 55, 58), "‹", button)) benchPage = (benchPage + pages - 1) % pages;
-            if (GUI.Button(new Rect(84, 598, 55, 58), "›", button)) benchPage = (benchPage + 1) % pages;
-            GUI.Label(new Rect(26, 663, 117, 31), (benchPage + 1) + " / " + pages, small);
-            for (int i = 0; i < 5; i++)
-            {
-                Rect card = BenchRect(i);
-                ExpeditionUiTheme.PanelBox(card);
-                int index = benchPage * 5 + i;
-                if (index < bench.Count)
-                {
-                    CatalogMember member = bench[index];
-                    DrawUnit(member, new Rect(card.x + 32, card.y + 3, 75, 93),
-                        new Rect(card.x + 4, card.y + 100, card.width - 8, 27));
-                }
-            }
-            GUI.enabled = modal == Modal.None && run.CanSummon;
-            string summonLabel = bench.Count >= 7 ? "대기석 가득 참 · 7/7" : run.Gold < ExpeditionRun.SummonCost ?
-                "소환 · " + (ExpeditionRun.SummonCost - run.Gold) + "G 부족" : "동료 소환  ·  " + ExpeditionRun.SummonCost + "G";
-            if (GUI.Button(new Rect(944, 574, 310, 58), summonLabel, button)) Summon();
-            GUI.enabled = modal == Modal.None && run.DeployedIds.Count > 0;
-            if (GUI.Button(new Rect(944, 641, 310, 58), "전투 시작  ›", primary))
-                StartBattle(false);
-            GUI.enabled = modal == Modal.None && run.CanUndo;
-            if (GUI.Button(new Rect(1075, 483, 164, 44), "되돌리기", button))
-            {
-                if (run.Undo()) { selectedId = null; Save("undo"); Notice("직전 준비 행동을 되돌렸습니다."); }
-                else Notice("대기석 공간이 부족하거나 되돌릴 행동이 없습니다.");
-            }
-            GUI.enabled = modal == Modal.None;
-        }
-
-        static Rect BenchRect(int index) { return new Rect(150 + index * 155, 573, 145, 127); }
+        static Rect BenchRect(int index) { return PreparationLayout.Bench(index); }
 
         void DrawUnit(CatalogMember member, Rect sprite, Rect name)
         {
@@ -561,7 +451,7 @@ namespace Expedition.Presentation
             Fill(new Rect(sprite.center.x - 28, sprite.yMax - 10, 56, 7), new Color(.02f, .025f, .035f, .75f));
             if (art != null) art.Draw(member.FormId, sprite, (int)(Time.unscaledTime * 5f) % 4);
             string label = database.Get(member.FormId).Name;
-            GUI.Label(name, label, centered);
+            if (name.width > 0) GUI.Label(name, label, centered);
             if (member.MaterialLocked)
             {
                 Fill(new Rect(sprite.x, sprite.y + 2, 54, 24), new Color(.13f, .14f, .17f, .94f));
@@ -646,6 +536,7 @@ namespace Expedition.Presentation
             else if (modal == Modal.GuideMenu) DrawGuideMenu();
             else if (modal == Modal.ChooseDonor || modal == Modal.ChoosePartner) DrawChooseMember();
             else if (modal == Modal.CombinationOptions) DrawCombinationOptions();
+            else if (modal == Modal.Encounter) DrawEncounterBrief();
             else DrawConfirmation();
         }
 
@@ -853,6 +744,7 @@ namespace Expedition.Presentation
 
         void ChooseCombinationOption(int index)
         {
+            growthPreviewKey = null;
             List<CatalogCombinationOption> options = run.GetCombinationOptions();
             if (index < 0 || index >= options.Count)
             { Notice("결합할 동료가 바뀌었습니다. 다시 선택해 주세요."); return; }
@@ -869,6 +761,7 @@ namespace Expedition.Presentation
 
         void PrepareEvolution(CatalogMember member, bool fromDrag = false)
         {
+            growthPreviewKey = null;
             evolutionFromDrag = fromDrag;
             selectedId = member.Id;
             if (member.FormId.StartsWith("E-", StringComparison.Ordinal))
@@ -1039,6 +932,9 @@ namespace Expedition.Presentation
 
         void ExecuteGrowth()
         {
+            if (GrowthRevealActive) return;
+            string beforeForm = run.Roster.Find(selectedId)?.FormId;
+            string donorForm = run.Roster.Find(pendingOtherId)?.FormId;
             bool applied = pendingAction == GrowthAction.Transfer ?
                 run.Transfer(pendingOtherId, selectedId, inheritTrait) :
                 pendingAction == GrowthAction.Evolve ? run.Evolve(selectedId, pendingFormId) :
@@ -1055,6 +951,8 @@ namespace Expedition.Presentation
                 pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail;
             evolutionFromDrag = false;
             combinationFromList = false;
+            if (pendingAction == GrowthAction.Evolve || pendingAction == GrowthAction.Combine)
+                BeginGrowthReveal(beforeForm, donorForm, pendingFormId, pendingAction == GrowthAction.Combine);
         }
 
         void Summon()
@@ -1141,22 +1039,11 @@ namespace Expedition.Presentation
             bool quickSwap = !IsDeployed(pointerId) && IsDeployed(hoverRecipientId) && run.DeployedIds.Count >= 5;
             string action = growth ? "성장 +1" :
                 quickSwap ? "출전 교체" : donor != null && donor.MaterialLocked ? "보호된 재료" : "성장 불가";
-            ExpeditionUiTheme.PanelBox(new Rect(735, 323, 493, 165), true);
-            if (art != null) art.Draw(resultForm, new Rect(746, 334, 106, 112), 0);
-            GUI.Label(new Rect(864, 337, 350, 37), action + "  →  " + database.Get(resultForm).Name, body);
-            if (growth)
-            {
-                string detail = "진화 진행  " + recipient.Growth + " → " +
-                    (recipient.Growth + 1) + " · 재료 동료 소모";
-                GUI.Label(new Rect(864, 377, 342, 50), quickSwap && !hoverArmed ?
-                    "빠르게 놓기: 출전 교체\n잠시 겹치기: " + action : detail, small);
-                float progress = hoverArmed ? 1f : Mathf.Clamp01((Time.unscaledTime - hoverStartTime) / GrowthHoverSeconds);
-                Fill(new Rect(864, 444, 336, 12), PanelLight);
-                Fill(new Rect(864, 444, 336 * progress, 12), Gold);
-                GUI.Label(new Rect(864, 462, 340, 24), hoverArmed ? "놓으면 " + action + " 실행" : "겹친 채 잠시 유지", small);
-            }
-            else GUI.Label(new Rect(864, 409, 340, 45), quickSwap ? "빠르게 놓으면 출전 교체" :
-                "이 대상에게 성장시킬 수 없습니다", small);
+            ExpeditionUiTheme.PanelBox(new Rect(908,240,344,300),true);
+            if(art!=null)art.Draw(resultForm,new Rect(1020,252,120,126),0);
+            GUI.Label(new Rect(924,386,312,40),action,heading);
+            GUI.Label(new Rect(924,430,312,48),growth?"진화 진행 "+recipient.Growth+" → "+(recipient.Growth+1)+" · 재료 소모":quickSwap?"빠르게 놓으면 출전 교체":"재료 보호·성장 조건을 확인하세요",small);
+            if(growth){float p=hoverArmed?1:Mathf.Clamp01((Time.unscaledTime-hoverStartTime)/GrowthHoverSeconds);Fill(new Rect(924,486,312,8),PanelLight);Fill(new Rect(924,486,312*p,8),Gold);GUI.Label(new Rect(924,501,312,28),hoverArmed?"놓으면 성장 +1":"잠시 유지 · 빠르게 놓으면 배치/교체",small);}
         }
 
         Rect MemberVisualRect(string id)
@@ -1166,7 +1053,7 @@ namespace Expedition.Presentation
             if (IsDeployed(id))
             {
                 Vector2 foot = ArenaPoint(member);
-                return new Rect(foot.x - 54, foot.y - 113, 108, 143);
+                return PreparationLayout.Hit(foot);
             }
             int index = 0;
             foreach (CatalogMember candidate in run.Roster.Members)
@@ -1185,17 +1072,14 @@ namespace Expedition.Presentation
             return "알 수 없음";
         }
 
-        static Vector2 ArenaPoint(CatalogMember member)
-        {
-            // Fit the full saved placement range (-2.5..2.2) without folding rows together.
-            return new Vector2(Mathf.Clamp(560f + member.X * 75f, 95f, 655f),
-                Mathf.Clamp(GroundY - member.Y * GroundYScale, 270f, 505f));
-        }
+        static Vector2 ArenaPoint(CatalogMember member) { return PreparationLayout.Point(member.X, member.Y); }
 
         void Update()
         {
+            PresentationPerformanceProbe.Mark(!startupReady ? "startup" : home ? "home" :
+                run != null && run.Phase != ExpeditionPhase.Preparation ? "result" : modal == Modal.None ? "preparation" : "dialog");
             if (!startupReady || home || run == null || run.Phase != ExpeditionPhase.Preparation ||
-                modal != Modal.None || viewport.width <= 0) { CancelPointer(); return; }
+                modal != Modal.None || GrowthRevealActive || viewport.width <= 0) { CancelPointer(); return; }
             bool down = false, held = false, up = false, canceled = false;
             Vector2 screen;
             if (Input.touchCount > 0)
@@ -1287,7 +1171,7 @@ namespace Expedition.Presentation
                 Notice("이 대상에게 성장시키려면 재료 보호와 성장 조건을 확인해 주세요.");
                 return;
             }
-            if (new Rect(32, 143, 687, 363).Contains(point))
+            if (PreparationLayout.Board.Contains(point))
             {
                 if (!IsDeployed(id))
                 {
@@ -1300,12 +1184,11 @@ namespace Expedition.Presentation
                     else if (!run.SetDeployed(id, true))
                     { Notice("출전은 다섯 명까지 가능합니다."); return; }
                 }
-                if (run.Move(id, Mathf.Clamp((pointerCurrent.x - 560f) / 75f, -6.2f, -.2f),
-                    Mathf.Clamp((GroundY - pointerCurrent.y) / GroundYScale, -2.5f, 2.2f))) Save("position", id);
+                if (run.Move(id, PreparationLayout.World(pointerCurrent).x, PreparationLayout.World(pointerCurrent).y)) Save("position", id);
                 else Save("deployment", id);
                 SelectPreparation(id);
             }
-            else if (point.y >= 550 && IsDeployed(id))
+            else if (point.y >= 576 && IsDeployed(id))
             {
                 if (run.SetDeployed(id, false)) Save("bench", id);
                 else Notice("대기석이 가득 찼거나 마지막 출전 동료입니다.");
@@ -1360,15 +1243,17 @@ namespace Expedition.Presentation
         string ActiveAt(Vector2 point, string except)
         {
             string selected = null;
-            float foreground = float.NegativeInfinity;
+            float nearest = float.PositiveInfinity;
             foreach (string id in run.DeployedIds)
             {
                 if (id == except) continue;
                 CatalogMember member = run.Roster.Find(id);
                 if (member == null) continue;
                 Vector2 foot = ArenaPoint(member);
-                if (new Rect(foot.x - 54, foot.y - 113, 108, 143).Contains(point) && foot.y >= foreground)
-                { selected = id; foreground = foot.y; }
+                if (!PreparationLayout.Hit(foot).Contains(point)) continue;
+                // A large rear sprite remains selectable where bodies overlap.
+                float distance = (point - (foot + new Vector2(0,-74))).sqrMagnitude;
+                if (distance <= nearest) { selected=id; nearest=distance; }
             }
             return selected;
         }

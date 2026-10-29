@@ -1,0 +1,227 @@
+{
+  "device": "Galaxy Buddy2 SM-M236L",
+  "build": "Development ARM64",
+  "method": "Unity unscaled frame times; 3-second warm-up per context; 15-second windows, remainder >=3 seconds; screenshots may add stalls; combat measurement excluded screen recording",
+  "scope": "Selected preparation/dialog intervals and one fight each at waves 15 and 30, switched from 1x to 2x. Not full-run endurance or GPU profiling. Pre-final diagnostics label results as preparation; these result intervals were excluded by PID/scenario.",
+  "summary": [
+    {
+      "name": "UI/preparation",
+      "windows": 5,
+      "seconds": 65.2,
+      "fpsRange": [
+        58.9,
+        60
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 3
+    },
+    {
+      "name": "UI/dialog",
+      "windows": 4,
+      "seconds": 52.3,
+      "fpsRange": [
+        58.3,
+        59.8
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 4
+    },
+    {
+      "name": "wave15/battle-1x",
+      "windows": 2,
+      "seconds": 20.7,
+      "fpsRange": [
+        59.3,
+        59.3
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 0
+    },
+    {
+      "name": "wave15/battle-2x",
+      "windows": 1,
+      "seconds": 10.2,
+      "fpsRange": [
+        59.7,
+        59.7
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 0
+    },
+    {
+      "name": "wave30/battle-1x",
+      "windows": 2,
+      "seconds": 21.1,
+      "fpsRange": [
+        59.4,
+        59.4
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 1
+    },
+    {
+      "name": "wave30/battle-2x",
+      "windows": 1,
+      "seconds": 10.9,
+      "fpsRange": [
+        59.4,
+        59.4
+      ],
+      "maxWindowP95ms": 16.8,
+      "over50ms": 2
+    }
+  ],
+  "samples": [
+    {
+      "scenario": "UI",
+      "context": "preparation",
+      "seconds": 15,
+      "frames": 901,
+      "fps": 60,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 49.9
+    },
+    {
+      "scenario": "UI",
+      "context": "preparation",
+      "seconds": 5.2,
+      "frames": 307,
+      "fps": 58.9,
+      "p95ms": 16.8,
+      "over50ms": 1,
+      "allocatedMb": 56.2
+    },
+    {
+      "scenario": "UI",
+      "context": "dialog",
+      "seconds": 15,
+      "frames": 876,
+      "fps": 58.3,
+      "p95ms": 16.8,
+      "over50ms": 3,
+      "allocatedMb": 51.3
+    },
+    {
+      "scenario": "UI",
+      "context": "dialog",
+      "seconds": 15,
+      "frames": 898,
+      "fps": 59.8,
+      "p95ms": 16.7,
+      "over50ms": 0,
+      "allocatedMb": 51.3
+    },
+    {
+      "scenario": "UI",
+      "context": "dialog",
+      "seconds": 15,
+      "frames": 896,
+      "fps": 59.6,
+      "p95ms": 16.8,
+      "over50ms": 1,
+      "allocatedMb": 51.3
+    },
+    {
+      "scenario": "UI",
+      "context": "preparation",
+      "seconds": 15,
+      "frames": 901,
+      "fps": 60,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 51.5
+    },
+    {
+      "scenario": "UI",
+      "context": "preparation",
+      "seconds": 15,
+      "frames": 899,
+      "fps": 59.9,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 51.3
+    },
+    {
+      "scenario": "UI",
+      "context": "dialog",
+      "seconds": 7.3,
+      "frames": 434,
+      "fps": 59.5,
+      "p95ms": 16.7,
+      "over50ms": 0,
+      "allocatedMb": 51.5
+    },
+    {
+      "scenario": "UI",
+      "context": "preparation",
+      "seconds": 15,
+      "frames": 892,
+      "fps": 59.4,
+      "p95ms": 16.8,
+      "over50ms": 2,
+      "allocatedMb": 51.5
+    },
+    {
+      "scenario": "wave15",
+      "context": "battle-1x",
+      "seconds": 15,
+      "frames": 891,
+      "fps": 59.3,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 57.9
+    },
+    {
+      "scenario": "wave15",
+      "context": "battle-1x",
+      "seconds": 5.7,
+      "frames": 338,
+      "fps": 59.3,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 57.5
+    },
+    {
+      "scenario": "wave15",
+      "context": "battle-2x",
+      "seconds": 10.2,
+      "frames": 612,
+      "fps": 59.7,
+      "p95ms": 16.8,
+      "over50ms": 0,
+      "allocatedMb": 58.7
+    },
+    {
+      "scenario": "wave30",
+      "context": "battle-1x",
+      "seconds": 15,
+      "frames": 892,
+      "fps": 59.4,
+      "p95ms": 16.8,
+      "over50ms": 1,
+      "allocatedMb": 58.1
+    },
+    {
+      "scenario": "wave30",
+      "context": "battle-1x",
+      "seconds": 6.1,
+      "frames": 365,
+      "fps": 59.4,
+      "p95ms": 16.7,
+      "over50ms": 0,
+      "allocatedMb": 57.8
+    },
+    {
+      "scenario": "wave30",
+      "context": "battle-2x",
+      "seconds": 10.9,
+      "frames": 645,
+      "fps": 59.4,
+      "p95ms": 16.8,
+      "over50ms": 2,
+      "allocatedMb": 58.8
+    }
+  ],
+  "exceptionMatches": 0
+}

@@ -88,7 +88,7 @@ namespace Expedition.Presentation
         bool tutorialRangeAcknowledged;
         readonly List<Rect> tutorialHoles = new List<Rect>(3);
         readonly List<Rect> tutorialDarkRects = new List<Rect>(36);
-        static readonly Rect TutorialCard = new Rect(724, 183, 523, 81);
+        static readonly Rect TutorialCard = new Rect(908, 228, 344, 185);
 
         void LoadTutorial()
         {
@@ -155,14 +155,13 @@ namespace Expedition.Presentation
         void DrawTutorialCard(ExpeditionTutorialStep step)
         {
             ExpeditionUiTheme.PanelBox(TutorialCard, true);
-            GUI.Label(new Rect(738, 193, 301, 62), TutorialMessage(step), body);
+            GUI.Label(new Rect(924, 246, 312, 92), TutorialMessage(step), body);
             if (step == ExpeditionTutorialStep.Range)
             {
-                if (GUI.Button(new Rect(1045, 205, 78, 42), "다음", button))
+                if (GUI.Button(new Rect(924, 351, 130, 44), "다음", button))
                     tutorialRangeAcknowledged = true;
             }
-            if (GUI.Button(new Rect(step == ExpeditionTutorialStep.Range ? 1130 : 1094,
-                205, step == ExpeditionTutorialStep.Range ? 99 : 135, 42),
+            if (GUI.Button(new Rect(1070, 351, 166, 44),
                 step == ExpeditionTutorialStep.RangeReplay ? "닫기" : "건너뛰기", button))
             {
                 if (run.Wave <= 2) FinishTutorialWave(run.Wave);
@@ -172,7 +171,7 @@ namespace Expedition.Presentation
 
         void DrawTutorialReplayButton()
         {
-            if (GUI.Button(new Rect(554, 100, 150, 34), "조작 안내", button))
+            if (GUI.Button(new Rect(338, 110, 152, 44), "조작 안내", button))
             { CancelPointer(); modal = Modal.GuideMenu; }
         }
 
@@ -180,7 +179,7 @@ namespace Expedition.Presentation
         {
             tutorialHoles.Clear();
             if (step == ExpeditionTutorialStep.Summon)
-                tutorialHoles.Add(new Rect(939, 569, 320, 68));
+                tutorialHoles.Add(PreparationLayout.Summon);
             else if (step == ExpeditionTutorialStep.Deploy)
             {
                 if (benchPage * 5 >= run.Roster.Members.Count - run.DeployedIds.Count) return;
@@ -189,11 +188,10 @@ namespace Expedition.Presentation
                 if (!TryTutorialEmptyField(out empty)) return;
                 tutorialHoles.Add(new Rect(empty.x - 36f, empty.y - 35f, 72f, 62f));
                 if (pointerDragging && pointerId != null)
-                    tutorialHoles.Add(new Rect(pointerCurrent.x - 55f, pointerCurrent.y - 106f,
-                        110f, 115f));
+                    tutorialHoles.Add(PreparationLayout.Hit(pointerCurrent));
             }
             else if (step == ExpeditionTutorialStep.Start)
-                tutorialHoles.Add(new Rect(939, 636, 320, 68));
+                tutorialHoles.Add(PreparationLayout.Battle);
             else if (step == ExpeditionTutorialStep.Select || step == ExpeditionTutorialStep.RangeReplay &&
                 PreparationSelection() == null)
             {
@@ -205,7 +203,7 @@ namespace Expedition.Presentation
                 tutorialHoles.Add(new Rect(foot.x - 59f, foot.y - 5f, 118f, 39f));
             }
             else if (step == ExpeditionTutorialStep.Range || step == ExpeditionTutorialStep.RangeReplay)
-                tutorialHoles.Add(new Rect(32, 133, 687, 373));
+                tutorialHoles.Add(new Rect(32,159,850,395));
         }
 
         bool TutorialAllowed(Vector2 point)
@@ -218,7 +216,7 @@ namespace Expedition.Presentation
                 CatalogMember member = TutorialSelectionTarget();
                 if (member == null) return false;
                 Vector2 foot = ArenaPoint(member);
-                return new Rect(foot.x - 54f, foot.y - 113f, 108f, 143f).Contains(point) &&
+                return PreparationLayout.Hit(foot).Contains(point) &&
                     MemberAt(point) == member.Id;
             }
             return ExpeditionTutorialMask.AllowsPointer(TutorialCard, tutorialHoles, point);
@@ -272,7 +270,7 @@ namespace Expedition.Presentation
                 if (member != null)
                 {
                     Vector2 foot = ArenaPoint(member);
-                    DrawUnit(member, new Rect(foot.x - 48f, foot.y - 113f, 96f, 110f),
+                    DrawUnit(member, PreparationLayout.Sprite(foot),
                         new Rect(foot.x - 64f, foot.y, 128f, 31f));
                 }
             }
@@ -295,8 +293,8 @@ namespace Expedition.Presentation
         {
             foreach (Vector2 point in TutorialEmptyChoices)
                 if (TutorialPointFree(point)) { empty = point; return true; }
-            for (float y = 280f; y <= 480f; y += 50f)
-                for (float x = 125f; x <= 525f; x += 50f)
+            for (float y = 320f; y <= 520f; y += 50f)
+                for (float x = 150f; x <= 770f; x += 60f)
                 {
                     Vector2 point = new Vector2(x, y);
                     if (TutorialPointFree(point)) { empty = point; return true; }
@@ -308,7 +306,7 @@ namespace Expedition.Presentation
         bool TutorialPointFree(Vector2 point)
         {
             // These are screen positions that map to themselves after the drop clamp.
-            if (point.x < 95f || point.x > 545f || point.y < 270f || point.y > 505f)
+            if (point.x < 130f || point.x > 801f || point.y < 300f || point.y > 535f)
                 return false;
             Rect target = new Rect(point.x - 36f, point.y - 35f, 72f, 62f);
             foreach (string id in run.DeployedIds)
@@ -316,7 +314,7 @@ namespace Expedition.Presentation
                 CatalogMember member = run.Roster.Find(id);
                 if (member == null) continue;
                 Vector2 foot = ArenaPoint(member);
-                if (target.Overlaps(new Rect(foot.x - 54f, foot.y - 113f, 108f, 143f)))
+                if (target.Overlaps(PreparationLayout.Hit(foot)))
                     return false;
             }
             return true;

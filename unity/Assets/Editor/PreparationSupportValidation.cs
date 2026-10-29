@@ -27,10 +27,8 @@ namespace Expedition.EditorTools
                     Check(name.CalcHeight(new GUIContent(form.Name),ExpeditionScreen.SupportLayout.Name(0).width)<=30,"name clipped: "+form.Name);
                     var support=CatalogPreparationPreview.ForSkill(form.Id);
                     if(support==null)continue;
-                    string suffix=(form.Id.StartsWith("F-") ?
-                        (support.Global?"전체":"거리 "+support.Radius.ToString("0.0"))+" · 동료 범위 안 4명 · " : "")+
-                        "현재 배치 기준 · 시전 때 대상 결정";
-                    Check(rule.CalcHeight(new GUIContent(support.Rule+"\n"+suffix),494)<=63,"target rule clipped: "+form.Id);
+                    rule.fontSize=14;
+                    Check(rule.CalcHeight(new GUIContent(support.Rule),310)<=43,"target rule clipped: "+form.Id);
                 }
                 foreach(string text in new[]{"금색: 선택 / 공격   ·   청록: 지원 범위   ·   번호: 오른쪽 동료","동료를 눌러 범위 확인 · 끌어서 배치"})
                     Check(caption.CalcSize(new GUIContent(text)).x<=640,"board caption clipped");
@@ -38,8 +36,8 @@ namespace Expedition.EditorTools
                 for(int i=0;i<5;i++)
                 {
                     Rect r=ExpeditionScreen.SupportLayout.Card(i);
-                    Check(r.xMin>=735&&r.xMax<=1229&&r.yMin>174&&r.yMax<270,"card escapes panel or hits buttons");
-                    Check(ExpeditionScreen.SupportLayout.Name(i).yMax<=ExpeditionScreen.SupportLayout.Status(i).yMin,"name/status overlap");
+                    Check(r.xMin>=908&&r.xMax<=1252&&r.yMin>=328&&r.yMax<=500,"card escapes panel or hits buttons");
+                    Check(!ExpeditionScreen.SupportLayout.Name(i).Overlaps(ExpeditionScreen.SupportLayout.Status(i)),"name/status overlap");
                     if(i>0)Check(!r.Overlaps(ExpeditionScreen.SupportLayout.Card(i-1)),"recipient cards overlap");
                 }
             }

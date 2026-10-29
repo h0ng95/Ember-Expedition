@@ -8,7 +8,7 @@ namespace Expedition.Presentation
 {
     public sealed partial class ExpeditionScreen
     {
-        const int StartupStages = 13;
+        static int StartupStages { get { return 8 + StartupBackgroundPaths.Length; } }
         const string SplashPath = "Art/Branding/ignis-splash-v1";
         static readonly string[] StartupBackgroundPaths = {
             "Art/forest-battlefield", "Art/ruined-outpost-battlefield",
@@ -129,7 +129,7 @@ namespace Expedition.Presentation
 
             startupStage = "준비 완료";
             startupLoading = false;
-            yield return null; // Present the real 13/13 state before entering the home screen.
+            yield return null; // Present the completed state before entering the home screen.
             float completeUntil = Time.unscaledTime + .3f;
             while (Time.unscaledTime < completeUntil) yield return null;
             startupReady = true;

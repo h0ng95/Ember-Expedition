@@ -12,6 +12,7 @@ try {
     & $compiler /nologo /target:exe /optimize+ "/out:$binary" "/r:$jsonLibrary" $core `
         (Join-Path $projectRoot 'unity/Assets/Scripts/Core/ExpeditionRun.cs') `
         (Join-Path $projectRoot 'unity/Assets/Scripts/Core/ExpeditionStory.cs') `
+        (Join-Path $projectRoot 'unity/Assets/Scripts/Core/ExpeditionDialogue.cs') `
         (Join-Path $PSScriptRoot 'Program.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Expedition story test compilation failed.' }
     & $binary (Join-Path $projectRoot 'unity/Assets/Resources/Content/unit-catalog-v010.json')

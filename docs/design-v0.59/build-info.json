@@ -1,0 +1,35 @@
+{
+  "version": "v0.59",
+  "builtAt": "2026-10-30T08:31:38.7428280+09:00",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 292811101,
+  "sha256": "1FCD6D964AB3DF0D197DF454791A3EB4B33215D13251C4E88C9C58BF07F91740",
+  "unity": "6000.3.24f1",
+  "buildType": "Android development / IL2CPP",
+  "device": "Galaxy Buddy2 SM-M236L",
+  "resolution": "2408x1080",
+  "tests": {
+    "storyCore": 62,
+    "runCore": 2052,
+    "accountSave": 150,
+    "learning": 5744,
+    "unityDialogueChecks": 445,
+    "settlementScenarios": 28,
+    "textMeasurements": 47,
+    "fixtures": 7
+  },
+  "deviceAudit": {
+    "bossScenes": 6,
+    "dialogueScreens": 19,
+    "realTouchNextResult": "passed",
+    "realTouchSkip": "passed",
+    "originalSaves": "restored and byte-verified"
+  },
+  "limitations": [
+    "Presentation QA uses isolated low-health enemies; not a full normal-difficulty campaign.",
+    "Scene line position is not saved; rewards and story journal are saved before dialogue.",
+    "New character gestures and locale switching are not implemented."
+  ],
+  "speechStyle": "360px bubble, Galmuri11 20px, 16px padding, 28px nameplate, Korean word wrapping",
+  "ignisReveal": "0.9s shard convergence, fractured dark shell with a living flame, six regional palettes, 256px source import, runtime palette texture released at scene end"
+}

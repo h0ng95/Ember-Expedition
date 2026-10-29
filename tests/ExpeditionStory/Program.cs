@@ -46,11 +46,11 @@ internal static class Program
             ExpeditionStory.BossClear(30).Id == "palace-clear" &&
             ExpeditionStory.BossClear(14) == null, "Only defeated regional bosses have clear records.");
         Check(new[] { "forest", "castle", "mine", "frost", "garden", "palace" }.All(id =>
-            ExpeditionStory.Get(id).Body.Count(c => c == '.') == 2),
+            ExpeditionStory.Get(id).Excerpt.Count(c => c == '.') == 2),
             "Preparation region excerpts contain two sentences each.");
         Check(new[] { "forest-clear", "castle-clear", "mine-clear", "frost-clear", "garden-clear",
             "palace-clear" }.All(id =>
-            ExpeditionStory.Get(id).Body.Count(c => c == '\n') == 1),
+            ExpeditionStory.Get(id).Excerpt.Count(c => c == '\n') == 1),
             "Boss clear records fit their two-line result excerpt.");
     }
 
@@ -164,9 +164,36 @@ internal static class Program
             CatalogAndMapping();
             UnlocksAndPersistence();
             LegacyAndInvalidData();
+            DialogueSpeakers();
             Console.WriteLine("PASS: expedition story, " + checks + " checks.");
             return 0;
         }
         catch (Exception error) { Console.Error.WriteLine("FAIL: " + error); return 1; }
+    }
+
+    static void DialogueSpeakers()
+    {
+        for (int wave = 0; wave <= 31; wave++)
+        {
+            var lines = ExpeditionDialogue.ForBoss(wave);
+            Check((lines != null) == (wave >= 5 && wave <= 30 && wave % 5 == 0),
+                "Only regional boss victories have a scene: " + wave);
+        }
+        var battle = new CatalogBattle(catalog);
+        var archer = battle.AddUnit("archer", CatalogTeam.Ally, "B-AR", null, null, 0, 1);
+        var knight = battle.AddUnit("knight", CatalogTeam.Ally, "B-KN", null, null, 0, 0);
+        var priest = battle.AddUnit("priest", CatalogTeam.Ally, "B-PR", null, null, 0, -1);
+        battle.AddEnemy("enemy", 100, 10, 0, 1, 1, 1, true, 3, 0);
+        Check(ExpeditionDialogue.Speaker(battle.Units, false) == knight &&
+            ExpeditionDialogue.Speaker(battle.Units, true) == priest, "Knight and a surviving companion speak.");
+        typeof(CatalogBattleUnit).GetProperty("Hp").SetValue(knight, 0f, null);
+        Check(ExpeditionDialogue.Speaker(battle.Units, false) == archer &&
+            ExpeditionDialogue.Speaker(battle.Units, true) == priest, "Fallen leader is replaced by an actual survivor.");
+        typeof(CatalogBattleUnit).GetProperty("Hp").SetValue(priest, 0f, null);
+        Check(ExpeditionDialogue.Speaker(battle.Units, false) == archer &&
+            ExpeditionDialogue.Speaker(battle.Units, true) == archer, "A lone survivor can speak every line.");
+        typeof(CatalogBattleUnit).GetProperty("Hp").SetValue(archer, 0f, null);
+        Check(ExpeditionDialogue.Speaker(battle.Units, false) == null &&
+            ExpeditionDialogue.Speaker(battle.Units, true) == null, "Enemies and fallen units never speak.");
     }
 }

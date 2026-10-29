@@ -194,7 +194,7 @@ namespace Expedition.Presentation
                 startupSubtitle = Style(28, Cream, true, TextAnchor.MiddleLeft);
             DrawIgnisPixels(91, 135, 15);
             GUI.Label(new Rect(93, 246, 570, 42), "ASHEN OATH", startupSubtitle);
-            GUI.Label(new Rect(94, 297, 535, 42), "잿빛 서약 · 마지막 불씨의 원정", body);
+            GUI.Label(new Rect(94, 297, 535, 42), "잿빛 서약 · 왕국의 불을 찾아", body);
             DrawStartupEmbers();
             Rect loadingBar = new Rect(89, 615, 1088, 8);
             Fill(loadingBar, new Color(.29f, .36f, .43f, .75f));

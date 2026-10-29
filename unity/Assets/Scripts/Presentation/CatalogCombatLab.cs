@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Expedition.Presentation
 {
     // Self-contained catalog test surface. The stage prototype is suspended while this is open.
-    public sealed class CatalogCombatLab : MonoBehaviour
+    public sealed partial class CatalogCombatLab : MonoBehaviour
     {
         const float Width = 1280f, Height = 720f, Tick = 1f / 60f;
         const float SettlementDuration = .55f;
@@ -216,6 +216,7 @@ namespace Expedition.Presentation
             expeditionMode = false;
             standaloneClose = expeditionExit = null;
             expeditionResult = null;
+            expeditionPresentationFinished = null;
             parent = owner;
             parentCamera = camera;
             if (clippedSpriteMaterial == null)
@@ -263,7 +264,7 @@ namespace Expedition.Presentation
 
         // The real expedition owns progression and saving; the lab only plays this battle.
         public void OpenExpeditionBattle(CatalogBattle runBattle, int wave, int total,
-            string encounter, Action<bool> onResult, Action onExit)
+            string encounter, Action<bool> onResult, Action onExit, Action onPresentationFinished = null)
         {
             expeditionSpeedChanged = null;
             if (runBattle == null || onResult == null || onExit == null)
@@ -274,6 +275,7 @@ namespace Expedition.Presentation
             expeditionTotal = total;
             expeditionEncounter = encounter;
             expeditionResult = onResult;
+            expeditionPresentationFinished = onPresentationFinished;
             expeditionExit = onExit;
             expeditionBackground = Resources.Load<Texture2D>(wave <= 5 ?
                 "Art/forest-battlefield" : wave <= 10 ?
@@ -325,6 +327,7 @@ namespace Expedition.Presentation
 
         void Close()
         {
+            if (dialogueActive) { FinishDialogue(); return; }
             Action callback = expeditionMode ? expeditionExit : standaloneClose;
             enabled = false;
             if (parentCamera != null) parentCamera.enabled = true;
@@ -334,6 +337,7 @@ namespace Expedition.Presentation
 
         void ClearBattle()
         {
+            ReleaseIgnisArtwork();
             if (battleEffects != null) { battleEffects.Dispose(); battleEffects = null; }
             if (battle != null) battle.Event -= OnBattleEvent;
             battle = null;
@@ -346,6 +350,7 @@ namespace Expedition.Presentation
             latestSkill = null;
             bossNoticeUntil = 0;
             partyFocusId=null;partyFocusUntil=0;
+            dialogueActive = false; dialogueLines = null; dialogueSpeaker = null;
         }
 
         void StartBattle()
@@ -547,6 +552,7 @@ namespace Expedition.Presentation
             PresentationPerformanceProbe.Mark(paused ? "battle-paused" : speed > 1 ? "battle-2x" : "battle-1x");
             float dt = Mathf.Min(Time.unscaledDeltaTime, .1f);
             galleryTime += dt;
+            if (dialogueActive) { AdvanceDialogue(dt); return; }
             if (screen == 0 && viewport.width > 0) HandlePlacementInput();
             if (screen == 2 && galleryAuto)
             {
@@ -630,8 +636,17 @@ namespace Expedition.Presentation
             Action<bool> callback = expeditionResult;
             bool victory = settlementVictory;
             expeditionResult = null;
+            if (victory && expeditionPresentationFinished != null && TryStartDialogue())
+            {
+                // Commit victory before the player reads, skips, backgrounds or closes the app.
+                if (callback != null) callback(true);
+                return;
+            }
+            Action finished = expeditionPresentationFinished;
+            expeditionPresentationFinished = null;
             enabled = false;
             if (callback != null) callback(victory);
+            if (finished != null) finished();
         }
 
         void EnsureStyles()
@@ -771,7 +786,7 @@ namespace Expedition.Presentation
             if (battle == null) { DrawBattleHeader(null); return; }
 
             Rect arena = HudRules.BattleArena;
-            if (battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
+            if (!dialogueActive && battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
             foreach (View view in combatViews)
                 if (view.Unit.IsAlive && IsDimRegionalEnemy(view.Unit))
                     DrawRegionalFootMarker(ExpeditionPoint(new Vector2(view.Unit.X, view.Unit.Y), arena),
@@ -803,7 +818,7 @@ namespace Expedition.Presentation
                     point.y -= PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, battle.Time);
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
-                else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
+                else if (!dialogueActive && unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
                 else if (view.HitTime > .13f && !GamePreferences.Current.ReduceFlashes) GUI.color = new Color(1f, .62f, .48f, 1f);
                 if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f &&
                     !(unit.Team == CatalogTeam.Ally && view.State == 2))
@@ -821,6 +836,7 @@ namespace Expedition.Presentation
                     Bounds = bounds, Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
             }
             if (!hiddenEscortsMarked) MarkHiddenEscorts(drawn);
+            if (dialogueActive) { DrawDialogue(drawn); return; }
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena),
                 id => DrawnBreathMouth(drawn, id));
             // Allocate compact health/status blocks before damage labels.

@@ -1,0 +1,7 @@
+Galmuri11 2.40.4 by Lee Minseo (quiple)
+https://github.com/quiple/galmuri
+Source commit: 71e1cacf1437a11220307120e63e30bc275312d4
+Original, unmodified font: dist/Galmuri11.ttf
+SHA-256: E24256F42E43713D2EA086A1E1669D78B968F5B3CC547E5C157F0606FFA5DEF1
+License: SIL Open Font License 1.1. Full notice: Galmuri-OFL.txt in this directory.
+Used for battlefield speech bubbles and their dialogue controls. No system font installation required.

@@ -13,7 +13,7 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 92, content.width, 59), cleared ? "원정 완료" : "원정 종료", title);
             GUI.Label(new Rect(content.x, 157, content.width, 45), cleared ?
-                "30전투 돌파 · 이그니스의 불이 왕궁 결계에 돌아왔습니다." :
+                ExpeditionStory.CompletionBrief :
                 "남은 기회를 모두 소진했습니다. 거점에서 준비해 새 원정에 도전하세요.", body);
             string[] captions = { "도달 전투", "승리한 전투", "격파한 보스" };
             string[] values = { run.Wave + " / " + ExpeditionRun.TotalWaves, run.Victories + "승", run.Victories / 5 + " / 6" };
@@ -36,10 +36,13 @@ namespace Expedition.Presentation
                 " + 남은 기회 " + (run.Lantern * 1000).ToString("N0") + "\n새 원정에서는 동료·골드·연구가 초기화됩니다.", small);
             ExpeditionUiTheme.FooterRule(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
+            int footerButtons = cleared ? 3 : 2;
             GUI.enabled = HasBattleReport;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "전투 기록", button)) modal = Modal.BattleReport;
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, footerButtons), "전투 기록", button)) modal = Modal.BattleReport;
             GUI.enabled = true;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "거점으로", primary))
+            if (cleared && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 3), "서약의 결말 읽기", button))
+                OpenJournal("palace-clear");
+            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, footerButtons - 1, footerButtons), "거점으로", primary))
             {
                 if (run.Phase == ExpeditionPhase.Result && run.Continue()) Save("advance");
                 home = true;

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Expedition.Core;
 using UnityEditor;
 using UnityEngine;
@@ -73,6 +74,68 @@ namespace Expedition.EditorTools
             PalaceEnemyArtValidation.GenerateManifest();
             PalaceEnemyArtValidation.Validate();
             AllyBodyScaleValidation.BuildAndroid();
+        }
+
+        public static void ValidateNarrativeAndBuild()
+        {
+            Validate();
+            ExpeditionDialogueValidation.Validate();
+            Font font = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 19);
+            int measurements = 0;
+            try
+            {
+                var style = new GUIStyle { font = font, wordWrap = true, padding = new RectOffset(2, 2, 2, 2) };
+                Action<string, int, float, float> fit = (text, size, width, height) => {
+                    style.fontSize = size;
+                    Check(style.CalcHeight(new GUIContent(text), width) <= height, "text clipping: " + text);
+                    measurements++;
+                };
+                foreach (StoryEntry entry in ExpeditionStory.Entries)
+                {
+                    fit(entry.Excerpt, 19, 866, 60);
+                    fit(entry.Title, 18, 238, 44);
+                    fit(entry.Title, 26, 560, 53);
+                }
+                fit(ExpeditionStory.HomeBrief, 19, 906, 64);
+                fit(ExpeditionStory.ReplayBrief, 19, 906, 64);
+                fit(ExpeditionStory.CompletionBrief, 19, 916, 45);
+                fit("아직 발견하지 못한 이야기", 26, 560, 53);
+                fit("서약의 결말 읽기", 18, 262, 60);
+                fit("발견한 단서 읽기", 18, 393, 60);
+                fit("원정의 기록을 다시 펼치다", 26, 464, 44);
+                fit("왕국의 불을 찾는 서약", 26, 464, 44);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(font); }
+
+            var catalog = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
+            Directory.CreateDirectory("Logs/v059-fixtures");
+            ExportNarrativeFixture("fresh", null, catalog);
+            foreach (int boss in new[] { 5, 10, 15, 20, 25, 30 })
+            {
+                var run = ExpeditionRun.New(catalog, (uint)(59000 + boss));
+                while (run.Wave < boss) { run.BeginBattle(); run.ResolveBattle(true); run.Continue(); }
+                run.BeginBattle(); run.ResolveBattle(true);
+                ExportNarrativeFixture("result-" + boss, run, catalog);
+            }
+            Debug.Log("PASS narrative layout: " + measurements + " text measurements; 7 isolated account fixtures, stable journal IDs and Unity JSON.");
+            PrototypeSetup.BuildAndroid();
+        }
+
+        static void ExportNarrativeFixture(string name, ExpeditionRun run, CatalogDatabase catalog)
+        {
+            var journal = ExpeditionJournal.New();
+            var progress = ExpeditionProgress.New();
+            var history = ExpeditionHistory.Restore(catalog, null);
+            if (run != null) { journal.Observe(run); progress.Observe(run); history.Observe(run); }
+            var account = new ExpeditionAccountSave {
+                Version = 2, HasRun = run != null, Run = run == null ? null : run.Capture(),
+                Journal = journal.Capture(), Progress = progress.Capture(), History = history.Capture(),
+                TutorialMask = run == null ? 0 : 3, LessonMask = run == null ? 0 : 7
+            };
+            account.Validate(catalog);
+            string json = JsonUtility.ToJson(account);
+            JsonUtility.FromJson<ExpeditionAccountSave>(json).Validate(catalog);
+            File.WriteAllText("Logs/v059-fixtures/" + name + ".json", json);
         }
     }
 }

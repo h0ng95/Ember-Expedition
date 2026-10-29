@@ -67,7 +67,10 @@ namespace Expedition.Presentation
         string selectedFormationId = "standard";
         string hoverRecipientId, growthPulseId;
         float toastUntil, hoverStartTime = -1f, growthPulseUntil;
-        Vector2 pointerStart, pointerCurrent, pointerGrabOffset, journalScroll;
+        Vector2 pointerStart, pointerCurrent, pointerGrabOffset, journalScroll, journalBodyScroll;
+        int journalDragPane;
+        float journalDragStartY, journalDragStartScroll;
+        bool journalDragging;
         int benchPage, choosePage, combinationPage, pointerFingerId;
         Modal modal;
         GrowthAction pendingAction;
@@ -214,6 +217,7 @@ namespace Expedition.Presentation
             if (!startupReady) return;
             if (storageBlocked) { Notice("기존 기록 복구가 필요해 새 원정을 시작할 수 없습니다."); return; }
             ExpeditionRun previousRun = run;
+            bool showOpening = journal != null && !journal.IsUnlocked("forest");
             ExpeditionHistorySave previousHistory = recordHistory.Capture();
             try
             {
@@ -240,6 +244,7 @@ namespace Expedition.Presentation
                 lessonReplay = ExpeditionLesson.None;
                 tutorialRangeAcknowledged = false;
                 Save();
+                if (showOpening) OpenJournal("intro");
             }
             catch (Exception exception)
             {
@@ -335,9 +340,10 @@ namespace Expedition.Presentation
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             ExpeditionUiTheme.Window(panel);
+            bool replay = journal != null && journal.IsUnlocked("palace-clear");
             GUI.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
             GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
-                "꺼진 왕국에 다시 불을 밝히다", heading);
+                replay ? "원정의 기록을 다시 펼치다" : "왕국의 불을 찾는 서약", heading);
             if (GUI.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
                 "개인 기록", button))
             { recordsPage = 0; selectedRecord = null; modal = Modal.Records; }
@@ -345,8 +351,7 @@ namespace Expedition.Presentation
                 modal = Modal.Progress;
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
             GUI.Label(new Rect(content.x, content.y + 104, content.width, 64),
-                "이그니스가 흩어진 밤, 왕국의 결계가 무너지고 수호자들이 뒤틀렸습니다.\n" +
-                "동료들과 원정대를 꾸려, 빼앗긴 이그니스의 조각을 되찾으세요.", dialogBody);
+                replay ? ExpeditionStory.ReplayBrief : ExpeditionStory.HomeBrief, dialogBody);
             if (run != null)
                 GUI.Label(new Rect(content.x, content.y + 176, content.width, 33),
                     "이어할 원정  ·  " + DifficultyLabel(run.Difficulty) + "  ·  전투 " + run.Wave +
@@ -492,7 +497,7 @@ namespace Expedition.Presentation
                 run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
                 "남은 기회를 모두 소진했습니다." : victory ?
-                (run.Wave == ExpeditionRun.TotalWaves ? "이그니스의 불이 왕궁 결계에 돌아왔습니다." :
+                (run.Wave == ExpeditionRun.TotalWaves ? ExpeditionStory.CompletionBrief :
                 "다음 길을 준비하세요.") :
                 "남은 기회 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
             GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
@@ -500,7 +505,7 @@ namespace Expedition.Presentation
                 "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     남은 기회 " + run.Lantern +
                 "\n" + outcome, body);
             if (clearStory != null)
-                GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Body, body);
+                GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Excerpt, body);
             string reward = run.LastVictory && run.LastReward > 0 ?
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
                 run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
@@ -513,9 +518,12 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.FooterRule(panel);
             if (run.Phase == ExpeditionPhase.Result)
             {
+                Rect footer = ExpeditionUiTheme.FooterRect(panel);
+                if (clearStory != null && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
+                    "발견한 단서 읽기", button)) OpenJournal(clearStory.Id);
                 string next = run.Lantern <= 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                     "원정 결과" : run.LastVictory ? "다음 전투 준비  ›" : "같은 전투 재도전  ›";
-                if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), next, primary))
+                if (GUI.Button(clearStory == null ? footer : ExpeditionUiTheme.FooterButton(footer, 1, 2), next, primary))
                 { if (run.Continue()) { Save("advance"); selectedId = null; } }
             }
             else if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "거점으로", primary)) home = true;
@@ -550,6 +558,8 @@ namespace Expedition.Presentation
                     if (journal != null && journal.IsUnlocked(entry.Id)) entryId = entry.Id;
             }
             selectedStoryId = entryId;
+            journalBodyScroll = Vector2.zero;
+            journalDragPane = 0;
             int selectedIndex = 0;
             for (int i = 0; i < ExpeditionStory.Entries.Count; i++)
                 if (ExpeditionStory.Entries[i].Id == entryId) { selectedIndex = i; break; }
@@ -571,6 +581,7 @@ namespace Expedition.Presentation
             { modal = Modal.None; return; }
             ExpeditionUiTheme.PanelBox(new Rect(content.x, 163, 320, 459));
             Rect journalViewport = new Rect(content.x + 10, 170, 300, 443);
+            DragJournalPane(1, journalViewport, ExpeditionStory.Entries.Count * 52 + 4, ref journalScroll);
             journalScroll = GUI.BeginScrollView(journalViewport, journalScroll,
                 new Rect(0, 0, 281, ExpeditionStory.Entries.Count * 52 + 4), false,
                 ExpeditionStory.Entries.Count > 8);
@@ -582,18 +593,54 @@ namespace Expedition.Presentation
                 if (entry.Id == selectedStoryId)
                     Fill(new Rect(row.x - 3, row.y - 3, row.width + 6, row.height + 6),
                         new Color(.69f, .51f, .26f, .65f));
-                if (GUI.Button(row, (unlocked ? "열림  ·  " : "잠김  ·  ") + entry.Title, button))
-                    selectedStoryId = entry.Id;
+                if (GUI.Button(row, unlocked ? entry.Title : "잠김  ·  기록 " + (i + 1).ToString("00"), button))
+                { selectedStoryId = entry.Id; journalBodyScroll = Vector2.zero; }
             }
             GUI.EndScrollView();
             ExpeditionUiTheme.ParchmentBox(new Rect(496, 163, 624, 459));
             StoryEntry selectedStory = ExpeditionStory.Get(selectedStoryId) ?? ExpeditionStory.Get("intro");
             bool selectedUnlocked = journal != null && journal.IsUnlocked(selectedStory.Id);
-            GUI.Label(new Rect(528, 190, 560, 53), selectedStory.Title, journalTitle);
+            GUI.Label(new Rect(528, 190, 560, 53), selectedUnlocked ? selectedStory.Title : "아직 발견하지 못한 이야기", journalTitle);
             GUI.Label(new Rect(529, 243, 559, 34), selectedUnlocked ? "원정대의 기록" : "아직 잠긴 기록", journalStatus);
             ExpeditionUiTheme.Rule(new Rect(528, 285, 560, 2));
-            GUI.Label(new Rect(529, 310, 559, 272), selectedUnlocked ? selectedStory.Body :
-                StoryUnlockHint(selectedStory.Id), journalBody);
+            string text = selectedUnlocked ? selectedStory.Body : StoryUnlockHint(selectedStory.Id);
+            Rect readingArea = new Rect(529, 306, 559, 284);
+            float textWidth = readingArea.width - 24;
+            float textHeight = Mathf.Max(readingArea.height - 4, journalBody.CalcHeight(new GUIContent(text), textWidth) + 8);
+            DragJournalPane(2, readingArea, textHeight, ref journalBodyScroll);
+            journalBodyScroll = GUI.BeginScrollView(readingArea, journalBodyScroll,
+                new Rect(0, 0, textWidth, textHeight), false, textHeight > readingArea.height);
+            GUI.Label(new Rect(0, 0, textWidth, textHeight), text, journalBody);
+            GUI.EndScrollView();
+        }
+
+        void DragJournalPane(int pane, Rect area, float contentHeight, ref Vector2 scroll)
+        {
+            Event current = Event.current;
+            // IMGUI scrollbars work on Android, but dragging the page itself needs a touch/mouse gesture.
+            Rect page = new Rect(area.x, area.y, area.width - 24, area.height);
+            if (current.type == EventType.MouseDown && current.button == 0 && page.Contains(current.mousePosition))
+            {
+                journalDragPane = pane;
+                journalDragStartY = current.mousePosition.y;
+                journalDragStartScroll = scroll.y;
+                journalDragging = false;
+            }
+            if (journalDragPane != pane) return;
+            if (current.type == EventType.MouseDrag &&
+                (journalDragging || Mathf.Abs(current.mousePosition.y - journalDragStartY) > 8))
+            {
+                journalDragging = true;
+                scroll.y = Mathf.Clamp(journalDragStartScroll + journalDragStartY - current.mousePosition.y,
+                    0, Mathf.Max(0, contentHeight - area.height));
+                GUIUtility.hotControl = 0; // A swipe over a chapter button must not select it on release.
+                current.Use();
+            }
+            else if (current.type == EventType.MouseUp)
+            {
+                journalDragPane = 0;
+                if (journalDragging) { GUIUtility.hotControl = 0; current.Use(); }
+            }
         }
 
         void DrawProgress()
@@ -654,17 +701,17 @@ namespace Expedition.Presentation
             switch (id)
             {
                 case "forest": return "새 원정을 시작하면 열립니다.";
-                case "forest-clear": return "숲길의 보스를 쓰러뜨리면 열립니다.";
+                case "forest-clear": return "숲길 보스전을 돌파하면 열립니다.";
                 case "castle": return "전투 6에 도달하면 열립니다.";
-                case "castle-clear": return "성문의 보스를 쓰러뜨리면 열립니다.";
+                case "castle-clear": return "성문 보스전을 돌파하면 열립니다.";
                 case "mine": return "전투 11에 도달하면 열립니다.";
-                case "mine-clear": return "용광로 수호자를 쓰러뜨리면 열립니다.";
+                case "mine-clear": return "용광로 수호자 전투를 돌파하면 열립니다.";
                 case "frost": return "전투 16에 도달하면 열립니다.";
-                case "frost-clear": return "서리의 파수꾼을 쓰러뜨리면 열립니다.";
+                case "frost-clear": return "서리의 파수꾼 전투를 돌파하면 열립니다.";
                 case "garden": return "전투 21에 도달하면 열립니다.";
-                case "garden-clear": return "가시의 군주를 쓰러뜨리면 열립니다.";
+                case "garden-clear": return "가시의 군주 전투를 돌파하면 열립니다.";
                 case "palace": return "전투 26에 도달하면 열립니다.";
-                case "palace-clear": return "왕관의 수호룡을 쓰러뜨리면 열립니다.";
+                case "palace-clear": return "왕관의 수호룡 전투를 돌파하면 열립니다.";
                 default: return "원정을 진행하면 열립니다.";
             }
         }
@@ -980,8 +1027,9 @@ namespace Expedition.Presentation
                 enabled = false;
                 lab.OpenExpeditionBattle(battle, run.Wave, ExpeditionRun.TotalWaves, run.EncounterName,
                     victory => { run.ResolveBattle(victory); CompleteReport();
-                        Save(victory ? "battle_win" : "battle_loss", battleSeconds: battle.Time); enabled = true; },
-                    () => { home = true; Save("battle_exit", "Return home; no inferred defeat.", battle.Time); enabled = true; });
+                        Save(victory ? "battle_win" : "battle_loss", battleSeconds: battle.Time); },
+                    () => { home = true; Save("battle_exit", "Return home; no inferred defeat.", battle.Time); enabled = true; },
+                    () => enabled = true);
                 lab.ConfigureExpeditionSpeed(run.BattleSpeed, value => { if (run.SetBattleSpeed(value)) Save("battle_speed", value.ToString()); });
             }
             catch (Exception exception) { enabled = true; Notice("전투를 열지 못했습니다: " + exception.Message); }

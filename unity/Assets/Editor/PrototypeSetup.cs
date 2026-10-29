@@ -127,6 +127,7 @@ namespace Expedition.EditorTools
             if (!assetPath.StartsWith("Assets/Resources/Art/", StringComparison.Ordinal)) return;
             var importer = (TextureImporter)assetImporter;
             bool startup = assetPath == StartupArtSetup.ImagePath;
+            bool ignisCore = assetPath == "Assets/Resources/Art/Ignis/ignis-living-core.png";
             bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal) ||
                 assetPath.StartsWith("Assets/Resources/Art/Effects/v049/", StringComparison.Ordinal);
             bool frostFloating = assetPath.StartsWith("Assets/Resources/Art/Enemies/v039/frost-boss-floating", StringComparison.Ordinal) ||
@@ -146,10 +147,10 @@ namespace Expedition.EditorTools
             importer.wrapMode = TextureWrapMode.Clamp;
             importer.npotScale = TextureImporterNPOTScale.None;
             importer.mipmapEnabled = false;
-            importer.isReadable = false;
+            importer.isReadable = ignisCore; // Small core texture supports a one-time regional palette swap.
             importer.alphaIsTransparency = true;
             // Catalog sprite sheets are loaded on demand on mobile; keep each sheet bounded.
-            importer.maxTextureSize = bossEffect || frostFloating ||
+            importer.maxTextureSize = ignisCore ? 256 : bossEffect || frostFloating ||
                 assetPath.StartsWith("Assets/Resources/Art/Units/v010/", StringComparison.Ordinal) ? 1024 : 2048;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
         }

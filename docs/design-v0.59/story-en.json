@@ -1,0 +1,76 @@
+{
+  "locale": "en",
+  "status": "Translation draft for the implemented Korean story; runtime language selection is not implemented.",
+  "terminology": {
+    "Ignis": "A source that sustains a region's life and magic, exploited by humans as fuel.",
+    "Ignis core": "One region's independent source, not a fragment of a single royal flame.",
+    "Ashen Oath": "The expedition's promise to protect the lives sustained by the flame."
+  },
+  "entries": [
+    {
+      "id": "intro", "title": "An Oath Among the Ashes",
+      "excerpt": "The crown orders the expedition to recover the stolen Ignis.\nThey swear to protect the kingdom's flame and its people.",
+      "body": "Ignis powers the kingdom's wards, heating and furnaces. Its lights are going out, one by one. The crown announces that guardians have taken the cores.\n\nFrom the last haven, you gather companions and accept the recovery order. Beyond the darkened walls, people endure the cold and attacks.\n\nBefore leaving, you swear an oath in the ash-covered square.\nWe will reclaim the kingdom's flame and protect those who live beneath its light."
+    },
+    {
+      "id": "forest", "title": "The Withered Woods",
+      "excerpt": "Twisted beasts charge through the dried roots.\nThe expedition follows the light guarded by Ashmane.",
+      "body": "The trees are dry to their heartwood. The beasts' transformation does not look like something that began last night.\n\nThe royal map names Ashmane a thief of Ignis. Yet its tracks circle the light deep in the forest, not the villages."
+    },
+    {
+      "id": "forest-clear", "title": "A Shoot Beside the Core",
+      "excerpt": "Ashmane retreats, revealing new shoots beside the core.\nThe expedition recovers it, but cannot forget that sight.",
+      "body": "As Ashmane retreats, small shoots become visible around the Ignis. Beyond them lie tangled roots that seem to have been dead for decades.\n\nThe expedition recovers the core as ordered. Was Ashmane guarding its power, or this small patch of earth? They record the site and continue to the castle."
+    },
+    {
+      "id": "castle", "title": "The Gate's Last Order",
+      "excerpt": "The gate golem raises its weapon even against returning people.\nAn old transport route leads from the forest into the castle.",
+      "body": "The gate golem bears an old royal crest on its chest. This human-made guardian refuses to open the way, despite the refugees' cries.\n\nA route for hauling heavy cargo passes beneath the castle. Alongside traces of Ignis lie crates still crusted with forest soil."
+    },
+    {
+      "id": "castle-clear", "title": "Whom Did the Gate Keep Out?",
+      "excerpt": "The golem's order forbids outside creatures from approaching the power source.\nWas the gate protecting people, or the cores gathered within?",
+      "body": "The stopped golem still holds its guard order: Deny outside creatures access to the power source. The kingdom wrote it.\n\nAt the end of the route, the second core bears a different mark from the first. They look unlike fragments of the same flame. The next destination in the intake ledger is the mine."
+    },
+    {
+      "id": "mine", "title": "The Furnace That Never Stops",
+      "excerpt": "Mining has ceased, but the furnace guardian still works.\nPower conduits beneath the cartway run toward the palace.",
+      "body": "The abandoned furnace continues to burn with Ignis. Its guardian repeats an old production order and attacks anything that approaches.\n\nFollowing traces of the core, the expedition inspects the conduits. A sealed office holds ledgers of incoming cargo and outgoing power."
+    },
+    {
+      "id": "mine-clear", "title": "The Export Ledger",
+      "excerpt": "The ledger records cores sent from several regions to the palace.\nThe expedition takes the third core and the ledger north to the cathedral.",
+      "body": "When the furnace stops, the office becomes accessible. The ledger names the forest, northern cathedral and garden, with dates for the removal of their cores. The dates match the beginning of the kingdom's prosperity.\n\nThe crown ordered the recovery of scattered shards. Why, then, had these cores been arriving from different regions so long ago?"
+    },
+    {
+      "id": "frost", "title": "The Ancient Altar",
+      "excerpt": "The core shines like a flame, yet governs the surrounding cold and water.\nThe watcher blocks the expedition before the frozen altar.",
+      "body": "The cathedral's core gives off no heat. Water still moves where its light reaches, while distant corridors lie sealed in ice.\n\nIgnis may be more than fuel. Beyond the frost watcher, the expedition sees an altar carved with the same mark as the core."
+    },
+    {
+      "id": "frost-clear", "title": "A Name Older Than the Kingdom",
+      "excerpt": "The altar predates the kingdom and bears the core's mark.\nHad the watcher stolen the core, or brought it home?",
+      "body": "As the watcher's frenzy subsides, the inscription becomes visible: The source that binds our waters and winter. It predates the kingdom.\n\nThe expedition places the fourth core in a protective vessel. They cannot send it to the palace on the strength of an order alone. They seek the truth in the garden, the last region named in the ledger."
+    },
+    {
+      "id": "garden", "title": "Conduits Beneath the Roots",
+      "excerpt": "Pipes bearing the royal crest extend beneath the thorn lord.\nBefore moving the core, the expedition follows them to their end.",
+      "body": "Thorns block the road to the palace. Between the roots are conduits like those found in the mine.\n\nThe thorn lord shields the core and repels anyone who approaches. Comparing the cathedral's inscription with the ledger, the expedition seeks to learn what these pipes carried away."
+    },
+    {
+      "id": "garden-clear", "title": "A Land Reclaiming Its Own",
+      "excerpt": "Humans took the regions' cores; the land withered and its creatures changed.\nThe guardians reclaimed their Ignis. The expedition stops the recovery.",
+      "body": "Where the thorn lord retreats, the expedition finds old royal plans. Ignis sustained each region's life and magic. Long ago, humans took the cores to power their kingdom. Deprived of that force, the land withered and its creatures became twisted.\n\nThe guardians recently reclaimed their cores. The kingdom called it theft. Returning the cores could not instantly heal the long-damaged land.\n\nThe expedition leaves the fifth core where it belongs. The plans reveal a forced extraction device still running beneath the palace."
+    },
+    {
+      "id": "palace", "title": "A Guardian Bound by a Crown",
+      "excerpt": "The palace stands on an ancient Ignis site.\nThe expedition means to break the dragon's binding crown and halt extraction.",
+      "body": "The crowned guardian dragon protected this core before the kingdom existed. Humans built a palace above it and bound both dragon and core into their power network. The crown was a restraint, not a sign of loyalty.\n\nExtraction continues. Trapped by the device, the dragon attacks all who approach. The expedition has come to sever its bonds, not to take the core.\n\nThe people left in the kingdom must also be saved. But the expedition cannot return to a life sustained by consuming other lands."
+    },
+    {
+      "id": "palace-clear", "title": "What the Oath Protects",
+      "excerpt": "The crown breaks, and the dragon shelters the last core once more.\nThe expedition begins returning the recovered cores to their homes.",
+      "body": "As the crown breaks, the dragon's wings relax. Forced extraction stops, and the last core remains beside its ancient guardian.\n\nThe expedition returns the recovered cores to their regions. Small shoots rise in the forest, and frozen waterways begin to flow. Recovery will take time.\n\nThe kingdom cannot restore every facility to its former power. Its people must survive on what remains and build a different life.\n\nThe expedition remembers the oath sworn among the ashes.\nThe lives we vowed to protect were never only those within the kingdom."
+    }
+  ]
+}

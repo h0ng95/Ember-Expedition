@@ -38,6 +38,7 @@ namespace Expedition.Presentation
         readonly HashSet<string> missing = new HashSet<string>();
         readonly FrostBossFloatingArt frostBossFloating = new FrostBossFloatingArt();
         Material clipMaterial;
+        Texture2D aerialBreath;
 
         public ForestEnemyArt()
         {
@@ -113,6 +114,8 @@ namespace Expedition.Presentation
 
         public bool TryGetBounds(string id, int index, Vector2 foot, out Rect bounds)
         {
+            if (id == "palace-boss" && index >= 24 && index <= 25)
+            { bounds = DrakeAttackPresentation.FlightBounds(index, foot); return true; }
             if (id == FrostEnemyArt.Species[3] && index >= 0 && index < 24 &&
                 frostBossFloating.TryGetBounds(index, foot, 0f, out bounds)) return true;
             return TryGetOriginalBounds(id, index, foot, out bounds);
@@ -135,6 +138,18 @@ namespace Expedition.Presentation
 
         public bool Draw(string id, int index, Vector2 foot, out Rect bounds, float walkTime = -1f)
         {
+            if (id == "palace-boss" && index >= 24 && index <= 25)
+            {
+                bounds = DrakeAttackPresentation.FlightBounds(index, foot);
+                if (aerialBreath == null) aerialBreath = Resources.Load<Texture2D>(DrakeAttackPresentation.FlightPath);
+                if (aerialBreath == null) return false;
+                aerialBreath.filterMode = FilterMode.Point;
+                Rect source = DrakeAttackPresentation.FlightSource(index);
+                GUI.DrawTextureWithTexCoords(bounds, aerialBreath,
+                    new Rect(source.x / aerialBreath.width, 1f - source.yMax / aerialBreath.height,
+                        source.width / aerialBreath.width, source.height / aerialBreath.height), true);
+                return true;
+            }
             if (id == FrostEnemyArt.Species[3] && index >= 0 && index < 24 &&
                 frostBossFloating.Draw(index, foot, Mathf.Max(0, walkTime), clipMaterial, out bounds)) return true;
             if (!TryGetOriginalBounds(id, index, foot, out bounds)) return false;
@@ -214,6 +229,8 @@ namespace Expedition.Presentation
 
         public void Release()
         {
+            if (aerialBreath != null) Resources.UnloadAsset(aerialBreath);
+            aerialBreath = null;
             frostBossFloating.Release();
             foreach (RenderTexture texture in clippedTextures.Values)
                 if (texture != null) { texture.Release(); DisposeObject(texture); }

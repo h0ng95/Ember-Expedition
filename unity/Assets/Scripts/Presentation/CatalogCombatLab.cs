@@ -399,9 +399,9 @@ namespace Expedition.Presentation
                     e.AbilityId == "GARDEN_BRIARS" ?
                     "가시뿌리 · 먼 동료 최대 셋 발밑을 차례로 공격" :
                     e.AbilityId == "DRACONIC_BREATH" ?
-                    "용의 직선 브레스 · 표시된 범위에 화상 공격" :
+                    "화염 균열 · 긴 예고 위로 불기둥이 솟습니다" :
                     e.AbilityId == "DRACONIC_BOMB" ?
-                    "비행 폭격 · 먼 동료의 위치에 화염탄 낙하" :
+                    "공중 브레스 · 표시된 원을 향해 불을 뿜습니다" :
                     e.AbilityId == "DRACONIC_LAND" ?
                     "착지 충격파 · 용의 발밑 원형 범위를 공격" :
                     e.AbilityId == "GOLEM_AFTERSHOCK" ?
@@ -768,7 +768,7 @@ namespace Expedition.Presentation
                     Fill(new Rect(point.x+26,point.y-5,2,10),cue);
                 }
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
-                    point.y -= PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, battle.Time);
+                    point.y -= PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, battle.Time);
                 Color previous = GUI.color;
                 if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
                 else if (unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
@@ -1054,7 +1054,7 @@ namespace Expedition.Presentation
         {
             return unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
                 94f +
-                PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, battle.Time) : 0f;
+                PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, battle.Time) : 0f;
         }
 
         string UnitName(CatalogBattleUnit unit)
@@ -1157,11 +1157,13 @@ namespace Expedition.Presentation
                         species == ForestEnemyArt.Species[2] || species == ForestEnemyArt.Species[3]);
                 float breathProgress;
                 if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && battleEffects != null &&
-                    battleEffects.TryGetBreathProgress(view.Unit.Id, out breathProgress))
-                    frame = PalaceEnemyArt.BreathFrame(breathProgress);
+                    (battleEffects.TryGetBreathProgress(view.Unit.Id, out breathProgress) ||
+                        DrakeAttackPresentation.AirIgniting(view.Unit)))
+                    frame = DrakeAttackPresentation.AirFrame(battle.Time);
                 else if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && view.Unit.DrakeRangedBasic &&
-                    view.Unit.AttackPhase == CatalogAttackPhase.WindingBasic && view.Unit.AttackWindupRemaining <= .18f)
-                    frame = PalaceEnemyArt.BreathFrame(1f - view.Unit.AttackWindupRemaining / .18f);
+                    (view.Unit.AttackPhase == CatalogAttackPhase.WindingBasic && view.Unit.AttackWindupRemaining <= .18f ||
+                        view.ReleaseRemaining > 0f && view.ReleaseAbilityId == "BASIC"))
+                    frame = DrakeAttackPresentation.BasicFrame;
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);

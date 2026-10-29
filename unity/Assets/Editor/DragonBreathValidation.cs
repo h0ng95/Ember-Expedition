@@ -31,7 +31,7 @@ namespace Expedition.EditorTools
                 bool released = false;
                 battle.Event += e =>
                 {
-                    if (e.Kind != CatalogEventKind.BossImpact || e.AbilityId != "DRACONIC_BREATH") return;
+                    if (e.Kind != CatalogEventKind.BossImpact || e.AbilityId != "DRACONIC_BOMB") return;
                     effectType.GetMethod("Observe").Invoke(effects, new object[] { e, battle });
                     released = true;
                 };
@@ -47,8 +47,8 @@ namespace Expedition.EditorTools
                     Check(active == (age < .44f), "effect lifetime at " + age);
                     if (active)
                     {
-                        int frame = PalaceEnemyArt.BreathFrame((float)query[1]);
-                        Check(frame >= 14 && frame <= 16, "mouth must remain open beyond old .18s release");
+                        int frame = DrakeAttackPresentation.AirFrame(age);
+                        Check(frame >= 24 && frame <= 25, "airborne open-jaw pose owns the whole breath");
                     }
                     lastAge = age;
                 }

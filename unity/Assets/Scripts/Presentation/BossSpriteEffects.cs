@@ -12,7 +12,7 @@ namespace Expedition.Presentation
         internal const string FrostPath = "Art/Effects/v039/frost-eruption";
         internal const string ChargePath = "Art/Effects/v039/charge-dust";
 
-        Texture2D roots, breath, firefall, golem, frost, charge;
+        Texture2D roots, breath, firefall, golem, frost, charge, pillars;
         bool loaded;
 
         void Load()
@@ -25,6 +25,7 @@ namespace Expedition.Presentation
             golem = LoadSheet(GolemPath);
             frost = LoadSheet(FrostPath);
             charge = LoadSheet(ChargePath);
+            pillars = LoadSheet(DrakeAttackPresentation.PillarsPath);
         }
 
         static Texture2D LoadSheet(string path)
@@ -101,7 +102,7 @@ namespace Expedition.Presentation
         }
 
         internal bool DrawBreath(Vector2 mouth, Vector2 groundTarget,
-            float halfWidth, float progress, bool afterglow = false)
+            float halfWidth, float progress, bool afterglow = false, bool contact = false)
         {
             Load();
             if (breath == null) return false;
@@ -109,7 +110,8 @@ namespace Expedition.Presentation
             float length = delta.magnitude;
             if (length < 1f) return false;
             progress = Mathf.Clamp01(progress);
-            int frame = afterglow ? (progress < .45f ? 6 : 7) : DragonBreathArt.EmissionFrame(progress);
+            int frame = afterglow ? (progress < .45f ? 6 : 7) : contact ?
+                2 + Mathf.Min(3, Mathf.FloorToInt(progress * 4f)) : DragonBreathArt.EmissionFrame(progress);
             Rect destination = DragonBreathArt.LocalBounds(frame, length, halfWidth);
             if (afterglow) destination.y -= 16f * progress;
             Matrix4x4 previous = GUI.matrix;
@@ -121,6 +123,30 @@ namespace Expedition.Presentation
                 afterglow ? DragonBreathArt.SmokeCrop(frame) : 1f);
             GUI.matrix = previous;
             return drawn;
+        }
+
+        internal void DrawPillar(Vector2 ground, float halfWidthPixels, float progress)
+        {
+            Load();
+            if (pillars == null) return;
+            int frame = Mathf.Min(7, Mathf.FloorToInt(progress * 8f));
+            int column = frame % 4;
+            // The generated floor flare crosses the atlas midpoint. Its actual row gutter is 460.
+            float top = frame < 4 ? 0 : 460, bottom = frame < 4 ? 460 : 887;
+            float left = Mathf.Round(column * pillars.width / 4f);
+            float right = Mathf.Round((column + 1) * pillars.width / 4f);
+            float width = halfWidthPixels * 2f / .68f;
+            float scale = width / (right - left);
+            float floor = frame < 4 ? 424 : 847;
+            Rect destination = new Rect(ground.x - width * .5f, ground.y - (floor - top) * scale,
+                width, (bottom - top) * scale);
+            Rect uv = new Rect(left / pillars.width, 1f - bottom / pillars.height,
+                (right - left) / pillars.width, (bottom - top) / pillars.height);
+            Color previous = GUI.color;
+            GUI.color *= new Color(1, 1, 1, 1f - Mathf.Clamp01((progress - .80f) / .20f));
+            if (GamePreferences.Current.ReduceFlashes) GUI.color *= new Color(.65f, .65f, .65f, 1f);
+            GUI.DrawTextureWithTexCoords(destination, pillars, uv, true);
+            GUI.color = previous;
         }
 
         internal bool DrawDrakeFirebolt(Vector2 mouth, Vector2 target, float progress)

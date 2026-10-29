@@ -127,11 +127,18 @@ namespace Expedition.EditorTools
             Check(Frame(boss, 2, 0, .1f, 0, 0, .8f,
                 CrownDrakePhase.BreathWarning, 0, .8f, null) == 12 &&
                 Frame(boss, 2, 0, .2f, 0, 0, .3f,
-                CrownDrakePhase.BreathWarning, 0, .3f, null) == 13,
-                "ground breath opens before impact");
+                CrownDrakePhase.BreathWarning, 0, .3f, null) == 12,
+                "ground pillars brace without a mouth flame");
             Check(Frame(boss, 2, 0, 0, .18f, 0, 0,
-                CrownDrakePhase.GroundWindow, 0, 0, "DRACONIC_BREATH") == 14,
-                "breath release follows impact event");
+                CrownDrakePhase.GroundWindow, 0, 0, "DRACONIC_BREATH") == 17,
+                "ground pillars release without a mouth flame");
+            foreach (string release in new[] { "BASIC", "DRACONIC_BREATH", "DRACONIC_LAND" })
+                for (int age = 0; age < 4; age++)
+                {
+                    int pose = Frame(boss, 2, 0, 0, .18f - age * .04f, age * .04f, 0,
+                        CrownDrakePhase.Grounded, 0, 0, release);
+                    Check(pose < 14 || pose > 16, "no baked-in mouth flame for " + release + " at " + age);
+                }
             Check(Frame(boss, 0, 0, 0, 0, 0, 0,
                 CrownDrakePhase.Rising, .5f, 0, null) == 22 &&
                 Frame(boss, 0, .27f, 0, 0, 0, 0,

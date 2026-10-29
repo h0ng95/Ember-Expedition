@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "transparentBackground": true,
+  "assets": [
+    {
+      "file": "unity/Assets/Resources/Art/Effects/v057/dragon-pillars.png",
+      "reference": "unity/Assets/Resources/Art/Effects/v039/dragon-firefall.png",
+      "prompt": "Create a production-ready transparent PNG sprite atlas for our original pixel-art fantasy game. Reference image is ONLY the orange/white fire style. New asset: a vertical GROUND FIRE PILLAR eruption animation, 8 frames in exact 4 columns by 2 rows equal cells, row-major chronological order. Each frame isolated, centered with same floor pivot at 90% cell height and generous transparent margins. Frame0 small flat fiery ground burst; frame1 fast upward column beginning; frame2 tall tapering eruption; frame3 tallest jagged pillar; frame4 full turbulent pillar; frame5 pillar breaking into embers; frame6 low flame and rising dark embers; frame7 thin fading embers. White-gold hot core, orange-red outer tongues, crisp chunky pixel clusters with dark outline accents, matching the reference detailed pixel texture. Vertical only, no falling projectile, no dragon, no text, no grid drawn, no shadow backdrop, no opaque black/white or checkerboard background. Maximum pillar width roughly 55% of its cell; floor glow can span 80%. Atlas width twice height. Use actual alpha transparency. Keep each cell's content strictly within its cell.",
+      "integration": "Original generated PNG retained. Draw UV row boundary at source y=460 so the top-row floor flare is not cropped at the nominal midpoint. Point filtering, no mipmaps. Every base starts at impact; vertical crests stagger by 0.028 seconds."
+    },
+    {
+      "file": "unity/Assets/Resources/Art/Enemies/v057/dragon-air-breath.png",
+      "reference": "unity/Assets/Resources/Art/Enemies/v031/palace-boss.png",
+      "prompt": "Use the reference as an exact character identity/material reference. Create an additional small animation sprite atlas for this SAME original navy-blue armored dragon with gold horn crown, purple-red wing membranes and amber glowing chest. It must have exactly TWO full-body dragon poses side by side in TWO equal horizontal cells, facing LEFT, BOTH hovering with hind legs tucked and both wings spread. Match the two flight poses in the last two cells of the reference bottom row: first wings up, second wings down. Change only the head/jaw pose: head tilted DOWN-LEFT about 30 degrees and mouth OPEN, ready to shoot a breath towards the ground. No emitted fire, no projectile, no smoke, no detached limbs. Preserve dark navy rocky scales, gold spikes, body proportions, size of torso, and detailed crisp pixel-art texture. Align same torso anchor and toes baseline in the two cells. Keep the entire wing tips and tail in each cell with padding; no cropping, no shadow, no scenery, no labels, no text. Real transparent alpha background, no painted gray/black/brown/checkerboard background. Wide 2:1 atlas, two cells only. This is a production game sprite asset, not a concept illustration.",
+      "integration": "Original generated PNG retained. Two measured source rectangles and mouth positions in DrakeAttackPresentation. Shared body scale 277/414, excluding wings. Used for aerial breath only."
+    }
+  ]
+}

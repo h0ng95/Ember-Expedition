@@ -46,7 +46,10 @@ namespace Expedition.Presentation
             // (550,646), (803,648), (1058,658), using a top-left source origin.
             // Normalize against each trimmed frame, then use the actual drawn bounds.
             Vector2 uv;
-            if (frame == 14) uv = new Vector2(27f / 238f, 97f / 182f);
+            if (frame == 24 || frame == 25)
+            { mouth = DrakeAttackPresentation.FlightMouth(frame, drawnBounds); return true; }
+            if (frame == 13) uv = new Vector2(12f / 224f, 111f / 170f);
+            else if (frame == 14) uv = new Vector2(27f / 238f, 97f / 182f);
             else if (frame == 15) uv = new Vector2(29f / 241f, 98f / 181f);
             else if (frame == 16) uv = new Vector2(27f / 233f, 105f / 175f);
             else return false;
@@ -84,7 +87,10 @@ namespace Expedition.Presentation
                 if (flightLift > 0f || phase == CrownDrakePhase.Rising ||
                     phase == CrownDrakePhase.AirWarning || phase == CrownDrakePhase.LandingWarning)
                     return 22 + (Math.Max(0, (int)(stateTime * 4f)) % 2);
-                if (breathWarningRemaining > 0f) return breathWarningRemaining < .42f ? 13 : 12;
+                // Ground fissures use a stomp/brace pose, never the old baked-in mouth flames.
+                if (breathWarningRemaining > 0f) return 12;
+                if (releaseRemaining > 0f)
+                    return releaseAbilityId == "BASIC" ? DrakeAttackPresentation.BasicFrame : 17;
             }
             return ForestEnemyArt.FrameIndex(id == Species[3] && state == 3 ? 0 : state,
                 stateTime, windupAge, releaseRemaining, releaseAge, 0f, false,

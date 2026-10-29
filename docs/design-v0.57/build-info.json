@@ -1,0 +1,25 @@
+{
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "sha256": "6315a23600e3383d35e1931a853e4e05623cfb016383c0a4f9f8e0a30e7c8748",
+  "bytes": 291347571,
+  "builtAt": "2026-10-29T13:55:36.194Z",
+  "unity": "6000.3.24f1",
+  "checks": {
+    "coreAssertions": 2052,
+    "newPresentationChecks": 105,
+    "palaceArtAssertions": 283,
+    "existingHudAndMouthTests": "passed"
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "installed": true,
+    "scenario": "wave30 QA fixture, 1x then 2x, final recording",
+    "saveRestored": "Original saves and PlayerPrefs restored byte-for-byte",
+    "exceptionMatches": 0,
+    "performanceSamples": [
+      "PRESENTATION_PERF context=battle-1x seconds=13.2 frames=785 fps=59.5 p95_ms=16.8 over50ms=0 allocated_mb=57.8\r",
+      "PRESENTATION_PERF context=battle-2x seconds=14.9 frames=886 fps=59.3 p95_ms=16.8 over50ms=1 allocated_mb=59.0\r"
+    ]
+  },
+  "scope": "Presentation change. Core, stats, timings, hit shapes and save versions unchanged. One device visual sample, not balance/endurance validation."
+}

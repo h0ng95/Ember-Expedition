@@ -8,7 +8,7 @@ namespace Expedition.Presentation
     // Bounded effect records; boss animation sheets are cached and drawn by UV.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, BombBurst,
+        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, PillarLine,
             ChargeDust, GolemCrack, FurnacePillar, FurnaceEmber, FrostSpire, DrakeLand }
         sealed class Effect
         {
@@ -86,8 +86,9 @@ namespace Expedition.Presentation
                 case "FURNACE_EMBER": return EffectKind.FurnaceEmber;
                 case "FROST_NOVA": return EffectKind.FrostSpire;
                 case "GARDEN_BRIARS": return EffectKind.RootBurst;
-                case "DRACONIC_BREATH": return EffectKind.Breath;
-                case "DRACONIC_BOMB": return EffectKind.BombBurst;
+                // Legacy combat IDs: ground capsule -> pillars; airborne circle -> breath.
+                case "DRACONIC_BREATH": return EffectKind.PillarLine;
+                case "DRACONIC_BOMB": return EffectKind.Breath;
                 case "DRACONIC_LAND": return EffectKind.DrakeLand;
                 default: return EffectKind.GroundImpact;
             }
@@ -102,7 +103,7 @@ namespace Expedition.Presentation
                 Kind = kind, Size = size, Duration = duration, Direction = direction,
                 BodyOffset = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
                     150f +
-                    PalaceEnemyArt.VisualFlightLift(unit.FlightLift, unit.Y, animationTime) : 57f });
+                    PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, animationTime) : 57f });
         }
 
         public void Observe(CatalogBattleEvent e, CatalogBattle battle)
@@ -114,12 +115,15 @@ namespace Expedition.Presentation
             {
                 if (effects.Count == 24) effects.RemoveAt(0);
                 bool charge = e.AbilityId == "BOSS_CHARGE";
-                bool breath = e.AbilityId == "DRACONIC_BREATH";
+                bool pillars = e.AbilityId == "DRACONIC_BREATH";
+                bool breath = e.AbilityId == "DRACONIC_BOMB";
                 effects.Add(new Effect { Kind = BossEffectKind(e.AbilityId), SourceId = source.Id,
-                    Point = breath ? new Vector2(source.BreathOriginX, source.BreathOriginY) :
+                    Point = pillars ? new Vector2(source.BreathOriginX, source.BreathOriginY) :
+                        breath ? new Vector2(source.X, source.Y) :
                         charge ? new Vector2(source.ChargeOriginX, source.ChargeOriginY) :
                         new Vector2(source.SlamTargetX, source.SlamTargetY),
-                    EndPoint = breath ? new Vector2(source.BreathTargetX, source.BreathTargetY) :
+                    EndPoint = pillars ? new Vector2(source.BreathTargetX, source.BreathTargetY) :
+                        breath ? new Vector2(source.SlamTargetX, source.SlamTargetY) :
                         charge ? new Vector2(source.ChargeImpactX, source.ChargeImpactY) : Vector2.zero,
                     Color = source.EnemyRole == CatalogEnemyRole.GardenLord ?
                         new Color(.55f, .86f, .27f) :
@@ -130,9 +134,10 @@ namespace Expedition.Presentation
                         source.EnemyRole == CatalogEnemyRole.FrostWarden ?
                         new Color(.32f, .76f, 1f) : source.BossEnraged ?
                         new Color(1f, .25f, .13f) : new Color(1f, .7f, .3f),
-                    Size = breath ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
-                    HalfWidth = breath ? source.BreathHalfWidth : 0f,
+                    Size = pillars ? source.BreathLength : charge ? source.ChargeWidth : source.SlamRadius,
+                    HalfWidth = pillars ? source.BreathHalfWidth : breath ? source.SlamRadius : 0f,
                     Duration = e.AbilityId == "GARDEN_BRIARS" ? .6f :
+                        pillars ? DrakeAttackPresentation.PillarDuration :
                         breath ? PalaceEnemyArt.BreathVisualDuration + DragonBreathArt.AfterglowDuration : .5f });
                 Play(hit, 1f);
             }
@@ -210,13 +215,25 @@ namespace Expedition.Presentation
         public void DrawGround(CatalogBattle battle, Func<Vector2, Vector2> project)
         {
             float scaleX=Mathf.Abs(project(Vector2.right).x-project(Vector2.zero).x);
+            // The next landing warning begins in Core on the breath hit. Keep the red
+            // contact circle visible while fire is still emitting, alongside the gold landing ring.
+            foreach (Effect effect in effects)
+                if (effect.Kind == EffectKind.Breath && effect.Age < PalaceEnemyArt.BreathVisualDuration)
+                {
+                    CatalogBattleUnit source = battle.Get(effect.SourceId);
+                    if (source == null || !source.IsAlive) continue;
+                    Vector2 center = project(effect.EndPoint);
+                    Color contact = new Color(1f, .28f, .09f, .95f);
+                    Ring(center, effect.Size * scaleX, effect.Size * 48f, contact, 4f);
+                    Ring(center, effect.Size * scaleX * .92f, effect.Size * 48f * .92f, contact, 1f);
+                }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
                 if (!unit.IsAlive) continue;
                 if (unit.EnemyRole == CatalogEnemyRole.CrownDrake)
                 {
                     Vector2 ground = project(new Vector2(unit.X, unit.Y));
-                    float lift = unit.FlightLift;
+                    float lift = DrakeAttackPresentation.FlightLift(unit);
                     if (lift > 0f)
                     {
                         // Keep the shadow on the floor: higher flight narrows and fades it.
@@ -316,14 +333,13 @@ namespace Expedition.Presentation
             float scaleX=Mathf.Abs(project(Vector2.right).x-project(Vector2.zero).x);
             foreach (CatalogBattleUnit unit in battle.Units)
             {
-                if (!unit.IsAlive || unit.EnemyRole != CatalogEnemyRole.CrownDrake ||
-                    unit.DrakePhase != CrownDrakePhase.AirWarning || unit.SlamWarningRemaining <= 0f)
+                if (unit.EnemyRole != CatalogEnemyRole.CrownDrake || !DrakeAttackPresentation.AirIgniting(unit))
                     continue;
                 Vector2 center = project(new Vector2(unit.SlamTargetX, unit.SlamTargetY));
-                float fall = Mathf.Clamp01(1f - unit.SlamWarningRemaining /
-                    (unit.BossEnraged ? .9f : 1.1f));
-                spriteEffects.DrawFallingFireball(center, fall,
-                    Mathf.FloorToInt(battle.Time * 10f));
+                Vector2? jaw = breathMouth(unit.Id);
+                float ignite = Mathf.Clamp01(1f - unit.SlamWarningRemaining / DrakeAttackPresentation.AirLeadIn);
+                if (jaw.HasValue) spriteEffects.DrawBreath(jaw.Value, center, unit.SlamRadius,
+                    ignite * .19f);
             }
             foreach (CatalogBattleUnit unit in battle.Units)
             {
@@ -362,7 +378,7 @@ namespace Expedition.Presentation
                 Vector2 from = project(new Vector2(unit.X, unit.Y)) + new Vector2(unit.Team == CatalogTeam.Ally ? 20 : -20, -65);
                 float targetBodyOffset = target.EnemyRole == CatalogEnemyRole.CrownDrake ?
                     150f +
-                    PalaceEnemyArt.VisualFlightLift(target.FlightLift, target.Y, battle.Time) : 58f;
+                    PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(target), target.Y, battle.Time) : 58f;
                 Vector2 to = project(new Vector2(target.X, target.Y)) +
                     new Vector2(0, -targetBodyOffset);
                 float progress = Mathf.Clamp01(1 - unit.AttackWindupRemaining / .18f);
@@ -420,8 +436,11 @@ namespace Expedition.Presentation
                             effect.HasBreathAnchor = true;
                             effect.BreathMouthOffset = mouth.Value - project(effect.Point);
                             spriteEffects.DrawBreath(mouth.Value, project(effect.EndPoint), effect.HalfWidth,
-                                effect.Age / PalaceEnemyArt.BreathVisualDuration);
+                                effect.Age / PalaceEnemyArt.BreathVisualDuration, false, true);
                         }
+                        // Ground contact is tied to the same circle and event as the damage.
+                        spriteEffects.DrawFireImpact(project(effect.EndPoint),
+                            effect.Age / PalaceEnemyArt.BreathVisualDuration, effect.Size * scaleX * 2f, .5f);
                     }
                     else if (effect.HasBreathAnchor)
                         spriteEffects.DrawBreath(project(effect.Point) + effect.BreathMouthOffset,
@@ -429,9 +448,18 @@ namespace Expedition.Presentation
                             (effect.Age - PalaceEnemyArt.BreathVisualDuration) / DragonBreathArt.AfterglowDuration, true);
                     continue;
                 }
-                if (effect.Kind == EffectKind.BombBurst)
+                if (effect.Kind == EffectKind.PillarLine)
                 {
-                    spriteEffects.DrawFireImpact(project(effect.Point), t);
+                    // Every base lights on impact; the upward columns crest along the marked strip.
+                    // Draw back-to-front for diagonal strips, while keeping wave order origin-to-end.
+                    bool reverse = project(effect.Point).y > project(effect.EndPoint).y;
+                    for (int n = 0; n < DrakeAttackPresentation.PillarCount; n++)
+                    {
+                        int index = reverse ? DrakeAttackPresentation.PillarCount - 1 - n : n;
+                        Vector2 ground = project(DrakeAttackPresentation.PillarPoint(effect.Point, effect.EndPoint, index));
+                        spriteEffects.DrawPillar(ground, effect.HalfWidth * scaleX,
+                            DrakeAttackPresentation.PillarProgress(effect.Age, index));
+                    }
                     continue;
                 }
                 if (effect.Kind == EffectKind.DrakeLand)

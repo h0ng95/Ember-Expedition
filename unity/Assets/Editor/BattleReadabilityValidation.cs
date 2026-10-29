@@ -83,7 +83,7 @@ namespace Expedition.EditorTools
                 "FURNACE_BLAST", "FURNACE_EMBER", "FROST_NOVA", "GARDEN_BRIARS",
                 "DRACONIC_BREATH", "DRACONIC_BOMB", "DRACONIC_LAND" };
             string[] visual = { "ChargeDust", "GolemCrack", "GolemCrack", "FurnacePillar",
-                "FurnaceEmber", "FrostSpire", "RootBurst", "Breath", "BombBurst", "DrakeLand" };
+                "FurnaceEmber", "FrostSpire", "RootBurst", "PillarLine", "Breath", "DrakeLand" };
             for (int i = 0; i < ability.Length; i++)
                 Check(select.Invoke(null, new object[] { ability[i] }).ToString() == visual[i],
                     ability[i] + " uses its own impact visual");

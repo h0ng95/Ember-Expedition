@@ -21,6 +21,9 @@ namespace Expedition.EditorTools
             var coreArt = Resources.Load<Texture2D>("Art/Ignis/ignis-living-core");
             Check(coreArt != null && coreArt.isReadable && coreArt.width <= 256 && coreArt.height <= 256,
                 "Ignis artwork is bundled, bounded and available for regional palette swaps");
+            var castleArt = Resources.Load<Texture2D>(CatalogCombatLab.CastleStoryArtPath);
+            Check(castleArt != null && castleArt.width <= 1024 && castleArt.height <= 1024 &&
+                castleArt.filterMode == FilterMode.Point, "castle props are bundled and mobile-bounded with point filtering");
             var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
             foreach (int wave in new[] { 1, 5, 10, 15, 20, 25, 30 })
             foreach (bool victory in new[] { false, true })
@@ -57,14 +60,16 @@ namespace Expedition.EditorTools
                         float beforeTime = battle.Time;
                         Call(lab, "AdvanceDialogue", 1.1f);
                         Check(battle.Time == beforeTime, "dialogue never advances combat");
-                        if (wave == 5)
+                        if (wave >= 5)
                         {
-                            Check((bool)Get(lab, "forestStoryActive") && (float)Get(lab, "dialogueAge") == 0,
-                                "forest observation precedes dialogue instead of hiding the action beneath a bubble");
+                            string scenePrefix = wave == 5 ? "forestStory" : wave == 10 ? "castleStory" : "regionalStory";
+                            float duration = wave == 5 ? CatalogCombatLab.ForestStoryDuration : wave == 10 ? CatalogCombatLab.CastleStoryDuration : CatalogCombatLab.RegionalStoryDuration;
+                            Check((bool)Get(lab, scenePrefix + "Active") && (float)Get(lab, "dialogueAge") == 0,
+                                "observation precedes dialogue instead of hiding the action beneath a bubble");
                             int unitCount = battle.Units.Count;
                             Call(lab, "NextDialogue");
                             Check((int)Get(lab, "dialogueIndex") == 0 &&
-                                (float)Get(lab, "forestStoryAge") >= CatalogCombatLab.ForestStoryDuration &&
+                                (float)Get(lab, scenePrefix + "Age") >= duration &&
                                 battle.Units.Count == unitCount && battle.Time == beforeTime,
                                 "skip reveal reaches its complete visual state without skipping speech or spawning a combatant");
                         }
@@ -103,7 +108,48 @@ namespace Expedition.EditorTools
             }
             CombatSettlementValidation.Validate();
             ValidateForestPreferences(db);
+            ValidateCastlePreferences(db);
+            SeasonEndingValidation.Validate(db);
             Debug.Log("PASS battlefield dialogue: " + checks + " checks, 28 victory/loss/skip scenarios, save-before-dialogue and bubble layout.");
+        }
+
+        static void ValidateCastlePreferences(CatalogDatabase db)
+        {
+            bool oldMotion = GamePreferences.Current.ReduceMotion, oldFlashes = GamePreferences.Current.ReduceFlashes;
+            try
+            {
+                foreach (bool quiet in new[] { false, true })
+                foreach (bool flashes in new[] { false, true })
+                foreach (string form in new[] { "B-KN", "B-AR", "H-02" })
+                {
+                    GamePreferences.Current.ReduceMotion = quiet;
+                    GamePreferences.Current.ReduceFlashes = flashes;
+                    var battle = new CatalogBattle(db);
+                    var ally = battle.AddUnit("survivor", CatalogTeam.Ally, form, null, null, -1, 0);
+                    var enemy = battle.AddEnemy("golem-boss", 1, 1, 0, 100, 1, .01f, true, .5f, 0, CatalogEnemyRole.Golem);
+                    typeof(CatalogBattleUnit).GetProperty("Hp").SetValue(enemy, 0f, null);
+                    battle.Step(1f / 60);
+                    var go = new GameObject("Castle vignette settings QA");
+                    try
+                    {
+                        var lab = go.AddComponent<CatalogCombatLab>(); int result = 0;
+                        lab.OpenExpeditionBattle(battle, 10, 30, "QA", won => {}, () => {}, () => result++);
+                        lab.ConfigureExpeditionSpeed(2, null);
+                        Set(lab, "settling", true); Set(lab, "settlementVictory", true);
+                        Call(lab, "AdvanceSettlement", .6f);
+                        float hp = ally.Hp, x = ally.X, y = ally.Y, time = battle.Time;
+                        Call(lab, "AdvanceDialogue", 3f);
+                        Check((float)Get(lab, "dialogueAge") > 0 && Get(lab, "dialogueSpeaker") == ally,
+                            "castle scene supports one survivor including a fused form and accessibility settings");
+                        Check(ally.Hp == hp && ally.X == x && ally.Y == y && enemy.Hp == 0 && battle.Time == time && battle.Units.Count == 2,
+                            "castle props cannot revive the golem, spawn targets, move units or tick combat");
+                        Call(lab, "FinishDialogue"); Call(lab, "FinishDialogue");
+                        Check(result == 1 && !(bool)Get(lab, "castleStoryActive"), "castle exit clears state and finishes once");
+                    }
+                    finally { UnityEngine.Object.DestroyImmediate(go); }
+                }
+            }
+            finally { GamePreferences.Current.ReduceMotion = oldMotion; GamePreferences.Current.ReduceFlashes = oldFlashes; }
         }
 
         static void ValidateForestPreferences(CatalogDatabase db)

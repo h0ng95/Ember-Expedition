@@ -13,15 +13,19 @@ namespace Expedition.Presentation
     {
         static readonly BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         bool manual;
+        int manualWave = 5;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void StartIfRequested()
         {
             string flag = Path.Combine(Application.persistentDataPath, "dialogue-audit.flag");
             if (!File.Exists(flag)) return;
-            bool manual = File.ReadAllText(flag).Trim() == "manual";
+            string mode = File.ReadAllText(flag).Trim();
+            bool manual = mode == "manual" || mode.EndsWith("-manual");
             File.Delete(flag);
             var go = new GameObject("Explicit dialogue QA"); DontDestroyOnLoad(go);
-            go.AddComponent<ExpeditionDialogueAudit>().manual = manual;
+            var audit = go.AddComponent<ExpeditionDialogueAudit>();
+            audit.manual = manual; audit.manualWave = mode == "castle-manual" ? 10 : mode == "mine-manual" ? 15 :
+                mode == "frost-manual" ? 20 : mode == "garden-manual" ? 25 : mode == "palace-manual" ? 30 : 5;
         }
         IEnumerator Start()
         {
@@ -36,7 +40,7 @@ namespace Expedition.Presentation
             Directory.CreateDirectory(directory);
             var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
             int completed = 0;
-            foreach (int wave in manual ? new[] { 5 } : new[] { 5, 10, 15, 20, 25, 30 })
+            foreach (int wave in manual ? new[] { manualWave } : new[] { 5, 10, 15, 20, 25, 30 })
             {
                 var battle = new CatalogBattle(db);
                 string[] forms = wave == 15 ? new[] { "B-AR" } : wave == 25 ?
@@ -69,13 +73,14 @@ namespace Expedition.Presentation
                 else
                 {
                     // Let the real-time Ignis reveal finish before reviewing the spoken lines.
-                    if (wave == 5)
+                    if (wave >= 5)
                     {
+                        string prefix = "wave-" + wave;
                         yield return new WaitForSecondsRealtime(.2f);
-                        yield return new WaitForEndOfFrame(); Capture(directory, "forest-beat-0");
+                        yield return new WaitForEndOfFrame(); Capture(directory, prefix + "-beat-0");
                         yield return new WaitForSecondsRealtime(1.1f);
-                        yield return new WaitForEndOfFrame(); Capture(directory, "forest-beat-1");
-                        yield return new WaitForSecondsRealtime(2.1f);
+                        yield return new WaitForEndOfFrame(); Capture(directory, prefix + "-beat-1");
+                        yield return new WaitForSecondsRealtime(2.7f);
                     }
                     else yield return new WaitForSecondsRealtime(1.1f);
                     int count = ExpeditionDialogue.ForBoss(wave).Count;

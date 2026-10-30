@@ -285,6 +285,7 @@ namespace Expedition.Presentation
                 wave <= 25 ? "Art/Environments/v030/garden-battlefield" :
                 "Art/Environments/v031/palace-battlefield");
             battle = runBattle;
+            LoadRegionalScenery();
             battleEffects = new CatalogBattleEffects(gameObject);
             foreach (CatalogBattleUnit unit in battle.Units)
                 combatViews.Add(new View { Unit = unit, LastPosition = new Vector2(unit.X, unit.Y) });
@@ -352,6 +353,8 @@ namespace Expedition.Presentation
             partyFocusId=null;partyFocusUntil=0;
             dialogueActive = false; dialogueLines = null; dialogueSpeaker = null;
             forestStoryActive = false; forestStoryAge = 0;
+            castleStoryActive = false; castleStoryAge = 0;
+            ReleaseRegionalScenery();
         }
 
         void StartBattle()
@@ -787,6 +790,8 @@ namespace Expedition.Presentation
             if (battle == null) { DrawBattleHeader(null); return; }
 
             Rect arena = HudRules.BattleArena;
+            DrawCastleStoryScenery();
+            DrawRegionalScenery();
             if (!dialogueActive && battleEffects != null) battleEffects.DrawGround(battle, p => ExpeditionPoint(p, arena));
             foreach (View view in combatViews)
                 if (view.Unit.IsAlive && IsDimRegionalEnemy(view.Unit))
@@ -802,7 +807,7 @@ namespace Expedition.Presentation
             foreach (View view in sorted)
             {
                 CatalogBattleUnit unit = view.Unit;
-                if (!unit.IsAlive && view.StateTime >= CorpseFadeEnd && !HoldForestGuardian(unit)) continue;
+                if (!unit.IsAlive && view.StateTime >= CorpseFadeEnd && !HoldStoryBoss(unit)) continue;
                 if (!hiddenEscortsMarked && unit.IsAlive && unit.Team == CatalogTeam.Ally)
                 {
                     MarkHiddenEscorts(drawn);
@@ -820,7 +825,7 @@ namespace Expedition.Presentation
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
                     point.y -= PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, battle.Time);
                 Color previous = GUI.color;
-                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, HoldForestGuardian(unit) ? 1 : CorpseAlpha(view.StateTime));
+                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, HoldStoryBoss(unit) ? 1 : CorpseAlpha(view.StateTime));
                 else if (!dialogueActive && unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
                 else if (view.HitTime > .13f && !GamePreferences.Current.ReduceFlashes) GUI.color = new Color(1f, .62f, .48f, 1f);
                 if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f &&
@@ -1271,12 +1276,14 @@ namespace Expedition.Presentation
                     (view.Unit.AttackPhase == CatalogAttackPhase.WindingBasic && view.Unit.AttackWindupRemaining <= .18f ||
                         view.ReleaseRemaining > 0f && view.ReleaseAbilityId == "BASIC"))
                     frame = DrakeAttackPresentation.BasicFrame;
-                // The defeated forest guardian stays crouched beside its young. This is
-                // presentation only: HP, targeting, outcome and rewards remain settled.
-                if (HoldForestGuardian(view.Unit)) frame = Mathf.Min(frame, 20);
+                // Defeated story bosses retain a settled pose. HP, targeting and rewards do not change.
+                if (HoldStoryBoss(view.Unit)) frame = Mathf.Min(frame, 20);
+                if (HoldRegionalGuardian(view.Unit)) frame = expeditionWave == 30 ? 19 : expeditionWave == 15 ? 20 : 0;
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
-                if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);
+                if (view.Unit.BossEnraged && !dialogueActive) GUI.color *= new Color(1f, .72f, .62f);
+                if (castleStoryActive && HoldCastleGolem(view.Unit))
+                    GUI.color *= Color.Lerp(Color.white, new Color(.78f, .83f, .9f), Mathf.Clamp01(CastleStoryTime / 1.6f));
                 bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds, view.StateTime);
                 GUI.color = beforeForest;
                 if (drewForest)

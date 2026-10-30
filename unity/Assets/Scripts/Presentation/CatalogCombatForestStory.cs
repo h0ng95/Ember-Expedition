@@ -12,7 +12,6 @@ namespace Expedition.Presentation
         float forestStoryAge;
         Vector2 forestGuardianGround;
         float ForestStoryTime { get { return GamePreferences.Current.ReduceMotion ? ForestStoryDuration : forestStoryAge; } }
-        bool DialogueReady { get { return IgnisReady && (!forestStoryActive || ForestStoryTime >= ForestStoryDuration); } }
 
         bool HoldForestGuardian(CatalogBattleUnit unit)
         {

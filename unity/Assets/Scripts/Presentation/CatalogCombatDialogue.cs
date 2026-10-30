@@ -20,6 +20,10 @@ namespace Expedition.Presentation
         static readonly Color SpeechPaper = new Color32(255, 249, 228, 255);
         static readonly Color SpeechShade = new Color32(215, 196, 161, 255);
         static readonly Color SpeechGold = new Color32(255, 213, 132, 255);
+        bool DialogueReady { get { return IgnisReady &&
+            (!forestStoryActive || ForestStoryTime >= ForestStoryDuration) &&
+            (!castleStoryActive || CastleStoryTime >= CastleStoryDuration) &&
+            (!regionalStoryActive || RegionalStoryTime >= RegionalStoryDuration); } }
 
         bool TryStartDialogue()
         {
@@ -30,6 +34,8 @@ namespace Expedition.Presentation
             dialogueIndex = 0;
             BeginIgnisReveal();
             BeginForestStory();
+            BeginCastleStory();
+            BeginRegionalStory();
             floating.Clear();
             SetDialogueSpeaker();
             return true;
@@ -46,7 +52,8 @@ namespace Expedition.Presentation
 
         void AdvanceDialogue(float dt)
         {
-            AdvanceForestStory(dt);
+            if (regionalStoryActive) AdvanceRegionalStory(dt);
+            else if (castleStoryActive) AdvanceCastleStory(dt); else AdvanceForestStory(dt);
             if (DialogueReady) dialogueAge += dt;
             foreach (var view in combatViews)
             {
@@ -60,7 +67,7 @@ namespace Expedition.Presentation
         void NextDialogue()
         {
             if (!dialogueActive) return;
-            if (!DialogueReady) { CompleteForestReveal(); return; }
+            if (!DialogueReady) { CompleteForestReveal(); CompleteCastleReveal(); CompleteRegionalReveal(); return; }
             if (dialogueAge < .15f) return;
             string text = dialogueLines[dialogueIndex].Text;
             if (dialogueAge * 38 < text.Length) { dialogueAge = text.Length / 38f + .1f; return; }
@@ -74,6 +81,8 @@ namespace Expedition.Presentation
             if (!dialogueActive) return;
             dialogueActive = false;
             forestStoryActive = false; forestStoryAge = 0;
+            castleStoryActive = false; castleStoryAge = 0;
+            regionalStoryActive = false; regionalStoryAge = 0;
             Action finished = expeditionPresentationFinished;
             expeditionPresentationFinished = null;
             enabled = false;
@@ -183,7 +192,11 @@ namespace Expedition.Presentation
             EnsureDialogueStyles();
             if (dialogueFont != null && dialogueFont.material != null && dialogueFont.material.mainTexture != null)
                 dialogueFont.material.mainTexture.filterMode = FilterMode.Point;
-            if (!forestStoryActive || ForestStoryTime >= ForestIgnisDelay) DrawIgnisReveal();
+            DrawCastleStoryClue();
+            DrawRegionalClue();
+            if ((!forestStoryActive || ForestStoryTime >= ForestIgnisDelay) &&
+                (!castleStoryActive || CastleStoryTime >= CastleIgnisDelay) &&
+                (!regionalStoryActive || RegionalStoryTime >= RegionalIgnisDelay)) DrawIgnisReveal();
             GUI.Label(new Rect(32, 16, 940, 40), expeditionEncounter, dialogueCaption);
             for (int i = 0; i < dialogueLines.Count; i++)
             {
@@ -220,12 +233,14 @@ namespace Expedition.Presentation
             }
             SpeechPlate(new Rect(452, 644, 376, 52), new Color(.09f, .1f, .14f, .84f));
             GUI.Label(new Rect(452, 644, 376, 52), DialogueReady ? "화면을 눌러 계속" :
-                forestStoryActive ? "잿갈기 뒤에서 작은 기척이 난다" : "이그니스가 모습을 드러낸다", dialogueControl);
+                forestStoryActive ? "잿갈기 뒤에서 작은 기척이 난다" :
+                castleStoryActive ? "골렘에 남은 명령을 살핀다" : regionalStoryActive ? RegionalStoryHint : "이그니스가 모습을 드러낸다", dialogueControl);
             if (SpeechButton(new Rect(24, 644, 204, 52), "건너뛰기", false)) { FinishDialogue(); return; }
             if (SpeechButton(new Rect(1020, 644, 236, 52),
                 !DialogueReady ? "연출 넘기기" : dialogueIndex + 1 == dialogueLines.Count ? "결과 보기" : "다음", true)) { NextDialogue(); return; }
             if (Event.current.type == EventType.MouseUp && Event.current.button == 0 &&
-                (DialogueReady ? dialogueAge >= .15f : forestStoryActive ? forestStoryAge >= .15f : ignisAge >= .15f))
+                (DialogueReady ? dialogueAge >= .15f : forestStoryActive ? forestStoryAge >= .15f :
+                    castleStoryActive ? castleStoryAge >= .15f : regionalStoryActive ? regionalStoryAge >= .15f : ignisAge >= .15f))
             { Event.current.Use(); NextDialogue(); }
         }
     }

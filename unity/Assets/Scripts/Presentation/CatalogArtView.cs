@@ -44,6 +44,9 @@ namespace Expedition.Presentation
         public void Draw(string id, Rect destination, int frame)
         { DrawFrame(id, destination, Mathf.Clamp(frame, 0, 3)); }
 
+        public void DrawPeaceful(string id, Rect destination, float time, bool walking)
+        { DrawFrame(id, destination, walking ? 6 + (int)(time * 8) % 6 : (int)(time * 4) % 4); }
+
         public void DrawPreview(string id, Rect destination, float time)
         {
             float phase = time % 3.2f;

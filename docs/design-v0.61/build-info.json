@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-31",
+  "version": "v0.61",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 293375055,
+  "sha256": "c4798fdddf9d1c315f90ce0e4c085fd3edbec01b59677fef726129697b143162",
+  "unity": "6000.3.24f1",
+  "validation": {
+    "coreStory": 62,
+    "dialogueChecks": 566,
+    "settlementScenarios": 28,
+    "castleCaptionPositions": 24,
+    "layoutMeasurements": 47,
+    "saveFixtures": 7
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "resolution": "2408x1080",
+    "bossScenes": 6,
+    "dialogueScreens": 21,
+    "castleRevealScreens": 2,
+    "manualNextAndResult": "passed",
+    "skipDuringReveal": "passed",
+    "skipRevealKeepsFirstLine": "passed",
+    "saveRestore": "byte-for-byte verified"
+  },
+  "video": "castle-story.mp4",
+  "artwork": {
+    "tool": "built-in image_gen",
+    "file": "unity/Assets/Resources/Art/Story/v061/castle-story-props.png",
+    "prompt": "art-prompt.txt",
+    "sourcePixels": "1774x887",
+    "alphaPreserved": true
+  },
+  "limitations": [
+    "Isolated QA battles with reduced enemy HP; not a balance run",
+    "New vignettes implemented for waves 5 and 10; waves 15-30 and ending remain future work",
+    "English is a draft only; runtime language remains Korean",
+    "HTML source and links checked; browser rendering not verified"
+  ]
+}

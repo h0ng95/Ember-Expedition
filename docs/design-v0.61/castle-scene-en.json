@@ -1,0 +1,18 @@
+{
+  "locale": "en",
+  "status": "Translation draft. Runtime remains Korean.",
+  "wave": 10,
+  "title": "Whom Did the Gate Keep Out?",
+  "lines": [
+    {"speaker": "leader", "text": "The royal crest. Yet it shut the gate on us, too."},
+    {"speaker": "observer", "text": "Deny outside creatures access to the power source. Humans were no exception."},
+    {"speaker": "leader", "text": "Its orders put the cores before the people outside?"},
+    {"speaker": "observer", "text": "Let's find the intake ledger. We need to know who gave that order."}
+  ],
+  "journalOverride": {
+    "id": "castle-clear",
+    "title": "Whom Did the Gate Keep Out?",
+    "excerpt": "Abandoned refugee belongings lie outside; sealed royal chests remain within.\nThe golem denied even humans access to the power source.",
+    "body": "When the golem stopped, a tablet bearing the royal crest was revealed: Deny outside creatures access to the power source. That was why the gate had remained closed even to returning humans.\n\nA threadbare blanket, a waterskin and a broken cup showed where people had waited outside. The royal seals on the chests within were still intact. Which had its orders placed first: people or the power source?\n\nThe second core bore a different mark from the forest's. The expedition recorded the guard order and followed the chest's intake markings toward the mine and its ledger."
+  }
+}

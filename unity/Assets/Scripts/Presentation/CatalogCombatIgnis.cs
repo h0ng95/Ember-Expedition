@@ -21,41 +21,14 @@ namespace Expedition.Presentation
                 { ground = ExpeditionPoint(new Vector2(unit.X, unit.Y), HudRules.BattleArena); break; }
             // Keep the core beside the fallen guardian, away from the overlapping survivors.
             ignisGround = new Vector2(Mathf.Clamp(ground.x + 88, 660, 1140), Mathf.Clamp(ground.y, 360, 590));
-            ignisColor = expeditionWave == 5 ? new Color32(103, 233, 167, 255) :
-                expeditionWave == 10 ? new Color32(255, 203, 105, 255) :
-                expeditionWave == 15 ? new Color32(255, 137, 83, 255) :
-                expeditionWave == 20 ? new Color32(126, 221, 255, 255) :
-                expeditionWave == 25 ? new Color32(206, 155, 255, 255) : new Color32(255, 230, 161, 255);
+            ignisColor = IgnisCoreArt.RegionColor(expeditionWave);
             LoadIgnisArtwork();
         }
 
         void LoadIgnisArtwork()
         {
             ReleaseIgnisArtwork();
-            var source = Resources.Load<Texture2D>("Art/Ignis/ignis-living-core");
-            if (source == null) return;
-            // Palette swap once per encounter. The original alpha and dark stone are unchanged.
-            Color32[] pixels = source.GetPixels32();
-            float regionHue, regionSaturation, regionValue;
-            Color.RGBToHSV(ignisColor, out regionHue, out regionSaturation, out regionValue);
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                Color original = pixels[i];
-                if (original.a <= 0) continue;
-                float h, s, v;
-                Color.RGBToHSV(original, out h, out s, out v);
-                float warmth = (h < .19f || h > .96f) ? 1 : 0;
-                float mask = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.48f, .88f, v)) *
-                    Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.03f, .25f, s)) * warmth;
-                Color flame = Color.HSVToRGB(regionHue, Mathf.Clamp01(s * (expeditionWave == 30 ? .45f : 1.12f)), v);
-                Color result = Color.Lerp(original, flame, mask); result.a = original.a;
-                pixels[i] = result;
-            }
-            ignisArtwork = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
-            ignisArtwork.name = "Ignis regional flame " + expeditionWave;
-            ignisArtwork.filterMode = FilterMode.Point;
-            ignisArtwork.wrapMode = TextureWrapMode.Clamp;
-            ignisArtwork.SetPixels32(pixels); ignisArtwork.Apply(false, true);
+            ignisArtwork = IgnisCoreArt.Create(expeditionWave);
         }
 
         void ReleaseIgnisArtwork()

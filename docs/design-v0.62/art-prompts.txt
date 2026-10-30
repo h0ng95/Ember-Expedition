@@ -1,0 +1,36 @@
+Tool: built-in image_gen. Generated PNGs and their alpha are copied unchanged.
+Final source files:
+story-props.png: exec-0a3c217a-83a3-4b24-bd08-ea1395f3ae4a.png
+kingdom-return.png: exec-37e5b8ce-1d7a-460b-a7ab-c1488d6f49c7.png (civilian proportion revision; initial source exec-f60f609d-3d58-4851-b36b-fc6e4758fbe4.png)
+ignis-living-core.png: exec-2de4876b-f71e-471f-b253-c7c56d2eb17a.png
+Source directory: C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/
+Project paths: unity/Assets/Resources/Art/Story/v062/{story-props,kingdom-return}.png; unity/Assets/Resources/Art/Ignis/ignis-living-core.png
+Earlier detailed atlas was rejected; only the simplified eight-prop atlas is used.
+
+=== story-props ===
+Use case: stylized-concept. Production game sprite sheet, GENUINE very low resolution PIXEL ART. Not inventory illustrations. Exactly 8 SMALL simple sprites in a precise regular 4 COLUMNS by 2 ROWS grid, ONE sprite in each cell, generous transparent padding. Suggested 1536x1024 canvas. Each object is drawn on only about 32x32 to 48x48 logical pixels then enlarged in crisp square integer blocks. Hard 1-pixel dark outlines. At most 12-16 flat colors for the ENTIRE sheet. At most 2 or 3 solid shades per material. NO extra surface detail, scratches, woven cloth, wood grain, texture noise, gradients, realistic lighting, soft shadow, glow, smooth edges, or 3D rendering. Think simple tiny in-world props in an old 16-bit side-view game, explicitly much simpler than modern high-detail fantasy item art.
+ROW 1 left to right:
+1. One small tied tan cloth bundle with folded teal blanket and tiny brown flask, very simple folds.
+2. A small flat bronze command plaque lying slightly tilted on ground, simple three-prong crown above two short engraved lines.
+3. One small CLOSED brown wooden supply chest with dark iron bands and a teal strap, no extra small box.
+4. One small OPEN cream parchment ledger, two pages, simple dark leaf on one and snowflake on the other; no text.
+ROW 2 left to right:
+5. A LOW wide gray-blue stone basin/altar with small simple six-point snowflake mark on front, ice at one corner. Plain shape.
+6. One thin dried pale root crossed by a short dark brass elbow pipe with teal band. Simple readable silhouette.
+7. Two small broken bronze restraint collar halves lying on ground, with two broken links. NO intact crown.
+8. One small teal folded blueprint scroll showing a simple cream branching channel diagram. No writing.
+Low side-view with only slightly visible top surfaces, all feet/ground contact near cell center-bottom, no scenic bases. Original generic medieval designs, no lanterns, no characters. Background MUST be fully transparent alpha, with only opaque sprite pixels and transparent empty pixels; no colored haze or ambient halo. No captions, cell borders, numbers, UI or watermark. Return only the atlas.
+
+=== story-props cleanup ===
+Edit the attached sprite sheet ONLY to clean its transparency. Preserve the exact eight objects, pixel art, colors, layout, size, shapes and details. Remove ALL colored haze, radial lighting, diffuse shadows, atmospheric halo, dark background pixels surrounding the objects. Every space outside the hard dark pixel outline of the objects must be genuinely transparent with alpha ZERO. Keep the actual sprite pixels opaque. The sprites must be clean isolated cutouts, with NO soft perimeter, NO ambient glow, NO baked shadows. Do not redraw or rearrange anything. Return transparent PNG.
+
+=== ignis-living-core ===
+Use case: style-transfer. Redesign the attached magic core into a genuinely LOW-RES PIXEL GAME SPRITE. Preserve its identity: a cracked dark floating stone core in 3-4 large pieces, modest bronze seams, a bright warm twisting flame inside. Keep a striking recognizable mysterious silhouette.
+The old version is far too realistic and finely textured. Do NOT retain its surface texture or smooth curling flame. Draw from scratch on a logical 40x56 pixel grid, then enlarge using hard nearest-neighbor square blocks. Every visible detail should be made of obvious large square pixels. Maximum approximately 12 flat colors. Rock: only dark navy, charcoal and one gray edge highlight. Fire: dark orange, orange, gold and cream in simple stepped ribbon blocks. Bronze: only shadow and ochre edge. Exactly 3 large rock pieces and 2 tiny floating chips. Thick dark outline. One simple rising flame with stair-step bends. No embossed detail, no texture noise, no smooth gradients, no realistic 3D, no illustration brushwork, no haze, no soft glow, no spark cloud, no photographic lighting.
+Single sprite centered with at least 10% clear padding all around; genuine transparent background alpha, all actual sprite pixels opaque, exterior fully transparent. No text, no pedestal, no scenery. This is for a tiny 70px tall in-world game object beside chibi pixel characters. It must look charming, bold, iconic and visibly more pixelated than the reference. Return only the transparent sprite.
+
+=== kingdom-return ===
+Use case: stylized-concept. Create an ORIGINAL 16:9 side-view PIXEL ART game background for the ending of IGNIS: ASHEN OATH. Reference is STYLE ONLY: chunky deliberate pixels and simplified 3-tone materials, not realistic rendering.
+Scene: a small medieval town courtyard at cold dawn after magical power has been lost. Most timber-and-stone houses and windows are dark, with a broken public pipe at far left and a silent forge. On the RIGHT HALF, four small original ordinary townspeople in simple wool cloaks share soup and warmth beside ONE low communal stove with a modest amber fire; one elder, one child, two adults, warm but restrained hope. A workbench, spare wooden planks, rope and repairs in progress near them. They are small game sprites, not giant portraits.
+Composition: horizon roughly upper half; LEFT HALF of the lower-middle courtyard is CLEAR walkable stone ground for actual game party sprites to enter from the left. Small community on right, buildings behind. Bottom 18% mostly quiet dark cobblestones for captions. Upper 12% quiet sky for scene title. No text or UI. 2D side-view, slight view of ground surface, no dramatic perspective. Muted blue-gray dawn and desaturated teal, warm limited gold stove light. Town remains damaged and mostly unlit; no miracle or fully restored prosperity.
+Low-resolution pixel art around 480x270 source detail displayed large: clear square clusters, stair-step edges, dark outlines, flat shadow bands, no photographic textures, no smooth light bloom, no 3D realism. Match a medieval RPG pixel battlefield. No giant flames, no glowing crystals, no lanterns, no franchise symbols, no watermark. Full opaque scene.

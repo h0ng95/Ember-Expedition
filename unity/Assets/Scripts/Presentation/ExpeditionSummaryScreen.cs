@@ -36,12 +36,13 @@ namespace Expedition.Presentation
                 " + 남은 기회 " + (run.Lantern * 1000).ToString("N0") + "\n새 원정에서는 동료·골드·연구가 초기화됩니다.", small);
             ExpeditionUiTheme.FooterRule(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
-            int footerButtons = cleared ? 3 : 2;
+            int footerButtons = cleared ? 4 : 2;
             GUI.enabled = HasBattleReport;
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, footerButtons), "전투 기록", button)) modal = Modal.BattleReport;
             GUI.enabled = true;
-            if (cleared && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 3), "서약의 결말 읽기", button))
+            if (cleared && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 4), "결말 읽기", button))
                 OpenJournal("palace-clear");
+            if (cleared && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 2, 4), "엔딩 다시 보기", button)) OpenEnding(true);
             if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, footerButtons - 1, footerButtons), "거점으로", primary))
             {
                 if (run.Phase == ExpeditionPhase.Result && run.Continue()) Save("advance");

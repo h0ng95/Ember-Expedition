@@ -1,0 +1,7 @@
+Tool: built-in image_gen. Final town background revision to match the existing party proportions.
+File: unity/Assets/Resources/Art/Story/v062/kingdom-return.png
+Source: C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-37e5b8ce-1d7a-460b-a7ab-c1488d6f49c7.png
+
+Edit IMAGE 1 only (the town background). IMAGE 2 is only a STYLE REFERENCE: use the three game party characters on the LEFT as the proportions/outline/shading reference, do NOT copy UI or weapons.
+The four civilian humans on the RIGHT of image 1 are too realistically proportioned. Redraw ONLY those four civilians as small CHIBI PIXEL RPG characters with large round heads, compact bodies about 2.5 heads tall, short legs, thick dark outlines, simplified cloth planes with 2-3 flat shade steps. Their proportions and pixel cluster size must match the archer/priest/knight in image 2, while keeping them humble unarmed civilians in blue, brown and teal clothing. Keep the old man, the child and two adults, preserving their identities and soup-sharing poses by the stove. No weapons, no armor, no lanterns, no extra people.
+Preserve the architecture, foreground paving, stove, fire, soup pot, workbench, supplies, overall composition, lighting and exact camera of image 1. Keep left foreground clear for in-game party. No UI or text. Sharply pixelated, no soft gradients, realism or painted faces. Output the full opaque background.

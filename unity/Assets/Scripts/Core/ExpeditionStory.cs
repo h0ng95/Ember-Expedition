@@ -35,8 +35,8 @@ namespace Expedition.Core
                 "성문 골렘은 돌아온 사람에게도 무기를 겨눈다.\n숲에서 이어진 옛 운반로가 성채 안으로 들어간다.",
                 "성문 골렘의 가슴에는 왕국의 오래된 문장이 새겨져 있다. 인간이 만든 수호 장치는 피난민의 외침에도 길을 열지 않는다.\n\n성채 아래로 무거운 것을 옮기던 운반로가 이어진다. 이그니스의 흔적과 함께, 숲의 흙이 굳은 궤짝이 남아 있다."),
             new StoryEntry("castle-clear", "누구를 막는 성문인가",
-                "골렘에는 ‘외부 생물의 동력원 접근 금지’ 명령이 남았다.\n성문은 사람을 지켰을까, 안에 모인 핵을 지켰을까.",
-                "멈춘 골렘에서 경비 명령을 읽었다. ‘외부 생물의 동력원 접근 금지.’ 왕국이 새긴 명령이었다.\n\n운반로 끝의 두 번째 핵은 첫 핵과 문양이 달랐다. 같은 불에서 깨진 조각이라기에는 낯설다. 반입 장부의 다음 행선지는 폐광이었다."),
+                "문 밖에는 피난 짐, 안쪽에는 봉인된 왕실 보관함이 남았다.\n골렘은 사람에게도 동력원 접근을 허용하지 않았다.",
+                "골렘이 멈추자 왕실 문장이 찍힌 명령판이 드러났다. ‘외부 생물의 동력원 접근 금지.’ 인간이 돌아와도 문을 열지 않았던 이유였다.\n\n문 밖의 헤진 담요와 물주머니, 깨진 잔은 사람들이 기다렸던 흔적이었다. 안쪽 보관함의 왕실 봉인은 그대로였다. 이 장치는 사람과 동력원 가운데 무엇을 먼저 지키라는 명령을 받았을까.\n\n두 번째 핵의 문양은 숲의 핵과 달랐다. 원정대는 경비 명령을 기록하고, 보관함의 반입 표기를 따라 폐광의 장부를 찾으러 간다."),
             new StoryEntry("mine", "멈추지 않는 용광로",
                 "채굴은 멎었지만 용광로 수호자는 아직 일하고 있다.\n광차길 아래 동력관은 왕궁 쪽으로 이어진다.",
                 "사람이 떠난 용광로는 이그니스의 힘으로 계속 달아오른다. 수호 장치는 오래된 생산 명령을 반복하며 접근하는 생물을 공격한다.\n\n원정대는 핵의 흔적을 좇아 동력관을 살핀다. 굳게 닫힌 관리실에는 반입과 송출을 기록한 장부가 남아 있다."),
@@ -109,11 +109,14 @@ namespace Expedition.Core
     {
         public int Version;
         public string[] UnlockedIds;
+        public string[] EndingParty;
     }
 
     public sealed class ExpeditionJournal
     {
         readonly HashSet<string> unlocked = new HashSet<string>(StringComparer.Ordinal);
+        string[] endingParty = new string[0];
+        public string[] EndingParty { get { return (string[])endingParty.Clone(); } }
 
         ExpeditionJournal() { unlocked.Add("intro"); }
 
@@ -125,7 +128,19 @@ namespace Expedition.Core
             if (save == null || save.Version != 1 || save.UnlockedIds == null) return journal;
             foreach (string id in save.UnlockedIds)
                 if (ExpeditionStory.Get(id) != null) journal.unlocked.Add(id);
+            if (journal.IsUnlocked("palace-clear")) journal.RecordEndingParty(save.EndingParty);
             return journal;
+        }
+
+        public bool RecordEndingParty(IEnumerable<string> forms)
+        {
+            if (!IsUnlocked("palace-clear") || forms == null) return false;
+            var copy = new List<string>();
+            foreach (string form in forms)
+                if (!string.IsNullOrEmpty(form) && form.Length <= 16 && copy.Count < 5) copy.Add(form);
+            bool changed = copy.Count != endingParty.Length;
+            for (int i = 0; !changed && i < copy.Count; i++) changed |= copy[i] != endingParty[i];
+            endingParty = copy.ToArray(); return changed;
         }
 
         public bool Observe(ExpeditionRun run)
@@ -157,7 +172,7 @@ namespace Expedition.Core
             var ids = new List<string>(unlocked.Count);
             foreach (StoryEntry entry in ExpeditionStory.Entries)
                 if (unlocked.Contains(entry.Id)) ids.Add(entry.Id);
-            return new ExpeditionJournalSave { Version = 1, UnlockedIds = ids.ToArray() };
+            return new ExpeditionJournalSave { Version = 1, UnlockedIds = ids.ToArray(), EndingParty = EndingParty };
         }
     }
 }

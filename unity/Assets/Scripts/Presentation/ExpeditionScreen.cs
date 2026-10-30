@@ -96,6 +96,7 @@ namespace Expedition.Presentation
         void OnDisable() { CancelPointer(); if (art != null) { art.Dispose(); art = null; } }
         void OnDestroy()
         {
+            if (ending != null) ending.Dispose();
             ReleasePreparationPreview();
             if (battleReport != null) battleReport.Dispose();
             if (font != null) Destroy(font);
@@ -140,6 +141,8 @@ namespace Expedition.Presentation
                 savingAccount = true;
                 ObserveLessonAction(diagnosticAction);
                 ObserveJournal();
+                if (run.Wave == 30 && run.LastVictory && endingActors.Count > 0 && journal != null)
+                    journalDirty |= journal.RecordEndingParty(endingActors);
                 ObserveProgress();
                 PersistAccount();
                 playtest.Record(diagnosticAction, run, detail, battleSeconds);
@@ -303,6 +306,8 @@ namespace Expedition.Presentation
                 GUI.matrix = Matrix4x4.identity;
                 return;
             }
+            if (ending != null && ending.Active)
+            { ending.Draw(); GUI.matrix = Matrix4x4.identity; return; }
             if (!GrowthRevealActive) { FilterTutorialGuiEvent(); FilterLessonGuiEvent(); }
             Fill(new Rect(0, 0, Width, Height), Background);
             GUI.enabled = modal == Modal.None && !GrowthRevealActive;
@@ -602,6 +607,8 @@ namespace Expedition.Presentation
             bool selectedUnlocked = journal != null && journal.IsUnlocked(selectedStory.Id);
             GUI.Label(new Rect(528, 190, 560, 53), selectedUnlocked ? selectedStory.Title : "아직 발견하지 못한 이야기", journalTitle);
             GUI.Label(new Rect(529, 243, 559, 34), selectedUnlocked ? "원정대의 기록" : "아직 잠긴 기록", journalStatus);
+            if (selectedUnlocked && selectedStory.Id == "palace-clear" &&
+                GUI.Button(new Rect(856, 242, 232, 38), "엔딩 다시 보기", button)) { OpenEnding(true); return; }
             ExpeditionUiTheme.Rule(new Rect(528, 285, 560, 2));
             string text = selectedUnlocked ? selectedStory.Body : StoryUnlockHint(selectedStory.Id);
             Rect readingArea = new Rect(529, 306, 559, 284);
@@ -1026,10 +1033,10 @@ namespace Expedition.Presentation
                 if (lab == null) lab = gameObject.AddComponent<CatalogCombatLab>();
                 enabled = false;
                 lab.OpenExpeditionBattle(battle, run.Wave, ExpeditionRun.TotalWaves, run.EncounterName,
-                    victory => { run.ResolveBattle(victory); CompleteReport();
+                    victory => { QueueEnding(battle, victory); run.ResolveBattle(victory); CompleteReport();
                         Save(victory ? "battle_win" : "battle_loss", battleSeconds: battle.Time); },
                     () => { home = true; Save("battle_exit", "Return home; no inferred defeat.", battle.Time); enabled = true; },
-                    () => enabled = true);
+                    FinishBattlePresentation);
                 lab.ConfigureExpeditionSpeed(run.BattleSpeed, value => { if (run.SetBattleSpeed(value)) Save("battle_speed", value.ToString()); });
             }
             catch (Exception exception) { enabled = true; Notice("전투를 열지 못했습니다: " + exception.Message); }
@@ -1124,6 +1131,11 @@ namespace Expedition.Presentation
 
         void Update()
         {
+            if (ending != null)
+            {
+                if (ending.Active) { ending.Tick(Time.unscaledDeltaTime); CancelPointer(); return; }
+                ending.Dispose(); ending = null;
+            }
             PresentationPerformanceProbe.Mark(!startupReady ? "startup" : home ? "home" :
                 run != null && run.Phase != ExpeditionPhase.Preparation ? "result" : modal == Modal.None ? "preparation" : "dialog");
             if (!startupReady || home || run == null || run.Phase != ExpeditionPhase.Preparation ||

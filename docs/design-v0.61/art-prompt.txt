@@ -1,0 +1,14 @@
+Tool: built-in image_gen (transparent style-transfer edit; no CLI/API fallback).
+Final source: C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-54dcf210-13e4-4134-91f8-b0a1c2514b17.png
+Project asset: unity/Assets/Resources/Art/Story/v061/castle-story-props.png
+Generated PNG and alpha copied unchanged. Runtime UV crops select each group.
+Revision: realistic surface texture rejected by user; redrawn with simplified pixel clusters and discrete shading.
+
+Use case: style-transfer
+Asset type: transparent sprite atlas for a mobile pixel-art fantasy game.
+Image 1 is the edit target: a three-prop atlas. Image 2 is ONLY a style/scale reference from actual gameplay; do not reproduce its scene, characters or UI.
+Redraw image 1 completely as clearly hand-pixelled low-resolution 2D RPG sprites that belong beside the small cartoon archer and priest in image 2. The previous atlas is much too realistic.
+Keep the three groups in ONE horizontal row, with large transparent gutters, all fully inside the canvas, aligned to a common bottom baseline: left a modest bundle under a dark teal blanket with a brown waterskin and tiny clay cup; center one bronze command tablet with a simple original three-pronged crown, diamond and four short incised strokes; right a closed wooden royal storage chest and small matching box with dark iron bands and the same crown/diamond crest.
+Art direction: each prop group has roughly 60 to 80 source-pixel height, displayed at integer upscale. Large visible square pixel clusters, sharp stair-step edges, dark 1 to 2 source-pixel outlines, 3 solid shade bands per material, bold simple silhouettes, chunky metal edge highlights, slightly exaggerated charming RPG proportions. Deep teal cloth, warm brown wood/leather, muted bronze. Cloth folds are 4 to 6 big planar shapes. Wood is a few broad planks. Flat graphic metal highlights. No detailed fabric weave, no scratched realistic metal, no granular noise, no tiny grain, no photographic texture, no smooth gradients, no antialiasing, no 3D/product render, no painted illustration. Do NOT merely pixelate the existing realistic rendering; simplify and redraw its forms.
+Scene/backdrop: genuine transparent alpha, no checkerboard, no ground, no soft shadows, no glow.
+Maintain the original layout and substantial separation between the three groups. No characters, no lanterns, no words, no labels, no border. Return ONLY the new transparent sprite atlas.

@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-31",
+  "version": "v0.62",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 295599271,
+  "sha256": "c806d0e3e817c69452555f47b2da1f10731c0a072131bbf02d9469b17f995c0e",
+  "unity": "6000.3.24f1",
+  "validation": {
+    "coreStory": 62,
+    "dialogueChecks": 609,
+    "settlementScenarios": 28,
+    "endingAndRegionalChecks": 214,
+    "regionalSurvivorSettingsCases": 48,
+    "layoutMeasurements": 47,
+    "saveFixtures": 7
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "resolution": "2408x1080",
+    "bossScenes": 6,
+    "dialogueScreens": 24,
+    "endingPages": 3,
+    "manualPalaceNextAndResult": "passed",
+    "manualEndingNextAndResult": "passed",
+    "endingSkip": "passed",
+    "resultScreenReplay": "passed",
+    "journalScreenReplay": "passed",
+    "oldCompletedRunPartyFallback": "visually verified with B-KN, B-AR, B-PR",
+    "replayPreservesQaSave": { "generation": 1000, "gold": 1155, "score": 333000, "historyCount": 1 },
+    "saveRestore": "original saves and PlayerPrefs byte-for-byte verified"
+  },
+  "videos": ["palace-release.mp4", "ending.mp4"],
+  "artwork": {
+    "tool": "built-in image_gen",
+    "files": [
+      "unity/Assets/Resources/Art/Ignis/ignis-living-core.png",
+      "unity/Assets/Resources/Art/Story/v062/story-props.png",
+      "unity/Assets/Resources/Art/Story/v062/kingdom-return.png"
+    ],
+    "prompts": ["art-prompts.txt", "town-revision-prompt.txt"],
+    "generatedPngsPreserved": true,
+    "runtimePresentation": "Point filtering, UV crops and a shared regional Ignis palette conversion"
+  },
+  "limitations": [
+    "Isolated QA battles with reduced enemy HP; not a natural 30-wave balance run",
+    "The first-clear autoplay condition and ending lifecycle were checked in automated tests; mobile replays were exercised through actual result and journal UI",
+    "Townspeople are part of the new pixel background; no bespoke repair-work character animations",
+    "Runtime language remains Korean",
+    "HTML source and local links checked; browser rendering not verified"
+  ]
+}

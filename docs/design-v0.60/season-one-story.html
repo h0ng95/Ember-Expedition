@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시즌1 스토리와 전장 장면 설계</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">IGNIS: ASHEN OATH · STORY DESIGN</div>
+<h1>시즌1 스토리와 전장 장면 설계</h1>
+<p>왕국을 구하려던 원정대가, 다른 지역에도 지킬 생명이 있다는 사실을 알아가는 30전투의 이야기.</p>
+<div class="chips"><span>시즌1</span><span>여섯 장면과 엔딩</span><span>첫 숲 장면 구현</span><span>후속 대본</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">이번에 정한 범위</a>
+<a href="#section-2">이야기가 지킬 규칙</a>
+<a href="#section-3">인물과 편성</a>
+<a href="#section-4">30전투의 감정 흐름</a>
+<a href="#section-5">전장 대본과 연출</a>
+<a href="#section-6">엔딩 장면 설계</a>
+<a href="#section-7">제작 기준</a><a class="source-link" href="season-one-story.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-31 · IGNIS: ASHEN OATH · 스포일러 포함</p>
+<p><strong>왕국의 사람들을 구하려던 원정대가, 다른 지역에도 지킬 생명이 있다는 사실을 알아가는 이야기다.</strong> Normal 30전투 안에서 진실 발견과 결말을 완성한다. 이번 구현은 5전투 이후의 첫 장면이며, 나머지 장면은 아래 대본과 연출을 바탕으로 차례로 제작한다.</p>
+<h2 id="section-1">이번에 정한 범위</h2>
+<ul>
+<li>시즌1: 도입, 보스전 뒤 여섯 장면, 엔딩의 감정 흐름과 대본을 잡는다.</li>
+<li>첫 구현: 잿갈기와 작은 숲 생물, 이그니스 주변의 새싹, 생존 동료 네 줄 대화.</li>
+<li>시즌2: 회복된 숲과 인간·수호자의 공존이 실제로 남아 있다는 연결점만 보관한다. 침략이나 새 왕을 시즌1 엔딩에 끼워 넣지 않는다.</li>
+<li>시즌3: 먼 미래의 후보로 둔다. 이그니스의 인공 기원·소멸·최초의 수호자는 현재 설정으로 확정하지 않는다.</li>
+</ul>
+<h2 id="section-2">이야기가 지킬 규칙</h2>
+<p>이그니스는 각 지역의 생명과 마법이 순환하도록 하는 고유한 근원이다. 숲의 녹색, 성채의 호박색, 용광로의 주홍색, 서리의 청색, 정원의 보라색, 왕궁의 백금빛을 유지한다. 왕국은 서로 다른 핵을 하나의 동력망에 묶고 모두 자기 것이라고 불렀다.</p>
+<p>왕국의 위기는 실제다. 난방과 결계가 멈추면 지금 살아가는 시민들이 피해를 입는다. 원정대가 진실을 알아도 그 사람들을 구할 책임은 사라지지 않는다. 지역의 피해를 알게 된 뒤에는 그 책임을 수행하는 방법을 바꾼다.</p>
+<p>숲과 수호자를 처음부터 선한 존재라고 단정하지 않는다. 변이 생물은 여전히 위험하고 일부 장치는 인간의 옛 명령대로 공격한다. 보스 승리는 전투 불능, 폭주 진정, 구속 해제일 수 있다. 작은 생물은 보스가 지키던 생명으로 표현하며 새로운 공격 대상으로 만들지 않는다.</p>
+<h2 id="section-3">인물과 편성</h2>
+<p>플레이어는 원정대장이다. 전장에서는 실제 출전한 생존 동료가 상황을 발견하고 의견을 낸다. 이름을 가진 필수 동료나 편성 제한을 추가하지 않는다.</p>
+<p><strong>방패 기사 계열의 인물 방향:</strong> 먼저 몸으로 막고, 동료를 데리고 왕국으로 돌아가는 것을 책임으로 여긴다. 초반에는 회수 명령을 수행하는 것이 사람을 지키는 길이라고 믿는다. 첫 숲에서는 추가 공격을 멈추고, 정원에서는 자신이 믿었던 명령을 멈추며, 왕궁에서는 그 결정의 대가까지 책임지겠다고 말한다. 개인 가족의 이름·죽음·과거 사건은 아직 확정하지 않는다.</p>
+<p><strong>관찰하는 동료의 방향:</strong> 이상한 징후와 다친 생명을 먼저 본다. 원정의 목적에 질문을 던지지만 처음부터 진실을 알고 있지는 않다. 사제가 있으면 이 역할을 우선 맡고, 없으면 다른 생존 동료가 관찰한 사실을 말한다. 전문 직업 지식이 있어야만 할 수 있는 대사는 쓰지 않는다.</p>
+<p>아래의 ‘선두’와 ‘동료’는 연출 역할이다. 동일한 개인이 모든 전투를 따라왔다고 가정하지 않는다. 기사가 없거나 쓰러지면 살아 있는 다른 동료가 선두 역할을 맡는다. 한 명만 살아남으면 두 역할의 대사를 혼잣말로 이어갈 수 있도록 상대의 이름이나 필수 응답을 넣지 않는다. 결합·진화로 모습이 바뀌어도 실제 모습과 이름표를 사용한다.</p>
+<h2 id="section-4">30전투의 감정 흐름</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="비교 표"><table>
+<thead>
+<tr>
+<th>시점</th>
+<th>눈으로 보여줄 것</th>
+<th>원정대의 변화</th>
+<th>핵의 행방</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>도입</td>
+<td>난방이 꺼진 거점에서도 사람들이 서로를 보살핌</td>
+<td>돌아가서 이들을 지켜야 한다</td>
+<td>회수 명령을 받음</td>
+</tr>
+<tr>
+<td>5 숲</td>
+<td>몸을 낮춘 잿갈기, 뒤에서 나온 작은 생물, 빛 아래 새싹</td>
+<td>적도 무언가를 지킬 수 있다는 첫 의문</td>
+<td>아직 명령에 따라 회수, 현장 기록</td>
+</tr>
+<tr>
+<td>10 성채</td>
+<td>피난민이 남긴 흔적과 인간의 경비 명령</td>
+<td>왕국의 명령이 항상 사람을 지키는가</td>
+<td>두 번째 핵과 명령 기록 확보</td>
+</tr>
+<tr>
+<td>15 폐광</td>
+<td>지역 이름이 다른 반출 장부, 왕국으로 이어지는 관</td>
+<td>번영과 타인의 피해가 연결될 가능성</td>
+<td>세 번째 핵, 장부 확보</td>
+</tr>
+<tr>
+<td>20 서리 성당</td>
+<td>오래된 제단과 핵의 동일한 문양, 남은 물길</td>
+<td>처음부터 왕국 소유였다는 설명이 무너짐</td>
+<td>네 번째 핵은 보호 용기에 보관, 송출 보류</td>
+</tr>
+<tr>
+<td>25 황혼 정원</td>
+<td>뿌리에 박힌 추출관과 왕실 도면</td>
+<td>약탈의 인과 확인, 회수 중단 결정</td>
+<td>다섯 번째 핵을 현지에 남김</td>
+</tr>
+<tr>
+<td>30 왕궁</td>
+<td>끊어진 구속 장치, 공격을 멈춘 수호룡</td>
+<td>왕국 밖의 생명까지 책임지겠다는 선택</td>
+<td>마지막 핵은 현지, 회수한 네 핵은 반환 시작</td>
+</tr>
+<tr>
+<td>엔딩</td>
+<td>돌아온 핵, 숲의 생명, 제한된 난방을 나누는 시민</td>
+<td>즉시 풍요롭지 않아도 함께 살아갈 길을 시작</td>
+<td>반환과 회복을 첫 완주 결말로 확정</td>
+</tr>
+</tbody></table></div>
+<h2 id="section-5">전장 대본과 연출</h2>
+<h3>5전투 숲 — 첫 의문</h3>
+<p><strong>이번 구현.</strong> 공격이 끝난 뒤 잿갈기가 낮은 자세로 남는다. 뒤쪽에서 작은 숲 생물이 조심스럽게 다가와 잿갈기 곁에 웅크린다. 이그니스가 떠오르면서 가까운 땅의 작은 새싹이 보이고 바깥의 마른 줄기와 대비된다. 가까운 생존 동료는 조금 물러선다.</p>
+<ol>
+<li>동료: “잠깐. 뒤에 작은 녀석이 있어.”</li>
+<li>선두: “…무기 내려. 더 다가가지 마.”</li>
+<li>동료: “새싹도 이 빛 주위에만 자라고 있어.”</li>
+<li>선두: “이곳을 지키던 건가… 기록해 둬.”</li>
+</ol>
+<p>아직 약탈이나 핵의 원래 소유자를 단정하지 않는다. 현장에서는 공격을 멈추고 관찰한다. 이후 회수 명령을 계속 수행하는 행동은 결과 기록에 남겨, 초반 원정대가 벌써 진실을 모두 깨달은 것처럼 보이지 않게 한다.</p>
+<p>연출은 3.2초, 대사는 사용자가 넘긴다. ‘연출 넘기기’는 작은 생물과 새싹이 자리한 마지막 상태로 이동하고 첫 대사를 유지한다. ‘건너뛰기’는 전체 대화를 닫고 결과로 간다. 모션 줄이기에서는 정지된 장면을 바로 보여준다.</p>
+<h3>10전투 성채 — 명령의 대상</h3>
+<p><strong>후속 연출·대본.</strong> 멈춘 골렘의 왕실 문장이 강조된다. 문 밖에는 피난민의 천과 생활 도구, 안쪽에는 동력원 보관 흔적을 배치한다. 살아 있는 피난민을 새 전투 유닛으로 추가할 필요는 없다.</p>
+<ol>
+<li>선두: “왕국의 문장이다. 그런데 우리에게도 문을 닫았군.”</li>
+<li>동료: “‘외부 생물의 동력원 접근 금지.’ 사람도 예외가 아니었어.”</li>
+<li>선두: “문 밖의 사람들보다 핵을 먼저 지키라는 명령인가.”</li>
+<li>동료: “누가 내린 명령인지, 반입 장부를 찾아보자.”</li>
+</ol>
+<h3>15전투 폐광 — 돌아갈 이유</h3>
+<p><strong>후속 연출·대본.</strong> 불이 꺼진 동력관 끝에 장부가 드러난다. 한 번의 대화로 약탈의 전모를 확정하지 않는다. 왕국의 사람들이 그 동력에 기대 살아왔다는 사실을 함께 둔다.</p>
+<ol>
+<li>동료: “숲, 성당, 정원… 핵을 가져온 곳이 전부 달라.”</li>
+<li>선두: “우리가 겨울을 넘긴 동력이 여기서 왔다는 건가.”</li>
+<li>동료: “그 뒤부터 그 땅이 메말랐다면?”</li>
+<li>선두: “장부를 챙겨. 우리를 기다리는 사람들에게도 알아야 할 일이야.”</li>
+</ol>
+<h3>20전투 서리 성당 — 명령을 보류하다</h3>
+<p><strong>후속 연출·대본.</strong> 파수꾼의 폭주가 진정된 뒤 핵의 빛과 제단 문양이 이어진다. 빛이 닿는 좁은 물길만 움직인다. 그 외 지역을 한순간에 녹이지 않는다.</p>
+<ol>
+<li>동료: “제단이 왕국보다 오래됐어. 핵의 문양도 같고.”</li>
+<li>선두: “왕국의 것이었다는 말부터 틀렸을 수 있겠군.”</li>
+<li>동료: “이걸 가져가도 되는 걸까.”</li>
+<li>선두: “왕궁으로 보내는 건 보류한다. 정원의 기록까지 확인하자.”</li>
+</ol>
+<h3>25전투 황혼 정원 — 무엇을 멈출 것인가</h3>
+<p><strong>후속 연출·대본.</strong> 핵에서 뿌리로 흐를 빛이 왕실 관으로 새어 나간 흔적을 보여 준다. 도면은 이미 본 장부와 제단의 의미를 연결한다. 핵을 주머니로 흡수시키는 효과를 사용하지 않는다.</p>
+<ol>
+<li>동료: “우리가 핵을 가져갔고, 이 땅이 메말랐어. 수호자들은 되찾았던 거야.”</li>
+<li>선두: “그럼 지금까지 우리가 회수한 건…”</li>
+<li>동료: “핵을 돌려주면 왕국의 사람들은 어떻게 해?”</li>
+<li>선두: “그 책임도 우리가 진다. 이 핵은 두고, 왕궁의 추출 장치를 멈춘다.”</li>
+</ol>
+<h3>30전투 왕궁 — 서약의 범위</h3>
+<p><strong>후속 연출·대본.</strong> 승리와 함께 구속 장치의 빛이 끊긴다. 용이 공격 자세를 풀고 마지막 핵을 감싼다. 용의 죽음이나 핵 획득 연출로 읽히지 않게 해야 한다.</p>
+<ol>
+<li>선두: “왕관이 부서졌다. 이제 우리를 공격하지 않는군.”</li>
+<li>동료: “남은 동력만으로 왕국이 버틸 수 있을까.”</li>
+<li>선두: “돌아가서 함께 버텨야지. 다른 땅을 계속 빼앗을 수는 없어.”</li>
+<li>선두: “우리가 지키겠다고 맹세한 생명은 왕국 안에만 있지 않았으니까.”</li>
+</ol>
+<h2 id="section-6">엔딩 장면 설계</h2>
+<p><strong>후속 제작.</strong> 처음 30전투를 완주하면 짧은 세 장면으로 끝낸다. 다시 보기와 건너뛰기를 제공한다.</p>
+<ol>
+<li><strong>숲:</strong> 반환된 녹색 핵 옆에 첫 장면의 작은 생물이 남아 있다. 새싹이 조금 늘었다. ‘돌려놓은 빛 곁에서, 다시 살아가는 것들이 있었다.’</li>
+<li><strong>왕국:</strong> 꺼진 시설과 어두운 창이 남아 있지만, 시민들은 한곳의 난방과 식량을 나누고 있다. ‘모든 불을 다시 켤 수는 없었다.’</li>
+<li><strong>돌아온 원정:</strong> 원정대가 시민과 함께 복구를 시작한다. ‘우리는 무엇을 지켜야 하는지부터 다시 배웠다.’ 이후 제목과 완주 결과로 이어진다.</li>
+</ol>
+<p>왕국이 곧바로 멸망하거나 새 마법 하나로 모두 회복되는 결말은 사용하지 않는다. 평화를 망치는 다음 왕이나 전쟁 예고도 붙이지 않는다. 시즌2가 제작된다면 여기서 구한 숲과 공동체를 실제로 다시 만나는 것이 연결점이다.</p>
+<h2 id="section-7">제작 기준</h2>
+<ul>
+<li>대사 한 줄은 짧은 도트 말풍선에 들어가야 하며 1×·2×와 무관하게 읽을 수 있다.</li>
+<li>시각적 단서가 먼저, 해석은 그다음이다. 새로운 진실을 매 장면 하나씩만 더한다.</li>
+<li>첫 장면은 기존 잿갈기·숲 생물의 완전한 스프라이트를 사용한다. 팔·머리 분리, 새 장비, 부자연스러운 보호 동작을 만들지 않는다. 현재는 몸을 낮추고 작은 생물이 곁에 머무르는 연출이다.</li>
+<li>개별 캐릭터의 전용 표정·감싸는 동작, 왕궁의 구속 해제와 세 장면 엔딩은 후속 아트·연출 범위다.</li>
+<li>반복 원정의 실패로 설정상 같은 수호자가 계속 죽고 부활하는 이야기를 만들지 않는다. 최초 완주 이후에는 원정 기록을 다시 펼치는 기존 규칙을 유지한다.</li>
+</ul>
+<p>기준 설정: <a href="../story-direction.md">이그니스 세계관</a>. 확장 논의: <a href="https://chatgpt.com/share/6ae4bb21-90a8-83ee-bf5c-94b98f990024">공유된 시즌1·2·3 구상</a>.</p>
+</main>
+</div>
+<footer>v0.60 · 첫 숲 장면은 구현, 나머지 장면은 후속 제작 대본입니다.<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

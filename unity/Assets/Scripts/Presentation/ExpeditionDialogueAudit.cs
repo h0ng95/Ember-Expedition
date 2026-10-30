@@ -69,17 +69,21 @@ namespace Expedition.Presentation
                 else
                 {
                     // Let the real-time Ignis reveal finish before reviewing the spoken lines.
-                    yield return new WaitForSecondsRealtime(1.1f);
+                    if (wave == 5)
+                    {
+                        yield return new WaitForSecondsRealtime(.2f);
+                        yield return new WaitForEndOfFrame(); Capture(directory, "forest-beat-0");
+                        yield return new WaitForSecondsRealtime(1.1f);
+                        yield return new WaitForEndOfFrame(); Capture(directory, "forest-beat-1");
+                        yield return new WaitForSecondsRealtime(2.1f);
+                    }
+                    else yield return new WaitForSecondsRealtime(1.1f);
                     int count = ExpeditionDialogue.ForBoss(wave).Count;
                     for (int line = 0; line < count; line++)
                     {
                         typeof(CatalogCombatLab).GetField("dialogueAge", Hidden).SetValue(lab, 100f);
                         yield return new WaitForEndOfFrame();
-                        var capture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-                        capture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0); capture.Apply();
-                        File.WriteAllBytes(Path.Combine(directory, "boss-" + wave + "-line-" + line + ".rgb"), capture.GetRawTextureData());
-                        File.WriteAllText(Path.Combine(directory, "capture-size.txt"), Screen.width + "," + Screen.height);
-                        Destroy(capture);
+                        Capture(directory, "boss-" + wave + "-line-" + line);
                         typeof(CatalogCombatLab).GetMethod("NextDialogue", Hidden).Invoke(lab, null);
                         yield return null;
                     }
@@ -91,6 +95,15 @@ namespace Expedition.Presentation
             File.WriteAllText(Path.Combine(directory, manual ? "manual.txt" : "result.txt"), "completed=" + completed);
             screen.enabled = true;
             Destroy(gameObject);
+        }
+
+        static void Capture(string directory, string name)
+        {
+            var capture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            capture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0); capture.Apply();
+            File.WriteAllBytes(Path.Combine(directory, name + ".rgb"), capture.GetRawTextureData());
+            File.WriteAllText(Path.Combine(directory, "capture-size.txt"), Screen.width + "," + Screen.height);
+            Destroy(capture);
         }
     }
 }

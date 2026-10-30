@@ -57,6 +57,17 @@ namespace Expedition.EditorTools
                         float beforeTime = battle.Time;
                         Call(lab, "AdvanceDialogue", 1.1f);
                         Check(battle.Time == beforeTime, "dialogue never advances combat");
+                        if (wave == 5)
+                        {
+                            Check((bool)Get(lab, "forestStoryActive") && (float)Get(lab, "dialogueAge") == 0,
+                                "forest observation precedes dialogue instead of hiding the action beneath a bubble");
+                            int unitCount = battle.Units.Count;
+                            Call(lab, "NextDialogue");
+                            Check((int)Get(lab, "dialogueIndex") == 0 &&
+                                (float)Get(lab, "forestStoryAge") >= CatalogCombatLab.ForestStoryDuration &&
+                                battle.Units.Count == unitCount && battle.Time == beforeTime,
+                                "skip reveal reaches its complete visual state without skipping speech or spawning a combatant");
+                        }
                         if (skip) Call(lab, "FinishDialogue");
                         else for (int i = 0; i < ExpeditionDialogue.ForBoss(wave).Count; i++)
                         { Set(lab, "dialogueAge", 10f); Call(lab, "NextDialogue"); }
@@ -91,7 +102,45 @@ namespace Expedition.EditorTools
                 }
             }
             CombatSettlementValidation.Validate();
+            ValidateForestPreferences(db);
             Debug.Log("PASS battlefield dialogue: " + checks + " checks, 28 victory/loss/skip scenarios, save-before-dialogue and bubble layout.");
+        }
+
+        static void ValidateForestPreferences(CatalogDatabase db)
+        {
+            bool oldMotion = GamePreferences.Current.ReduceMotion;
+            try
+            {
+                foreach (bool quiet in new[] { false, true })
+                foreach (string form in new[] { "B-KN", "B-AR", "H-02" })
+                {
+                    GamePreferences.Current.ReduceMotion = quiet;
+                    var battle = new CatalogBattle(db);
+                    var ally = battle.AddUnit("survivor", CatalogTeam.Ally, form, null, null, -1, 0);
+                    var enemy = battle.AddEnemy("beast-boss", 1, 1, 0, 100, 1, .01f, true, .5f, 0, CatalogEnemyRole.Beast);
+                    typeof(CatalogBattleUnit).GetProperty("Hp").SetValue(enemy, 0f, null);
+                    battle.Step(1f / 60);
+                    var go = new GameObject("Forest vignette settings QA");
+                    try
+                    {
+                        var lab = go.AddComponent<CatalogCombatLab>();
+                        int result = 0;
+                        lab.OpenExpeditionBattle(battle, 5, 30, "QA", won => {}, () => {}, () => result++);
+                        Set(lab, "settling", true); Set(lab, "settlementVictory", true);
+                        Call(lab, "AdvanceSettlement", .6f);
+                        float hp = ally.Hp, x = ally.X, y = ally.Y;
+                        Call(lab, "AdvanceDialogue", 3.3f);
+                        Check((float)Get(lab, "dialogueAge") > 0 && Get(lab, "dialogueSpeaker") == ally,
+                            "motion setting and a lone basic/fused survivor reach the first line");
+                        Check(ally.Hp == hp && ally.X == x && ally.Y == y && enemy.Hp == 0 && battle.Units.Count == 2,
+                            "vignette changes no HP, position, boss life or roster");
+                        Call(lab, "FinishDialogue"); Call(lab, "FinishDialogue");
+                        Check(result == 1 && !(bool)Get(lab, "forestStoryActive"), "skip cleans the vignette and returns once");
+                    }
+                    finally { UnityEngine.Object.DestroyImmediate(go); }
+                }
+            }
+            finally { GamePreferences.Current.ReduceMotion = oldMotion; }
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Expedition.Presentation
             dialogueActive = true;
             dialogueIndex = 0;
             BeginIgnisReveal();
+            BeginForestStory();
             floating.Clear();
             SetDialogueSpeaker();
             return true;
@@ -45,8 +46,8 @@ namespace Expedition.Presentation
 
         void AdvanceDialogue(float dt)
         {
-            ignisAge += dt;
-            if (IgnisReady) dialogueAge += dt;
+            AdvanceForestStory(dt);
+            if (DialogueReady) dialogueAge += dt;
             foreach (var view in combatViews)
             {
                 view.HitTime = view.ReleaseRemaining = 0;
@@ -59,7 +60,7 @@ namespace Expedition.Presentation
         void NextDialogue()
         {
             if (!dialogueActive) return;
-            if (!IgnisReady) { ignisAge = IgnisRevealDuration; return; }
+            if (!DialogueReady) { CompleteForestReveal(); return; }
             if (dialogueAge < .15f) return;
             string text = dialogueLines[dialogueIndex].Text;
             if (dialogueAge * 38 < text.Length) { dialogueAge = text.Length / 38f + .1f; return; }
@@ -72,6 +73,7 @@ namespace Expedition.Presentation
         {
             if (!dialogueActive) return;
             dialogueActive = false;
+            forestStoryActive = false; forestStoryAge = 0;
             Action finished = expeditionPresentationFinished;
             expeditionPresentationFinished = null;
             enabled = false;
@@ -181,7 +183,7 @@ namespace Expedition.Presentation
             EnsureDialogueStyles();
             if (dialogueFont != null && dialogueFont.material != null && dialogueFont.material.mainTexture != null)
                 dialogueFont.material.mainTexture.filterMode = FilterMode.Point;
-            DrawIgnisReveal();
+            if (!forestStoryActive || ForestStoryTime >= ForestIgnisDelay) DrawIgnisReveal();
             GUI.Label(new Rect(32, 16, 940, 40), expeditionEncounter, dialogueCaption);
             for (int i = 0; i < dialogueLines.Count; i++)
             {
@@ -192,7 +194,7 @@ namespace Expedition.Presentation
             DrawnCombatant? speaker = null;
             foreach (var actor in drawn)
                 if (actor.View.Unit == dialogueSpeaker) { speaker = actor; break; }
-            if (speaker != null && IgnisReady)
+            if (speaker != null && DialogueReady)
             {
                 string full = dialogueWrapped ?? (dialogueWrapped = WrapDialogueText(dialogueText, dialogueLines[dialogueIndex].Text, 328));
                 float textHeight = dialogueText.CalcHeight(new GUIContent(full), 328);
@@ -217,12 +219,13 @@ namespace Expedition.Presentation
                     SpeechArrow(new Vector2(bubble.xMax - 36, bubble.yMax - 16), SpeechInk, true);
             }
             SpeechPlate(new Rect(452, 644, 376, 52), new Color(.09f, .1f, .14f, .84f));
-            GUI.Label(new Rect(452, 644, 376, 52), IgnisReady ? "화면을 눌러 계속" : "이그니스가 모습을 드러낸다", dialogueControl);
+            GUI.Label(new Rect(452, 644, 376, 52), DialogueReady ? "화면을 눌러 계속" :
+                forestStoryActive ? "잿갈기 뒤에서 작은 기척이 난다" : "이그니스가 모습을 드러낸다", dialogueControl);
             if (SpeechButton(new Rect(24, 644, 204, 52), "건너뛰기", false)) { FinishDialogue(); return; }
             if (SpeechButton(new Rect(1020, 644, 236, 52),
-                dialogueIndex + 1 == dialogueLines.Count ? "결과 보기" : "다음", true)) { NextDialogue(); return; }
+                !DialogueReady ? "연출 넘기기" : dialogueIndex + 1 == dialogueLines.Count ? "결과 보기" : "다음", true)) { NextDialogue(); return; }
             if (Event.current.type == EventType.MouseUp && Event.current.button == 0 &&
-                (IgnisReady ? dialogueAge >= .15f : ignisAge >= .15f))
+                (DialogueReady ? dialogueAge >= .15f : forestStoryActive ? forestStoryAge >= .15f : ignisAge >= .15f))
             { Event.current.Use(); NextDialogue(); }
         }
     }

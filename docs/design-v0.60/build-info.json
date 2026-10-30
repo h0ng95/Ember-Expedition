@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-31",
+  "version": "v0.60",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 292816329,
+  "sha256": "9501fafbe054dd181762b45a7f06f6ebc8d1b7bf93eb1acd56c3555014851bf9",
+  "unity": "6000.3.24f1",
+  "validation": {
+    "coreStory": 62,
+    "dialogueChecks": 484,
+    "settlementScenarios": 28,
+    "layoutMeasurements": 47,
+    "saveFixtures": 7
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "resolution": "2408x1080",
+    "bossScenes": 6,
+    "dialogueScreens": 20,
+    "revealScreens": 2,
+    "manualNextAndResult": "passed",
+    "skipDuringReveal": "passed",
+    "saveRestore": "byte-for-byte verified"
+  },
+  "video": "forest-story.mp4",
+  "limitations": [
+    "Isolated QA battles with reduced enemy HP, not a balance run",
+    "Only wave 5 has the new vignette; waves 10-30 and the ending have scripts for future production",
+    "Local HTML browser preview was blocked by URL policy; Markdown source checked"
+  ]
+}

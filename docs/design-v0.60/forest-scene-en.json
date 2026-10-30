@@ -1,0 +1,18 @@
+{
+  "locale": "en",
+  "status": "Translation draft. Runtime still uses Korean; other scenes retain v0.59 text.",
+  "wave": 5,
+  "title": "A Life Behind the Guardian",
+  "lines": [
+    {"speaker": "observer", "text": "Wait. There's a little one behind it."},
+    {"speaker": "leader", "text": "...Lower your weapons. Don't go any closer."},
+    {"speaker": "observer", "text": "Look. The shoots only grow around this light."},
+    {"speaker": "leader", "text": "Was it protecting this place...? Write it down."}
+  ],
+  "journalOverride": {
+    "id": "forest-clear",
+    "title": "A Shoot Beside the Core",
+    "excerpt": "A small creature emerges and crouches beside Ashmane.\nSeeing shoots around the core, the expedition stops approaching.",
+    "body": "Even after falling, Ashmane keeps its body low in front of a small creature. The little one emerges cautiously and crouches beside it. The expedition lowers its weapons and stops.\n\nNew shoots grow in the light of Ignis. Beyond it lie only long-dead roots. Was Ashmane guarding its power, or this small patch of earth?\n\nPeople are still waiting in the kingdom. The expedition cannot yet abandon its orders. They take the first core, but record what they saw before continuing to the castle."
+  }
+}

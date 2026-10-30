@@ -13,9 +13,12 @@ namespace Expedition.Core
     public static class ExpeditionDialogue
     {
         static readonly IReadOnlyList<ExpeditionDialogueLine>[] Scenes = {
-            Scene("핵을 확보했다. 성채로 이동한다.",
-                "잠깐… 새싹이 이 빛 주위에만 자라고 있어.",
-                "잿갈기가 지키던 게 이것이었나. 기록해 둬."),
+            Array.AsReadOnly(new[] {
+                new ExpeditionDialogueLine(true, "잠깐. 뒤에 작은 녀석이 있어."),
+                new ExpeditionDialogueLine(false, "…무기 내려. 더 다가가지 마."),
+                new ExpeditionDialogueLine(true, "새싹도 이 빛 주위에만 자라고 있어."),
+                new ExpeditionDialogueLine(false, "이곳을 지키던 건가… 기록해 둬.")
+            }),
             Scene("골렘이 멈췄다. 안에 명령이 남아 있어.",
                 "‘외부 생물의 동력원 접근 금지.’ 왕국이 새긴 명령이야.",
                 "핵의 문양도 서로 다르군. 반입 장부부터 찾아보자."),

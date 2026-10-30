@@ -351,6 +351,7 @@ namespace Expedition.Presentation
             bossNoticeUntil = 0;
             partyFocusId=null;partyFocusUntil=0;
             dialogueActive = false; dialogueLines = null; dialogueSpeaker = null;
+            forestStoryActive = false; forestStoryAge = 0;
         }
 
         void StartBattle()
@@ -796,17 +797,19 @@ namespace Expedition.Presentation
             sorted.Sort((a, b) => BattleVisibility.Compare(a.Unit.IsAlive, a.Unit.Y, a.Unit.Team, a.Unit.Id,
                 b.Unit.IsAlive, b.Unit.Y, b.Unit.Team, b.Unit.Id));
             var drawn = new List<DrawnCombatant>(sorted.Count);
+            if (dialogueActive) DrawForestStoryGround();
             bool hiddenEscortsMarked = false;
             foreach (View view in sorted)
             {
                 CatalogBattleUnit unit = view.Unit;
-                if (!unit.IsAlive && view.StateTime >= CorpseFadeEnd) continue;
+                if (!unit.IsAlive && view.StateTime >= CorpseFadeEnd && !HoldForestGuardian(unit)) continue;
                 if (!hiddenEscortsMarked && unit.IsAlive && unit.Team == CatalogTeam.Ally)
                 {
                     MarkHiddenEscorts(drawn);
                     hiddenEscortsMarked = true;
                 }
                 Vector2 point = ExpeditionPoint(new Vector2(unit.X, unit.Y), arena);
+                if (dialogueActive) point = ForestStoryAllyPoint(unit, point);
                 if(unit.Id==partyFocusId && Time.unscaledTime<partyFocusUntil && unit.IsAlive)
                 {
                     Color cue=new Color(1f,.79f,.38f,.85f);
@@ -817,7 +820,7 @@ namespace Expedition.Presentation
                 if (unit.IsAlive && unit.EnemyRole == CatalogEnemyRole.CrownDrake)
                     point.y -= PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, battle.Time);
                 Color previous = GUI.color;
-                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, CorpseAlpha(view.StateTime));
+                if (!unit.IsAlive) GUI.color = new Color(1, 1, 1, HoldForestGuardian(unit) ? 1 : CorpseAlpha(view.StateTime));
                 else if (!dialogueActive && unit.FrozenRemaining > 0f) GUI.color = new Color(.68f, .87f, 1f, 1f);
                 else if (view.HitTime > .13f && !GamePreferences.Current.ReduceFlashes) GUI.color = new Color(1f, .62f, .48f, 1f);
                 if (!GamePreferences.Current.ReduceMotion && unit.IsAlive && view.HitTime > 0 && unit.FrozenRemaining <= 0f &&
@@ -836,7 +839,7 @@ namespace Expedition.Presentation
                     Bounds = bounds, Height = drawnHeight, RegionalArtLoaded = regionalArtLoaded });
             }
             if (!hiddenEscortsMarked) MarkHiddenEscorts(drawn);
-            if (dialogueActive) { DrawDialogue(drawn); return; }
+            if (dialogueActive) { DrawForestStoryCub(); DrawDialogue(drawn); return; }
             if (battleEffects != null) battleEffects.Draw(battle, p => ExpeditionPoint(p, arena),
                 id => DrawnBreathMouth(drawn, id));
             // Allocate compact health/status blocks before damage labels.
@@ -1268,6 +1271,9 @@ namespace Expedition.Presentation
                     (view.Unit.AttackPhase == CatalogAttackPhase.WindingBasic && view.Unit.AttackWindupRemaining <= .18f ||
                         view.ReleaseRemaining > 0f && view.ReleaseAbilityId == "BASIC"))
                     frame = DrakeAttackPresentation.BasicFrame;
+                // The defeated forest guardian stays crouched beside its young. This is
+                // presentation only: HP, targeting, outcome and rewards remain settled.
+                if (HoldForestGuardian(view.Unit)) frame = Mathf.Min(frame, 20);
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged) GUI.color *= new Color(1f, .72f, .62f);

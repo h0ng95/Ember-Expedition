@@ -1,0 +1,420 @@
+{
+  "note": "Fixed correlated policies, not human win rates. Old-rule acquisition frozen for isolated comparisons. Production runs use normal-067 end-to-end.",
+  "totals": {
+    "routes": 1344,
+    "actualBattles": 23654,
+    "isolatedBattles": 3858
+  },
+  "reports": [
+    {
+      "id": "pressure",
+      "rules": "normal-052",
+      "firstSeed": 67101,
+      "seedsPerPolicy": 2,
+      "routes": 336,
+      "completed": 60,
+      "actualBattles": 6398,
+      "isolatedBattles": 1716,
+      "summary": [
+        {
+          "wave": 15,
+          "n": 183,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 105,
+              "timeouts": 32,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 97,
+              "timeouts": 64,
+              "gained": 32,
+              "lost": 40
+            },
+            {
+              "candidate": "spread",
+              "wins": 93,
+              "timeouts": 31,
+              "gained": 3,
+              "lost": 15
+            },
+            {
+              "candidate": "furnace-hp95",
+              "wins": 121,
+              "timeouts": 18,
+              "gained": 16,
+              "lost": 0
+            },
+            {
+              "candidate": "furnace-hp90",
+              "wins": 130,
+              "timeouts": 11,
+              "gained": 25,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 18,
+          "n": 140,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 93,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 80,
+              "timeouts": 0,
+              "gained": 5,
+              "lost": 18
+            },
+            {
+              "candidate": "spread",
+              "wins": 100,
+              "timeouts": 0,
+              "gained": 9,
+              "lost": 2
+            },
+            {
+              "candidate": "acolyte-power90",
+              "wins": 113,
+              "timeouts": 0,
+              "gained": 20,
+              "lost": 0
+            },
+            {
+              "candidate": "acolyte-interval22",
+              "wins": 107,
+              "timeouts": 0,
+              "gained": 19,
+              "lost": 5
+            }
+          ]
+        },
+        {
+          "wave": 19,
+          "n": 106,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 56,
+              "timeouts": 2,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 93,
+              "timeouts": 0,
+              "gained": 39,
+              "lost": 2
+            },
+            {
+              "candidate": "spread",
+              "wins": 36,
+              "timeouts": 2,
+              "gained": 1,
+              "lost": 21
+            },
+            {
+              "candidate": "acolyte-power90",
+              "wins": 73,
+              "timeouts": 0,
+              "gained": 18,
+              "lost": 1
+            },
+            {
+              "candidate": "acolyte-interval22",
+              "wins": 77,
+              "timeouts": 0,
+              "gained": 22,
+              "lost": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "offense",
+      "rules": "normal-052",
+      "firstSeed": 67101,
+      "seedsPerPolicy": 2,
+      "growthOrder": "OffenseBalanced",
+      "routes": 336,
+      "completed": 38,
+      "actualBattles": 6136,
+      "isolatedBattles": 1795,
+      "summary": [
+        {
+          "wave": 15,
+          "n": 210,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 76,
+              "timeouts": 8,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 103,
+              "timeouts": 24,
+              "gained": 37,
+              "lost": 10
+            },
+            {
+              "candidate": "spread",
+              "wins": 51,
+              "timeouts": 7,
+              "gained": 1,
+              "lost": 26
+            },
+            {
+              "candidate": "furnace-hp95",
+              "wins": 83,
+              "timeouts": 6,
+              "gained": 7,
+              "lost": 0
+            },
+            {
+              "candidate": "furnace-hp90",
+              "wins": 88,
+              "timeouts": 5,
+              "gained": 12,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 18,
+          "n": 114,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 67,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 66,
+              "timeouts": 0,
+              "gained": 3,
+              "lost": 4
+            },
+            {
+              "candidate": "spread",
+              "wins": 69,
+              "timeouts": 0,
+              "gained": 7,
+              "lost": 5
+            },
+            {
+              "candidate": "acolyte-power95",
+              "wins": 65,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 2
+            },
+            {
+              "candidate": "acolyte-power90",
+              "wins": 74,
+              "timeouts": 0,
+              "gained": 7,
+              "lost": 0
+            },
+            {
+              "candidate": "acolyte-interval22",
+              "wins": 72,
+              "timeouts": 0,
+              "gained": 10,
+              "lost": 5
+            }
+          ]
+        },
+        {
+          "wave": 19,
+          "n": 77,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 67,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "compact",
+              "wins": 77,
+              "timeouts": 0,
+              "gained": 10,
+              "lost": 0
+            },
+            {
+              "candidate": "spread",
+              "wins": 56,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 11
+            },
+            {
+              "candidate": "acolyte-power95",
+              "wins": 70,
+              "timeouts": 0,
+              "gained": 3,
+              "lost": 0
+            },
+            {
+              "candidate": "acolyte-power90",
+              "wins": 73,
+              "timeouts": 0,
+              "gained": 6,
+              "lost": 0
+            },
+            {
+              "candidate": "acolyte-interval22",
+              "wins": 74,
+              "timeouts": 0,
+              "gained": 7,
+              "lost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "holdout",
+      "rules": "normal-052",
+      "firstSeed": 67501,
+      "seedsPerPolicy": 2,
+      "growthOrder": "Balanced",
+      "routes": 336,
+      "completed": 38,
+      "actualBattles": 5497,
+      "isolatedBattles": 347,
+      "summary": [
+        {
+          "wave": 15,
+          "n": 158,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 95,
+              "timeouts": 45,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "adopted",
+              "wins": 108,
+              "timeouts": 31,
+              "gained": 13,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 18,
+          "n": 114,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 54,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "adopted",
+              "wins": 54,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 19,
+          "n": 75,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 43,
+              "timeouts": 1,
+              "gained": 0,
+              "lost": 0
+            },
+            {
+              "candidate": "adopted",
+              "wins": 43,
+              "timeouts": 1,
+              "gained": 0,
+              "lost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "production",
+      "rules": "normal-067",
+      "firstSeed": 67501,
+      "seedsPerPolicy": 2,
+      "growthOrder": "Balanced",
+      "routes": 336,
+      "completed": 45,
+      "actualBattles": 5623,
+      "isolatedBattles": 0,
+      "summary": [
+        {
+          "wave": 15,
+          "n": 158,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 108,
+              "timeouts": 31,
+              "gained": 0,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 18,
+          "n": 126,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 61,
+              "timeouts": 0,
+              "gained": 0,
+              "lost": 0
+            }
+          ]
+        },
+        {
+          "wave": 19,
+          "n": 83,
+          "candidates": [
+            {
+              "candidate": "current",
+              "wins": 46,
+              "timeouts": 1,
+              "gained": 0,
+              "lost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

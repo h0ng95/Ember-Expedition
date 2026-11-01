@@ -524,7 +524,7 @@ namespace Expedition.Core
                     AddMineWorkers(result, 2, revised ? 710f : 660f, revised ? 64f : 59f, 18f);
                     AddMineSlingers(result, 2, revised ? 500f : 450f, revised ? 57f : 51f); break;
                 case 15:
-                    result.AddEnemy("furnace-boss", 6000f, 98f, 25f, 1.8f, 1.1f, .48f,
+                    result.AddEnemy("furnace-boss", CatalogBalance.FurnaceHp(RulesVersion), 98f, 25f, 1.8f, 1.1f, .48f,
                         true, 4.1f, 0f, CatalogEnemyRole.Furnace, true);
                     result.AddEnemy("mine-elite", 850f, 52f, 20f, 1.8f, 1f, .57f,
                         false, 3f, -1.25f, CatalogEnemyRole.Supervisor);

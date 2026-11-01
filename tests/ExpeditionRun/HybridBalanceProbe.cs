@@ -12,12 +12,14 @@ internal static class HybridBalanceProbe
 {
     static bool FrontFirst;
     static bool Balanced;
+    static bool OffenseBalanced;
     internal static void ConfigureGrowthOrder(string order)
     {
-        if (order != "TargetFirst" && order != "FrontFirst" && order != "Balanced")
+        if (order != "TargetFirst" && order != "FrontFirst" && order != "Balanced" && order != "OffenseBalanced")
             throw new ArgumentException("Unsupported growth order.", "order");
         FrontFirst = order != "TargetFirst";
-        Balanced = order == "Balanced";
+        Balanced = order == "Balanced" || order == "OffenseBalanced";
+        OffenseBalanced = order == "OffenseBalanced";
     }
     internal sealed class Policy
     {
@@ -154,6 +156,24 @@ internal static class HybridBalanceProbe
             ordered.Add(starter.Id);
         if (policy.First != null && p.AcquiredWave == 0)
         { ordered.Add(p.FirstId); ordered.Add(p.SecondId); }
+        // A second, legal spending policy: branch healing and damage before pouring
+        // every recruit into final priests. Do not redefine historic Balanced reports.
+        if (OffenseBalanced)
+        {
+            foreach (string id in run.DeployedIds)
+                if (run.Roster.Find(id).FormId == "B-PR" && !ordered.Contains(id)) ordered.Add(id);
+            foreach (string id in run.DeployedIds)
+            {
+                var member = run.Roster.Find(id); string family = Family(member);
+                if ((family == "AR" || family == "FI" || family == "IC") && member.FormId.StartsWith("B-") && !ordered.Contains(id)) ordered.Add(id);
+            }
+            if (!ordered.Contains("ally-01")) ordered.Add("ally-01");
+            foreach (string id in run.DeployedIds)
+            {
+                string family = Family(run.Roster.Find(id));
+                if ((family == "AR" || family == "FI" || family == "IC") && !ordered.Contains(id)) ordered.Add(id);
+            }
+        }
         // After the recipe, establish branch healing and then finish the frontline
         // before spending every spare recruit on the final priest. The final-only
         // control keeps its original priorities.

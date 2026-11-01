@@ -429,11 +429,11 @@ namespace Expedition.Presentation
                 case 12: return "불씨 투척병 둘이 약한 동료를 노립니다.\n후열을 전열에서 너무 멀리 두지 마세요.";
                 case 13: return "채굴병 셋이 전열을 묶고 투척병이 후열을 노립니다.\n보호와 회복을 나누어 배치하세요.";
                 case 14: return "감독관은 가까운 적 둘에게 4초 보호막을 줍니다.\n보호막은 7초마다 다시 생깁니다.";
-                case 15: return "용광로 폭발에 맞으면 화상이 3초 이어집니다.\n체력 45%부터 후속 불씨파가 추가됩니다.";
+                case 15: return "폭발 화상 3초 · 체력 45%부터 후속 불씨파\n공격 동료의 성장·진화도 확인하세요. 제한 75초.";
                 case 16: return "서리 근위병이 전열을 막고 시종이 후열을 노립니다.\n회복 동료가 너무 멀리 떨어지지 않게 하세요.";
                 case 17: return "근위병 셋이 앞줄을 압박합니다.\n후열의 공격 각도와 전열의 생존을 점검하세요.";
                 case 18: return "시종 셋이 약한 동료를 함께 노립니다.\n보호와 회복을 나누어 배치하세요.";
-                case 19: return "찬송 감시자는 가까운 적 둘에게 보호막을 줍니다.\n보호막에 막히기 전에 목표를 고르세요.";
+                case 19: return "감시자가 가까운 적 둘에게 보호막을 줍니다.\n전열이 회복·보호 범위 안에 드는지 확인하세요.";
                 case 20: return run.RulesVersion >= 3 ?
                     "후열 다음 앞열에 빙결 원형 공격이 이어집니다.\n동료 간격을 벌리세요 · 각 공격 전에 원이 표시됩니다." :
                     "서리 원형 공격은 먼 동료 위치를 예고합니다.\n맞은 동료는 잠시 얼어 공격과 이동이 멈춥니다.";
@@ -491,10 +491,11 @@ namespace Expedition.Presentation
                 (run.Phase == ExpeditionPhase.Result && run.LastVictory);
             StoryEntry clearStory = run.LastVictory ? ExpeditionStory.BossClear(run.Wave) : null;
             DrawHeader(run.Phase == ExpeditionPhase.Result ? "전투 결과" : "원정 결과");
-            Rect panel = new Rect(175, 140, 930, 430);
+            bool failureEvidence = !victory && HasFailureEvidence;
+            Rect panel = failureEvidence ? new Rect(175, 112, 930, 520) : new Rect(175, 140, 930, 430);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(clearStory == null ? new Rect(content.x, 180, content.width, 72) :
+            GUI.Label(failureEvidence ? new Rect(content.x, 140, content.width, 60) : clearStory == null ? new Rect(content.x, 180, content.width, 72) :
                 new Rect(content.x, 164, content.width, 60),
                 run.Phase == ExpeditionPhase.Completed ? "원정 완료" :
                 run.Phase == ExpeditionPhase.Defeated ? "원정 종료" : victory ? "승리" : "패배", title);
@@ -505,20 +506,22 @@ namespace Expedition.Presentation
                 (run.Wave == ExpeditionRun.TotalWaves ? ExpeditionStory.CompletionBrief :
                 "다음 길을 준비하세요.") :
                 "남은 기회 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
-            GUI.Label(clearStory == null ? new Rect(content.x, 275, content.width, 92) :
+            GUI.Label(failureEvidence ? new Rect(content.x, 214, content.width, 82) : clearStory == null ? new Rect(content.x, 275, content.width, 92) :
                 new Rect(content.x, 232, content.width, 68),
                 "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     남은 기회 " + run.Lantern +
                 "\n" + outcome, body);
             if (clearStory != null)
                 GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Excerpt, body);
+            if (failureEvidence) DrawFailureEvidence(new Rect(content.x, 302, content.width, 124));
             string reward = run.LastVictory && run.LastReward > 0 ?
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
                 run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
                 ExpeditionRun.TotalWaves + "전투 돌파 · 원정 완료" :
                 "이번 전투 보상 0 G   ·   보유 " + run.Gold + " G";
-            GUI.Label(new Rect(content.x, clearStory == null ? 370 : 376,
+            float rewardY = failureEvidence ? 444 : clearStory == null ? 370 : 376;
+            GUI.Label(new Rect(content.x, rewardY,
                 HasBattleReport ? content.width - 210 : content.width, 43), reward, heading);
-            if (HasBattleReport && GUI.Button(new Rect(content.xMax - 195, 370, 195, 48), "전투 기록", button))
+            if (HasBattleReport && GUI.Button(new Rect(content.xMax - 195, rewardY, 195, 48), "전투 기록", button))
                 modal = Modal.BattleReport;
             ExpeditionUiTheme.FooterRule(panel);
             if (run.Phase == ExpeditionPhase.Result)

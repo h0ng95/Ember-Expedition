@@ -3,10 +3,11 @@ namespace Expedition.Core
     // Saved per expedition. Updates must not change an expedition already in progress.
     public static class CatalogBalance
     {
-        public const int CurrentRules = 5;
-        public const int CurrentSaveVersion = 13;
+        public const int CurrentRules = 6;
+        public const int CurrentSaveVersion = 14;
         public static string Version(int rules)
-        { return rules == 0 ? "legacy-v044" : rules == 1 ? "normal-045" : rules == 2 ? "normal-046" : rules == 3 ? "normal-048" : rules == 4 ? "normal-050" : "normal-052"; }
+        { return rules == 0 ? "legacy-v044" : rules == 1 ? "normal-045" : rules == 2 ? "normal-046" : rules == 3 ? "normal-048" : rules == 4 ? "normal-050" : rules == 5 ? "normal-052" : "normal-067"; }
+        public static float FurnaceHp(int rules) { return rules >= 6 ? 5700f : 6000f; }
         public static float DrakeBasicPower(int rules) { return rules >= 5 ? .9f : 1f; }
         public static float Spellcraft(int rules) { return rules >= 2 ? 1.30f : 1.15f; }
         public static float Cinders(int rules) { return rules >= 2 ? 1.50f : 1.30f; }

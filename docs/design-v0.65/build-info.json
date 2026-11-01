@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-01",
+  "version": "v0.65",
+  "unity": "6000.3.24f1",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 301267627,
+  "sha256": "5e55dbe0a6ad6d74420edf480505087b97bccdb4e9dcf1622ef471c09176e610",
+  "art": {
+    "tool": "built-in image_gen",
+    "poses": 8,
+    "sourceResolution": "1536x1024 per sheet",
+    "import": "Point/1024, alpha cutoff 103/255",
+    "pngAndAlphaPreserved": true
+  },
+  "validation": {
+    "editorBossSimulations": 6,
+    "editorBossImpacts": 27,
+    "dialogueChecks": 609,
+    "endingChecks": 214,
+    "deviceCases": 24,
+    "rawCaptures": 47,
+    "model": "Galaxy Buddy2 SM-M236L",
+    "saveRestore": "verified byte-for-byte"
+  },
+  "scope": "Presentation only; combat damage, timing and area rules unchanged",
+  "limitations": [
+    "Isolated inflated-health visual QA, not natural difficulty testing",
+    "HTML source and local links checked; browser rendering not verified"
+  ]
+}

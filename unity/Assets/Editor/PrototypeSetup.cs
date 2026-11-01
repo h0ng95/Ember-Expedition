@@ -134,7 +134,8 @@ namespace Expedition.EditorTools
             bool frostFloating = assetPath.StartsWith("Assets/Resources/Art/Enemies/v039/frost-boss-floating", StringComparison.Ordinal) ||
                 assetPath == "Assets/Resources/Art/Enemies/v039/frost-boss-full-motion.png" ||
                 assetPath == "Assets/Resources/Art/Enemies/v063/frost-warden.png" ||
-                assetPath == "Assets/Resources/Art/Enemies/v064/frost-warden.png";
+                assetPath == "Assets/Resources/Art/Enemies/v064/frost-warden.png" ||
+                assetPath.StartsWith("Assets/Resources/Art/Enemies/v065/", StringComparison.Ordinal);
             importer.textureType = startup ? TextureImporterType.Sprite : TextureImporterType.Default;
             if (startup)
             {

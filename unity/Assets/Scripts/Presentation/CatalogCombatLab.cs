@@ -58,6 +58,7 @@ namespace Expedition.Presentation
             public CatalogBattleUnit Unit;
             public Vector2 LastPosition;
             public float StateTime, HitTime, WindupAge, ReleaseAge, ReleaseRemaining;
+            public int ReleaseBossVariant;
             public string ReleaseAbilityId, ReleaseTargetId;
             public float RevealUntil;
             public int State, RenderedEnemyFrame;
@@ -391,7 +392,10 @@ namespace Expedition.Presentation
             {
                 bool projectileArrival = source.Unit.Team == CatalogTeam.Ally &&
                     e.Kind == CatalogEventKind.BasicHit && AllyAttackPresentation.Projectile(source.Unit);
-                source.ReleaseRemaining = projectileArrival ? .06f : .18f;
+                source.ReleaseRemaining = projectileArrival ? .06f :
+                    e.Kind == CatalogEventKind.BossImpact ? BossActionPresentation.ReleaseDuration(e.AbilityId) : .18f;
+                if (e.Kind == CatalogEventKind.BossImpact)
+                    source.ReleaseBossVariant = BossActionPresentation.ReleaseVariant(source.Unit);
                 source.ReleaseAge = projectileArrival ? AllyAttackPresentation.ProjectileFlight : 0;
                 source.ReleaseAbilityId = e.AbilityId;
                 source.ReleaseTargetId = e.TargetId;
@@ -1267,6 +1271,8 @@ namespace Expedition.Presentation
                         view.ReleaseRemaining, view.ReleaseAge, view.Unit.ChargeWarningRemaining,
                         view.Unit.IsCharging, view.Unit.AttackWindupRemaining,
                         species == ForestEnemyArt.Species[2] || species == ForestEnemyArt.Species[3]);
+                frame = BossActionPresentation.Frame(view.Unit, frame, view.ReleaseRemaining,
+                    view.ReleaseAge, view.ReleaseAbilityId, view.ReleaseBossVariant);
                 float breathProgress;
                 if (palaceSpecies == "palace-boss" && view.Unit.IsAlive && battleEffects != null &&
                     (battleEffects.TryGetBreathProgress(view.Unit.Id, out breathProgress) ||
@@ -1285,9 +1291,12 @@ namespace Expedition.Presentation
                     frame = FrostBossFloatingArt.DefeatFrame(view.StateTime,
                         GamePreferences.Current.ReduceMotion || regionalStoryActive &&
                         RegionalStoryTime >= RegionalStoryDuration);
+                if (gardenSpecies == "garden-boss" && !view.Unit.IsAlive)
+                    frame = BossActionPresentation.GardenDefeatFrame(view.StateTime, GamePreferences.Current.ReduceMotion);
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
-                if (view.Unit.BossEnraged && !dialogueActive) GUI.color *= new Color(1f, .72f, .62f);
+                if (view.Unit.BossEnraged && view.Unit.IsAlive && !dialogueActive)
+                    GUI.color *= new Color(1f, .9f, .82f);
                 if (castleStoryActive && HoldCastleGolem(view.Unit))
                     GUI.color *= Color.Lerp(Color.white, new Color(.78f, .83f, .9f), Mathf.Clamp01(CastleStoryTime / 1.6f));
                 bool drewForest = forestEnemyArt.Draw(species, frame, foot, out bounds, view.StateTime);

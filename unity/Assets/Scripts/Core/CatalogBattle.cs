@@ -115,8 +115,10 @@ namespace Expedition.Core
         internal float NextSlamAt, SlamAimX, SlamAimY, SlamRadiusValue;
         internal bool FrostFollowup;
         public bool IsFrostFollowup { get { return FrostFollowup && SlamWarningRemaining > 0; } }
+        public int FrostStrikeOrdinal { get { return FrostFollowup ? 1 : 0; } }
         internal float GardenNextWarningAt;
         internal int GardenStrikeCount, GardenStrikeIndex;
+        public int GardenStrikeOrdinal { get { return GardenStrikeIndex; } }
         internal float[] GardenAimXs, GardenAimYs;
         internal string[] GardenTargetIds;
         internal float NextGuardAt;

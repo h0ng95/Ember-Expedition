@@ -37,6 +37,7 @@ namespace Expedition.Presentation
         readonly Dictionary<string, RenderTexture> clippedTextures = new Dictionary<string, RenderTexture>();
         readonly HashSet<string> missing = new HashSet<string>();
         readonly FrostBossFloatingArt frostBossFloating = new FrostBossFloatingArt();
+        readonly BossCastArt bossCast = new BossCastArt();
         Material clipMaterial;
         Texture2D aerialBreath;
 
@@ -114,6 +115,7 @@ namespace Expedition.Presentation
 
         public bool TryGetBounds(string id, int index, Vector2 foot, out Rect bounds)
         {
+            if (BossCastArt.Supports(id, index)) { bounds = BossCastArt.BoundsFor(id, index, foot); return true; }
             if (id == "palace-boss" && index >= 24 && index <= 25)
             { bounds = DrakeAttackPresentation.FlightBounds(index, foot); return true; }
             if (id == FrostEnemyArt.Species[3] && index >= 0 && index < 24 &&
@@ -138,6 +140,8 @@ namespace Expedition.Presentation
 
         public bool Draw(string id, int index, Vector2 foot, out Rect bounds, float walkTime = -1f)
         {
+            if (BossCastArt.Supports(id, index))
+                return bossCast.Draw(id, index, foot, clipMaterial, out bounds);
             if (id == "palace-boss" && index >= 24 && index <= 25)
             {
                 bounds = DrakeAttackPresentation.FlightBounds(index, foot);
@@ -232,6 +236,7 @@ namespace Expedition.Presentation
             if (aerialBreath != null) Resources.UnloadAsset(aerialBreath);
             aerialBreath = null;
             frostBossFloating.Release();
+            bossCast.Release();
             foreach (RenderTexture texture in clippedTextures.Values)
                 if (texture != null) { texture.Release(); DisposeObject(texture); }
             clippedTextures.Clear();

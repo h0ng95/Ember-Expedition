@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-01",
+  "version": "v0.66",
+  "unity": "6000.3.24f1",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 301271883,
+  "sha256": "0166b954ec787bc361f9b12de36bd65acf1ed0b7919166a0e31cce50c2dcdfdb",
+  "validation": {
+    "storyGuideChecks": 143,
+    "learningUiChecks": 20,
+    "dialogueChecks": 609,
+    "endingChecks": 214,
+    "storyDeviceCases": 12,
+    "storyCaptures": 84,
+    "device": "Galaxy Buddy2 SM-M236L",
+    "saveRestore": "byte-identical"
+  },
+  "notes": [
+    "Scene QA uses isolated one-HP bosses; separate normal progression audit uses unmodified rules and legal preparation.",
+    "Scene captures precede final guide-only padding and click fixes; final guide captures use final APK.",
+    "HTML source and relative links checked; browser rendering not verified."
+  ]
+}

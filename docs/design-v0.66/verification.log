@@ -1,0 +1,32 @@
+PASS story reveal and optional combination guide: 143 assertions.
+PASS season ending: 214 checks; 48 regional survivor/settings cases; ending skip/replay and optional journal party.
+PASS battlefield dialogue: 609 checks, 28 victory/loss/skip scenarios, save-before-dialogue and bubble layout.
+Build Finished, Result: Success.
+Test APK created: Builds/Android/expedition-combat-prototype.apk
+
+11-01 12:56:27.900 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-5 outcome=1
+11-01 12:56:33.153 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-10 outcome=1
+11-01 12:56:38.524 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-15 outcome=1
+11-01 12:56:43.754 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-20 outcome=1
+11-01 12:56:49.195 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-25 outcome=1
+11-01 12:56:54.417 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS normal-30 outcome=1
+11-01 12:56:59.803 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-5 outcome=1
+11-01 12:57:04.982 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-10 outcome=1
+11-01 12:57:10.336 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-15 outcome=1
+11-01 12:57:15.496 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-20 outcome=1
+11-01 12:57:20.963 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-25 outcome=1
+11-01 12:57:26.177 18759 18791 I Unity   : DIALOGUE_AUDIT_PASS quiet-30 outcome=1
+
+{
+  "device": "Galaxy Buddy2",
+  "guideAcknowledgedByTouch": true,
+  "detailsAfterAcknowledgement": true,
+  "menuAndResearchReplayed": true,
+  "unitsGoldResearchUnchanged": true,
+  "guideFlagSurvivesReload": true,
+  "oldLessonMask": 7,
+  "finalApkGardenNextSkip": true
+}
+
+
+All original saves and PlayerPrefs restored and verified byte-for-byte.

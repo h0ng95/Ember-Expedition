@@ -13,6 +13,7 @@ namespace Expedition.Presentation
     {
         static readonly BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         bool manual;
+        bool review;
         int manualWave = 5;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void StartIfRequested()
@@ -26,6 +27,7 @@ namespace Expedition.Presentation
             var audit = go.AddComponent<ExpeditionDialogueAudit>();
             audit.manual = manual; audit.manualWave = mode == "castle-manual" ? 10 : mode == "mine-manual" ? 15 :
                 mode == "frost-manual" ? 20 : mode == "garden-manual" ? 25 : mode == "palace-manual" ? 30 : 5;
+            audit.review = mode == "review";
         }
         IEnumerator Start()
         {
@@ -36,12 +38,18 @@ namespace Expedition.Presentation
             if (screen == null || !(bool)typeof(ExpeditionScreen).GetField("startupReady", Hidden).GetValue(screen))
             { Debug.LogError("DIALOGUE_AUDIT startup did not complete"); Destroy(gameObject); yield break; }
             screen.enabled = false;
-            string directory = Path.Combine(Application.persistentDataPath, "DialogueAudit");
+            string directory = Path.Combine(Application.persistentDataPath, review ? "StoryFlowAudit" : "DialogueAudit");
             Directory.CreateDirectory(directory);
             var db = CatalogDatabase.FromJson(Resources.Load<TextAsset>("Content/unit-catalog-v010").text);
             int completed = 0;
-            foreach (int wave in manual ? new[] { manualWave } : new[] { 5, 10, 15, 20, 25, 30 })
+            bool oldMotion = GamePreferences.Current.ReduceMotion, oldFlashes = GamePreferences.Current.ReduceFlashes;
+            var waves = manual ? new[] { manualWave } : review ? new[] { 5, 10, 15, 20, 25, 30, 5, 10, 15, 20, 25, 30 } : new[] { 5, 10, 15, 20, 25, 30 };
+            for (int caseIndex = 0; caseIndex < waves.Length; caseIndex++)
             {
+                int wave = waves[caseIndex];
+                bool quiet = review && caseIndex >= 6;
+                string tag = review ? (quiet ? "quiet-" : "normal-") : "";
+                if (review) GamePreferences.Current.ReduceMotion = GamePreferences.Current.ReduceFlashes = quiet;
                 var battle = new CatalogBattle(db);
                 string[] forms = wave == 15 ? new[] { "B-AR" } : wave == 25 ?
                     new[] { "F-BA", "H-02", "F-PR" } : new[] { "B-KN", "B-AR", "B-PR" };
@@ -63,6 +71,12 @@ namespace Expedition.Presentation
                 lab.OpenExpeditionBattle(battle, wave, 30, "QA · 보스 " + wave,
                     won => { if (!won) throw new Exception("Dialogue QA lost"); outcomes++; }, () => {}, () => finished = true);
                 lab.ConfigureExpeditionSpeed(wave % 10 == 0 ? 2 : 1, null);
+                if (review)
+                {
+                    typeof(CatalogCombatLab).GetField("speed", Hidden).SetValue(lab, 0f);
+                    yield return new WaitForEndOfFrame(); Capture(directory, tag + "wave-" + wave + "-combat");
+                    lab.ConfigureExpeditionSpeed(wave % 10 == 0 ? 2 : 1, null);
+                }
                 deadline = Time.realtimeSinceStartup + 25;
                 while (!(bool)typeof(CatalogCombatLab).GetField("dialogueActive", Hidden).GetValue(lab) &&
                     Time.realtimeSinceStartup < deadline) yield return null;
@@ -75,7 +89,7 @@ namespace Expedition.Presentation
                     // Let the real-time Ignis reveal finish before reviewing the spoken lines.
                     if (wave >= 5)
                     {
-                        string prefix = "wave-" + wave;
+                        string prefix = tag + "wave-" + wave;
                         yield return new WaitForSecondsRealtime(.2f);
                         yield return new WaitForEndOfFrame(); Capture(directory, prefix + "-beat-0");
                         yield return new WaitForSecondsRealtime(1.1f);
@@ -88,16 +102,18 @@ namespace Expedition.Presentation
                     {
                         typeof(CatalogCombatLab).GetField("dialogueAge", Hidden).SetValue(lab, 100f);
                         yield return new WaitForEndOfFrame();
-                        Capture(directory, "boss-" + wave + "-line-" + line);
+                        Capture(directory, tag + "boss-" + wave + "-line-" + line);
                         typeof(CatalogCombatLab).GetMethod("NextDialogue", Hidden).Invoke(lab, null);
                         yield return null;
                     }
                 }
                 if (outcomes != 1 || !finished) Debug.LogError("DIALOGUE_AUDIT callback mismatch " + wave);
-                else { completed++; Debug.Log("DIALOGUE_AUDIT_PASS " + wave + " outcome=1"); }
+                else { completed++; Debug.Log("DIALOGUE_AUDIT_PASS " + tag + wave + " outcome=1"); }
                 Destroy(go); yield return null;
             }
             File.WriteAllText(Path.Combine(directory, manual ? "manual.txt" : "result.txt"), "completed=" + completed);
+            GamePreferences.Current.ReduceMotion = oldMotion; GamePreferences.Current.ReduceFlashes = oldFlashes;
+            Debug.Log("DIALOGUE_AUDIT_COMPLETE " + completed);
             screen.enabled = true;
             Destroy(gameObject);
         }

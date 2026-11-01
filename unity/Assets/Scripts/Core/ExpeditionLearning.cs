@@ -2,7 +2,7 @@ using System;
 
 namespace Expedition.Core
 {
-    public enum ExpeditionLesson { None = 0, Growth = 1, Evolution = 2, Tactics = 4 }
+    public enum ExpeditionLesson { None = 0, Growth = 1, Evolution = 2, Tactics = 4, Combination = 8 }
 
     public sealed class ExpeditionGrowthExample
     {

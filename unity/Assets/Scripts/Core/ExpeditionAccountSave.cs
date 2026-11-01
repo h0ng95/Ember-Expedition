@@ -10,6 +10,8 @@ namespace Expedition.Core
         public ExpeditionProgressSave Progress;
         public ExpeditionJournalSave Journal;
         public int TutorialMask, LessonMask;
+        // Optional flag: keep the original three-bit mask readable by older saves.
+        public bool CombinationGuideSeen;
         public ExpeditionHistorySave History;
         public bool HasRun;
 

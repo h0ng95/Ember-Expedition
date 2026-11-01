@@ -247,7 +247,9 @@ namespace Expedition.Presentation
             Rect panel = new Rect(130, 28, 1020, 664), content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
             GUI.Label(new Rect(content.x, 60, content.width, 42), combine ? "결합 결과 확인" : "진화 결과 선택", heading);
-            if (GUI.Button(new Rect(954,62,164,42),growthDetails?"모습 비교":"상세 능력",button)) { growthDetails=!growthDetails; infoScroll=Vector2.zero; }
+            // The introduction occupies this header; its acknowledgement must receive the click.
+            if (!GrowthPreviewHeaderCovered() && GUI.Button(new Rect(954,62,164,42),growthDetails?"모습 비교":"상세 능력",button))
+            { growthDetails=!growthDetails; infoScroll=Vector2.zero; }
             bool branch = !combine && member.FormId.StartsWith("B-", StringComparison.Ordinal);
             if (branch)
             {

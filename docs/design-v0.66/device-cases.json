@@ -1,0 +1,86 @@
+[
+  {
+    "wave": 5,
+    "speed": 1,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 10,
+    "speed": 2,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 15,
+    "speed": 1,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 20,
+    "speed": 2,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 25,
+    "speed": 1,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 30,
+    "speed": 2,
+    "reducedMotionAndFlashes": false,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 5,
+    "speed": 1,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 10,
+    "speed": 2,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 15,
+    "speed": 1,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 20,
+    "speed": 2,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 25,
+    "speed": 1,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  },
+  {
+    "wave": 30,
+    "speed": 2,
+    "reducedMotionAndFlashes": true,
+    "victoryCallbacks": 1,
+    "completed": true
+  }
+]

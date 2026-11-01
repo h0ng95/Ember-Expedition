@@ -45,7 +45,8 @@ namespace Expedition.Presentation
             if (accountStore == null || journal == null || progress == null) throw new InvalidOperationException("저장 준비 전입니다.");
             recordHistory.Observe(run);
             var snapshot = new ExpeditionAccountSave { Version = 2, HasRun = run != null, Run = run == null ? null : run.Capture(),
-                Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask,
+                Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask & 7,
+                CombinationGuideSeen = (lessonMask & (int)ExpeditionLesson.Combination) != 0,
                 History = recordHistory.Capture() };
             accountStore.Commit(JsonUtility.ToJson(snapshot));
             journalDirty = progressDirty = false;

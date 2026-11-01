@@ -1,0 +1,1982 @@
+{
+  "firstSeed": 66501,
+  "seedsPerPolicy": 4,
+  "legalRuns": 144,
+  "completed": 31,
+  "actualBattles": 3241,
+  "counterfactualBattles": 6259,
+  "rules": "normal-052",
+  "note": "Same-current-party adjacent-stage comparison, conditional on reaching the anchor stage. At the third stage of each region the next boss is also tested. Counterfactual fights do not count as legal expedition progress. Fixed delayed research policies, not human win rates.",
+  "rows": [
+    {
+      "wave": 2,
+      "n": 144,
+      "previousWins": 144,
+      "currentWins": 144,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9938395284116268,
+      "currentHp": 0.9869320951402187,
+      "previousSeconds": 2.370831787586212,
+      "currentSeconds": 3.895832359790802,
+      "nextWins": 144,
+      "nextHp": 0.8579940237104893,
+      "nextSeconds": 9.684398889541626,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 3,
+      "n": 144,
+      "previousWins": 144,
+      "currentWins": 144,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9915478068093458,
+      "currentHp": 0.8999803264935812,
+      "previousSeconds": 4.031249687075615,
+      "currentSeconds": 9.927103519439697,
+      "nextWins": 117,
+      "nextHp": 0.4579037179549535,
+      "nextSeconds": 17.889482021331787,
+      "bossWins": 78,
+      "bossHp": 0.4106426152090232,
+      "bossSeconds": 39.71869238217672,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 4,
+      "n": 144,
+      "previousWins": 144,
+      "currentWins": 123,
+      "easierWins": 0,
+      "harderWins": 21,
+      "previousHp": 0.9184792103866736,
+      "currentHp": 0.5591994846860567,
+      "previousSeconds": 10.052796045939127,
+      "currentSeconds": 17.528376420338947,
+      "nextWins": 111,
+      "nextHp": 0.5827994948873917,
+      "nextSeconds": 40.14127016067505,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 5,
+      "n": 132,
+      "previousWins": 132,
+      "currentWins": 132,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.7013689550486478,
+      "currentHp": 0.7863672795620832,
+      "previousSeconds": 15.655614592812277,
+      "currentSeconds": 35.60190114107999,
+      "nextWins": 132,
+      "nextHp": 0.8696520572358911,
+      "nextSeconds": 13.669660048051314,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 6,
+      "n": 132,
+      "previousWins": 132,
+      "currentWins": 132,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9253400469368155,
+      "currentHp": 0.9468654746359045,
+      "previousSeconds": 30.20425623113459,
+      "currentSeconds": 11.794688658280807,
+      "nextWins": 132,
+      "nextHp": 0.8531183004379272,
+      "nextSeconds": 15.323422692038797,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 7,
+      "n": 132,
+      "previousWins": 132,
+      "currentWins": 132,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9716456654396924,
+      "currentHp": 0.8981949524445967,
+      "previousSeconds": 11.244697050614791,
+      "currentSeconds": 14.77987038005482,
+      "nextWins": 117,
+      "nextHp": 0.5103892750868743,
+      "nextSeconds": 21.94226108897816,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 8,
+      "n": 132,
+      "previousWins": 132,
+      "currentWins": 129,
+      "easierWins": 0,
+      "harderWins": 3,
+      "previousHp": 0.9334167377515272,
+      "currentHp": 0.6494308051399209,
+      "previousSeconds": 14.345786094665527,
+      "currentSeconds": 21.074092518199574,
+      "nextWins": 99,
+      "nextHp": 0.4645285625010729,
+      "nextSeconds": 27.72626373984597,
+      "bossWins": 96,
+      "bossHp": 0.6379979963160374,
+      "bossSeconds": 50.35059348019686,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 9,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 114,
+      "easierWins": 0,
+      "harderWins": 15,
+      "previousHp": 0.7298429552898851,
+      "currentHp": 0.5942832811973816,
+      "previousSeconds": 19.979711754377497,
+      "currentSeconds": 26.588138048038925,
+      "nextWins": 114,
+      "nextHp": 0.7637387180570946,
+      "nextSeconds": 48.72811029123705,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 10,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 123,
+      "easierWins": 0,
+      "harderWins": 6,
+      "previousHp": 0.8058747968008352,
+      "currentHp": 0.8514779410216697,
+      "previousSeconds": 24.367629295171692,
+      "currentSeconds": 46.07853831801304,
+      "nextWins": 129,
+      "nextHp": 0.9851433676342631,
+      "nextSeconds": 17.02626844894054,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 11,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 129,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9588427483573441,
+      "currentHp": 0.9911401784697245,
+      "previousSeconds": 42.23699486902518,
+      "currentSeconds": 15.884296210237252,
+      "nextWins": 129,
+      "nextHp": 0.9366177777911342,
+      "nextSeconds": 21.89596158404683,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 12,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 129,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9916663202204445,
+      "currentHp": 0.9543883952983591,
+      "previousSeconds": 15.492829315422117,
+      "currentSeconds": 21.291965632475623,
+      "nextWins": 123,
+      "nextHp": 0.7678204371716625,
+      "nextSeconds": 28.84714750541273,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 13,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 127,
+      "easierWins": 0,
+      "harderWins": 2,
+      "previousHp": 0.9670942337938058,
+      "currentHp": 0.82864286086356,
+      "previousSeconds": 20.767167438832363,
+      "currentSeconds": 27.75310735185017,
+      "nextWins": 108,
+      "nextHp": 0.6897744129794513,
+      "nextSeconds": 37.29856893258501,
+      "bossWins": 26,
+      "bossHp": 0.3462878921928332,
+      "bossSeconds": 59.66280589732089,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 14,
+      "n": 129,
+      "previousWins": 129,
+      "currentWins": 117,
+      "easierWins": 0,
+      "harderWins": 12,
+      "previousHp": 0.892086513975794,
+      "currentHp": 0.767557305421016,
+      "previousSeconds": 26.253776225008707,
+      "currentSeconds": 35.61241895099019,
+      "nextWins": 37,
+      "nextHp": 0.45851321957370106,
+      "nextSeconds": 61.980219020399936,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 15,
+      "n": 125,
+      "previousWins": 125,
+      "currentWins": 72,
+      "easierWins": 0,
+      "harderWins": 53,
+      "previousHp": 0.9181677045822143,
+      "currentHp": 0.7093400188684463,
+      "previousSeconds": 34.52151156616211,
+      "currentSeconds": 65.42939596557618,
+      "nextWins": 125,
+      "nextHp": 0.9673866977691651,
+      "nextSeconds": 20.08826513671875,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 16,
+      "n": 95,
+      "previousWins": 95,
+      "currentWins": 95,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.8995146054970591,
+      "currentHp": 0.977949387148807,
+      "previousSeconds": 58.40785968178197,
+      "currentSeconds": 18.1832275390625,
+      "nextWins": 92,
+      "nextHp": 0.7269003805361296,
+      "nextSeconds": 30.745141119706002,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 17,
+      "n": 95,
+      "previousWins": 95,
+      "currentWins": 95,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9867898275977687,
+      "currentHp": 0.8914847436704134,
+      "previousSeconds": 16.69991683959961,
+      "currentSeconds": 26.507486483925266,
+      "nextWins": 60,
+      "nextHp": 0.2917451383251893,
+      "nextSeconds": 35.19296798706055,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 18,
+      "n": 95,
+      "previousWins": 95,
+      "currentWins": 68,
+      "easierWins": 0,
+      "harderWins": 27,
+      "previousHp": 0.9056127328621714,
+      "currentHp": 0.37230973588792904,
+      "previousSeconds": 25.50241410104852,
+      "currentSeconds": 34.942971801757814,
+      "nextWins": 50,
+      "nextHp": 0.33184076128037354,
+      "nextSeconds": 36.0636564555921,
+      "bossWins": 44,
+      "bossHp": 0.39664333231355015,
+      "bossSeconds": 63.49956359863281,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 19,
+      "n": 80,
+      "previousWins": 80,
+      "currentWins": 50,
+      "easierWins": 0,
+      "harderWins": 30,
+      "previousHp": 0.5160364728420973,
+      "currentHp": 0.38592614405788483,
+      "previousSeconds": 35.15901017189026,
+      "currentSeconds": 36.45211544036865,
+      "nextWins": 43,
+      "nextHp": 0.42807648885063826,
+      "nextSeconds": 63.749149560928345,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 20,
+      "n": 68,
+      "previousWins": 68,
+      "currentWins": 64,
+      "easierWins": 0,
+      "harderWins": 4,
+      "previousHp": 0.8398622423410416,
+      "currentHp": 0.6563734369462028,
+      "previousSeconds": 27.494359970092773,
+      "currentSeconds": 51.43834428226246,
+      "nextWins": 68,
+      "nextHp": 0.952541181269814,
+      "nextSeconds": 13.826186180114746,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 21,
+      "n": 64,
+      "previousWins": 64,
+      "currentWins": 64,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.6847985845524818,
+      "currentHp": 0.9533501975238323,
+      "previousSeconds": 48.182821393013,
+      "currentSeconds": 13.221584498882294,
+      "nextWins": 64,
+      "nextHp": 0.8511557886376977,
+      "nextSeconds": 20.47564047574997,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 22,
+      "n": 64,
+      "previousWins": 64,
+      "currentWins": 64,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9725296329706907,
+      "currentHp": 0.8784946342930198,
+      "previousSeconds": 11.775249995291233,
+      "currentSeconds": 18.148332238197327,
+      "nextWins": 60,
+      "nextHp": 0.5449444367550313,
+      "nextSeconds": 24.26777011156082,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 23,
+      "n": 64,
+      "previousWins": 64,
+      "currentWins": 64,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.8989582220092416,
+      "currentHp": 0.6454526069574058,
+      "previousSeconds": 16.331172466278076,
+      "currentSeconds": 21.52119743824005,
+      "nextWins": 64,
+      "nextHp": 0.7731947926804423,
+      "nextSeconds": 24.88026076555252,
+      "bossWins": 45,
+      "bossHp": 0.37501513794995844,
+      "bossSeconds": 47.51274782419205,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 24,
+      "n": 64,
+      "previousWins": 64,
+      "currentWins": 64,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.6454526069574058,
+      "currentHp": 0.7731947926804423,
+      "previousSeconds": 21.52119743824005,
+      "currentSeconds": 24.88026076555252,
+      "nextWins": 45,
+      "nextHp": 0.37501513794995844,
+      "nextSeconds": 47.51274782419205,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 25,
+      "n": 64,
+      "previousWins": 64,
+      "currentWins": 45,
+      "easierWins": 0,
+      "harderWins": 19,
+      "previousHp": 0.7731947926804423,
+      "currentHp": 0.37501513794995844,
+      "previousSeconds": 24.88026076555252,
+      "currentSeconds": 47.51274782419205,
+      "nextWins": 64,
+      "nextHp": 0.9498001681640744,
+      "nextSeconds": 13.924698770046234,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 26,
+      "n": 49,
+      "previousWins": 49,
+      "currentWins": 49,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.5120516458944399,
+      "currentHp": 0.9506150338114524,
+      "previousSeconds": 47.82461929321289,
+      "currentSeconds": 14.991779638796437,
+      "nextWins": 49,
+      "nextHp": 0.8717259180789091,
+      "nextSeconds": 22.86614927953603,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 27,
+      "n": 49,
+      "previousWins": 49,
+      "currentWins": 49,
+      "easierWins": 0,
+      "harderWins": 0,
+      "previousHp": 0.9506150338114524,
+      "currentHp": 0.8717259180789091,
+      "previousSeconds": 14.991779638796437,
+      "currentSeconds": 22.86614927953603,
+      "nextWins": 38,
+      "nextHp": 0.3841447775461236,
+      "nextSeconds": 30.210595033606705,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 28,
+      "n": 49,
+      "previousWins": 49,
+      "currentWins": 38,
+      "easierWins": 0,
+      "harderWins": 11,
+      "previousHp": 0.8717259180789091,
+      "currentHp": 0.3841447775461236,
+      "previousSeconds": 22.86614927953603,
+      "currentSeconds": 30.210595033606705,
+      "nextWins": 31,
+      "nextHp": 0.2898477856972616,
+      "nextSeconds": 34.97582844325474,
+      "bossWins": 36,
+      "bossHp": 0.6338042736205519,
+      "bossSeconds": 61.01115760024713,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 29,
+      "n": 46,
+      "previousWins": 46,
+      "currentWins": 26,
+      "easierWins": 0,
+      "harderWins": 20,
+      "previousHp": 0.4847747618737428,
+      "currentHp": 0.2869982913531282,
+      "previousSeconds": 29.7591378585152,
+      "currentSeconds": 33.07394235030465,
+      "nextWins": 37,
+      "nextHp": 0.6388766191413869,
+      "nextSeconds": 59.83928713591202,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    },
+    {
+      "wave": 30,
+      "n": 36,
+      "previousWins": 36,
+      "currentWins": 29,
+      "easierWins": 0,
+      "harderWins": 7,
+      "previousHp": 0.534589744244133,
+      "currentHp": 0.5627821917749114,
+      "previousSeconds": 32.98624240027534,
+      "currentSeconds": 59.94600582122803,
+      "nextWins": 0,
+      "nextHp": 0,
+      "nextSeconds": 0,
+      "bossWins": 0,
+      "bossHp": 0,
+      "bossSeconds": 0,
+      "compared": 0,
+      "beforeWins": 0,
+      "beforeHp": 0,
+      "beforeSeconds": 0,
+      "bossBeforeWins": 0,
+      "bossBeforeHp": 0
+    }
+  ],
+  "encounters": [
+    {
+      "wave": 1,
+      "count": 2,
+      "hp": 148,
+      "basicDps": 8.888889,
+      "enemies": [
+        {
+          "id": "beast-1",
+          "hp": 74,
+          "power": 8,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "beast-2",
+          "hp": 74,
+          "power": 8,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 2,
+      "count": 3,
+      "hp": 233,
+      "basicDps": 13.5,
+      "enemies": [
+        {
+          "id": "beast-1",
+          "hp": 84,
+          "power": 9,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "beast-2",
+          "hp": 84,
+          "power": 9,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "spine-raider-1",
+          "hp": 65,
+          "power": 7,
+          "x": 3.2,
+          "y": 1.2,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 3,
+      "count": 4,
+      "hp": 715,
+      "basicDps": 58.3333359,
+      "enemies": [
+        {
+          "id": "beast-1",
+          "hp": 190,
+          "power": 24,
+          "x": 2.1,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "spine-raider-1",
+          "hp": 175,
+          "power": 30,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "spine-raider-2",
+          "hp": 175,
+          "power": 30,
+          "x": 3.7,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "spine-raider-3",
+          "hp": 175,
+          "power": 30,
+          "x": -0.5,
+          "y": 2.5,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 4,
+      "count": 4,
+      "hp": 1155,
+      "basicDps": 100.388893,
+      "enemies": [
+        {
+          "id": "elite-beast",
+          "hp": 550,
+          "power": 62,
+          "x": 3.25,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "beast-1",
+          "hp": 220,
+          "power": 40,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "beast-2",
+          "hp": 220,
+          "power": 40,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "spine-raider-1",
+          "hp": 165,
+          "power": 43,
+          "x": 3.2,
+          "y": 1.2,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 5,
+      "count": 3,
+      "hp": 2680,
+      "basicDps": 37.878788,
+      "enemies": [
+        {
+          "id": "beast-boss",
+          "hp": 2500,
+          "power": 46,
+          "x": 3.7,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "beast-1",
+          "hp": 90,
+          "power": 9,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "beast-2",
+          "hp": 90,
+          "power": 9,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 6,
+      "count": 3,
+      "hp": 1060,
+      "basicDps": 61.9444466,
+      "enemies": [
+        {
+          "id": "stone-infantry-1",
+          "hp": 400,
+          "power": 40,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-2",
+          "hp": 400,
+          "power": 40,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-1",
+          "hp": 260,
+          "power": 35,
+          "x": 3.2,
+          "y": 1.2,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 7,
+      "count": 4,
+      "hp": 1380,
+      "basicDps": 90,
+      "enemies": [
+        {
+          "id": "stone-infantry-1",
+          "hp": 420,
+          "power": 45,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-2",
+          "hp": 420,
+          "power": 45,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-1",
+          "hp": 270,
+          "power": 40,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-2",
+          "hp": 270,
+          "power": 40,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 8,
+      "count": 5,
+      "hp": 1920,
+      "basicDps": 125,
+      "enemies": [
+        {
+          "id": "stone-infantry-1",
+          "hp": 440,
+          "power": 48,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-2",
+          "hp": 440,
+          "power": 48,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-3",
+          "hp": 440,
+          "power": 48,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-1",
+          "hp": 300,
+          "power": 45,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-2",
+          "hp": 300,
+          "power": 45,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 9,
+      "count": 6,
+      "hp": 2430,
+      "basicDps": 135.222229,
+      "enemies": [
+        {
+          "id": "stone-elite",
+          "hp": 770,
+          "power": 55,
+          "x": 3.45,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-1",
+          "hp": 370,
+          "power": 40,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-2",
+          "hp": 370,
+          "power": 40,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "stone-infantry-3",
+          "hp": 370,
+          "power": 40,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-1",
+          "hp": 275,
+          "power": 38,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-2",
+          "hp": 275,
+          "power": 38,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 10,
+      "count": 3,
+      "hp": 4500,
+      "basicDps": 59.4444466,
+      "enemies": [
+        {
+          "id": "golem-boss",
+          "hp": 4200,
+          "power": 80,
+          "x": 4.1,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "crossbow-raider-1",
+          "hp": 150,
+          "power": 15,
+          "x": 2.8,
+          "y": -2.15,
+          "boss": false
+        },
+        {
+          "id": "crossbow-raider-2",
+          "hp": 150,
+          "power": 15,
+          "x": 2.8,
+          "y": 2.15,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 11,
+      "count": 4,
+      "hp": 1820,
+      "basicDps": 96,
+      "enemies": [
+        {
+          "id": "mine-worker-1",
+          "hp": 480,
+          "power": 45,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-2",
+          "hp": 480,
+          "power": 45,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-3",
+          "hp": 480,
+          "power": 45,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-1",
+          "hp": 380,
+          "power": 42,
+          "x": 3.2,
+          "y": 1.2,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 12,
+      "count": 5,
+      "hp": 2440,
+      "basicDps": 130.333344,
+      "enemies": [
+        {
+          "id": "mine-worker-1",
+          "hp": 540,
+          "power": 50,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-2",
+          "hp": 540,
+          "power": 50,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-3",
+          "hp": 540,
+          "power": 50,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-1",
+          "hp": 410,
+          "power": 47,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-2",
+          "hp": 410,
+          "power": 47,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 13,
+      "count": 5,
+      "hp": 3210,
+      "basicDps": 163.333328,
+      "enemies": [
+        {
+          "id": "mine-worker-1",
+          "hp": 750,
+          "power": 65,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-2",
+          "hp": 750,
+          "power": 65,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-3",
+          "hp": 750,
+          "power": 65,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-1",
+          "hp": 480,
+          "power": 55,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-2",
+          "hp": 480,
+          "power": 55,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 14,
+      "count": 5,
+      "hp": 3870,
+      "basicDps": 172.555557,
+      "enemies": [
+        {
+          "id": "mine-elite",
+          "hp": 1450,
+          "power": 80,
+          "x": 3.45,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-1",
+          "hp": 710,
+          "power": 64,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "mine-worker-2",
+          "hp": 710,
+          "power": 64,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-1",
+          "hp": 500,
+          "power": 57,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-2",
+          "hp": 500,
+          "power": 57,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 15,
+      "count": 4,
+      "hp": 7450,
+      "basicDps": 119.333336,
+      "enemies": [
+        {
+          "id": "furnace-boss",
+          "hp": 6000,
+          "power": 98,
+          "x": 4.1,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "mine-elite",
+          "hp": 850,
+          "power": 52,
+          "x": 3,
+          "y": -1.25,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-1",
+          "hp": 300,
+          "power": 36,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "mine-slinger-2",
+          "hp": 300,
+          "power": 36,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 16,
+      "count": 4,
+      "hp": 2580,
+      "basicDps": 129.444443,
+      "enemies": [
+        {
+          "id": "frost-guard-1",
+          "hp": 790,
+          "power": 67,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-2",
+          "hp": 790,
+          "power": 67,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-1",
+          "hp": 500,
+          "power": 55,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-2",
+          "hp": 500,
+          "power": 55,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 17,
+      "count": 5,
+      "hp": 4090,
+      "basicDps": 200,
+      "enemies": [
+        {
+          "id": "frost-guard-1",
+          "hp": 930,
+          "power": 75,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-2",
+          "hp": 930,
+          "power": 75,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-3",
+          "hp": 930,
+          "power": 75,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-1",
+          "hp": 650,
+          "power": 75,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-2",
+          "hp": 650,
+          "power": 75,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 18,
+      "count": 6,
+      "hp": 4980,
+      "basicDps": 228.166672,
+      "enemies": [
+        {
+          "id": "frost-guard-1",
+          "hp": 1040,
+          "power": 82,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-2",
+          "hp": 1040,
+          "power": 82,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-3",
+          "hp": 1040,
+          "power": 82,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-1",
+          "hp": 620,
+          "power": 61,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-2",
+          "hp": 620,
+          "power": 61,
+          "x": 3.7,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-3",
+          "hp": 620,
+          "power": 61,
+          "x": 4.2,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 19,
+      "count": 5,
+      "hp": 5210,
+      "basicDps": 216.555557,
+      "enemies": [
+        {
+          "id": "frost-cantor",
+          "hp": 1650,
+          "power": 90,
+          "x": 3.45,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-1",
+          "hp": 1100,
+          "power": 86,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "frost-guard-2",
+          "hp": 1100,
+          "power": 86,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-1",
+          "hp": 680,
+          "power": 71,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-2",
+          "hp": 680,
+          "power": 71,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 20,
+      "count": 3,
+      "hp": 8600,
+      "basicDps": 123.111115,
+      "enemies": [
+        {
+          "id": "frost-boss",
+          "hp": 7400,
+          "power": 110,
+          "x": 4.1,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "frost-acolyte-1",
+          "hp": 600,
+          "power": 62,
+          "x": 2.8,
+          "y": -2.15,
+          "boss": false
+        },
+        {
+          "id": "frost-acolyte-2",
+          "hp": 600,
+          "power": 62,
+          "x": 2.8,
+          "y": 2.15,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 21,
+      "count": 4,
+      "hp": 2920,
+      "basicDps": 152.222229,
+      "enemies": [
+        {
+          "id": "garden-guard-1",
+          "hp": 920,
+          "power": 83,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-2",
+          "hp": 920,
+          "power": 83,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-1",
+          "hp": 540,
+          "power": 60,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-2",
+          "hp": 540,
+          "power": 60,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 22,
+      "count": 5,
+      "hp": 4390,
+      "basicDps": 221.333328,
+      "enemies": [
+        {
+          "id": "garden-guard-1",
+          "hp": 1050,
+          "power": 92,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-2",
+          "hp": 1050,
+          "power": 92,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-3",
+          "hp": 1050,
+          "power": 92,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-1",
+          "hp": 620,
+          "power": 68,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-2",
+          "hp": 620,
+          "power": 68,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 23,
+      "count": 6,
+      "hp": 5610,
+      "basicDps": 274.333344,
+      "enemies": [
+        {
+          "id": "garden-guard-1",
+          "hp": 1170,
+          "power": 98,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-2",
+          "hp": 1170,
+          "power": 98,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-3",
+          "hp": 1170,
+          "power": 98,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-1",
+          "hp": 700,
+          "power": 74,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-2",
+          "hp": 700,
+          "power": 74,
+          "x": 3.7,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-3",
+          "hp": 700,
+          "power": 74,
+          "x": 4.2,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 24,
+      "count": 5,
+      "hp": 5890,
+      "basicDps": 247.444458,
+      "enemies": [
+        {
+          "id": "garden-keeper",
+          "hp": 1950,
+          "power": 103,
+          "x": 3.45,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-1",
+          "hp": 1230,
+          "power": 101,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "garden-guard-2",
+          "hp": 1230,
+          "power": 101,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-1",
+          "hp": 740,
+          "power": 78,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-2",
+          "hp": 740,
+          "power": 78,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 25,
+      "count": 3,
+      "hp": 9400,
+      "basicDps": 129.444443,
+      "enemies": [
+        {
+          "id": "garden-boss",
+          "hp": 8500,
+          "power": 125,
+          "x": 4.1,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "garden-spitter-1",
+          "hp": 450,
+          "power": 60,
+          "x": 2.8,
+          "y": -2.15,
+          "boss": false
+        },
+        {
+          "id": "garden-spitter-2",
+          "hp": 450,
+          "power": 60,
+          "x": 2.8,
+          "y": 2.15,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 26,
+      "count": 4,
+      "hp": 3841,
+      "basicDps": 168.17778,
+      "enemies": [
+        {
+          "id": "palace-guard-1",
+          "hp": 1207.5,
+          "power": 88,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-2",
+          "hp": 1207.5,
+          "power": 88,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-1",
+          "hp": 713,
+          "power": 70.4,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-2",
+          "hp": 713,
+          "power": 70.4,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 27,
+      "count": 5,
+      "hp": 5531.5,
+      "basicDps": 232.833344,
+      "enemies": [
+        {
+          "id": "palace-guard-1",
+          "hp": 1322.5,
+          "power": 93.5,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-2",
+          "hp": 1322.5,
+          "power": 93.5,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-3",
+          "hp": 1322.5,
+          "power": 93.5,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-1",
+          "hp": 782,
+          "power": 77,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-2",
+          "hp": 782,
+          "power": 77,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 28,
+      "count": 6,
+      "hp": 6865.5,
+      "basicDps": 287.1,
+      "enemies": [
+        {
+          "id": "palace-guard-1",
+          "hp": 1437.5,
+          "power": 99,
+          "x": 2.1,
+          "y": -1.15,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-2",
+          "hp": 1437.5,
+          "power": 99,
+          "x": 2.64999986,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-3",
+          "hp": 1437.5,
+          "power": 99,
+          "x": 2.1,
+          "y": 1.15,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-1",
+          "hp": 851,
+          "power": 81.4,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-2",
+          "hp": 851,
+          "power": 81.4,
+          "x": 3.7,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-3",
+          "hp": 851,
+          "power": 81.4,
+          "x": 4.2,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 29,
+      "count": 5,
+      "hp": 6992,
+      "basicDps": 250.6889,
+      "enemies": [
+        {
+          "id": "palace-sentinel",
+          "hp": 2185,
+          "power": 90,
+          "x": 3.45,
+          "y": 0,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-1",
+          "hp": 1518,
+          "power": 103.4,
+          "x": 2.1,
+          "y": -0.575,
+          "boss": false
+        },
+        {
+          "id": "palace-guard-2",
+          "hp": 1518,
+          "power": 103.4,
+          "x": 2.64999986,
+          "y": 0.575,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-1",
+          "hp": 885.5,
+          "power": 85.8,
+          "x": 3.2,
+          "y": -1.35,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-2",
+          "hp": 885.5,
+          "power": 85.8,
+          "x": 3.7,
+          "y": 1.35,
+          "boss": false
+        }
+      ]
+    },
+    {
+      "wave": 30,
+      "count": 3,
+      "hp": 12000,
+      "basicDps": 158.555557,
+      "enemies": [
+        {
+          "id": "palace-boss",
+          "hp": 10800,
+          "power": 145,
+          "x": 4.1,
+          "y": 0,
+          "boss": true
+        },
+        {
+          "id": "palace-arbalist-1",
+          "hp": 600,
+          "power": 78,
+          "x": 2.8,
+          "y": -2.15,
+          "boss": false
+        },
+        {
+          "id": "palace-arbalist-2",
+          "hp": 600,
+          "power": 78,
+          "x": 2.8,
+          "y": 2.15,
+          "boss": false
+        }
+      ]
+    }
+  ]
+}

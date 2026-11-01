@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-01",
+  "version": "v0.64",
+  "unity": "6000.3.24f1",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 298586643,
+  "sha256": "1ae3800b64af65970c5cc0718423fb0c84620a0906b5c0e658b975760ae52682",
+  "art": {
+    "file": "unity/Assets/Resources/Art/Enemies/v064/frost-warden.png",
+    "tool": "built-in image_gen",
+    "sourcePixels": "1087x1447",
+    "poses": 8,
+    "defeatPoses": 4,
+    "pngAndAlphaPreserved": true,
+    "import": "Point/1024; per-pose UV bounds",
+    "idleDisplayHeight": 290,
+    "idleDisplayWidth": 370.55555555555554
+  },
+  "validation": {
+    "combatFrames": 24,
+    "dialogueChecks": 609,
+    "settlementScenarios": 28,
+    "endingChecks": 214
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "cases": [
+      "1x motion",
+      "2x motion",
+      "1x reduced motion",
+      "2x reduced motion"
+    ],
+    "screenshots": 24,
+    "saveRestore": "verified byte-for-byte"
+  },
+  "spum": "User chose not to adopt; no purchase or import",
+  "limitations": [
+    "Isolated visual QA, not a natural balance run",
+    "HTML source and local links checked; browser rendering not verified"
+  ]
+}

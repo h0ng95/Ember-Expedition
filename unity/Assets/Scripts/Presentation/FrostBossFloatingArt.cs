@@ -6,23 +6,30 @@ namespace Expedition.Presentation
     // Finished full-character drawings. Arms are part of each frame, never separate layers.
     public sealed class FrostBossFloatingArt
     {
-        public const string TexturePath = "Art/Enemies/v039/frost-boss-full-motion";
+        public const string TexturePath = "Art/Enemies/v064/frost-warden";
+        const float SheetWidth = 1087f, SheetHeight = 1447f;
         static readonly Rect[] Frames = {
-            new Rect(25, 30, 656, 566), new Rect(729, 58, 574, 544),
-            new Rect(16, 647, 688, 512), new Rect(713, 608, 595, 560)
+            new Rect(45, 35, 506, 396), new Rect(600, 49, 471, 382),
+            new Rect(12, 442, 563, 371), new Rect(580, 442, 495, 377),
+            new Rect(43, 818, 510, 356), new Rect(583, 879, 486, 276),
+            new Rect(32, 1186, 493, 242), new Rect(555, 1224, 512, 205)
         };
-        static readonly float[] Anchors = { 350f, 970f, 500f, 983f };
+        static readonly float[] Anchors = { 287f, 800f, 318f, 805f, 292f, 824f, 277f, 812f };
         Texture2D texture;
         RenderTexture clipped;
         bool attempted, clipAttempted;
 
         public static int SpriteIndex(int combatFrame)
         {
+            if (combatFrame >= 18 && combatFrame <= 21) return combatFrame - 14;
             if (combatFrame == 12 || combatFrame == 13 || combatFrame == 22 || combatFrame == 23) return 1;
             if (combatFrame == 14 || combatFrame == 15) return 2;
             if (combatFrame == 16 || combatFrame == 17) return 3;
             return 0;
         }
+
+        public static int DefeatFrame(float age, bool reduceMotion)
+        { return reduceMotion ? 21 : 18 + Mathf.Clamp((int)(Mathf.Max(0, age) / .24f), 0, 3); }
 
         public static Rect BoundsFor(int frame, Vector2 foot, float time)
         {
@@ -31,10 +38,12 @@ namespace Expedition.Presentation
             // One scale for all poses; leaning forward changes height naturally.
             float scale = FrostEnemyArt.SilhouetteHeight(FrostEnemyArt.Species[3]) / Frames[0].height;
             bool moving = frame >= 6 && frame <= 11;
-            float bob = Mathf.Sin(time * Mathf.PI * 1.2f) * (moving ? 2f : 1.2f);
-            float fall = frame >= 18 && frame <= 21 ? (frame - 18) * 2f : 0f;
+            bool defeated = index >= 4;
+            float bob = defeated || GamePreferences.Current.ReduceMotion ? 0 :
+                Mathf.Sin(time * Mathf.PI * 1.2f) * (moving ? 2f : 1.2f);
+            float hover = !defeated ? 10f : index == 4 ? 6f : index == 5 ? 3f : 0f;
             return new Rect(foot.x + (source.x - Anchors[index]) * scale,
-                foot.y - source.height * scale - 10f + bob + fall, source.width * scale, source.height * scale);
+                foot.y - source.height * scale - hover + bob, source.width * scale, source.height * scale);
         }
 
         void Load(Material material)
@@ -78,11 +87,10 @@ namespace Expedition.Presentation
             Color saved = GUI.color;
             try
             {
-                if (frame >= 18 && frame <= 21)
-                    GUI.color = new Color(saved.r, saved.g, saved.b, saved.a * (21 - frame) / 3f);
+                // The caller owns corpse fading. Story scenes keep the settled pose opaque.
                 Rect source = Frames[SpriteIndex(frame)];
-                Rect uv = new Rect(source.x / 1312f, 1f - source.yMax / 1199f,
-                    source.width / 1312f, source.height / 1199f);
+                Rect uv = new Rect(source.x / SheetWidth, 1f - source.yMax / SheetHeight,
+                    source.width / SheetWidth, source.height / SheetHeight);
                 GUI.DrawTextureWithTexCoords(bounds, clipped != null ? (Texture)clipped : texture, uv, true);
             }
             finally { GUI.color = saved; }

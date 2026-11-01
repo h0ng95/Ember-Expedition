@@ -1,0 +1,33 @@
+Mode: built-in image_gen; transparent_background=true. PNG/alpha preserved without external image editing.
+Identity reference: unity/Assets/Resources/Art/Enemies/v039/frost-boss-full-motion.png
+Output: unity/Assets/Resources/Art/Enemies/v064/frost-warden.png
+
+Attempt 1 (not selected):
+Edit the provided original Frost Warden character into a production-ready pixel sprite atlas. Input 1 is the identity and imposing anatomy reference (wide old dark-iron boss); input 2 is the pixel style and 8-pose sequence reference ONLY, it is currently too narrow, too bright gold and too pale icy blue. Restore input 1's intimidating broad shoulders, massive chest, huge fists and tiny helmet relative to shoulders. Not a thin cute knight.
+Output exactly 8 complete whole-character frames in a clean 4 columns by 2 rows atlas, landscape 1536x1024. Each cell has ample EMPTY transparent space all around, minimum 20px gaps, no touching adjacent frames or canvas edges. Keep the same character scale across all cells. Upright silhouette is about 1.15 times as WIDE as it is TALL. Size upright characters around 300px wide and 260px tall so the entire extended punch fits its cell; do not fill cell height. Face LEFT in a three-quarter side battlefield view in every frame.
+Row1: idle intimidating floating armored torso with both huge gauntlets down; windup with fist raised towards face; punch thrust forcefully LEFT with connected shoulder upper arm elbow wrist, opposite fist guards torso; recovery returning to idle.
+Row2: beginning defeat with dimmed chest crystal and shoulders dropping; sagging downward with heavy gauntlets nearly on ground; collapsed forward on BOTH fists with torso lowering; settled powerless collapsed armor sitting low on ground, lowered helmet and extinguished dark-blue chest gem.
+All poses must preserve EXACT equipment, connected arms, same crown-shaped helmet, huge layered shoulders, 2 fists, blue shoulder crystals, dark navy torn cloth, pointed floating armored waist. No legs, no feet, no weapons, no extra hands. Only the few small floating waist chips descend to ground at defeat, no severed limb pieces. Final defeat retains broad heavy shoulder and chest mass, not a miniature.
+Palette: dominant charcoal/blue-black iron, clear broad steel-grey bevel planes with limited stepped shades. Thin tarnished dark brass seams, NOT wide bright gold bands. Shoulder ice predominantly deep cobalt / dark sapphire, small restrained blue highlights at tips, no large baby-blue or white faces. Chest core is the one small bright cyan-white focus when alive. Strong dark silhouette and angular armored slab shapes.
+Authentic readable pixel art with consistent chunky pixel grid, hard staircase contours and flat clustered 3-tone shading like the second reference; no scratch microtexture, no photographic metal, no soft airbrush, no gradient bloom. It must retain first reference's mass while simplifying its rendering.
+Genuinely transparent RGBA background, alpha 0 outside the sprites, no smoky haze, no shadows or glow outside silhouettes, no checkerboard painted into image, no background, no labels, no decorations. Keep all 8 complete poses uncut.
+
+Attempt 2 (selected body design; superseded by color-only edit):
+Create a NEW sprite sheet of the exact floating armored frost boss in this reference. Preserve its massive wide torso, enormous gauntlets and tiny crown helmet. The reference IDENTITY is correct, but redraw it in crisp low-resolution pixel art. Not a realistic illustration.
+8 frames, arranged TWO COLUMNS and FOUR ROWS on a portrait transparent sheet. Each pose is completely separate with generous clear alpha-0 margins. Keep character scale constant in all cells. Wide imposing body, roughly 120 pixels wide by 100 high for idle in the underlying pixel grid, enlarged with nearest-neighbor pixel blocks. Main shoulder and chest mass must dominate; arms remain connected. Facing screen LEFT. No legs or boots; pointed waist with only short floating fragments.
+Row 1: idle / fist windup.
+Row 2: leftwards full punch / recovery.
+Row 3: power fading shoulders drop / sinking almost to ground.
+Row 4: slumped on two huge fists / final fully grounded collapsed armor, torso bent low with same full shoulder width.
+Keep exactly two fists and the same armor design across all 8 poses. 3-frame buildup to the FINAL defeated pose, not disappearing, no detachable arms.
+Extremely important colors: charcoal-black heavy iron covers 75 percent of silhouette; narrow aged DARK BROWN BRASS edging, no shiny yellow gold. Ice is opaque DEEP NAVY and muted cobalt, just tiny grey-blue edges; no turquoise, NO electric blue, NO fluorescent blue, NO white crystal faces. Chest tiny subdued cyan gem when alive, dark when dead. Dark navy cloth. Flat discrete color clusters with 3 shades per material, confident dark outline, coarse visible pixel steps, no tiny scratches, no realistic glints.
+The result should look heavy and threatening, like a dark fortress with frozen shoulders, not a shiny blue toy. No background at all, no smoke, glow, haze, floor or shadows. Genuine transparent background. ALL figures complete, ample padding, no labels.
+Source: exec-273814ef-7fe8-471c-91eb-7b1885d365e8.png
+
+Final user-directed ice-only saturation edit:
+Perform a COLOR-ONLY EDIT on this EXACT transparent pixel-art sprite atlas. Preserve the exact 1086x1448 dimensions, all 8 poses, same positions, margins, silhouettes, pixel texture, dark iron armor, brass trim, cloth, connected hands and body proportions. DO NOT redraw, reposition or recompose any part.
+Only change the ice crystals on shoulders/forearms and the pointed floating ice underneath the waist, including floating ice chips: reduce their blue color SATURATION by approximately 45%, moving electric cobalt and cyan toward restrained cool steel-blue/slate blue. Preserve the existing brightness structure and dark facet shadows, and keep blue clearly blue. No pale white washed-out ice. No neon blue. Do not alter the iron or brass colors. Preserve the small luminous chest gem as the main glowing focus when alive and extinguished gem in defeat.
+No change whatsoever to shape, pixel density, pose, equipment count, scale, cropping, transparency or spacing. Keep genuine transparent RGBA background; absolutely no smoke haze, background or shadows. This is the same sheet with only less saturated ice, nothing else.
+
+Selected output: exec-e83c1b71-98d2-4134-8ad9-915203608e51.png
+Actual source dimensions: 1087x1447; final crop bounds were remeasured before import.

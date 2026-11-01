@@ -1279,6 +1279,12 @@ namespace Expedition.Presentation
                 // Defeated story bosses retain a settled pose. HP, targeting and rewards do not change.
                 if (HoldStoryBoss(view.Unit)) frame = Mathf.Min(frame, 20);
                 if (HoldRegionalGuardian(view.Unit)) frame = expeditionWave == 30 ? 19 : expeditionWave == 15 ? 20 : 0;
+                // Frost retains a grounded, powered-down full-body pose through story dialogue.
+                // Keep this after the generic guardian idle override; otherwise it stands up again.
+                if (frostSpecies == "frost-boss" && !view.Unit.IsAlive)
+                    frame = FrostBossFloatingArt.DefeatFrame(view.StateTime,
+                        GamePreferences.Current.ReduceMotion || regionalStoryActive &&
+                        RegionalStoryTime >= RegionalStoryDuration);
                 view.RenderedEnemyFrame = frame;
                 Color beforeForest = GUI.color;
                 if (view.Unit.BossEnraged && !dialogueActive) GUI.color *= new Color(1f, .72f, .62f);

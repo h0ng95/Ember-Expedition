@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v0.63 서리 파수꾼 · 도트 표현과 패배 모션</title>
+<style>
+:root{--ink:#233a38;--muted:#60706a;--paper:#fffefb;--line:#dedfd5;--green:#245c50;--amber:#a95924;--wash:#f2f1e9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.85 'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:4px}a:hover{color:var(--amber)}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #ca8d4a;outline-offset:4px}
+.hero{background:#173c35;color:#fff8e9;border-bottom:5px solid #bf874b;padding:48px max(28px,calc((100vw - 1200px)/2)) 38px}
+.eyebrow{color:#bcd4c2;letter-spacing:.16em;font-size:12px;font-weight:700}.hero h1{font-size:clamp(27px,3.2vw,40px);line-height:1.4;margin:12px 0 16px;max-width:1000px}.hero p{max-width:900px;margin:0;color:#d7e0d6;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chips span{font-size:12px;padding:5px 13px;border:1px solid #557064;border-radius:30px;color:#e5ebdf}
+.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:28px;max-width:1280px;margin:30px auto;padding:0 24px}
+nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;align-self:start;padding:12px 4px 24px;font-size:12px;line-height:1.6}nav strong{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;margin-bottom:12px}nav a{display:block;text-decoration:none;padding:9px 11px;border-left:2px solid transparent}nav a:hover{background:#e5e7da;border-left-color:var(--green)}nav .source-link{border-top:1px solid var(--line);margin-top:14px;padding-top:15px;font-weight:bold}
+main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:36px 42px;box-shadow:0 8px 30px #263d3010}main>p:first-child{color:var(--muted);font-size:12px;margin-top:0}main>p:nth-child(2){background:#edf3e9;border-left:4px solid #39765e;padding:18px 22px;font-size:18px;line-height:1.8}
+h2{font-size:24px;line-height:1.5;margin:48px 0 22px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:24px;color:#194f41}h3{font-size:19px;line-height:1.55;margin:30px 0 12px;color:#684421}p{margin:15px 0}li{margin:9px 0}ul,ol{padding-left:24px}strong{font-weight:700}code{font:0.88em/1.6 Consolas,'Malgun Gothic',monospace;background:#eef0e9;padding:2px 5px;border-radius:3px}
+pre{background:#eaf0e9;border:1px solid #d1decf;border-radius:8px;padding:24px;margin:24px 0;white-space:pre-wrap;line-height:1.8}pre code{background:none;padding:0;font-family:'Malgun Gothic',sans-serif}
+main img{display:block;width:100%;max-width:640px;height:auto;margin:24px auto;background:#173c35;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:7px}table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#e7ede4;color:#24483b;font-weight:700}td:first-child{font-weight:700;min-width:105px}tbody tr:nth-child(even){background:#f8f8f1}tbody tr:last-child td{border-bottom:0}table:has(th:nth-child(4)){min-width:660px}th:nth-child(4):last-child{width:29%}
+footer{max-width:1280px;margin:25px auto;padding:0 24px 36px;color:var(--muted);font-size:12px;text-align:right}footer button{border:1px solid #9eaea0;background:#fffefb;color:var(--green);border-radius:5px;padding:8px 16px;margin-left:14px;cursor:pointer}
+@media(max-width:1000px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px;padding:0 16px}main{padding:26px}.hero{padding:34px 28px}nav{font-size:11px}}
+@media(max-width:740px){.layout{display:block;margin:18px auto;padding:0 12px}nav{position:static;max-height:none;padding:0 4px 16px}nav a{display:inline-block;padding:7px 9px}nav .source-link{display:block}main{padding:22px 18px}.hero{padding:28px 22px}.hero p{font-size:15px}h2{font-size:21px}main>p:nth-child(2){font-size:16px;padding:14px}body{font-size:15px}th,td{padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt;line-height:1.7}.hero{background:white;color:#173c35;border-bottom:2px solid #173c35;padding:0 0 18px}.hero h1{font-size:24pt}.hero p{color:#38534b;font-size:11pt}.eyebrow,.chips,nav,footer{display:none}.layout{display:block;margin:0;padding:0}main{padding:0;border:0;box-shadow:none}main>p:nth-child(2){font-size:12pt}h2{font-size:16pt;margin-top:24px;padding-top:16px}h3{font-size:12pt}h2,h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table,table:has(th:nth-child(4)){min-width:0;font-size:9pt}th,td{padding:7px;word-break:normal;overflow-wrap:anywhere}td:first-child{min-width:0}tr{break-inside:avoid}a{color:inherit}pre{font-size:10pt}@page{size:A4;margin:18mm}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="eyebrow">IGNIS: ASHEN OATH · FROST WARDEN</div>
+<h1>v0.63 서리 파수꾼 · 도트 표현과 패배 모션</h1>
+<p>서리 파수꾼의 도트 표현, 차분한 색감과 지면에 내려앉는 패배 모션을 기록합니다.</p>
+<div class="chips"><span>아트 일관성</span><span>8자세</span><span>패배 모션</span><span>Buddy2</span></div>
+</header>
+<div class="layout">
+<nav aria-label="문서 목차"><strong>CONTENTS</strong><a href="#section-1">아트와 색</a>
+<a href="#section-2">패배 처리</a>
+<a href="#section-3">적용 파일</a>
+<a href="#section-4">검증</a>
+<a href="#section-5">다음 작업의 우선순위</a><a class="source-link" href="HANDOFF.md">노션용 Markdown 원문</a></nav>
+<main><p>2026-10-31 · IGNIS: ASHEN OATH</p>
+<p><strong>서리 파수꾼을 기존 아군·잿갈기와 함께 놓았을 때 어울리도록 단순화하고, 부유를 멈추며 내려앉는 전용 패배 자세를 추가했다.</strong> 전투 후 대화가 시작되면 다시 대기 자세로 돌아가던 처리도 수정했다.</p>
+<h2 id="section-1">아트와 색</h2>
+<ul>
+<li>넓은 갑주, 큰 주먹, 청색 결정, 남색 천과 하체의 부유 핵을 유지했다.</li>
+<li>세밀한 흠집·얼음 결·금속 반사를 줄이고 넓은 명암 면과 굵은 픽셀 윤곽으로 바꿨다.</li>
+<li>첫 시안의 청색과 금색이 다른 보스보다 튄다는 피드백을 반영했다. 결정은 차분한 청색, 장식은 황동색으로 낮추고 가슴 핵에 밝은 포인트를 집중했다.</li>
+<li>모든 자세는 팔·주먹이 몸통에 붙어 있는 전신 그림이다. 새 다리나 무기를 추가하지 않는다.</li>
+</ul>
+<h2 id="section-2">패배 처리</h2>
+<p>공격용 4자세에 패배용 4자세를 더했다. <strong>힘이 빠짐 → 내려감 → 지면을 짚음 → 고개를 숙인 채 정지</strong>로 연결하며, 최종 자세에서는 핵의 빛이 약하다. 약 0.72초 뒤 마지막 자세에 도달하고 대화 내내 유지한다.</p>
+<p>서리 보스의 체력이 0이 되면 일반 수호자 대기 자세 고정보다 패배 자세 선택이 우선한다. 패배 상태에서는 부유 흔들림이 없다. 모션 줄이기를 켜면 바로 마지막 자세를 보여 준다. 전투 중 쓰러졌을 때의 일반적인 사라짐은 상위 전투 화면이 처리하고, 이야기 장면에서는 몸체를 사라지게 하지 않는다.</p>
+<p>살아 있는 기본 높이 290과 자세 전체에 같은 확대 비율을 유지한다. 주저앉은 자세는 몸을 축소한 것이 아니라 낮아진 전신 그림이다. 전투 체력·피해·사거리·공격 간격·보상은 변경하지 않는다.</p>
+<h2 id="section-3">적용 파일</h2>
+<ul>
+<li><a href="../../unity/Assets/Resources/Art/Enemies/v063/frost-warden.png">새 8자세 시트</a></li>
+<li><a href="art-prompts.txt">제작·정리·색 보정 프롬프트</a></li>
+<li><a href="../art-direction.md">공통 아트 일관성 기준</a></li>
+</ul>
+<p>내장 <code>image_gen</code>으로 제작한 PNG와 알파를 그대로 저장했다. 기존 런타임의 투명 경계 처리와 자세별 UV 범위를 사용한다.</p>
+<h2 id="section-4">검증</h2>
+<ul>
+<li>Unity 6000.3.24f1 Android 빌드 성공. <a href="build-info.json">빌드 정보</a>.</li>
+<li>24개 전투 프레임의 범위, 8개 전신 자세 연결, 기본 높이 290, 공격 시 부유 기준점, 패배 후 접지와 부유 정지를 검사했다. 모션 줄이기는 마지막 패배 자세로 즉시 전환한다.</li>
+<li>기존 전장 대화 609개 검사와 28개 승리·패배·건너뛰기 시나리오, 후반 연출·엔딩 214개 검사를 통과했다.</li>
+<li>Galaxy Buddy2에서 <strong>1×·2× × 모션 줄이기 켬·끔 = 4조건</strong>을 재생했다. 각 조건에서 보스 일반 공격 4회·서리 고유 공격 1회가 발생했고, 결과 콜백과 대화 종료가 각각 한 번 호출됐다. 최종 표시 프레임은 모두 21(새 시트의 마지막 패배 자세)이었다.</li>
+<li>24개 화면과 48초 영상을 남겨 공격, 내려앉기, 최종 자세를 비교했다. 별도 실제 터치로 다음 대사와 건너뛰기도 확인했다.</li>
+<li>테스트 전 저장 파일과 PlayerPrefs를 바이트 단위로 복원하고 일치 여부를 확인했다.</li>
+</ul>
+<p>이 테스트는 아군·보스의 체력을 늘리고 정해진 시점에 보스를 전투 불능으로 만드는 격리 QA다. 일반 원정의 밸런스·완주율을 평가한 결과는 아니다. HTML은 소스와 연결 파일을 확인했으며 브라우저 렌더링 검증은 포함하지 않는다.</p>
+<p><a href="frost-review.mp4">Buddy2 공격·패배 영상</a> · <a href="screenshots/motion-contact.png">모션 단계 모음</a></p>
+<video src="frost-review.mp4" controls playsinline preload="metadata" poster="screenshots/battle.png" style="width:100%;margin:16px 0"></video>
+<p><img src="screenshots/dialogue.png" alt="실제 전장에서 대화 중에도 유지하는 마지막 패배 자세"></p>
+<p><img src="screenshots/battle.png" alt="일반 전투의 차분한 청색 결정과 황동 장식"></p>
+<h2 id="section-5">다음 작업의 우선순위</h2>
+<ol>
+<li><strong>나머지 보스 5종의 전투 종료 자세와 그림체를 비교한다.</strong> 특히 25전투 정원 보스는 현재 대화에서 대기 자세를 유지한다. 전투가 끝났다는 변화가 필요한지 먼저 보고, 튀는 재질·과한 채도·자세만 선별해 수정한다.</li>
+<li><strong>첫 원정부터 30전투 엔딩까지 처음 하는 사람의 플레이를 확인한다.</strong> 튜토리얼, 소환·연구·결합 선택, 패배 이유 이해, 대사 길이와 다시 하기 의향을 기록한다. 연출용 QA의 승리를 실제 게임 난도 평가로 사용하지 않는다.</li>
+<li><strong>출시 점검으로 이어간다.</strong> Buddy2 장시간 발열·프레임·저장 복구, 실제 사운드 청취를 확인하고, 영문 UI와 광고판·광고 없는 유료판의 출시 작업을 정리한다.</li>
+</ol>
+<p>이번 작업은 1번의 서리 보스 수정까지다. 다른 보스의 아트를 일괄 교체하거나 새로운 게임 콘텐츠를 추가한 것은 아니다.</p>
+</main>
+</div>
+<footer>서리 파수꾼 · v0.63 구현과 실기기 확인<button type="button" onclick="window.print()">인쇄 / PDF 저장</button></footer>
+</body>
+</html>

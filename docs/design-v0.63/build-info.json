@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-31",
+  "version": "v0.63",
+  "unity": "6000.3.24f1",
+  "apk": "unity/Builds/Android/expedition-combat-prototype.apk",
+  "bytes": 297095893,
+  "sha256": "fe3074aa0c1826ae356a0510118bf5a70f741febe7342dda6c194fe0311a1c12",
+  "art": {
+    "file": "unity/Assets/Resources/Art/Enemies/v063/frost-warden.png",
+    "prompt": "art-prompts.txt",
+    "tool": "built-in image_gen",
+    "sourcePixels": "1536x1024",
+    "poses": 8,
+    "defeatPoses": 4,
+    "sourcePngAndAlphaPreserved": true,
+    "import": "Point / 1024, existing runtime alpha clip, per-pose UV bounds"
+  },
+  "validation": {
+    "combatFrames": 24,
+    "dialogueChecks": 609,
+    "settlementScenarios": 28,
+    "endingAndRegionalChecks": 214,
+    "defeat": "monotonic progression, stationary grounded final pose, no individual limb transforms, immediate final pose under reduced motion"
+  },
+  "device": {
+    "model": "Galaxy Buddy2 SM-M236L",
+    "resolution": "2408x1080",
+    "cases": ["1x motion", "2x motion", "1x reduced motion", "2x reduced motion"],
+    "basicAttacksPerCase": 4,
+    "frostImpactsPerCase": 1,
+    "finalFrameEachCase": 21,
+    "screenshots": 24,
+    "touchNextAndSkip": "passed",
+    "saveRestore": "original save slots and PlayerPrefs verified byte-for-byte"
+  },
+  "video": "frost-review.mp4",
+  "limitations": [
+    "Isolated QA: inflated health and forced defeat; not a natural 30-wave balance run",
+    "New art and defeat animation apply to the frost boss only",
+    "HTML source and links verified; browser rendering not checked"
+  ]
+}

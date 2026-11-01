@@ -1,0 +1,46 @@
+Tool: built-in image_gen. Project asset: unity/Assets/Resources/Art/Enemies/v063/frost-warden.png
+Final source: C:/Users/whwog/.codex/generated_images/01a14e3b-5142-7871-8565-822e92917bb8/exec-d66357c8-d6ed-42e2-b47b-bac68f4b8055.png
+Generated PNG and alpha copied unchanged; runtime uses the existing alpha clip and per-pose UV crops.
+
+=== 1 ===
+Use case: style-transfer.
+Asset type: production transparent pixel-art sprite sheet for an existing 2D medieval mobile game.
+Image 1 is the EDIT TARGET / identity reference: the blue-crystal FLOATING FROST WARDEN with a broad dark armored torso, large attached gauntlets, gold trim, pointed closed helmet, navy cloth and a large icy lower core. Images 2 and 3 are STYLE REFERENCES ONLY: match their bold dark contours, simplified readable materials and compact game-sprite forms. Do not copy their colors, weapons or anatomy.
+
+Redraw this same frost guardian with visibly coarser, deliberate pixel clusters and LIMITED flat shading. Remove fine metal scratches, rivet noise, delicate ice veining, realistic specular gradients and overly intricate surface detail. Keep the powerful wide silhouette, dark navy/charcoal plates, restrained gold bands, and distinct medium-blue/cyan crystals. The knight and forest monster should look like they belong in the same game as this boss. Approximately 100-120 logical pixels tall for an upright body, enlarged with sharp square pixel clusters. 3 broad shade levels per material; controlled small highlights; NO smooth paint or photographic texture.
+
+Create EXACTLY EIGHT full-body frames in a REGULAR 4 COLUMNS x 2 ROWS sprite atlas, preferably 1536 x 1024. Each cell has generous fully transparent padding, one character only. Same facing LEFT, camera, consistent BODY SCALE and identity across all eight frames. Do NOT increase body scale for shorter crouched poses. Align the character's body centerline to each cell's horizontal center; ground baseline is near 90% of each cell height. All eight figures fit fully within their cells, never touching neighboring cells. No labels, grids, shadows, ground, text or effects outside the body.
+
+TOP ROW, left to right:
+0. Calm hovering idle. Same huge wide chest and gauntlets as reference, no legs or boots. Lower crystal assembly suspended above ground.
+1. Attack windup: connected near-side fist pulled toward chest, torso turned slightly, other attached fist guarding. No detached or duplicate fists.
+2. Attack impact: entire torso leans left with one SHORT powerful punch toward LEFT, elbow and upper arm visibly connected to shoulder. Other arm stays attached and bent. No giant fist, no streaks.
+3. Attack recovery: torso straightening, both attached gauntlets returning downward; ready to return to idle. Near same scale as frame 0.
+
+BOTTOM ROW, left to right: a continuous, nonviolent DEFEAT / POWER-DOWN sequence. This is the same living guardian becoming inactive, not shattered dead armor.
+4. Power falters: head tilts down a little, shoulders and both connected arms begin to droop; chest and lower core shine dimmer.
+5. Lowering: whole body sinks closer to ground, torso bends forward, both arms sag naturally and remain attached; crystals dim further.
+6. Landing: lower armor/core touches ground, both connected gauntlets brace against ground, head bowed; clearly lower silhouette, about 72% of idle height, SAME actual body scale.
+7. Settled defeated pose: entire coherent body rests low on ground, head bowed, shoulders relaxed, both arms intact and heavy on ground, navy cloth pooled behind. Core and ice remain blue but almost unlit. About 65-70% of idle height, not a resized small character. This pose must remain visibly present during dialogue.
+
+Critical continuity: exactly two attached arms and gauntlets in every frame. Same helmet, crystal groups, gold bands and core across all poses. No sword, shield, new weapon, new legs, extra torso, detached arm, moving limb layer, floating severed fist, ghosts or motion trails.
+True transparent alpha background. Outside all hard pixel contours must be fully transparent, no haze, soft halos, baked shadows or checkerboard painting. Return only the eight-frame atlas.
+
+=== 2 ===
+Edit this exact eight-frame frost guardian sprite atlas. Preserve the SAME character design, pixel drawing style, color palette, eight poses, equipment and connected arms. This is a technical sprite cleanup, not a new design.
+1. Remove ALL smoky/dark/blue/gold haze and all diffuse glow OUTSIDE the hard silhouette of each guardian. Empty space must be alpha ZERO, sprite interior solid opaque. No background color, soft perimeter, shadows or halos. Preserve the cyan light INSIDE the chest/core and the crystals.
+2. Give every sprite at least 24 clear pixels of padding inside its own cell in a strict 4-column by 2-row grid. The rightmost character's gauntlet must be fully inside its cell, not cut off at the image edge. Use a roomier canvas or uniformly reduce ALL EIGHT sprites by the same proportion to fit. Never scale the crouching sprites differently. Ensure all complete bodies including cloth and fists are visible. Keep the actual top-row body sizes equal.
+3. Keep the lower row's four increasingly lowered defeat poses exactly recognizable. In the final TWO bottom-right poses, chest and lower core are nearly unlit dark cyan-blue, NO white shine. Keep the blue identity of the crystals, but with less bright highlight in these final resting poses.
+No text, grid lines, extra objects, new limbs or motion trails. Return only the clean genuine transparent sprite atlas.
+
+=== 3 ===
+Edit this exact sprite sheet, preserving the eight full-body poses, design, silhouette, pixel clusters and connected limbs.
+The current blue and gold are too saturated compared to the rest of the medieval game. Adjust ONLY the palette and edge clearance:
+- Blue crystals: replace electric saturated cyan/royal-blue with quieter steel-blue and medium frosty blue, approximately 25% less saturation. Use a few pale icy edge pixels, not broad white glowing faces. Keep recognizable BLUE ice; not gray and not teal.
+- Armor trim: muted aged brass/ochre, approximately 20% less saturation and 10% less brightness than current orange-gold.
+- Cloth: restrained dark navy, no vivid royal blue.
+- Dark iron plates: preserve charcoal/navy and clear broad flat shadow planes.
+- Only the small chest core may be distinctly luminous in the first six poses. Final two resting defeat poses must have dark dim chest cores, no white shine.
+Do not muddy all the colors or flatten the contrast of the dark silhouette. Keep crisp pixel game art. No realistic surface detail.
+Make the full near-right arm and outer crystals of the TOP RIGHT sprite comfortably inside the canvas, with clear transparent margin. All eight complete bodies, no cropped fists. Retain same scale among poses.
+EVERYTHING outside the actual characters must be genuine fully transparent alpha: remove all blue/gold/black smoky background, haze, ambient lighting and glow around them. Sprite pixels opaque, empty pixels alpha zero. No outlines added around the whole cells. No text, no checkerboard, no ground, no shadow, no extra objects. Return only the recolored eight-pose transparent atlas.

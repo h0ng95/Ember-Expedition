@@ -7,11 +7,9 @@ namespace Expedition.Core
     public static class ExpeditionPreparationHints
     {
         static readonly string[] Empty = new string[0];
-        static readonly string[] Fallback = {
-            "전열과 후열 간격을 점검하세요",
-            "회복·보호 동료를 전열 근처에 배치",
-            "같은 공격을 피하도록 시작 위치 조정"
-        };
+        static readonly CatalogLocalizedStrings Fallback = new CatalogLocalizedStrings("text.0210",
+            "text.0211",
+            "text.0212");
 
         public static string[] ForBoss(ExpeditionRun run, CatalogDatabase catalog)
         {
@@ -22,7 +20,7 @@ namespace Expedition.Core
             var lines = new List<string>(3);
             int bench = run.Roster.Members.Count - run.DeployedIds.Count;
             if (run.DeployedIds.Count < 5 && bench > 0)
-                lines.Add("출전 " + run.DeployedIds.Count + "/5 · 대기 동료 " + bench + "명");
+                lines.Add(CatalogText.Get("text.0213") + run.DeployedIds.Count + CatalogText.Get("text.0214") + bench + CatalogText.Get("text.0006"));
 
             CatalogMember ready = null;
             foreach (string id in run.DeployedIds)
@@ -35,7 +33,7 @@ namespace Expedition.Core
             if (ready != null)
                 lines.Add(catalog.Get(ready.FormId).Name +
                     (ready.FormId.StartsWith("B-", StringComparison.Ordinal) ?
-                        " · 분기 진화 가능" : " · 최종 진화 가능"));
+                        CatalogText.Get("text.0215") : CatalogText.Get("text.0216")));
 
             if (run.Wave >= 10)
             {
@@ -47,8 +45,8 @@ namespace Expedition.Core
                     // Ready forms were handled above; hybrids and final forms have no such growth path.
                     if (needed <= 0) continue;
                     lines.Add(catalog.Get(member.FormId).Name +
-                        (member.FormId == "B-KN" ? " · 첫 진화까지 성장 " :
-                            " · 최종 진화까지 성장 ") + needed);
+                        (member.FormId == "B-KN" ? CatalogText.Get("text.0217") :
+                            CatalogText.Get("text.0218")) + needed);
                     break;
                 }
             }
@@ -57,7 +55,7 @@ namespace Expedition.Core
                 foreach (string id in run.DeployedIds)
                     if (run.Roster.Find(id).FormId == "H-06")
                     {
-                        lines.Add("지휘: 본인+거리3 내 최대2명, 평타1회+60%");
+                        lines.Add(CatalogText.Get("text.0219"));
                         break;
                     }
 

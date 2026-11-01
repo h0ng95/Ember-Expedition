@@ -14,6 +14,7 @@ namespace Expedition.Presentation
         int dialogueIndex;
         float dialogueAge;
         string dialogueWrapped;
+        int dialogueLanguageRevision = -1;
         GUIStyle dialogueText, dialogueName, dialogueCaption, dialogueControl;
         Font dialogueFont;
         static readonly Color SpeechInk = new Color32(38, 40, 53, 255);
@@ -182,14 +183,16 @@ namespace Expedition.Presentation
             SpeechPlate(r, new Color32(107, 101, 91, 255));
             SpeechPlate(new Rect(r.x + 4, r.y + 4, r.width - 8, r.height - 8),
                 held ? new Color32(63, 67, 78, 255) : SpeechInk);
-            GUI.Label(new Rect(r.x + 12, r.y, r.width - (next ? 40 : 24), r.height), text, dialogueControl);
+            LocalizedGui.Label(new Rect(r.x + 12, r.y, r.width - (next ? 40 : 24), r.height), text, dialogueControl);
             if (next) SpeechArrow(new Vector2(r.xMax - 32, r.center.y - 10), SpeechGold, false);
-            return GUI.Button(r, GUIContent.none, GUIStyle.none);
+            return LocalizedGui.Button(r, GUIContent.none, GUIStyle.none);
         }
 
         void DrawDialogue(List<DrawnCombatant> drawn)
         {
             EnsureDialogueStyles();
+            if (dialogueLanguageRevision != CatalogText.Revision)
+            { dialogueLanguageRevision = CatalogText.Revision; dialogueWrapped = null; }
             if (dialogueFont != null && dialogueFont.material != null && dialogueFont.material.mainTexture != null)
                 dialogueFont.material.mainTexture.filterMode = FilterMode.Point;
             DrawCastleStoryClue();
@@ -197,7 +200,7 @@ namespace Expedition.Presentation
             if ((!forestStoryActive || ForestStoryTime >= ForestIgnisDelay) &&
                 (!castleStoryActive || CastleStoryTime >= CastleIgnisDelay) &&
                 (!regionalStoryActive || RegionalStoryTime >= RegionalIgnisDelay)) DrawIgnisReveal();
-            GUI.Label(new Rect(32, 16, 940, 40), expeditionEncounter, dialogueCaption);
+            LocalizedGui.Label(new Rect(32, 16, 940, 40), expeditionEncounter, dialogueCaption);
             for (int i = 0; i < dialogueLines.Count; i++)
             {
                 float x = 1152 + i * 24;
@@ -223,21 +226,21 @@ namespace Expedition.Presentation
                 Rect nameplate = new Rect(bubble.x + 16, bubble.y - 16, nameWidth, 28);
                 SpeechPlate(nameplate, SpeechInk);
                 Fill(new Rect(nameplate.x + 12, nameplate.y + 4, nameplate.width - 24, 4), new Color32(89, 83, 75, 255));
-                GUI.Label(nameplate, name, dialogueName);
+                LocalizedGui.Label(nameplate, name, dialogueName);
                 int characters = Mathf.Clamp((int)(dialogueAge * 38), 0, full.Length);
                 // Transparent unrevealed glyphs retain word wrapping throughout the typewriter reveal.
                 string reveal = full.Substring(0, characters) + "<color=#26283500>" + full.Substring(characters) + "</color>";
-                GUI.Label(new Rect(bubble.x + 16, bubble.y + 16, 328, textHeight + 4), reveal, dialogueText);
+                LocalizedGui.Label(new Rect(bubble.x + 16, bubble.y + 16, 328, textHeight + 4), reveal, dialogueText);
                 if (characters == full.Length && (GamePreferences.Current.ReduceMotion || (int)(dialogueAge * 2) % 2 == 0))
                     SpeechArrow(new Vector2(bubble.xMax - 36, bubble.yMax - 16), SpeechInk, true);
             }
             SpeechPlate(new Rect(452, 644, 376, 52), new Color(.09f, .1f, .14f, .84f));
-            GUI.Label(new Rect(452, 644, 376, 52), DialogueReady ? "화면을 눌러 계속" :
-                forestStoryActive ? "잿갈기 뒤에서 작은 기척이 난다" :
-                castleStoryActive ? "골렘에 남은 명령을 살핀다" : regionalStoryActive ? RegionalStoryHint : "이그니스가 모습을 드러낸다", dialogueControl);
-            if (SpeechButton(new Rect(24, 644, 204, 52), "건너뛰기", false)) { FinishDialogue(); return; }
+            LocalizedGui.Label(new Rect(452, 644, 376, 52), DialogueReady ? CatalogText.Get("text.0323") :
+                forestStoryActive ? CatalogText.Get("text.0324") :
+                castleStoryActive ? CatalogText.Get("text.0325") : regionalStoryActive ? RegionalStoryHint : CatalogText.Get("text.0326"), dialogueControl);
+            if (SpeechButton(new Rect(24, 644, 204, 52), CatalogText.Get("text.0327"), false)) { FinishDialogue(); return; }
             if (SpeechButton(new Rect(1020, 644, 236, 52),
-                !DialogueReady ? "연출 넘기기" : dialogueIndex + 1 == dialogueLines.Count ? "결과 보기" : "다음", true)) { NextDialogue(); return; }
+                !DialogueReady ? CatalogText.Get("text.0328") : dialogueIndex + 1 == dialogueLines.Count ? CatalogText.Get("text.0329") : CatalogText.Get("text.0330"), true)) { NextDialogue(); return; }
             if (Event.current.type == EventType.MouseUp && Event.current.button == 0 &&
                 (DialogueReady ? dialogueAge >= .15f : forestStoryActive ? forestStoryAge >= .15f :
                     castleStoryActive ? castleStoryAge >= .15f : regionalStoryActive ? regionalStoryAge >= .15f : ignisAge >= .15f))

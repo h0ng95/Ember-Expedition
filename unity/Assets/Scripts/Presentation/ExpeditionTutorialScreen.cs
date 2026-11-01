@@ -133,36 +133,36 @@ namespace Expedition.Presentation
             ExpeditionTutorialStep step = CurrentTutorialStep();
             if (step == ExpeditionTutorialStep.None)
             {
-                GUI.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
+                LocalizedGui.Label(new Rect(735, 193, 490, 65), PreparationAdvice(), body);
             }
         }
 
         string TutorialMessage(ExpeditionTutorialStep step)
         {
             return step == ExpeditionTutorialStep.Summon ?
-                "① 동료를 소환하세요.\n20G 사용 · 결과는 무작위" :
+                CatalogText.Get("text.0829") :
                 step == ExpeditionTutorialStep.Deploy ?
-                "② 아래 동료를 끌어서\n전장의 빈 곳에 놓으세요." :
+                CatalogText.Get("text.0830") :
                 step == ExpeditionTutorialStep.Select ?
-                "① 출전 동료를 누르세요.\n공격·지원 범위를 확인하세요." :
+                CatalogText.Get("text.0831") :
                 step == ExpeditionTutorialStep.Range ?
-                "② 금색: 기본 공격 범위\n청록: 지원 기술이 있을 때" :
+                CatalogText.Get("text.0832") :
                 step == ExpeditionTutorialStep.RangeReplay ?
-                "동료를 누르면 금색 공격 범위\n지원 기술이 있으면 청록 범위" :
-                "③ 전투 시작을 누르세요.\n전투는 자동으로 진행됩니다.";
+                CatalogText.Get("text.0833") :
+                CatalogText.Get("text.0834");
         }
 
         void DrawTutorialCard(ExpeditionTutorialStep step)
         {
             ExpeditionUiTheme.PanelBox(TutorialCard, true);
-            GUI.Label(new Rect(924, 246, 312, 92), TutorialMessage(step), body);
+            LocalizedGui.Label(new Rect(924, 246, 312, 92), TutorialMessage(step), body);
             if (step == ExpeditionTutorialStep.Range)
             {
-                if (GUI.Button(new Rect(924, 351, 130, 44), "다음", button))
+                if (LocalizedGui.Button(new Rect(924, 351, 130, 44), CatalogText.Get("text.0330"), button))
                     tutorialRangeAcknowledged = true;
             }
-            if (GUI.Button(new Rect(1070, 351, 166, 44),
-                step == ExpeditionTutorialStep.RangeReplay ? "닫기" : "건너뛰기", button))
+            if (LocalizedGui.Button(new Rect(1070, 351, 166, 44),
+                step == ExpeditionTutorialStep.RangeReplay ? CatalogText.Get("text.0400") : CatalogText.Get("text.0327"), button))
             {
                 if (run.Wave <= 2) FinishTutorialWave(run.Wave);
                 else tutorialReplayWave = 0;
@@ -171,7 +171,7 @@ namespace Expedition.Presentation
 
         void DrawTutorialReplayButton()
         {
-            if (GUI.Button(new Rect(338, 110, 152, 44), "조작 안내", button))
+            if (LocalizedGui.Button(new Rect(338, 110, 152, 44), CatalogText.Get("text.0835"), button))
             { CancelPointer(); modal = Modal.GuideMenu; }
         }
 
@@ -284,7 +284,7 @@ namespace Expedition.Presentation
                     Vector2 dot = Vector2.Lerp(source, target, i / 13f);
                     Fill(new Rect(dot.x - 2f, dot.y - 2f, 4f, 4f), Gold);
                 }
-                GUI.Label(new Rect(target.x - 45f, tutorialHoles[1].y - 32f, 90f, 27f), "+ 배치", centered);
+                LocalizedGui.Label(new Rect(target.x - 45f, tutorialHoles[1].y - 32f, 90f, 27f), CatalogText.Get("text.0836"), centered);
             }
             DrawTutorialCard(step);
         }

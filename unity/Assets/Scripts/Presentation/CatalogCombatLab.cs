@@ -94,7 +94,7 @@ namespace Expedition.Presentation
             public static readonly Rect BossHealth = new Rect(404f, 36f, 472f, 24f);
             public static Rect Encounter(bool boss) { return new Rect(26f, 6f, boss ? 310f : 820f, 32f); }
             public static string EncounterLabel(string name,int wave,int total,bool boss)
-            { return boss ? "보스 전투  " + wave + " / " + total : name + "   " + wave + "/" + total; }
+            { return boss ? CatalogText.Get("text.0331") + wave + " / " + total : name + "   " + wave + "/" + total; }
             public static readonly Rect Clock = new Rect(26f, 40f, 310f, 28f);
             public static readonly Rect Notice = new Rect(28f, 670f, 936f, 42f);
             public static readonly Rect UnitCount = new Rect(1000f, 670f, 254f, 42f);
@@ -137,8 +137,8 @@ namespace Expedition.Presentation
             }
             public static string DamageText(BattleFloatKind kind, float amount)
             {
-                string prefix = kind == BattleFloatKind.Burn ? "화상 " :
-                    kind == BattleFloatKind.Poison ? "중독 " : "";
+                string prefix = kind == BattleFloatKind.Burn ? CatalogText.Get("text.0332") :
+                    kind == BattleFloatKind.Poison ? CatalogText.Get("text.0333") : "";
                 return prefix + "−" + NumberText(amount);
             }
             public static string NumberText(float amount)
@@ -274,7 +274,7 @@ namespace Expedition.Presentation
             expeditionMode = true;
             expeditionWave = wave;
             expeditionTotal = total;
-            expeditionEncounter = encounter;
+            expeditionEncounter = CatalogText.KeyFor(encounter);
             expeditionResult = onResult;
             expeditionPresentationFinished = onPresentationFinished;
             expeditionExit = onExit;
@@ -402,7 +402,7 @@ namespace Expedition.Presentation
                 source.NewRelease = true;
                 if (e.Kind == CatalogEventKind.SkillUsed && clock >= bossNoticeUntil)
                 {
-                    latestSkill = expeditionMode ? UnitName(source.Unit) + " · 기술 발동" :
+                    latestSkill = expeditionMode ? UnitName(source.Unit) + CatalogText.Get("text.0334") :
                         source.Unit.FormId + "  /  " + e.AbilityId;
                     latestSkillUntil = clock + 2f;
                 }
@@ -410,44 +410,44 @@ namespace Expedition.Presentation
             if (e.Kind == CatalogEventKind.ChargeTelegraph && source != null &&
                 (source.Unit.IsBoss || clock >= bossNoticeUntil))
             {
-                latestSkill = source.Unit.IsBoss ? "우두머리 돌진 · 표시된 경로를 공격합니다" :
+                latestSkill = source.Unit.IsBoss ? CatalogText.Get("text.0335") :
                     CastleEnemyArt.SpeciesFor(source.Unit) == CastleEnemyArt.Species[2] ?
-                    "갑주 석상이 방패를 듭니다 · 돌진 예고" : "야수가 몸을 낮춥니다 · 돌진 예고";
+                    CatalogText.Get("text.0336") : CatalogText.Get("text.0337");
                 latestSkillUntil = clock + 1.1f;
                 if (source.Unit.IsBoss) bossNoticeUntil = latestSkillUntil;
             }
             if (e.Kind == CatalogEventKind.BossTelegraph && source != null)
             {
                 latestSkill = e.AbilityId == "FURNACE_EMBER" ?
-                    "후속 불씨파 · 작은 원 안을 다시 공격합니다" :
+                    CatalogText.Get("text.0338") :
                     e.AbilityId == "FURNACE_BLAST" ?
-                    "용광로 폭발 · 표시된 범위에 화상을 남깁니다" :
+                    CatalogText.Get("text.0339") :
                     e.AbilityId == "FROST_NOVA" ?
-                    (source.Unit.IsFrostFollowup ? "서리 연쇄 · 앞열 위치에 두 번째 빙결 공격" :
-                    "서리 폭발 · 먼 동료 위치에 빙결 원형 공격") :
+                    (source.Unit.IsFrostFollowup ? CatalogText.Get("text.0340") :
+                    CatalogText.Get("text.0341")) :
                     e.AbilityId == "GARDEN_BRIARS" ?
-                    "가시뿌리 · 먼 동료 최대 셋 발밑을 차례로 공격" :
+                    CatalogText.Get("text.0342") :
                     e.AbilityId == "DRACONIC_BREATH" ?
-                    "화염 균열 · 긴 예고 위로 불기둥이 솟습니다" :
+                    CatalogText.Get("text.0343") :
                     e.AbilityId == "DRACONIC_BOMB" ?
-                    "공중 브레스 · 표시된 원을 향해 불을 뿜습니다" :
+                    CatalogText.Get("text.0344") :
                     e.AbilityId == "DRACONIC_LAND" ?
-                    "착지 충격파 · 용의 발밑 원형 범위를 공격" :
+                    CatalogText.Get("text.0345") :
                     e.AbilityId == "GOLEM_AFTERSHOCK" ?
-                    "후속 충격파 · 작은 원 안을 다시 공격합니다" :
-                    "골렘 내려찍기 · 표시된 범위를 공격합니다";
+                    CatalogText.Get("text.0346") :
+                    CatalogText.Get("text.0347");
                 latestSkillUntil = clock + 1.4f;
                 bossNoticeUntil = latestSkillUntil;
             }
             if (e.Kind == CatalogEventKind.BossEnraged && source != null)
             {
-                latestSkill = UnitName(source.Unit) + " 분노 · " +
-                    (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? "돌진 간격 단축" :
-                    source.Unit.EnemyRole == CatalogEnemyRole.Furnace ? "폭발 뒤 불씨파 추가" :
-                    source.Unit.EnemyRole == CatalogEnemyRole.FrostWarden ? "서리 원형 공격 간격 단축" :
-                    source.Unit.EnemyRole == CatalogEnemyRole.GardenLord ? "독가시 공격 간격 단축" :
-                    source.Unit.EnemyRole == CatalogEnemyRole.CrownDrake ? "비행과 브레스 전환 빨라짐" :
-                    "내려찍기 뒤 충격파 추가");
+                latestSkill = UnitName(source.Unit) + CatalogText.Get("text.0348") +
+                    (source.Unit.EnemyRole == CatalogEnemyRole.Beast ? CatalogText.Get("text.0349") :
+                    source.Unit.EnemyRole == CatalogEnemyRole.Furnace ? CatalogText.Get("text.0350") :
+                    source.Unit.EnemyRole == CatalogEnemyRole.FrostWarden ? CatalogText.Get("text.0351") :
+                    source.Unit.EnemyRole == CatalogEnemyRole.GardenLord ? CatalogText.Get("text.0352") :
+                    source.Unit.EnemyRole == CatalogEnemyRole.CrownDrake ? CatalogText.Get("text.0353") :
+                    CatalogText.Get("text.0354"));
                 latestSkillUntil = clock + 3f;
                 bossNoticeUntil = latestSkillUntil;
             }
@@ -486,7 +486,7 @@ namespace Expedition.Presentation
                 source.NewRelease = true;
                 if (clock >= bossNoticeUntil)
                 {
-                    latestSkill = UnitName(source.Unit) + " · 주변 적에게 보호막";
+                    latestSkill = UnitName(source.Unit) + CatalogText.Get("text.0355");
                     latestSkillUntil = clock + 1.8f;
                 }
             }
@@ -497,12 +497,12 @@ namespace Expedition.Presentation
                 target.ReleaseRemaining = 0f;
                 target.NewRelease = false;
                 if (floating.Count < 24)
-                    floating.Add(new FloatText { Text = "◆ 빙결", Kind = BattleFloatKind.Freeze,
+                    floating.Add(new FloatText { Text = CatalogText.Get("text.0356"), Kind = BattleFloatKind.Freeze,
                         Position = new Vector2(target.Unit.X, target.Unit.Y),
                         Color = new Color(.59f, .88f, 1f), Lift = FloatLift(target.Unit) });
             }
             if (e.Kind == CatalogEventKind.Poison && target != null && floating.Count < 24)
-                floating.Add(new FloatText { Text = "◆ 중독", Kind = BattleFloatKind.PoisonApplied,
+                floating.Add(new FloatText { Text = CatalogText.Get("text.0357"), Kind = BattleFloatKind.PoisonApplied,
                     Position = new Vector2(target.Unit.X, target.Unit.Y),
                     Color = new Color(.73f, 1f, .42f), Lift = FloatLift(target.Unit) });
         }
@@ -709,13 +709,13 @@ namespace Expedition.Presentation
             }
             Fill(new Rect(0, 0, Width, Height), Ink);
             Fill(new Rect(0, 0, Width, 66), new Color(.035f, .085f, .09f));
-            if (GUI.Button(new Rect(15, 11, 100, 43), standaloneClose != null ? "← HOME" : "← MAP", button)) { Close(); GUI.matrix = Matrix4x4.identity; return; }
-            GUI.Label(new Rect(132, 12, 720, 44), "EMBER EXPEDITION  /  CATALOG COMBAT LAB", title);
-            if (GUI.Button(new Rect(925, 10, 160, 45), screen == 2 ? "TEAM BUILDER" : "ANIMATION QA", button))
+            if (LocalizedGui.Button(new Rect(15, 11, 100, 43), standaloneClose != null ? "← HOME" : "← MAP", button)) { Close(); GUI.matrix = Matrix4x4.identity; return; }
+            LocalizedGui.Label(new Rect(132, 12, 720, 44), "EMBER EXPEDITION  /  CATALOG COMBAT LAB", title);
+            if (LocalizedGui.Button(new Rect(925, 10, 160, 45), screen == 2 ? "TEAM BUILDER" : "ANIMATION QA", button))
             { screen = screen == 2 ? 0 : 2; TrimSheets(); }
-            if (GUI.Button(new Rect(1095, 10, 168, 45), "RESET BATTLE", button))
+            if (LocalizedGui.Button(new Rect(1095, 10, 168, 45), "RESET BATTLE", button))
             { ClearBattle(); screen = 0; TrimSheets(); }
-            if (error != null || database == null) GUI.Label(new Rect(30, 100, 1200, 80), error ?? "Catalog data unavailable", heading);
+            if (error != null || database == null) LocalizedGui.Label(new Rect(30, 100, 1200, 80), error ?? "Catalog data unavailable", heading);
             else if (screen == 2) DrawGallery();
             else { DrawRoster(); DrawArena(); }
             GUI.matrix = Matrix4x4.identity;
@@ -725,7 +725,7 @@ namespace Expedition.Presentation
         {
             Fill(new Rect(14, 78, 375, 624), Panel);
             for (int i = 0; i < 4; i++)
-                if (GUI.Button(new Rect(20 + i * 92, 87, 90, 38), CategoryNames[i], button))
+                if (LocalizedGui.Button(new Rect(20 + i * 92, 87, 90, 38), CategoryNames[i], button))
                 { category = i; selected = CategoryStart(i); branch = fusionPair = 0; TrimSheets(); }
             int start = CategoryStart(category), count = category == 1 ? 12 : 6;
             int columns = 2;
@@ -735,51 +735,51 @@ namespace Expedition.Presentation
                 CatalogForm form = database.Get(FormIds[index]);
                 Rect rect = new Rect(24 + (i % columns) * 180, 136 + (i / columns) * 68, 174, 62);
                 if (index == selected) Fill(rect, new Color(.51f, .37f, .18f));
-                if (GUI.Button(rect, form.Name + "\n" + English[index], button))
+                if (LocalizedGui.Button(rect, form.Name + "\n" + English[index], button))
                 { selected = index; branch = fusionPair = 0; TrimSheets(); }
             }
             if (category != 1)
             {
                 Fill(new Rect(25, 570, 352, 118), new Color(.06f, .13f, .14f));
-                GUI.Label(new Rect(34, 578, 330, 35), "30 playable forms · same core data", small);
-                GUI.Label(new Rect(34, 610, 330, 65), "Select a form, choose inherited trait and branch, then add up to five allies.", small);
+                LocalizedGui.Label(new Rect(34, 578, 330, 35), "30 playable forms · same core data", small);
+                LocalizedGui.Label(new Rect(34, 610, 330, 65), "Select a form, choose inherited trait and branch, then add up to five allies.", small);
             }
             Fill(new Rect(401, 78, 866, 244), Panel);
             CatalogForm chosen = database.Get(FormIds[selected]);
-            GUI.Label(new Rect(420, 89, 550, 36), chosen.Name + "  /  " + English[selected], heading);
-            GUI.Label(new Rect(420, 127, 550, 26), chosen.Id + "  ·  " + chosen.Tier + "  ·  " + chosen.Family, small);
-            GUI.Label(new Rect(420, 162, 465, 66), "HP " + chosen.Hp.ToString("0") + "   ATK " + chosen.Power.ToString("0") +
+            LocalizedGui.Label(new Rect(420, 89, 550, 36), chosen.Name + "  /  " + English[selected], heading);
+            LocalizedGui.Label(new Rect(420, 127, 550, 26), chosen.Id + "  ·  " + chosen.Tier + "  ·  " + chosen.Family, small);
+            LocalizedGui.Label(new Rect(420, 162, 465, 66), "HP " + chosen.Hp.ToString("0") + "   ATK " + chosen.Power.ToString("0") +
                 "   DEF " + chosen.Defense.ToString("0") + "\nRNG " + chosen.Range.ToString("0.0") +
                 "   INT " + chosen.AttackInterval.ToString("0.00") + "s   MOVE " + chosen.MoveSpeed.ToString("0.00"), label);
             DrawSheet(chosen.Id, 0, (int)(galleryTime * 5) % 4, new Rect(910, 98, 104, 132), false);
             if (chosen.Id.StartsWith("F-", StringComparison.Ordinal))
             {
                 string[] branchIds = BranchesFor(chosen.Id);
-                if (GUI.Button(new Rect(420, 246, 240, 52), "BRANCH: " + branchIds[branch], button)) branch = 1 - branch;
+                if (LocalizedGui.Button(new Rect(420, 246, 240, 52), "BRANCH: " + branchIds[branch], button)) branch = 1 - branch;
             }
             else if (chosen.Id.StartsWith("H-", StringComparison.Ordinal))
             {
                 string[] source = FusionFamilies[selected - 24];
                 string left = BranchesFor("F-" + source[0])[fusionPair / 2];
                 string right = BranchesFor("F-" + source[1])[fusionPair % 2];
-                if (GUI.Button(new Rect(420, 246, 240, 52), left + " + " + right, button)) fusionPair = (fusionPair + 1) % 4;
+                if (LocalizedGui.Button(new Rect(420, 246, 240, 52), left + " + " + right, button)) fusionPair = (fusionPair + 1) % 4;
             }
-            if (GUI.Button(new Rect(675, 246, 257, 52), "TRAIT: " + TraitNames[trait], button)) trait = (trait + 1) % Traits.Length;
+            if (LocalizedGui.Button(new Rect(675, 246, 257, 52), "TRAIT: " + TraitNames[trait], button)) trait = (trait + 1) % Traits.Length;
             GUI.enabled = party.Count < 5 && screen == 0;
             string addLabel = chosen.Id.StartsWith("E-", StringComparison.Ordinal) ||
                 chosen.Id.StartsWith("F-", StringComparison.Ordinal) ? "EVOLVE + ADD" :
                 chosen.Id.StartsWith("H-", StringComparison.Ordinal) ? "FUSE + ADD" : "+ ADD TO TEAM";
-            if (GUI.Button(new Rect(946, 246, 303, 52), addLabel, button)) AddSelected();
+            if (LocalizedGui.Button(new Rect(946, 246, 303, 52), addLabel, button)) AddSelected();
             GUI.enabled = true;
             Fill(new Rect(401, 332, 866, 117), Panel);
-            GUI.Label(new Rect(414, 337, 190, 30), "TEAM  " + party.Count + "/5", heading);
-            if (lastAction != null) GUI.Label(new Rect(605, 342, 640, 27), lastAction, small);
+            LocalizedGui.Label(new Rect(414, 337, 190, 30), "TEAM  " + party.Count + "/5", heading);
+            if (lastAction != null) LocalizedGui.Label(new Rect(605, 342, 640, 27), lastAction, small);
             for (int i = 0; i < party.Count; i++)
             {
                 Slot slot = party[i];
                 Rect rect = new Rect(416 + i * 166, 370, 160, 68);
                 GUI.enabled = screen == 0;
-                if (GUI.Button(rect, database.Get(slot.FormId).Name + "\n" + slot.FormId, button))
+                if (LocalizedGui.Button(rect, database.Get(slot.FormId).Name + "\n" + slot.FormId, button))
                 { party.RemoveAt(i); TrimSheets(); }
                 GUI.enabled = true;
             }
@@ -905,9 +905,9 @@ namespace Expedition.Presentation
                 numberSlots.Add(number);
                 float opacity = Mathf.Clamp01(1f - text.Age / .75f);
                 GUI.color = new Color(.015f, .02f, .025f, opacity * .82f);
-                GUI.Label(new Rect(number.x + 1.5f, number.y + 2f, width, 28), text.Text, style);
+                LocalizedGui.Label(new Rect(number.x + 1.5f, number.y + 2f, width, 28), text.Text, style);
                 GUI.color = new Color(text.Color.r, text.Color.g, text.Color.b, opacity);
-                GUI.Label(number, text.Text, style);
+                LocalizedGui.Label(number, text.Text, style);
                 GUI.color = previous;
             }
             DrawPartyRoster();
@@ -915,12 +915,12 @@ namespace Expedition.Presentation
             Color hudPanel = ExpeditionUiTheme.Panel;
             Fill(new Rect(0, 664, Width, 56), new Color(hudPanel.r, hudPanel.g, hudPanel.b, .96f));
             ExpeditionUiTheme.Rule(new Rect(16, 664, Width - 32, 2));
-            GUI.Label(HudRules.Notice, latestSkill != null && latestSkillUntil > clock ?
-                latestSkill : "전투가 끝나면 다음 준비에서 동료들이 회복합니다.", noticeText);
+            LocalizedGui.Label(HudRules.Notice, latestSkill != null && latestSkillUntil > clock ?
+                latestSkill : CatalogText.Get("text.0358"), noticeText);
             int alive = 0, enemies = 0;
             foreach (CatalogBattleUnit unit in battle.Units)
                 if (unit.IsAlive) { if (unit.Team == CatalogTeam.Ally) alive++; else enemies++; }
-            GUI.Label(HudRules.UnitCount, "아군 " + alive + "  ·  적 " + enemies, unitCountText);
+            LocalizedGui.Label(HudRules.UnitCount, CatalogText.Get("text.0359") + alive + CatalogText.Get("text.0360") + enemies, unitCountText);
             if (paused)
             {
                 if (battleSettingsOpen)
@@ -931,13 +931,13 @@ namespace Expedition.Presentation
                 Fill(new Rect(0, 76, Width, 588), new Color(.015f, .04f, .04f, .72f));
                 Rect pauseWindow = new Rect(362, 190, 556, 344);
                 ExpeditionUiTheme.Window(pauseWindow);
-                GUI.Label(new Rect(394, 222, 492, 45), "잠시 쉬어가기", title);
-                GUI.Label(new Rect(394, 280, 492, 52), "거점에 나가도 원정은 저장됩니다.\n이어하기는 이 전투의 시작부터 재개합니다.", label);
-                if (GUI.Button(new Rect(394, 350, 492, 50), "설정", button)) battleSettingsOpen = true;
+                LocalizedGui.Label(new Rect(394, 222, 492, 45), CatalogText.Get("text.0361"), title);
+                LocalizedGui.Label(new Rect(394, 280, 492, 52), CatalogText.Get("text.0362"), label);
+                if (LocalizedGui.Button(new Rect(394, 350, 492, 50), CatalogText.Get("text.0363"), button)) battleSettingsOpen = true;
                 ExpeditionUiTheme.FooterRule(pauseWindow);
                 Rect footer = ExpeditionUiTheme.FooterRect(pauseWindow);
-                if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "계속하기", button)) SetPaused(false);
-                if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "거점으로", button)) Close();
+                if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), CatalogText.Get("text.0364"), button)) SetPaused(false);
+                if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), CatalogText.Get("text.0365"), button)) Close();
             }
         }
 
@@ -949,7 +949,7 @@ namespace Expedition.Presentation
             Rect panel=HudRules.PartyPanel(count);
             Fill(panel,new Color(.055f,.065f,.085f,.94f));
             ExpeditionUiTheme.Rule(new Rect(panel.x,panel.y,2,panel.height));
-            GUI.Label(new Rect(panel.x+12,panel.y+5,panel.width-24,25),"원정대 · "+alive+" / "+count,small);
+            LocalizedGui.Label(new Rect(panel.x+12,panel.y+5,panel.width-24,25),CatalogText.Get("text.0366")+alive+" / "+count,small);
             int index=0;
             foreach(View view in combatViews)
             {
@@ -962,7 +962,7 @@ namespace Expedition.Presentation
                 Fill(new Rect(row.x,row.y+row.height-1,row.width,1),new Color(.38f,.32f,.23f,.55f));
                 Color prior=GUI.color;
                 if(!unit.IsAlive)GUI.color=new Color(.65f,.65f,.65f,.52f);
-                GUI.Label(HudRules.PartyName(index),UnitName(unit),partyNameText);
+                LocalizedGui.Label(HudRules.PartyName(index),unit.FormId == "H-06" ? CatalogText.Get("unit.H-06.short") : UnitName(unit),partyNameText);
                 Rect portrait=new Rect(row.x+5,row.y+23,46,52);
                 Fill(portrait,new Color(.035f,.045f,.065f));
                 GUI.BeginGroup(portrait);
@@ -977,13 +977,13 @@ namespace Expedition.Presentation
                 float ratio=unit.Hp/unit.MaxHp;
                 CombatHud.Meter(new Rect(row.x+58,row.y+28,98,8),ratio,
                     Mathf.Max(ratio,view.Health.Value),unit.Shield/unit.MaxHp,true);
-                GUI.Label(HudRules.PartyHealth(index),unit.IsAlive?
-                    Mathf.CeilToInt(unit.Hp)+" / "+Mathf.CeilToInt(unit.MaxHp):"전투 불능",partyHealthText);
+                LocalizedGui.Label(HudRules.PartyHealth(index),unit.IsAlive?
+                    Mathf.CeilToInt(unit.Hp)+" / "+Mathf.CeilToInt(unit.MaxHp):CatalogText.Get("text.0367"),partyHealthText);
                 int status=0;
                 if(unit.IsAlive && unit.FrozenRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),0,unit.FrozenRemaining);
                 if(unit.IsAlive && unit.BurnRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),1,unit.BurnRemaining);
                 if(unit.IsAlive && unit.PoisonRemaining>0)CombatHud.StatusIcon(new Rect(row.x+58+status++*20,row.y+60,17,17),2,unit.PoisonRemaining);
-                if(GUI.Button(row,GUIContent.none,GUIStyle.none))
+                if(LocalizedGui.Button(row,GUIContent.none,GUIStyle.none))
                 {partyFocusId=unit.Id;partyFocusUntil=Time.unscaledTime+2.2f;}
                 index++;
             }
@@ -1002,7 +1002,7 @@ namespace Expedition.Presentation
             Fill(r,new Color(.04f,.05f,.07f,.96f));
             Fill(new Rect(r.x,r.yMax-2,r.width,2),color);
             Color old=GUI.color;GUI.color=color;
-            GUI.Label(r,(index+1).ToString(),identityText);GUI.color=old;
+            LocalizedGui.Label(r,(index+1).ToString(),identityText);GUI.color=old;
         }
 
         void DrawAllyIdentity(List<DrawnCombatant> drawn,List<Rect> occupied,Rect arena)
@@ -1074,33 +1074,33 @@ namespace Expedition.Presentation
         void DrawBattleHeader(CatalogBattleUnit boss)
         {
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0,0,Width,boss!=null?92:76));
-            GUI.Label(HudRules.Encounter(boss!=null),HudRules.EncounterLabel(expeditionEncounter,expeditionWave,expeditionTotal,boss!=null),
+            LocalizedGui.Label(HudRules.Encounter(boss!=null),HudRules.EncounterLabel(CatalogText.Resolve(expeditionEncounter),expeditionWave,expeditionTotal,boss!=null),
                 boss==null?encounterText:bossEncounterText);
-            GUI.Label(HudRules.Clock,clock.ToString("0.0")+" / 75초",clockText);
+            LocalizedGui.Label(HudRules.Clock,clock.ToString("0.0")+CatalogText.Get("text.0368"),clockText);
             if(boss!=null)
             {
-                GUI.Label(HudRules.BossName,UnitName(boss),bossNameText);
+                LocalizedGui.Label(HudRules.BossName,UnitName(boss),bossNameText);
                 CombatHud.Crest(new Vector2(392,18),true);
                 float trail=boss.Hp/boss.MaxHp;
                 foreach(View view in combatViews)if(view.Unit==boss){trail=Mathf.Max(trail,view.Health.Value);break;}
                 CombatHud.Meter(HudRules.BossHealth,boss.Hp/boss.MaxHp,trail,boss.Shield/boss.MaxHp,false,true);
                 string hp=boss.Hp.ToString("0")+" / "+boss.MaxHp.ToString("0");
                 Rect shadow=HudRules.BossHealth;shadow.y+=1;Color old=bossHealthText.normal.textColor;
-                bossHealthText.normal.textColor=Color.black;GUI.Label(shadow,hp,bossHealthText);
-                bossHealthText.normal.textColor=old;GUI.Label(HudRules.BossHealth,hp,bossHealthText);
+                bossHealthText.normal.textColor=Color.black;LocalizedGui.Label(shadow,hp,bossHealthText);
+                bossHealthText.normal.textColor=old;LocalizedGui.Label(HudRules.BossHealth,hp,bossHealthText);
                 int total=(boss.BossEnraged?1:0)+(boss.FrozenRemaining>0?1:0)+(boss.BurnRemaining>0?1:0)+(boss.PoisonRemaining>0?1:0),chip=0;
                 if(boss.BossEnraged)
                 {
                     Rect r=HudRules.BossChip(chip++,total);Fill(r,new Color(.28f,.08f,.07f));
-                    GUI.Label(r,"분노",bossBadgeText);
+                    LocalizedGui.Label(r,CatalogText.Get("text.0369"),bossBadgeText);
                 }
                 if(boss.FrozenRemaining>0)DrawBossStatusChip(chip++,total,0,boss.FrozenRemaining);
                 if(boss.BurnRemaining>0)DrawBossStatusChip(chip++,total,1,boss.BurnRemaining);
                 if(boss.PoisonRemaining>0)DrawBossStatusChip(chip++,total,2,boss.PoisonRemaining);
             }
             GUI.enabled=!battleSettingsOpen;
-            if(GUI.Button(new Rect(928,14,108,49),speed==1f?"1×":"2×",button))ToggleSpeed();
-            if(GUI.Button(new Rect(1050,14,204,49),paused?"계속하기":"일시정지",button))SetPaused(!paused);
+            if(LocalizedGui.Button(new Rect(928,14,108,49),speed==1f?"1×":"2×",button))ToggleSpeed();
+            if(LocalizedGui.Button(new Rect(1050,14,204,49),paused?CatalogText.Get("text.0364"):CatalogText.Get("text.0370"),button))SetPaused(!paused);
             GUI.enabled=true;
         }
 
@@ -1109,7 +1109,7 @@ namespace Expedition.Presentation
             Rect r=HudRules.BossChip(index,total);
             Fill(r,new Color(.08f,.075f,.08f));
             CombatHud.StatusIcon(new Rect(r.x,r.y,20,20),kind,remaining);
-            GUI.Label(new Rect(r.x+22,r.y,r.width-22,r.height),remaining.ToString("0.0"),bossStatusText);
+            LocalizedGui.Label(new Rect(r.x+22,r.y,r.width-22,r.height),remaining.ToString("0.0"),bossStatusText);
         }
 
         static bool IsDimRegionalEnemy(CatalogBattleUnit unit)
@@ -1132,7 +1132,7 @@ namespace Expedition.Presentation
         {
             Fill(rect, new Color(.07f, .085f, .1f, .86f));
             ExpeditionUiTheme.Rule(new Rect(rect.x + 2f, rect.y + 1f, rect.width - 4f, 1f));
-            GUI.Label(rect, name, dotText);
+            LocalizedGui.Label(rect, name, dotText);
         }
 
         void DrawStatus(Rect rect, string name, float remaining, Color background, Color foreground,
@@ -1140,14 +1140,14 @@ namespace Expedition.Presentation
         {
             Fill(rect, background);
             Rect glyph = new Rect(rect.x + 3f, rect.center.y - 6f, 12f, 12f);
-            if (name == "빙")
+            if (name == CatalogText.Get("text.0371"))
             {
                 Fill(new Rect(glyph.x + 5, glyph.y, 2, 12), foreground);
                 Fill(new Rect(glyph.x, glyph.y + 5, 12, 2), foreground);
                 Fill(new Rect(glyph.x + 2, glyph.y + 2, 2, 2), foreground);
                 Fill(new Rect(glyph.x + 8, glyph.y + 8, 2, 2), foreground);
             }
-            else if (name == "화")
+            else if (name == CatalogText.Get("text.0372"))
             {
                 Fill(new Rect(glyph.x + 5, glyph.y, 3, 4), foreground);
                 Fill(new Rect(glyph.x + 3, glyph.y + 4, 7, 5), foreground);
@@ -1161,7 +1161,7 @@ namespace Expedition.Presentation
             }
             Color prior = GUI.color;
             GUI.color = foreground;
-            GUI.Label(new Rect(rect.x + 17f, rect.y, rect.width - 17f, rect.height),
+            LocalizedGui.Label(new Rect(rect.x + 17f, rect.y, rect.width - 17f, rect.height),
                 (rect.width < 60f ? "" : name) + remaining.ToString("0.0"), textStyle ?? statusText);
             GUI.color = prior;
         }
@@ -1176,30 +1176,30 @@ namespace Expedition.Presentation
         string UnitName(CatalogBattleUnit unit)
         {
             if (unit.Team == CatalogTeam.Ally) return database.Get(unit.FormId).Name;
-            if (unit.Id == "palace-boss") return "왕관의 수호룡";
-            if (unit.Id == "palace-sentinel") return "왕궁 집행관";
-            if (unit.Id.StartsWith("palace-guard-", StringComparison.Ordinal)) return "왕궁 근위병";
-            if (unit.Id.StartsWith("palace-arbalist-", StringComparison.Ordinal)) return "왕궁 석궁병";
-            if (unit.Id == "garden-boss") return "가시의 군주";
-            if (unit.Id == "garden-keeper") return "정예 황혼정원사";
-            if (unit.Id.StartsWith("garden-guard-", StringComparison.Ordinal)) return "가시 근위병";
-            if (unit.Id.StartsWith("garden-spitter-", StringComparison.Ordinal)) return "독침 사냥꾼";
-            if (unit.Id == "frost-boss") return "서리의 파수꾼";
-            if (unit.Id == "frost-cantor") return "찬송 감시자";
-            if (unit.Id.StartsWith("frost-guard-", StringComparison.Ordinal)) return "서리 근위병";
-            if (unit.Id.StartsWith("frost-acolyte-", StringComparison.Ordinal)) return "서리 시종";
-            if (unit.Id == "furnace-boss") return "용광로 수호자";
-            if (unit.Id == "mine-elite") return "철쇄 감독관";
-            if (unit.Id.StartsWith("mine-worker-", StringComparison.Ordinal)) return "잿재 채굴병";
-            if (unit.Id.StartsWith("mine-slinger-", StringComparison.Ordinal)) return "불씨 투척병";
-            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? "잿갈기 우두머리" : "성문 골렘";
-            if (unit.Id.StartsWith("stone-elite", StringComparison.Ordinal)) return "갑주 석상";
-            if (unit.Id.StartsWith("stone-", StringComparison.Ordinal)) return "돌편 보병";
-            if (unit.Id.StartsWith("spine-", StringComparison.Ordinal)) return "가시등 짐승";
-            if (unit.Id.StartsWith("crossbow-", StringComparison.Ordinal)) return "석궁 수비병";
-            if (unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0) return "돌격 뿔짐승";
+            if (unit.Id == "palace-boss") return CatalogText.Get("text.0249");
+            if (unit.Id == "palace-sentinel") return CatalogText.Get("text.0248");
+            if (unit.Id.StartsWith("palace-guard-", StringComparison.Ordinal)) return CatalogText.Get("text.0373");
+            if (unit.Id.StartsWith("palace-arbalist-", StringComparison.Ordinal)) return CatalogText.Get("text.0374");
+            if (unit.Id == "garden-boss") return CatalogText.Get("text.0244");
+            if (unit.Id == "garden-keeper") return CatalogText.Get("text.0375");
+            if (unit.Id.StartsWith("garden-guard-", StringComparison.Ordinal)) return CatalogText.Get("text.0376");
+            if (unit.Id.StartsWith("garden-spitter-", StringComparison.Ordinal)) return CatalogText.Get("text.0377");
+            if (unit.Id == "frost-boss") return CatalogText.Get("text.0239");
+            if (unit.Id == "frost-cantor") return CatalogText.Get("text.0378");
+            if (unit.Id.StartsWith("frost-guard-", StringComparison.Ordinal)) return CatalogText.Get("text.0379");
+            if (unit.Id.StartsWith("frost-acolyte-", StringComparison.Ordinal)) return CatalogText.Get("text.0380");
+            if (unit.Id == "furnace-boss") return CatalogText.Get("text.0234");
+            if (unit.Id == "mine-elite") return CatalogText.Get("text.0233");
+            if (unit.Id.StartsWith("mine-worker-", StringComparison.Ordinal)) return CatalogText.Get("text.0381");
+            if (unit.Id.StartsWith("mine-slinger-", StringComparison.Ordinal)) return CatalogText.Get("text.0382");
+            if (unit.IsBoss) return unit.EnemyRole == CatalogEnemyRole.Beast ? CatalogText.Get("text.0224") : CatalogText.Get("text.0229");
+            if (unit.Id.StartsWith("stone-elite", StringComparison.Ordinal)) return CatalogText.Get("text.0228");
+            if (unit.Id.StartsWith("stone-", StringComparison.Ordinal)) return CatalogText.Get("text.0383");
+            if (unit.Id.StartsWith("spine-", StringComparison.Ordinal)) return CatalogText.Get("text.0384");
+            if (unit.Id.StartsWith("crossbow-", StringComparison.Ordinal)) return CatalogText.Get("text.0385");
+            if (unit.Id.IndexOf("elite", StringComparison.Ordinal) >= 0) return CatalogText.Get("text.0223");
             return unit.EnemyRole == CatalogEnemyRole.Raider ||
-                unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? "초소 약탈자" : "뿔 야수";
+                unit.Id.IndexOf("raider", StringComparison.Ordinal) >= 0 ? CatalogText.Get("text.0386") : CatalogText.Get("text.0387");
         }
 
         static Vector2 ExpeditionPoint(Vector2 position, Rect arena)
@@ -1363,10 +1363,10 @@ namespace Expedition.Presentation
             Fill(arena, new Color(.065f, .14f, .13f));
             Fill(new Rect(401, 556, 866, 2), new Color(.41f, .48f, .32f));
             Fill(new Rect(401, 459, 520, 190), new Color(.3f, .75f, .51f, .035f));
-            GUI.Label(new Rect(411, 464, 500, 25), screen == 0 ? "Drag allies to set their starting positions" :
+            LocalizedGui.Label(new Rect(411, 464, 500, 25), screen == 0 ? "Drag allies to set their starting positions" :
                 "Battle time " + clock.ToString("0.0") + "s", small);
             if (screen == 1 && latestSkill != null && latestSkillUntil > clock)
-                GUI.Label(new Rect(786, 464, 447, 25), "SKILL  " + latestSkill, small);
+                LocalizedGui.Label(new Rect(786, 464, 447, 25), "SKILL  " + latestSkill, small);
             if (screen == 0)
             {
                 for (int i = 0; i < party.Count; i++)
@@ -1375,7 +1375,7 @@ namespace Expedition.Presentation
                     Vector2 point = ArenaPoint(slot.Position, arena);
                     DrawSheet(slot.FormId, 0, (int)(galleryTime * 5) % 4,
                         new Rect(point.x - 45, point.y - 106, 90, 106), false);
-                    GUI.Label(new Rect(point.x - 56, point.y - 7, 112, 24), slot.FormId, centered);
+                    LocalizedGui.Label(new Rect(point.x - 56, point.y - 7, 112, 24), slot.FormId, centered);
                 }
             }
             else if (battle != null)
@@ -1396,7 +1396,7 @@ namespace Expedition.Presentation
                         new Color(.45f, .94f, .55f) : new Color(1f, .45f, .39f));
                     if (unit.Shield > 0) Fill(new Rect(point.x - barWidth * .5f, barY + 7f,
                         barWidth * Mathf.Clamp01(unit.Shield / unit.MaxHp), 3), Color.cyan);
-                    GUI.Label(new Rect(point.x - (unit.IsBoss ? 82f : 44f), point.y - 7,
+                    LocalizedGui.Label(new Rect(point.x - (unit.IsBoss ? 82f : 44f), point.y - 7,
                         unit.IsBoss ? 164f : 88f, 22), unit.IsBoss ? "GOLEM / TEMP ART" : unit.FormId ?? "ENEMY", tiny);
                 }
                 foreach (FloatText text in floating)
@@ -1404,7 +1404,7 @@ namespace Expedition.Presentation
                     Vector2 point = ArenaPoint(text.Position, arena);
                     Color before = GUI.color;
                     GUI.color = new Color(text.Color.r, text.Color.g, text.Color.b, 1 - text.Age / .75f);
-                    GUI.Label(new Rect(point.x - 38, point.y - 120 - text.Age * 25, 80, 26), text.Text, centered);
+                    LocalizedGui.Label(new Rect(point.x - 38, point.y - 120 - text.Age * 25, 80, 26), text.Text, centered);
                     GUI.color = before;
                 }
                 if (battle.Ended)
@@ -1413,20 +1413,20 @@ namespace Expedition.Presentation
                     foreach (CatalogBattleUnit unit in battle.Units)
                         if (unit.IsAlive) { if (unit.Team == CatalogTeam.Ally) allies++; else enemies++; }
                     Fill(new Rect(667, 490, 344, 125), new Color(.02f, .08f, .09f, .89f));
-                    GUI.Label(new Rect(694, 512, 300, 38), battle.Winner == CatalogTeam.Ally ? "VICTORY" : "DEFEAT", title);
-                    GUI.Label(new Rect(694, 552, 300, 50), "Time " + clock.ToString("0.0") + "s · Allies " + allies +
+                    LocalizedGui.Label(new Rect(694, 512, 300, 38), battle.Winner == CatalogTeam.Ally ? "VICTORY" : "DEFEAT", title);
+                    LocalizedGui.Label(new Rect(694, 552, 300, 50), "Time " + clock.ToString("0.0") + "s · Allies " + allies +
                         " · Enemies " + enemies + "\nReset to adjust the team", small);
                 }
             }
             Fill(new Rect(401, 660, 866, 46), Panel);
             GUI.enabled = screen == 0;
-            if (GUI.Button(new Rect(412, 665, 210, 37), PresetNames[preset], button)) preset = (preset + 1) % Presets.Length;
+            if (LocalizedGui.Button(new Rect(412, 665, 210, 37), PresetNames[preset], button)) preset = (preset + 1) % Presets.Length;
             GUI.enabled = true;
-            if (GUI.Button(new Rect(633, 665, 110, 37), speed == 1 ? "1×" : "2×", button)) ToggleSpeed();
+            if (LocalizedGui.Button(new Rect(633, 665, 110, 37), speed == 1 ? "1×" : "2×", button)) ToggleSpeed();
             GUI.enabled = screen == 1 && battle != null && !battle.Ended;
-            if (GUI.Button(new Rect(752, 665, 130, 37), paused ? "RESUME" : "PAUSE", button)) paused = !paused;
+            if (LocalizedGui.Button(new Rect(752, 665, 130, 37), paused ? "RESUME" : "PAUSE", button)) paused = !paused;
             GUI.enabled = party.Count > 0;
-            if (GUI.Button(new Rect(891, 665, 363, 37), screen == 1 ? "RETRY SAME TEAM" : "FIGHT", button)) StartBattle();
+            if (LocalizedGui.Button(new Rect(891, 665, 363, 37), screen == 1 ? "RETRY SAME TEAM" : "FIGHT", button)) StartBattle();
             GUI.enabled = true;
         }
 
@@ -1472,35 +1472,35 @@ namespace Expedition.Presentation
         void DrawGallery()
         {
             Fill(new Rect(17, 78, 1247, 626), Panel);
-            GUI.Label(new Rect(36, 87, 950, 34), "ANIMATION QA  /  all 30 forms", heading);
-            GUI.Label(new Rect(37, 124, 1150, 26), "Actual Resources sheet · 6 × 4 cells · missing art is shown explicitly", small);
+            LocalizedGui.Label(new Rect(36, 87, 950, 34), "ANIMATION QA  /  all 30 forms", heading);
+            LocalizedGui.Label(new Rect(37, 124, 1150, 26), "Actual Resources sheet · 6 × 4 cells · missing art is shown explicitly", small);
             for (int i = 0; i < FormIds.Length; i++)
             {
                 int column = i % 6, row = i / 6;
                 Rect rect = new Rect(34 + column * 203, 169 + row * 67, 194, 60);
                 if (i == selected) Fill(rect, new Color(.5f, .37f, .17f));
-                if (GUI.Button(rect, database.Get(FormIds[i]).Name + "\n" + English[i], button))
+                if (LocalizedGui.Button(rect, database.Get(FormIds[i]).Name + "\n" + English[i], button))
                 { selected = i; category = i < 6 ? 0 : i < 18 ? 1 : i < 24 ? 2 : 3; TrimSheets(); }
             }
             CatalogForm form = database.Get(FormIds[selected]);
             Fill(new Rect(37, 520, 580, 170), new Color(.06f, .13f, .14f));
-            GUI.Label(new Rect(53, 529, 520, 32), form.Name + "  /  " + English[selected] + "  /  " + form.Id, heading);
+            LocalizedGui.Label(new Rect(53, 529, 520, 32), form.Name + "  /  " + English[selected] + "  /  " + form.Id, heading);
             string[] states = { "IDLE", "WALK", "ATTACK", "HIT", "DEATH" };
             for (int i = 0; i < states.Length; i++)
-                if (GUI.Button(new Rect(54 + i * 108, 573, 103, 43), states[i], button))
+                if (LocalizedGui.Button(new Rect(54 + i * 108, 573, 103, 43), states[i], button))
                 { galleryAuto = false; galleryState = i; galleryTime = 0; }
-            if (GUI.Button(new Rect(54, 627, 103, 35), galleryAuto ? "AUTO ✓" : "AUTO", button))
+            if (LocalizedGui.Button(new Rect(54, 627, 103, 35), galleryAuto ? "AUTO ✓" : "AUTO", button))
             { galleryAuto = !galleryAuto; galleryTime = 0; }
             float stateTime = GalleryStateTime();
-            GUI.Label(new Rect(165, 632, 433, 37), "State: " + states[galleryState] + "  ·  frame " +
+            LocalizedGui.Label(new Rect(165, 632, 433, 37), "State: " + states[galleryState] + "  ·  frame " +
                 AnimationFrame(galleryState, stateTime) + "  ·  " +
                 (sheets.ContainsKey(form.Id) ? artEntries.ContainsKey(form.Id) ? "SOURCE ART + CROP DATA" :
                 "SOURCE ART / GRID FALLBACK" : "MISSING ART"), label);
             Fill(new Rect(628, 518, 615, 174), new Color(.035f, .095f, .1f));
             DrawSheet(form.Id, galleryState, AnimationFrame(galleryState, stateTime), new Rect(787, 528, 155, 155), false);
             DrawSheet(form.Id, galleryState, AnimationFrame(galleryState, stateTime), new Rect(1005, 548, 115, 130), true);
-            GUI.Label(new Rect(784, 673, 168, 25), "ALLY / RIGHT", small);
-            GUI.Label(new Rect(999, 673, 180, 25), "ENEMY / LEFT", small);
+            LocalizedGui.Label(new Rect(784, 673, 168, 25), "ALLY / RIGHT", small);
+            LocalizedGui.Label(new Rect(999, 673, 180, 25), "ENEMY / LEFT", small);
         }
 
         void AddSelected()
@@ -1709,7 +1709,7 @@ namespace Expedition.Presentation
             if (texture == null)
             {
                 Fill(rect, new Color(.42f, .13f, .14f));
-                GUI.Label(new Rect(rect.x, rect.center.y - 24, rect.width, 48), "MISSING ART\n" + id, centered);
+                LocalizedGui.Label(new Rect(rect.x, rect.center.y - 24, rect.width, 48), "MISSING ART\n" + id, centered);
                 return rect;
             }
             int index = state == 0 ? Mathf.Clamp(frame, 0, 3) : state == 1 ? 6 + Mathf.Clamp(frame, 0, 5) :
@@ -1775,7 +1775,7 @@ namespace Expedition.Presentation
             if (bossConceptSheet == null)
             {
                 Fill(destination, new Color(.4f, .14f, .14f));
-                GUI.Label(destination, "MISSING BOSS ART", centered);
+                LocalizedGui.Label(destination, "MISSING BOSS ART", centered);
                 return;
             }
             Rect uv = new Rect((63f + 333f) / bossConceptSheet.width, 113f / bossConceptSheet.height,

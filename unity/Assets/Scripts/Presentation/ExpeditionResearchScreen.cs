@@ -39,15 +39,15 @@ namespace Expedition.Presentation
         {
             EnsureRuneStyles();
             ExpeditionUiTheme.Window(ResearchWindow);
-            GUI.Label(new Rect(76, 61, 600, 42), tactics ? "원정 연구" : "원정 연구", title);
-            GUI.Label(new Rect(78, 111, 760, 30), tactics ?
-                "숲 돌파 → 기초 · 성채 돌파 → 상위  /  새 원정에서 초기화" :
-                "RESEARCH  /  첫 돌파의 기록으로 새로운 길을 여세요", small);
+            LocalizedGui.Label(new Rect(76, 61, 600, 42), tactics ? CatalogText.Get("text.0427") : CatalogText.Get("text.0427"), title);
+            LocalizedGui.Label(new Rect(78, 111, 760, 30), tactics ?
+                CatalogText.Get("text.0532") :
+                CatalogText.Get("text.0533"), small);
             ExpeditionUiTheme.PanelBox(new Rect(936, 65, 268, 70));
-            GUI.Label(new Rect(948, 70, 244, 29), tactics ? "원정 골드" : "연구 포인트", runeCaption);
-            GUI.Label(new Rect(948, 97, 244, 28), unavailable ? "기록 확인 필요" : tactics ?
-                run.Gold + " G  ·  " + run.TacticIds.Count + "/3 선택" : progress.ResearchPoints +
-                " PT  /  누적 " + progress.ResearchEarned, runeName);
+            LocalizedGui.Label(new Rect(948, 70, 244, 29), tactics ? CatalogText.Get("text.0534") : CatalogText.Get("text.0535"), runeCaption);
+            LocalizedGui.Label(new Rect(948, 97, 244, 28), unavailable ? CatalogText.Get("text.0536") : tactics ?
+                run.Gold + " G  ·  " + run.TacticIds.Count + CatalogText.Get("text.0537") : progress.ResearchPoints +
+                CatalogText.Get("text.0538") + progress.ResearchEarned, runeName);
             ExpeditionResearchBoard.Background(ResearchMap);
         }
 
@@ -66,14 +66,14 @@ namespace Expedition.Presentation
                         tier, ExpeditionResearchBoard.BranchColor(b), node.Title, node.Cost + " G",
                         HasId(run.TacticIds, node.Id), run.CanPurchaseTactic(node.Id), selectedTacticNodeId == node.Id,
                         lastUnlockedRune == node.Id && Time.unscaledTime < runePulseUntil, runeName, runeCaption,
-                        !run.HasResearchRegion(node) ? node.RequiredRegion + " 돌파 필요" : "잠김"))
+                        !run.HasResearchRegion(node) ? node.RequiredRegion + CatalogText.Get("text.0539") : CatalogText.Get("text.0529")))
                         selectedTacticNodeId = node.Id;
                 }
             CatalogResearchNode selected = CatalogResearch.Get(selectedTacticNodeId) ?? CatalogResearch.Nodes[0];
             bool owned = HasId(run.TacticIds, selected.Id), canBuy = run.CanPurchaseTactic(selected.Id);
             int branch = Array.IndexOf(TacticBranches, selected.BranchId);
             DrawRuneDetail(selected.Title, branch * 2 + selected.Tier - 1, branch,
-                owned ? "선택한 연구" : canBuy ? "해금 가능" : "잠긴 연구");
+                owned ? CatalogText.Get("text.0540") : canBuy ? CatalogText.Get("text.0541") : CatalogText.Get("text.0542"));
             var affected = new List<CatalogMember>();
             foreach (string id in run.DeployedIds)
             {
@@ -83,12 +83,12 @@ namespace Expedition.Presentation
             string names = "";
             foreach (CatalogMember member in affected)
                 names += (names.Length == 0 ? "" : " · ") + database.Get(member.FormId).Name;
-            if (names.Length == 0) names = "적용할 동료가 없습니다.\n동료를 확보한 뒤 투자하세요.";
+            if (names.Length == 0) names = CatalogText.Get("text.0543");
             if (researchDetailId != selected.Id) { researchDetailId = selected.Id; researchDetailScroll = Vector2.zero; }
-            string requirement = selected.RequiredRegion + " " + selected.RequiredBossWave + "전투 돌파 " +
-                (run.HasResearchRegion(selected) ? "완료" : "필요") + " · " + selected.Cost + "G";
+            string requirement = CatalogText.Format("research.requirement", selected.RequiredRegion, selected.RequiredBossWave,
+                run.HasResearchRegion(selected) ? CatalogText.Get("text.0545") : CatalogText.Get("text.0546"), selected.Cost);
             string[] paragraphs = { selected.DescriptionForRules(run.RulesVersion), EffectCondition(selected.Id),
-                "적용 동료  " + affected.Count + " / " + run.DeployedIds.Count, names,
+                CatalogText.Get("text.0547") + affected.Count + " / " + run.DeployedIds.Count, names,
                 requirement, TacticLockReason(selected, owned, canBuy) };
             GUIStyle[] styles = { runeBody, runeSmall, runeSection, runeSmall, runeSection, runeSmall };
             float textWidth = ResearchDetailViewport.width - 24;
@@ -101,14 +101,14 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.FooterRule(ResearchWindow);
             Rect footer = ExpeditionUiTheme.FooterRect(ResearchWindow);
             bool enabled = GUI.enabled; GUI.enabled = canBuy;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
-                owned ? "선택 완료" : "연구 선택  ·  " + selected.Cost + " G", primary))
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
+                owned ? CatalogText.Get("text.0548") : CatalogText.Get("text.0549") + selected.Cost + " G", primary))
             {
                 if (run.PurchaseTactic(selected.Id))
                 { Save("tactic_purchase", selected.Id); lastUnlockedRune = selected.Id; runePulseUntil = Time.unscaledTime + 1.2f; }
             }
             GUI.enabled = enabled;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "닫기", button))
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), CatalogText.Get("text.0400"), button))
             { FinishLesson(ExpeditionLesson.Tactics); modal = Modal.None; }
         }
 
@@ -135,8 +135,8 @@ namespace Expedition.Presentation
             Color color = ExpeditionResearchBoard.BranchColor(branch);
             ExpeditionUiTheme.Fill(new Rect(858, 160, 344, 3), color);
             ExpeditionResearchBoard.Glyph(new Rect(884, 181, 44, 44), glyph, Color.white);
-            GUI.Label(new Rect(940, 176, 239, 25), state, small);
-            GUI.Label(new Rect(940, 205, 239, 40), name, heading);
+            LocalizedGui.Label(new Rect(940, 176, 239, 25), state, small);
+            LocalizedGui.Label(new Rect(940, 205, 239, 40), name, heading);
             ExpeditionUiTheme.Rule(new Rect(888, 254, 292, 1));
         }
 
@@ -147,7 +147,7 @@ namespace Expedition.Presentation
             {
                 // Measure with the actual Android font and padding instead of assuming a line count.
                 float height = Mathf.Ceil(styles[i].CalcHeight(new GUIContent(text[i]), width)) + 5;
-                if (draw) GUI.Label(new Rect(0, y, width, height), text[i], styles[i]);
+                if (draw) LocalizedGui.Label(new Rect(0, y, width, height), text[i], styles[i]);
                 y += height + (i == 1 || i == 3 ? 12 : 5);
             }
             return y;
@@ -170,25 +170,25 @@ namespace Expedition.Presentation
 
         string LegacyLockReason(CatalogLegacyResearchNode node, bool owned, bool available)
         {
-            if (badProgress || progress == null) return "성과 기록을 확인하지 못했습니다. 기존 저장을 보관 중입니다.";
-            if (owned) return "새 원정부터 적용됩니다.\n진행 중인 원정의 효과는 유지됩니다.";
-            if (available) return "연구 " + node.Cost + " PT 사용 · 새 원정부터 적용\n첫 최고 격파 기록으로 포인트 획득";
+            if (badProgress || progress == null) return CatalogText.Get("text.0550");
+            if (owned) return CatalogText.Get("text.0551");
+            if (available) return CatalogText.Get("text.0552") + node.Cost + CatalogText.Get("text.0553");
             if (node.PrerequisiteId != null && !HasId(progress.ResearchIds, node.PrerequisiteId))
-                return "먼저 연결된 연구를 여세요.\n" + CatalogLegacyResearch.Get(node.PrerequisiteId).Title;
-            return "연구 포인트 " + (node.Cost - progress.ResearchPoints) + " PT가 더 필요합니다.";
+                return CatalogText.Get("text.0554") + CatalogLegacyResearch.Get(node.PrerequisiteId).Title;
+            return CatalogText.Get("text.0555") + (node.Cost - progress.ResearchPoints) + CatalogText.Get("text.0556");
         }
 
         string TacticLockReason(CatalogResearchNode node, bool owned, bool available)
         {
-            if (owned) return "이 원정 동안 적용 · 새 원정에서 초기화\n되돌리기로 환불되지 않습니다.";
-            if (available) return "소환 " + (node.Cost / (float)ExpeditionRun.SummonCost).ToString("0.#") +
-                "회와 같은 비용 · 환불 불가\n동료 성장과 함께 비교하세요.";
-            if (run.Phase != ExpeditionPhase.Preparation) return "전투 준비 중에만 선택할 수 있습니다.";
-            if (!run.HasResearchRegion(node)) return "이번 원정에서 지역 보스를 격파하세요.\n골드만으로는 열 수 없습니다.";
+            if (owned) return CatalogText.Get("text.0557");
+            if (available) return CatalogText.Get("text.0558") + (node.Cost / (float)ExpeditionRun.SummonCost).ToString("0.#") +
+                CatalogText.Get("text.0559");
+            if (run.Phase != ExpeditionPhase.Preparation) return CatalogText.Get("text.0560");
+            if (!run.HasResearchRegion(node)) return CatalogText.Get("text.0561");
             if (node.PrerequisiteId != null && !HasId(run.TacticIds, node.PrerequisiteId))
-                return "먼저 연결된 연구를 여세요.\n" + CatalogResearch.Get(node.PrerequisiteId).Title;
-            if (run.TacticIds.Count >= CatalogResearch.MaxNodes) return "이번 원정은 최대 3개까지 선택합니다.";
-            return "골드 " + (node.Cost - run.Gold) + " G가 더 필요합니다.";
+                return CatalogText.Get("text.0554") + CatalogResearch.Get(node.PrerequisiteId).Title;
+            if (run.TacticIds.Count >= CatalogResearch.MaxNodes) return CatalogText.Get("text.0562");
+            return CatalogText.Get("text.0563") + (node.Cost - run.Gold) + CatalogText.Get("text.0564");
         }
 
         bool EffectCanApply(string id, CatalogMember member)
@@ -211,13 +211,13 @@ namespace Expedition.Presentation
         {
             switch (id)
             {
-                case "shieldcraft": return "보호막이 남아 있는 동안 발동";
-                case "exploitation": return "적에게 표식 또는 둔화가 있을 때 발동";
-                case "spellcraft": case "ember-insight": return "직접 기술 피해만 적용 · 회복/보호막 제외";
-                case "cinders": return "동료가 부여한 화상의 피해에 적용";
-                case "marksmanship": return "원거리 기본 공격에 적용 · 기술 피해 제외";
-                case "bulwark": return "근접 동료의 전투 시작 최대 체력에 적용";
-                default: return "이 원정에 기록된 연구 효과";
+                case "shieldcraft": return CatalogText.Get("text.0565");
+                case "exploitation": return CatalogText.Get("text.0566");
+                case "spellcraft": case "ember-insight": return CatalogText.Get("text.0567");
+                case "cinders": return CatalogText.Get("text.0568");
+                case "marksmanship": return CatalogText.Get("text.0569");
+                case "bulwark": return CatalogText.Get("text.0570");
+                default: return CatalogText.Get("text.0571");
             }
         }
 
@@ -238,37 +238,37 @@ namespace Expedition.Presentation
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
             CatalogForm form = database.Get(member.FormId);
-            GUI.Label(new Rect(content.x, 77, 840, 43), form.Name + " · 적용 효과", heading);
-            GUI.Label(new Rect(content.x, 124, 840, 55), "최대 체력  " + form.Hp.ToString("0") + " → " + memberEffectPreview.MaxHp.ToString("0") +
-                "     기본 공격력  " + form.Power.ToString("0") + "\n피해 보정은 아래 조건에 따라 공격 시 적용됩니다.", body);
+            LocalizedGui.Label(new Rect(content.x, 77, 840, 43), form.Name + CatalogText.Get("text.0572"), heading);
+            LocalizedGui.Label(new Rect(content.x, 124, 840, 55), CatalogText.Get("text.0573") + form.Hp.ToString("0") + " → " + memberEffectPreview.MaxHp.ToString("0") +
+                CatalogText.Get("text.0574") + form.Power.ToString("0") + CatalogText.Get("text.0575"), body);
             float y = 193;
             int shown = 0;
             foreach (string id in run.LegacyResearchIds)
             {
                 CatalogLegacyResearchNode node = CatalogLegacyResearch.Get(id);
                 if (node.Tier != 2 || !EffectCanApply(id, member)) continue;
-                EffectRow(content.x, y, content.width, "연구", node.Description, EffectCondition(id)); y += 57; shown++;
+                EffectRow(content.x, y, content.width, CatalogText.Get("text.0576"), node.Description, EffectCondition(id)); y += 57; shown++;
             }
             foreach (string id in run.TacticIds)
             {
                 CatalogResearchNode node = CatalogResearch.Get(id);
                 if (!EffectCanApply(id, member)) continue;
-                EffectRow(content.x, y, content.width, "연구", node.DescriptionForRules(run.RulesVersion), EffectCondition(id)); y += 57; shown++;
+                EffectRow(content.x, y, content.width, CatalogText.Get("text.0576"), node.DescriptionForRules(run.RulesVersion), EffectCondition(id)); y += 57; shown++;
             }
-            if (shown == 0) GUI.Label(new Rect(content.x, 213, content.width, 80),
-                "이 동료에게 적용되는 연구가 없습니다.\n고유·전승 특성은 동료 상세에서 확인할 수 있습니다.", body);
-            GUI.Label(new Rect(content.x, 535, content.width, 23),
-                "현재 원정의 효과 기준 · 전투 중 일시 강화와 적 방어력은 수치에 포함하지 않습니다.", small);
+            if (shown == 0) LocalizedGui.Label(new Rect(content.x, 213, content.width, 80),
+                CatalogText.Get("text.0577"), body);
+            LocalizedGui.Label(new Rect(content.x, 535, content.width, 23),
+                CatalogText.Get("text.0578"), small);
             ExpeditionUiTheme.FooterRule(panel);
-            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "동료 상세로", button)) modal = Modal.Detail;
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterRect(panel), CatalogText.Get("text.0579"), button)) modal = Modal.Detail;
         }
 
         void EffectRow(float x, float y, float width, string kind, string effect, string condition)
         {
             ExpeditionUiTheme.Fill(new Rect(x, y, width, 51), new Color(.07f, .08f, .12f, .7f));
-            GUI.Label(new Rect(x + 12, y + 8, 59, 29), kind, hint);
-            GUI.Label(new Rect(x + 80, y + 3, width - 90, 26), effect, body);
-            GUI.Label(new Rect(x + 80, y + 28, width - 90, 21), condition, small);
+            LocalizedGui.Label(new Rect(x + 12, y + 8, 59, 29), kind, hint);
+            LocalizedGui.Label(new Rect(x + 80, y + 3, width - 90, 26), effect, body);
+            LocalizedGui.Label(new Rect(x + 80, y + 28, width - 90, 21), condition, small);
         }
     }
 }

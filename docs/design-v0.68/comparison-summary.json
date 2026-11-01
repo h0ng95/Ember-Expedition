@@ -1,0 +1,5651 @@
+{
+  "rules": "normal-067",
+  "legal": {
+    "routes": 336,
+    "completed": 65,
+    "actualBattles": 6253,
+    "isolatedReplays": 3938,
+    "anchors": 1004,
+    "waves": {
+      "20": {
+        "current": {
+          "n": 94,
+          "wins": 84,
+          "winPercent": 89.4,
+          "timeouts": 4,
+          "meanHpPercent": 65.5
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 87.2
+        },
+        "next": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 96.1
+        },
+        "compact": {
+          "n": 94,
+          "wins": 84,
+          "winPercent": 89.4,
+          "timeouts": 4,
+          "meanHpPercent": 65.4
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 69.7
+        }
+      },
+      "21": {
+        "current": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 95.8
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 70.2
+        },
+        "next": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 79.8
+        },
+        "compact": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 97.9
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 92.2
+        }
+      },
+      "22": {
+        "current": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 86.3
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 97.1
+        },
+        "next": {
+          "n": 94,
+          "wins": 90,
+          "winPercent": 95.7,
+          "timeouts": 0,
+          "meanHpPercent": 56.9
+        },
+        "compact": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 84.8
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 89.3
+        }
+      },
+      "23": {
+        "current": {
+          "n": 94,
+          "wins": 90,
+          "winPercent": 95.7,
+          "timeouts": 0,
+          "meanHpPercent": 58.4
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 86.6
+        },
+        "next": {
+          "n": 94,
+          "wins": 88,
+          "winPercent": 93.6,
+          "timeouts": 0,
+          "meanHpPercent": 73.4
+        },
+        "compact": {
+          "n": 94,
+          "wins": 86,
+          "winPercent": 91.5,
+          "timeouts": 0,
+          "meanHpPercent": 52.6
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 63.9
+        }
+      },
+      "24": {
+        "current": {
+          "n": 94,
+          "wins": 92,
+          "winPercent": 97.9,
+          "timeouts": 0,
+          "meanHpPercent": 77.2
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 60.8
+        },
+        "next": {
+          "n": 94,
+          "wins": 85,
+          "winPercent": 90.4,
+          "timeouts": 0,
+          "meanHpPercent": 68.4
+        },
+        "compact": {
+          "n": 94,
+          "wins": 82,
+          "winPercent": 87.2,
+          "timeouts": 0,
+          "meanHpPercent": 72.5
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 78.2
+        }
+      },
+      "25": {
+        "current": {
+          "n": 94,
+          "wins": 85,
+          "winPercent": 90.4,
+          "timeouts": 0,
+          "meanHpPercent": 68.4
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 78.9
+        },
+        "next": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 95.4
+        },
+        "compact": {
+          "n": 94,
+          "wins": 82,
+          "winPercent": 87.2,
+          "timeouts": 0,
+          "meanHpPercent": 68.6
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 73.4
+        }
+      },
+      "26": {
+        "current": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 95.1
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 71.4
+        },
+        "next": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 87.3
+        },
+        "compact": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 98
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 92.9
+        }
+      },
+      "27": {
+        "current": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 87.3
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 95.1
+        },
+        "next": {
+          "n": 94,
+          "wins": 70,
+          "winPercent": 74.5,
+          "timeouts": 0,
+          "meanHpPercent": 34.1
+        },
+        "compact": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 82
+        },
+        "spread": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 91.4
+        }
+      },
+      "28": {
+        "current": {
+          "n": 94,
+          "wins": 70,
+          "winPercent": 74.5,
+          "timeouts": 0,
+          "meanHpPercent": 34.1
+        },
+        "previous": {
+          "n": 94,
+          "wins": 94,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 87.3
+        },
+        "next": {
+          "n": 94,
+          "wins": 88,
+          "winPercent": 93.6,
+          "timeouts": 0,
+          "meanHpPercent": 68
+        },
+        "compact": {
+          "n": 94,
+          "wins": 48,
+          "winPercent": 51.1,
+          "timeouts": 0,
+          "meanHpPercent": 15.5
+        },
+        "spread": {
+          "n": 94,
+          "wins": 80,
+          "winPercent": 85.1,
+          "timeouts": 0,
+          "meanHpPercent": 45.8
+        }
+      },
+      "29": {
+        "current": {
+          "n": 80,
+          "wins": 74,
+          "winPercent": 92.5,
+          "timeouts": 0,
+          "meanHpPercent": 64.1
+        },
+        "previous": {
+          "n": 80,
+          "wins": 80,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 43.6
+        },
+        "next": {
+          "n": 80,
+          "wins": 65,
+          "winPercent": 81.3,
+          "timeouts": 9,
+          "meanHpPercent": 68.1
+        },
+        "compact": {
+          "n": 80,
+          "wins": 80,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 84.8
+        },
+        "spread": {
+          "n": 80,
+          "wins": 74,
+          "winPercent": 92.5,
+          "timeouts": 0,
+          "meanHpPercent": 57.9
+        }
+      },
+      "30": {
+        "current": {
+          "n": 78,
+          "wins": 64,
+          "winPercent": 82.1,
+          "timeouts": 9,
+          "meanHpPercent": 69.7
+        },
+        "previous": {
+          "n": 78,
+          "wins": 78,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 70.8
+        },
+        "next": null,
+        "compact": {
+          "n": 78,
+          "wins": 66,
+          "winPercent": 84.6,
+          "timeouts": 12,
+          "meanHpPercent": 73.9
+        },
+        "spread": {
+          "n": 78,
+          "wins": 61,
+          "winPercent": 78.2,
+          "timeouts": 12,
+          "meanHpPercent": 68.8
+        }
+      }
+    },
+    "policies": {
+      "final": {
+        "n": 48,
+        "completed": 6,
+        "acquired": 0
+      },
+      "H-01": {
+        "n": 48,
+        "completed": 22,
+        "acquired": 45
+      },
+      "H-02": {
+        "n": 48,
+        "completed": 0,
+        "acquired": 48
+      },
+      "H-03": {
+        "n": 48,
+        "completed": 2,
+        "acquired": 21
+      },
+      "H-04": {
+        "n": 48,
+        "completed": 0,
+        "acquired": 36
+      },
+      "H-05": {
+        "n": 48,
+        "completed": 24,
+        "acquired": 48
+      },
+      "H-06": {
+        "n": 48,
+        "completed": 11,
+        "acquired": 30
+      }
+    }
+  },
+  "controlled": {
+    "battles": 10692,
+    "waves": {
+      "20": {
+        "n": 972,
+        "wins": 346,
+        "winPercent": 35.6,
+        "timeouts": 41,
+        "meanHpPercent": 22.9
+      },
+      "21": {
+        "n": 972,
+        "wins": 972,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 92.6
+      },
+      "22": {
+        "n": 972,
+        "wins": 946,
+        "winPercent": 97.3,
+        "timeouts": 0,
+        "meanHpPercent": 76.7
+      },
+      "23": {
+        "n": 972,
+        "wins": 601,
+        "winPercent": 61.8,
+        "timeouts": 0,
+        "meanHpPercent": 40.9
+      },
+      "24": {
+        "n": 972,
+        "wins": 722,
+        "winPercent": 74.3,
+        "timeouts": 2,
+        "meanHpPercent": 55.7
+      },
+      "25": {
+        "n": 972,
+        "wins": 197,
+        "winPercent": 20.3,
+        "timeouts": 134,
+        "meanHpPercent": 11.4
+      },
+      "26": {
+        "n": 972,
+        "wins": 972,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 87.5
+      },
+      "27": {
+        "n": 972,
+        "wins": 850,
+        "winPercent": 87.4,
+        "timeouts": 0,
+        "meanHpPercent": 65.2
+      },
+      "28": {
+        "n": 972,
+        "wins": 416,
+        "winPercent": 42.8,
+        "timeouts": 0,
+        "meanHpPercent": 29.6
+      },
+      "29": {
+        "n": 972,
+        "wins": 511,
+        "winPercent": 52.6,
+        "timeouts": 4,
+        "meanHpPercent": 39.6
+      },
+      "30": {
+        "n": 972,
+        "wins": 262,
+        "winPercent": 27,
+        "timeouts": 65,
+        "meanHpPercent": 20.8
+      }
+    },
+    "pairs": {
+      "23-24": {
+        "n": 972,
+        "lossToWin": 173,
+        "winToLoss": 52,
+        "meanHpDifference": 0.14746783837458843
+      },
+      "28-29": {
+        "n": 972,
+        "lossToWin": 114,
+        "winToLoss": 19,
+        "meanHpDifference": 0.1005298452670165
+      },
+      "25-30": {
+        "n": 972,
+        "lossToWin": 101,
+        "winToLoss": 36,
+        "meanHpDifference": 0.09374071654804728
+      }
+    },
+    "budgets": {
+      "23": {
+        "20": {
+          "n": 324,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "21": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 87.4
+        },
+        "22": {
+          "n": 324,
+          "wins": 298,
+          "winPercent": 92,
+          "timeouts": 0,
+          "meanHpPercent": 56.5
+        },
+        "23": {
+          "n": 324,
+          "wins": 70,
+          "winPercent": 21.6,
+          "timeouts": 0,
+          "meanHpPercent": 8.4
+        },
+        "24": {
+          "n": 324,
+          "wins": 103,
+          "winPercent": 31.8,
+          "timeouts": 2,
+          "meanHpPercent": 13.8
+        },
+        "25": {
+          "n": 324,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 13,
+          "meanHpPercent": 1.4
+        },
+        "26": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 75.8
+        },
+        "27": {
+          "n": 324,
+          "wins": 213,
+          "winPercent": 65.7,
+          "timeouts": 0,
+          "meanHpPercent": 31.9
+        },
+        "28": {
+          "n": 324,
+          "wins": 10,
+          "winPercent": 3.1,
+          "timeouts": 0,
+          "meanHpPercent": 1.5
+        },
+        "29": {
+          "n": 324,
+          "wins": 22,
+          "winPercent": 6.8,
+          "timeouts": 0,
+          "meanHpPercent": 2.2
+        },
+        "30": {
+          "n": 324,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        }
+      },
+      "27": {
+        "20": {
+          "n": 324,
+          "wins": 26,
+          "winPercent": 8,
+          "timeouts": 41,
+          "meanHpPercent": 8.9
+        },
+        "21": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 92.7
+        },
+        "22": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 80.4
+        },
+        "23": {
+          "n": 324,
+          "wins": 207,
+          "winPercent": 63.9,
+          "timeouts": 0,
+          "meanHpPercent": 31.7
+        },
+        "24": {
+          "n": 324,
+          "wins": 295,
+          "winPercent": 91,
+          "timeouts": 0,
+          "meanHpPercent": 60.9
+        },
+        "25": {
+          "n": 324,
+          "wins": 22,
+          "winPercent": 6.8,
+          "timeouts": 64,
+          "meanHpPercent": 7.6
+        },
+        "26": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 89.3
+        },
+        "27": {
+          "n": 324,
+          "wins": 313,
+          "winPercent": 96.6,
+          "timeouts": 0,
+          "meanHpPercent": 70.8
+        },
+        "28": {
+          "n": 324,
+          "wins": 82,
+          "winPercent": 25.3,
+          "timeouts": 0,
+          "meanHpPercent": 10.6
+        },
+        "29": {
+          "n": 324,
+          "wins": 167,
+          "winPercent": 51.5,
+          "timeouts": 4,
+          "meanHpPercent": 32
+        },
+        "30": {
+          "n": 324,
+          "wins": 8,
+          "winPercent": 2.5,
+          "timeouts": 51,
+          "meanHpPercent": 10.7
+        }
+      },
+      "35": {
+        "20": {
+          "n": 324,
+          "wins": 320,
+          "winPercent": 98.8,
+          "timeouts": 0,
+          "meanHpPercent": 59.9
+        },
+        "21": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 97.8
+        },
+        "22": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 93.2
+        },
+        "23": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 82.6
+        },
+        "24": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 92.3
+        },
+        "25": {
+          "n": 324,
+          "wins": 175,
+          "winPercent": 54,
+          "timeouts": 57,
+          "meanHpPercent": 25.2
+        },
+        "26": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 97.4
+        },
+        "27": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 92.9
+        },
+        "28": {
+          "n": 324,
+          "wins": 324,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 76.6
+        },
+        "29": {
+          "n": 324,
+          "wins": 322,
+          "winPercent": 99.4,
+          "timeouts": 0,
+          "meanHpPercent": 84.7
+        },
+        "30": {
+          "n": 324,
+          "wins": 254,
+          "winPercent": 78.4,
+          "timeouts": 14,
+          "meanHpPercent": 51.6
+        }
+      }
+    },
+    "finalBossBuilds": {
+      "23": {
+        "F-AR": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "F-FI": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "F-IC": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-01": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-02": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-03": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-04": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-05": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-06": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        }
+      },
+      "27": {
+        "F-AR": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "F-FI": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "F-IC": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-01": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 2,
+          "meanHpPercent": 1.7
+        },
+        "H-02": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 24,
+          "meanHpPercent": 26.6
+        },
+        "H-03": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-04": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "H-05": {
+          "n": 36,
+          "wins": 8,
+          "winPercent": 22.2,
+          "timeouts": 25,
+          "meanHpPercent": 68.3
+        },
+        "H-06": {
+          "n": 36,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        }
+      },
+      "35": {
+        "F-AR": {
+          "n": 36,
+          "wins": 29,
+          "winPercent": 80.6,
+          "timeouts": 0,
+          "meanHpPercent": 34
+        },
+        "F-FI": {
+          "n": 36,
+          "wins": 28,
+          "winPercent": 77.8,
+          "timeouts": 0,
+          "meanHpPercent": 45.7
+        },
+        "F-IC": {
+          "n": 36,
+          "wins": 24,
+          "winPercent": 66.7,
+          "timeouts": 0,
+          "meanHpPercent": 35.3
+        },
+        "H-01": {
+          "n": 36,
+          "wins": 32,
+          "winPercent": 88.9,
+          "timeouts": 0,
+          "meanHpPercent": 59.8
+        },
+        "H-02": {
+          "n": 36,
+          "wins": 36,
+          "winPercent": 100,
+          "timeouts": 0,
+          "meanHpPercent": 76.3
+        },
+        "H-03": {
+          "n": 36,
+          "wins": 25,
+          "winPercent": 69.4,
+          "timeouts": 2,
+          "meanHpPercent": 39.5
+        },
+        "H-04": {
+          "n": 36,
+          "wins": 24,
+          "winPercent": 66.7,
+          "timeouts": 2,
+          "meanHpPercent": 43.5
+        },
+        "H-05": {
+          "n": 36,
+          "wins": 26,
+          "winPercent": 72.2,
+          "timeouts": 10,
+          "meanHpPercent": 88
+        },
+        "H-06": {
+          "n": 36,
+          "wins": 30,
+          "winPercent": 83.3,
+          "timeouts": 0,
+          "meanHpPercent": 42.5
+        }
+      }
+    },
+    "finalBossResearch": {
+      "23": {
+        "defense-precision": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "defense-arcana": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "precision-defense": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "precision-arcana": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "arcana-defense": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        },
+        "arcana-precision": {
+          "n": 54,
+          "wins": 0,
+          "winPercent": 0,
+          "timeouts": 0,
+          "meanHpPercent": 0
+        }
+      },
+      "27": {
+        "defense-precision": {
+          "n": 54,
+          "wins": 1,
+          "winPercent": 1.9,
+          "timeouts": 10,
+          "meanHpPercent": 11.1
+        },
+        "defense-arcana": {
+          "n": 54,
+          "wins": 1,
+          "winPercent": 1.9,
+          "timeouts": 9,
+          "meanHpPercent": 11.4
+        },
+        "precision-defense": {
+          "n": 54,
+          "wins": 2,
+          "winPercent": 3.7,
+          "timeouts": 9,
+          "meanHpPercent": 11.1
+        },
+        "precision-arcana": {
+          "n": 54,
+          "wins": 2,
+          "winPercent": 3.7,
+          "timeouts": 6,
+          "meanHpPercent": 9.5
+        },
+        "arcana-defense": {
+          "n": 54,
+          "wins": 1,
+          "winPercent": 1.9,
+          "timeouts": 10,
+          "meanHpPercent": 11.6
+        },
+        "arcana-precision": {
+          "n": 54,
+          "wins": 1,
+          "winPercent": 1.9,
+          "timeouts": 7,
+          "meanHpPercent": 9.8
+        }
+      },
+      "35": {
+        "defense-precision": {
+          "n": 54,
+          "wins": 44,
+          "winPercent": 81.5,
+          "timeouts": 0,
+          "meanHpPercent": 50.6
+        },
+        "defense-arcana": {
+          "n": 54,
+          "wins": 43,
+          "winPercent": 79.6,
+          "timeouts": 2,
+          "meanHpPercent": 50.8
+        },
+        "precision-defense": {
+          "n": 54,
+          "wins": 45,
+          "winPercent": 83.3,
+          "timeouts": 2,
+          "meanHpPercent": 55.7
+        },
+        "precision-arcana": {
+          "n": 54,
+          "wins": 44,
+          "winPercent": 81.5,
+          "timeouts": 2,
+          "meanHpPercent": 57.1
+        },
+        "arcana-defense": {
+          "n": 54,
+          "wins": 38,
+          "winPercent": 70.4,
+          "timeouts": 6,
+          "meanHpPercent": 46.2
+        },
+        "arcana-precision": {
+          "n": 54,
+          "wins": 40,
+          "winPercent": 74.1,
+          "timeouts": 2,
+          "meanHpPercent": 49.3
+        }
+      }
+    },
+    "wave29Builds": {
+      "F-AR": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 90.2
+      },
+      "F-FI": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 93.7
+      },
+      "F-IC": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 90.6
+      },
+      "H-01": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 71.8
+      },
+      "H-02": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 93.5
+      },
+      "H-03": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 84.2
+      },
+      "H-04": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 86.5
+      },
+      "H-05": {
+        "n": 36,
+        "wins": 34,
+        "winPercent": 94.4,
+        "timeouts": 0,
+        "meanHpPercent": 66.1
+      },
+      "H-06": {
+        "n": 36,
+        "wins": 36,
+        "winPercent": 100,
+        "timeouts": 0,
+        "meanHpPercent": 85.9
+      }
+    },
+    "wave30WinningRows": [
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.58278,
+          "health": 0.3815529,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 45.0994835,
+          "health": 0.3815529,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 41.06621,
+          "health": 0.612669349,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 39.3829041,
+          "health": 0.240363911,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.5494461,
+          "health": 0.3815529,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.5993538,
+          "health": 0.513261139,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3827057,
+          "health": 0.413150668,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.7659721,
+          "health": 0.5339825,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.5494156,
+          "health": 0.320994824,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.83267,
+          "health": 0.4722263,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.5827332,
+          "health": 0.35613957,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.56605,
+          "health": 0.497110873,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 44.83282,
+          "health": 0.5693046,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.14922,
+          "health": 0.39019835,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.3492661,
+          "health": 0.239965454,
+          "enemyHp": 0,
+          "alive": 2
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.21598,
+          "health": 0.5203188,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.6827469,
+          "health": 0.279964715,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.5993538,
+          "health": 0.513261139,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3827057,
+          "health": 0.413150668,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.7659721,
+          "health": 0.5339825,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.5494156,
+          "health": 0.320994824,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.816,
+          "health": 0.4722263,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.5827332,
+          "health": 0.35613957,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.56605,
+          "health": 0.497110873,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 44.83282,
+          "health": 0.5693046,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.199234,
+          "health": 0.414093256,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.3492661,
+          "health": 0.239965454,
+          "enemyHp": 0,
+          "alive": 2
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.21598,
+          "health": 0.5203188,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-AR",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.6827469,
+          "health": 0.279964715,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.4160538,
+          "health": 0.0559591278,
+          "enemyHp": 0,
+          "alive": 2
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.96609,
+          "health": 0.144924641,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.6327934,
+          "health": 0.342722982,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.4160538,
+          "health": 0.0559591278,
+          "enemyHp": 0,
+          "alive": 2
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.7993355,
+          "health": 0.5125067,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.7161255,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.7659721,
+          "health": 0.5339825,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 45.7828064,
+          "health": 0.8680458,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 61.7825623,
+          "health": 0.374076784,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.0327873,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 57.6326256,
+          "health": 0.491681069,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.5161743,
+          "health": 0.8574001,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 62.4158859,
+          "health": 0.374076784,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.149437,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.1159821,
+          "health": 0.5216265,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 45.5161438,
+          "health": 0.8596799,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.7993355,
+          "health": 0.5125067,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.7161255,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.7659721,
+          "health": 0.5339825,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 45.7828064,
+          "health": 0.8680458,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 61.7825623,
+          "health": 0.374076784,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.0327873,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 57.6326256,
+          "health": 0.491681069,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.5161743,
+          "health": 0.8574001,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 62.4158859,
+          "health": 0.374076784,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.149437,
+          "health": 0.8431346,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.1159821,
+          "health": 0.5216265,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-FI",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 45.5161438,
+          "health": 0.8596799,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 61.7825623,
+          "health": 0.3501807,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.06606,
+          "health": 0.5920601,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.11588,
+          "health": 0.355324954,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.899395,
+          "health": 0.5920601,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.56599,
+          "health": 0.4717854,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.06612,
+          "health": 0.733017743,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.94935,
+          "health": 0.5153322,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.6495056,
+          "health": 0.7421404,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 73.91798,
+          "health": 0.285653383,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.79935,
+          "health": 0.6944694,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.5163956,
+          "health": 0.445469141,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.06606,
+          "health": 0.568610132,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 61.7825623,
+          "health": 0.3501807,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.06606,
+          "health": 0.5920601,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.11588,
+          "health": 0.355324954,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.899395,
+          "health": 0.5920601,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.56599,
+          "health": 0.4717854,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.06612,
+          "health": 0.733017743,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.94935,
+          "health": 0.5153322,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.6495056,
+          "health": 0.7421404,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 73.91798,
+          "health": 0.285653383,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.79935,
+          "health": 0.6944694,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.5163956,
+          "health": 0.445469141,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "F-IC",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.06606,
+          "health": 0.568610132,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.5493546,
+          "health": 0.3085871,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.73276,
+          "health": 0.0874250755,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.4160538,
+          "health": 0.391113222,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.0827866,
+          "health": 0.332572371,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.81611,
+          "health": 0.470579326,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 41.9162,
+          "health": 0.39835307,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.7161255,
+          "health": 0.214597777,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.38266,
+          "health": 0.218639374,
+          "enemyHp": 0,
+          "alive": 2
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.76605,
+          "health": 0.7629347,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.0660133,
+          "health": 0.868410945,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.0660744,
+          "health": 0.5936982,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.0493469,
+          "health": 0.868410945,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3993721,
+          "health": 0.7629347,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.8493347,
+          "health": 0.8713224,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.0994377,
+          "health": 0.805668,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.06603,
+          "health": 0.8202912,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.38269,
+          "health": 0.7537512,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 58.132618,
+          "health": 0.8813037,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.89938,
+          "health": 0.7688775,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.33266,
+          "health": 0.7899926,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.76605,
+          "health": 0.7629347,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.0660133,
+          "health": 0.868410945,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.0660744,
+          "health": 0.5936982,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.0493469,
+          "health": 0.868410945,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3993721,
+          "health": 0.7629347,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.8493347,
+          "health": 0.8713224,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.0994377,
+          "health": 0.805668,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.06603,
+          "health": 0.8202912,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.38269,
+          "health": 0.7537512,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 58.132618,
+          "health": 0.8813037,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.89938,
+          "health": 0.7688775,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-01",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.33266,
+          "health": 0.7899926,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.9993019,
+          "health": 0.3354778,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 57.8326225,
+          "health": 0.607360363,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.7993355,
+          "health": 0.359215766,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.1326637,
+          "health": 0.587551653,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.44937,
+          "health": 0.387531638,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.01603,
+          "health": 0.628089,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.61611,
+          "health": 0.46653077,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.6827774,
+          "health": 0.712941647,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 59.0159378,
+          "health": 0.333760768,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 59.3492661,
+          "health": 0.607360363,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 59.04927,
+          "health": 0.293546438,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.982666,
+          "health": 0.6085913,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.16611,
+          "health": 0.89685744,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.2159042,
+          "health": 0.886876762,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.58286,
+          "health": 0.89685744,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.56619,
+          "health": 0.886876762,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.13362,
+          "health": 0.9276906,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.16696,
+          "health": 0.916077,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.36636,
+          "health": 0.8916952,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.78312,
+          "health": 0.8740983,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.96713,
+          "health": 0.9248282,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 70.38389,
+          "health": 0.893874049,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.36636,
+          "health": 0.8916952,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.78312,
+          "health": 0.8740983,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.16611,
+          "health": 0.89685744,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.2159042,
+          "health": 0.886876762,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.58286,
+          "health": 0.89685744,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.56619,
+          "health": 0.886876762,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.13362,
+          "health": 0.9276906,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.16696,
+          "health": 0.916077,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.36636,
+          "health": 0.8916952,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.78312,
+          "health": 0.8740983,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 69.96713,
+          "health": 0.9248282,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 70.38389,
+          "health": 0.893874049,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.36636,
+          "health": 0.8916952,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-02",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.78312,
+          "health": 0.8740983,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.5494461,
+          "health": 0.404975384,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.5995064,
+          "health": 0.4825616,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.3660545,
+          "health": 0.110340707,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.31614,
+          "health": 0.410787731,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.0493774,
+          "health": 0.693777561,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 68.91691,
+          "health": 0.398376375,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1160431,
+          "health": 0.693777561,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.8326378,
+          "health": 0.5529896,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.13277,
+          "health": 0.719725251,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.0826645,
+          "health": 0.517941356,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 44.83282,
+          "health": 0.7707795,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 60.3659172,
+          "health": 0.411383927,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.9833755,
+          "health": 0.4327507,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3827057,
+          "health": 0.7104589,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.31614,
+          "health": 0.410787731,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.0493774,
+          "health": 0.693777561,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 68.91691,
+          "health": 0.398376375,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1160431,
+          "health": 0.693777561,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.8326378,
+          "health": 0.5529896,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.13277,
+          "health": 0.719725251,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.0826645,
+          "health": 0.517941356,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 44.83282,
+          "health": 0.7707795,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 60.3659172,
+          "health": 0.411383927,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.9833755,
+          "health": 0.4327507,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-03",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3827057,
+          "health": 0.7104589,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 48.08277,
+          "health": 0.350228,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.26618,
+          "health": 0.390136778,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.199234,
+          "health": 0.4089955,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1160431,
+          "health": 0.8621412,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.9833755,
+          "health": 0.44501403,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3493729,
+          "health": 0.8575921,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.69934,
+          "health": 0.4644583,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.5494156,
+          "health": 0.7361844,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 62.91588,
+          "health": 0.364942819,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.3827972,
+          "health": 0.8644308,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.1993446,
+          "health": 0.8568377,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.74999,
+          "health": 0.466627777,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1660423,
+          "health": 0.8839654,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.43262,
+          "health": 0.4089955,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1160431,
+          "health": 0.8621412,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.9833755,
+          "health": 0.44501403,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.3493729,
+          "health": 0.8575921,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.69934,
+          "health": 0.4644583,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.5494156,
+          "health": 0.7361844,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 62.91588,
+          "health": 0.364942819,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.3827972,
+          "health": 0.8644308,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.1993446,
+          "health": 0.8568377,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 67.74999,
+          "health": 0.466627777,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-04",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 52.1660423,
+          "health": 0.8839654,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 74.66814,
+          "health": 0.6438477,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 71.5674744,
+          "health": 0.8761178,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.31601,
+          "health": 0.8334526,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 54.5326729,
+          "health": 0.9571518,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.9660149,
+          "health": 0.88315773,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.19936,
+          "health": 0.913225055,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.4327354,
+          "health": 0.5859579,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.4993858,
+          "health": 0.8345366,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.34945,
+          "health": 0.884772062,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.6494446,
+          "health": 0.9557271,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.51599,
+          "health": 0.8010827,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.599308,
+          "health": 0.9257086,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.9660149,
+          "health": 0.839937,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.8826828,
+          "health": 0.9883118,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 70.38389,
+          "health": 0.976203442,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 57.7659569,
+          "health": 0.972842336,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.9993019,
+          "health": 0.9849609,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 58.699276,
+          "health": 0.9750515,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.69932,
+          "health": 0.9765156,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 63.1492081,
+          "health": 0.8096159,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 59.4992638,
+          "health": 0.9187213,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 74.41808,
+          "health": 0.642756641,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 72.23428,
+          "health": 0.732140958,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 71.41744,
+          "health": 0.7210506,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 66.78312,
+          "health": 0.694515467,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 74.68481,
+          "health": 0.6818178,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 27,
+        "gold": 620,
+        "build": "H-05",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 71.5841446,
+          "health": 0.6940615,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 70.38389,
+          "health": 0.976203442,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 57.7659569,
+          "health": 0.972842336,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 56.9993019,
+          "health": 0.9849609,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 58.699276,
+          "health": 0.9750515,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.69932,
+          "health": 0.9765156,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 63.1492081,
+          "health": 0.8096159,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-05",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 59.4992638,
+          "health": 0.9187213,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.0326958,
+          "health": 0.106542975,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 51.6827164,
+          "health": 0.0726861,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 47.01612,
+          "health": 0.4357604,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 40.916214,
+          "health": 0.547996461,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.1159973,
+          "health": 0.0192349888,
+          "enemyHp": 0,
+          "alive": 1
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "0",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.61608,
+          "health": 0.127271488,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 60.2825851,
+          "health": 0.3406461,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.6994133,
+          "health": 0.5574616,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.199234,
+          "health": 0.499119848,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.6327324,
+          "health": 0.6525484,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 55.8659859,
+          "health": 0.525759637,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.74946,
+          "health": 0.7729763,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.2326927,
+          "health": 0.6036019,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.81617,
+          "health": 0.7999693,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 72.85108,
+          "health": 0.233077466,
+          "enemyHp": 0,
+          "alive": 3
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.79935,
+          "health": 0.725484848,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.3159256,
+          "health": 0.444955677,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "1",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.96606,
+          "health": 0.640488446,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 60.2825851,
+          "health": 0.344003528,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "defense-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 49.6994133,
+          "health": 0.5574616,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.199234,
+          "health": 0.499119848,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "defense-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.6327324,
+          "health": 0.6525484,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.71602,
+          "health": 0.64439106,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "precision-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 46.74946,
+          "health": 0.7729763,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.2326927,
+          "health": 0.6036019,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "precision-arcana",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 43.81617,
+          "health": 0.7999693,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 65.816246,
+          "health": 0.508500636,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "arcana-defense",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 53.79935,
+          "health": 0.725484848,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "compact",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 64.3159256,
+          "health": 0.444955677,
+          "enemyHp": 0,
+          "alive": 4
+        }
+      },
+      {
+        "wave": 30,
+        "supply": 35,
+        "gold": 780,
+        "build": "H-06",
+        "backline": "2",
+        "research": "arcana-precision",
+        "layout": "spread",
+        "result": {
+          "win": true,
+          "timeout": false,
+          "seconds": 50.96606,
+          "health": 0.640488446,
+          "enemyHp": 0,
+          "alive": 5
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Deterministic scenario coverage, not player win probabilities.",
+    "Legal routes share two random seeds and fixed policies; reaching late waves selects stronger parties.",
+    "Controlled teams equal recruited material and research cost, not recruitment luck or acquisition order.",
+    "Two fixed layouts, six fixed research sets and selected evolution branches are not exhaustive.",
+    "Controlled hybrid teams spend their one-copy saving on an inherited banner trait for the frontline.",
+    "No production balance values were changed by this audit."
+  ]
+}

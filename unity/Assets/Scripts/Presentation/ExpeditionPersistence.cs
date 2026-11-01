@@ -29,20 +29,20 @@ namespace Expedition.Presentation
                 loadedAccount.Version == 1 && loadedAccount.Run != null && loadedAccount.Run.Version == 0)) loadedAccount.Run = null;
             recordHistory = ExpeditionHistory.Restore(database, loadedAccount == null || loadedAccount.Version < 2 ? null : loadedAccount.History);
             if (result.State == SaveReadState.Recovered)
-                error = "저장 문제를 발견해 마지막 정상 기록으로 복구했습니다.\n최근 행동 일부는 다시 진행해야 할 수 있습니다.";
+                error = CatalogText.Get("text.0436");
             storageBlocked = result.State == SaveReadState.Damaged || result.State == SaveReadState.FutureVersion;
             if (storageBlocked)
             {
                 badSave = badProgress = true;
                 error = result.State == SaveReadState.FutureVersion ?
-                    "더 새로운 버전의 저장 기록입니다.\n게임을 업데이트해 주세요. 기존 파일은 보관됩니다." :
-                    "저장과 백업을 모두 읽지 못했습니다.\n기록을 보관하고 덮어쓰기를 멈췄습니다.";
+                    CatalogText.Get("text.0437") :
+                    CatalogText.Get("text.0438");
             }
         }
         void PersistAccount()
         {
-            if (storageBlocked || badSave || badProgress) throw new InvalidOperationException("기존 기록을 보호하기 위해 저장을 중지했습니다.");
-            if (accountStore == null || journal == null || progress == null) throw new InvalidOperationException("저장 준비 전입니다.");
+            if (storageBlocked || badSave || badProgress) throw new InvalidOperationException(CatalogText.Get("text.0439"));
+            if (accountStore == null || journal == null || progress == null) throw new InvalidOperationException(CatalogText.Get("text.0440"));
             recordHistory.Observe(run);
             var snapshot = new ExpeditionAccountSave { Version = 2, HasRun = run != null, Run = run == null ? null : run.Capture(),
                 Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask & 7,
@@ -56,7 +56,7 @@ namespace Expedition.Presentation
         {
             if (!startupReady || savingAccount || storageBlocked || badSave || badProgress) return;
             try { PersistAccount(); }
-            catch (Exception) { Notice("안내 상태를 저장하지 못했습니다. 다음 저장 때 다시 시도합니다."); }
+            catch (Exception) { Notice(CatalogText.Get("text.0441")); }
         }
         void FinalizeAccountLoad()
         {
@@ -65,7 +65,7 @@ namespace Expedition.Presentation
             if (accountReadState == SaveReadState.Empty || accountReadState == SaveReadState.Recovered ||
                 loadedAccount != null && loadedAccount.Version < 2)
                 try { PersistAccount(); }
-                catch (Exception) { Notice("기록 백업을 저장하지 못했습니다. 다음 저장 때 다시 시도합니다."); }
+                catch (Exception) { Notice(CatalogText.Get("text.0442")); }
         }
     }
 }

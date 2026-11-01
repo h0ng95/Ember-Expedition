@@ -17,6 +17,7 @@ internal static class Program
             EventRouting(database);
             ActualOverkill(database);
             FailureEvidence(database);
+            DuplicateFormIdentity(database);
             Console.WriteLine("PASS: battle report, " + assertions + " assertions.");
             return 0;
         }
@@ -27,6 +28,19 @@ internal static class Program
     {
         assertions++;
         if (!condition) throw new Exception(message);
+    }
+
+    static void DuplicateFormIdentity(CatalogDatabase database)
+    {
+        var battle=new CatalogBattle(database);
+        var first=battle.AddUnit("knight-a",CatalogTeam.Ally,"B-KN",null,null,-2,0);
+        var second=battle.AddUnit("knight-b",CatalogTeam.Ally,"B-KN",null,null,-1,0);
+        var enemy=battle.AddEnemy("enemy",100,10,0,1,1,1,false,1,0);
+        var report=new CatalogBattleReport(battle);
+        Send(battle,CatalogEventKind.Defeated,enemy,second,0);
+        Send(battle,CatalogEventKind.Defeated,enemy,first,0);
+        Check(report.FirstLostUnitId=="knight-b"&&report.FirstLostFormId=="B-KN","duplicate forms retain exact first-lost instance ID");
+        report.Dispose();
     }
 
     static void Send(CatalogBattle battle, CatalogEventKind kind,
@@ -95,7 +109,7 @@ internal static class Program
         report.Complete(false); report.Complete(false);
         Check(report.Outcome == CatalogBattleOutcome.Defeat && report.AlliesAlive == 0 && report.EnemiesAlive == 1,
             "annihilation is not a timeout and repeated completion does not duplicate counts");
-        Check(report.FirstLostFormId == "B-AR" && report.FirstLostWasRanged && report.FirstLossAt > 0 && report.FirstLossAt < 5,
+        Check(report.FirstLostFormId == "B-AR" && report.FirstLostUnitId == ally.Id && report.FirstLostWasRanged && report.FirstLossAt > 0 && report.FirstLossAt < 5,
             "zero-amount actual death event records the first ranged loss");
         Check(CatalogBattleFeedback.Summary(report).Contains("아군 전멸") &&
             CatalogBattleFeedback.Evidence(report, database).Contains(database.Get("B-AR").Name) &&

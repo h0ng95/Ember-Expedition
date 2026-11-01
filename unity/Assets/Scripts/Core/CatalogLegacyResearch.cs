@@ -10,8 +10,10 @@ namespace Expedition.Core
         public int Tier { get; private set; }
         public int Cost { get; private set; }
         public string PrerequisiteId { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
+        string localizedTitle;
+        public string Title { get { return CatalogText.Resolve(localizedTitle); } private set { localizedTitle = value; } }
+        string localizedDescription;
+        public string Description { get { return CatalogText.Resolve(localizedDescription); } private set { localizedDescription = value; } }
 
         internal CatalogLegacyResearchNode(string id, string branch, int tier, int cost,
             string prerequisite, string title, string description)
@@ -27,17 +29,17 @@ namespace Expedition.Core
     {
         static readonly CatalogLegacyResearchNode[] nodes = {
             new CatalogLegacyResearchNode("tactical-start", "tactical", 1, 3, null,
-                "서약 편성", "시작 편성 해금: 기사 · 기수 · 사제"),
+                "text.0017", "text.0018"),
             new CatalogLegacyResearchNode("tactical-vigor", "tactical", 2, 6, "tactical-start",
-                "원정대 체력", "새 원정에서 모든 동료 최대 체력 +5%"),
+                "text.0019", "text.0020"),
             new CatalogLegacyResearchNode("ember-start", "ember", 1, 3, null,
-                "화염 편성", "시작 편성 해금: 기사 · 화염술사 · 사제"),
+                "text.0021", "text.0022"),
             new CatalogLegacyResearchNode("ember-insight", "ember", 2, 6, "ember-start",
-                "마력 이해", "새 원정에서 동료 직접 공격 기술 피해 +5%"),
+                "text.0023", "text.0024"),
             new CatalogLegacyResearchNode("frost-start", "frost", 1, 3, null,
-                "서리 편성", "시작 편성 해금: 기사 · 서리술사 · 사제"),
+                "text.0025", "text.0026"),
             new CatalogLegacyResearchNode("frost-focus", "frost", 2, 6, "frost-start",
-                "정밀 훈련", "새 원정에서 모든 동료 기본 공격 피해 +5%")
+                "text.0027", "text.0028")
         };
         static readonly IReadOnlyList<CatalogLegacyResearchNode> publicNodes = Array.AsReadOnly(nodes);
         public static IReadOnlyList<CatalogLegacyResearchNode> Nodes { get { return publicNodes; } }

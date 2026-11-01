@@ -61,35 +61,29 @@ namespace Expedition.Core
             45, 50, 50, 55, 0 };
         static readonly int[] LegacyVictoryRewards = { 20, 20, 20, 30, 50, 25, 25, 25, 35, 0 };
         static readonly string[] Families = { "KN", "AR", "FI", "PR", "IC", "BA" };
-        static readonly string[] Encounters =
-        {
-            "숲길 입구", "가시등 숲길", "야수의 소굴", "돌격 뿔짐승", "잿갈기 우두머리",
-            "무너진 성채", "성채 수비선", "성채의 무리", "갑주 석상", "성문 골렘",
-            "폐광 입구", "잿가루 통로", "광차 갈림길", "철쇄 감독관", "용광로 수호자",
-            "서리 성당 입구", "얼어붙은 회랑", "서리 제단", "찬송의 감시자", "서리의 파수꾼",
-            "황혼 정원 입구", "독가시 산책로", "시든 온실", "황혼 정원사", "가시의 군주",
-            "잿빛 왕궁 입구", "왕궁의 회랑", "검은 왕좌 길", "왕궁 집행관", "왕관의 수호룡"
-        };
-        static readonly string[] EncounterDescriptions =
-        {
-            "새끼 뿔짐승 2", "새끼 뿔짐승 2 · 가시등 짐승 1",
-            "새끼 뿔짐승 1 · 가시등 짐승 3 (측면 1)", "돌격 뿔짐승 1 · 일반 뿔짐승 2 · 가시등 짐승 1",
-            "잿갈기 우두머리 1 · 일반 졸개 2", "돌편 보병 2 · 석궁 수비병 1",
-            "돌편 보병 2 · 석궁 수비병 2", "돌편 보병 3 · 석궁 수비병 2",
-            "갑주 석상 1 · 돌편 보병 3 · 석궁 수비병 2", "성문 골렘 1 · 석궁 수비병 2",
-            "채굴병 2 · 불씨 투척병 1", "채굴병 2 · 불씨 투척병 2",
-            "채굴병 3 · 불씨 투척병 2", "철쇄 감독관 1 · 채굴병 2 · 불씨 투척병 2",
-            "용광로 수호자 1 · 철쇄 감독관 1 · 불씨 투척병 2",
-            "서리 근위병 2 · 서리 시종 2", "서리 근위병 3 · 서리 시종 2",
-            "서리 근위병 3 · 서리 시종 3", "찬송 감시자 1 · 서리 근위병 2 · 서리 시종 2",
-            "서리의 파수꾼 1 · 서리 시종 2",
-            "가시 근위병 2 · 독침 사냥꾼 2", "가시 근위병 3 · 독침 사냥꾼 2",
-            "가시 근위병 3 · 독침 사냥꾼 3", "황혼 정원사 1 · 가시 근위병 2 · 독침 사냥꾼 2",
-            "가시의 군주 1 · 독침 사냥꾼 2",
-            "왕궁 근위병 2 · 왕궁 석궁병 2", "왕궁 근위병 3 · 왕궁 석궁병 2",
-            "왕궁 근위병 3 · 왕궁 석궁병 3", "왕궁 집행관 1 · 왕궁 근위병 2 · 왕궁 석궁병 2",
-            "왕관의 수호룡 1 · 왕궁 석궁병 2"
-        };
+        static readonly CatalogLocalizedStrings Encounters = new CatalogLocalizedStrings("text.0220", "text.0221", "text.0222", "text.0223", "text.0224",
+            "text.0225", "text.0226", "text.0227", "text.0228", "text.0229",
+            "text.0230", "text.0231", "text.0232", "text.0233", "text.0234",
+            "text.0235", "text.0236", "text.0237", "text.0238", "text.0239",
+            "text.0240", "text.0241", "text.0242", "text.0243", "text.0244",
+            "text.0245", "text.0246", "text.0247", "text.0248", "text.0249");
+        static readonly CatalogLocalizedStrings EncounterDescriptions = new CatalogLocalizedStrings("text.0250", "text.0251",
+            "text.0252", "text.0253",
+            "text.0254", "text.0255",
+            "text.0256", "text.0257",
+            "text.0258", "text.0259",
+            "text.0260", "text.0261",
+            "text.0262", "text.0263",
+            "text.0264",
+            "text.0265", "text.0266",
+            "text.0267", "text.0268",
+            "text.0269",
+            "text.0270", "text.0271",
+            "text.0272", "text.0273",
+            "text.0274",
+            "text.0275", "text.0276",
+            "text.0277", "text.0278",
+            "text.0279");
 
         readonly CatalogDatabase catalog;
         readonly List<string> deployedIds = new List<string>(5);
@@ -147,8 +141,8 @@ namespace Expedition.Core
         }
         public string EncounterName { get { return Encounters[Wave - 1]; } }
         public string EncounterDescription { get {
-            if (RulesVersion >= 3 && Wave == 11) return "채굴병 3 · 불씨 투척병 1";
-            if (RulesVersion >= 3 && Wave == 12) return "채굴병 3 · 불씨 투척병 2";
+            if (RulesVersion >= 3 && Wave == 11) return CatalogText.Get("text.0280");
+            if (RulesVersion >= 3 && Wave == 12) return CatalogText.Get("text.0262");
             return EncounterDescriptions[Wave - 1];
         } }
 

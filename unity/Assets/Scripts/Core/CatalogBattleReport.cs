@@ -35,6 +35,7 @@ namespace Expedition.Core
         public int AlliesAlive { get; private set; }
         public int EnemiesAlive { get; private set; }
         public string FirstLostFormId { get; private set; }
+        public string FirstLostUnitId { get; private set; }
         public float FirstLossAt { get; private set; }
         public bool FirstLostWasRanged { get; private set; }
 
@@ -78,7 +79,7 @@ namespace Expedition.Core
             {
                 CatalogBattleUnit lost = battle.Get(eventData.TargetId);
                 if (lost != null && lost.Team == CatalogTeam.Ally)
-                { FirstLostFormId = lost.FormId; FirstLossAt = battle.Time; FirstLostWasRanged = lost.Range > 2.1f; }
+                { FirstLostFormId = lost.FormId; FirstLostUnitId = lost.Id; FirstLossAt = battle.Time; FirstLostWasRanged = lost.Range > 2.1f; }
             }
             if (eventData.Amount <= 0f) return;
             AllyContribution source;

@@ -1,0 +1,45 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v0.68 실기기·빌드 검증</title><style>*{box-sizing:border-box}body{margin:0;background:#121923;color:#e4e8e8;font:16px/1.8 'Malgun Gothic',sans-serif;word-break:keep-all;overflow-wrap:anywhere}main{max-width:1220px;margin:auto;padding:32px}h1{font-size:30px}h2{margin-top:36px;padding-top:20px;border-top:1px solid #43515a;color:#eccd88}a{color:#99c9ed}table{border-collapse:collapse;width:100%}td,th{border:1px solid #43515a;padding:12px;text-align:left;vertical-align:top}th{background:#26323d}img,video{max-width:100%;height:auto}code{color:#eed19a}@media(max-width:720px){main{padding:18px}table{display:block;overflow-x:auto}td,th{min-width:150px}}
+img{max-width:100%;height:auto}table{width:100%}main{max-width:1120px;margin:auto}
+img{max-width:100%;height:auto}table{width:100%}main{max-width:1120px;margin:auto}pre{overflow:auto}blockquote{border-left:3px solid #c9a66b;padding-left:18px}</style></head><body><main><h1>v0.68 실기기·빌드 검증</h1>
+<p>2026-11-01 · Galaxy Buddy2 / SM-M236L · 2408×1080 가로 화면</p>
+<h2>최종 빌드</h2>
+<ul>
+<li>Unity 6000.3.24f1 / Android Development APK.</li>
+<li><code>RetryReviewValidation.ValidateAndBuild</code>: <strong>51 checks PASS</strong>, <code>Build Finished, Result: Success.</code></li>
+<li>APK: <code>unity/Builds/Android/expedition-combat-prototype.apk</code> (301,288,411 bytes).</li>
+<li>SHA-256: <code>0246C1A05D2B8BE9C1FFE097B29155E5D4BFE379FEAC6803A3C594950C2E3AF6</code>.</li>
+<li>이 APK는 개발 검증용이며 스토어 배포 완료를 의미하지 않는다.</li>
+</ul>
+<h2>화면 검사</h2>
+<p>기존 정상 진행 체크포인트로 실제 Core 전투를 재생하고, 결과·기록·재도전 준비를 실제 게임 UI로 표시했다. 저장 쓰기를 막는 명시적 개발용 검증 모드이며, 검증 후 기존 화면 상태를 복구한다.</p>
+<p>18장 캡처:</p>
+<ul>
+<li>15전투 시간 초과, 18·19전투 전멸, 18전투 승리의 결과·기록 8장.</li>
+<li>패배 3종의 첫 이탈 동료 선택·기록 재열기·회복 동료 선택 9장.</li>
+<li>상세 기록이 없는 경우의 안내 1장.</li>
+</ul>
+<p>처음 캡처에서 새 재도전 안내와 기존 지원 범위 설명이 같은 줄에 겹쳤다. 중복 안내를 제거하고 기존 설명의 폭과 기록 버튼을 분리한 뒤 다시 빌드·설치해 확인했다. 동료 이름·하단 버튼·범위 안내·오른쪽 동료 상세에서 해당 겹침과 글자 잘림이 보이지 않는다.</p>
+<h2>실제 터치</h2>
+<p>자동 함수 호출과 별도로 다음 경로를 실제 Android 터치로 확인했다.</p>
+<ol>
+<li>패배 결과의 <strong>전투 기록</strong> 열기.</li>
+<li><strong>출전 4 · 수호 기사</strong> 행 또는 하단 <strong>첫 이탈 동료 배치 보기</strong> 누르기. 두 경로를 각각 확인했다.</li>
+<li>준비 화면에서 해당 유닛의 선택 표시와 지원 범위 확인.</li>
+<li><strong>이전 전투 기록</strong> 다시 열기.</li>
+<li>세 번째 행의 회복 동료 <strong>새벽의 인도자</strong> 선택 → 해당 지원 범위 표시.</li>
+</ol>
+<p>최종 빠른 선택 버튼 경유 로그:</p>
+<pre><code class="language-text">15:46:52 RETRY_AUDIT_OPEN_READY
+15:46:54 RETRY_AUDIT_FOCUS_READY
+15:46:55 RETRY_AUDIT_REOPEN_READY
+15:47:22 RETRY_AUDIT_SECOND_READY
+15:47:23 RETRY_AUDIT_TOUCH_PASS
+</code></pre>
+<p>일반 <strong>같은 전투 재도전</strong> 버튼에서 준비로 넘어가도 기록을 다시 열 수 있는 조건은 Unity 회귀 검사로 확인했다. 유닛 상세와 재료를 소비하는 실제 성장 동작 전체를 이번 터치 경로에서 다시 검사한 것은 아니다.</p>
+<p><img src="screenshots/retry-first.png" alt="실제 터치로 첫 이탈 동료 선택"></p>
+<p><img src="screenshots/retry-support.png" alt="실제 터치로 회복 동료 선택"></p>
+<p><img src="screenshots/duplicate-report.png" alt="같은 직업 두 명을 구분한 기록"></p>
+<h2>데이터 보존</h2>
+<p>검증 전에 기존 계정 저장 2슬롯·손상 보관본의 존재 여부·PlayerPrefs를 백업했다. 종료 후 존재 여부와 내용을 복원하고 <strong>바이트 단위 일치</strong>를 확인했다. 이번 검증의 명시된 임시 체크포인트·캡처·플래그만 정리했고 앱은 종료한 상태다. 새 APK 설치는 유지했다.</p>
+<p>게임 난이도 조정이나 플레이어 저장 상태 변경 없이 UI를 확인했다. 51개 Unity 검사에서는 준비로 넘어갈 때 Phase 외에 골드·남은 기회·편성·난수·되돌리기 기록이 그대로인지 비교했다.</p>
+</main></body></html>

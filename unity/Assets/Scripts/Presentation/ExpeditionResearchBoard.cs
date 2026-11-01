@@ -1,3 +1,4 @@
+using Expedition.Core;
 using UnityEngine;
 
 namespace Expedition.Presentation
@@ -47,8 +48,8 @@ namespace Expedition.Presentation
             Draw(ring, new Rect(Core.x - 49, Core.y - 49, 98, 98), ExpeditionUiTheme.Gold);
             Draw(ring, new Rect(Core.x - 55, Core.y - 55, 110, 110), new Color(.78f, .6f, .33f, .5f));
             ExpeditionUiTheme.DrawEmber(Core, 37);
-            GUI.Label(new Rect(Core.x - 80, Core.y + 57, 160, 27), name, centered);
-            GUI.Label(new Rect(Core.x - 80, Core.y + 84, 160, 25), count + " / " + capacity + " 활성", caption);
+            LocalizedGui.Label(new Rect(Core.x - 80, Core.y + 57, 160, 27), name, centered);
+            LocalizedGui.Label(new Rect(Core.x - 80, Core.y + 84, 160, 25), count + " / " + capacity + CatalogText.Get("text.0528"), caption);
         }
 
         public static void Path(Vector2 from, Vector2 to, Color color, bool learned, bool focused)
@@ -64,15 +65,16 @@ namespace Expedition.Presentation
 
         public static bool Node(Vector2 center, int glyph, int tier, Color color, string title,
             string cost, bool owned, bool available, bool selected, bool recent,
-            GUIStyle label, GUIStyle caption, string lockedHint = "잠김")
+            GUIStyle label, GUIStyle caption, string lockedHint = null)
         {
             EnsureTextures();
+            lockedHint = lockedHint ?? CatalogText.Get("text.0529");
             float radius = tier == 1 ? 27 : 32;
             float hitRadius = radius + 3;
-            bool clicked = GUI.Button(new Rect(center.x - 48, center.y - hitRadius, 96, hitRadius * 2),
+            bool clicked = LocalizedGui.Button(new Rect(center.x - 48, center.y - hitRadius, 96, hitRadius * 2),
                 GUIContent.none, GUIStyle.none);
             // The title and cost are part of the same visible target on a touch screen.
-            clicked |= GUI.Button(new Rect(center.x - 100, center.y + 38, 200, 50), GUIContent.none, GUIStyle.none);
+            clicked |= LocalizedGui.Button(new Rect(center.x - 100, center.y + 38, 200, 50), GUIContent.none, GUIStyle.none);
             Color state = owned ? color : available ? Color.Lerp(color, Color.white, .25f) : new Color(.38f, .4f, .46f);
             if (owned || selected || available)
             {
@@ -96,9 +98,9 @@ namespace Expedition.Presentation
                 Line(check + new Vector2(-4, 0), check + new Vector2(-1, 3), ExpeditionUiTheme.Cream, 2);
                 Line(check + new Vector2(-1, 3), check + new Vector2(5, -4), ExpeditionUiTheme.Cream, 2);
             }
-            GUI.Label(new Rect(center.x - 100, center.y + 38, 200, 26), title, label);
-            GUI.Label(new Rect(center.x - 100, center.y + 64, 200, 24),
-                owned ? "활성" : available ? cost + " · 해금 가능" : cost + " · " + lockedHint, caption);
+            LocalizedGui.Label(new Rect(center.x - 100, center.y + 38, 200, 26), title, label);
+            LocalizedGui.Label(new Rect(center.x - 100, center.y + 64, 200, 24),
+                owned ? CatalogText.Get("text.0530") : available ? cost + CatalogText.Get("text.0531") : cost + " · " + lockedHint, caption);
             return clicked;
         }
 

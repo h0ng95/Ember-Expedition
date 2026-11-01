@@ -1,0 +1,255 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v0.68 · 후반 난이도 비교와 패배 후 재도전 연결</title><style>*{box-sizing:border-box}body{margin:0;background:#121923;color:#e4e8e8;font:16px/1.8 'Malgun Gothic',sans-serif;word-break:keep-all;overflow-wrap:anywhere}main{max-width:1220px;margin:auto;padding:32px}h1{font-size:30px}h2{margin-top:36px;padding-top:20px;border-top:1px solid #43515a;color:#eccd88}a{color:#99c9ed}table{border-collapse:collapse;width:100%}td,th{border:1px solid #43515a;padding:12px;text-align:left;vertical-align:top}th{background:#26323d}img,video{max-width:100%;height:auto}code{color:#eed19a}@media(max-width:720px){main{padding:18px}table{display:block;overflow-x:auto}td,th{min-width:150px}}
+img{max-width:100%;height:auto}table{width:100%}main{max-width:1120px;margin:auto}
+img{max-width:100%;height:auto}table{width:100%}main{max-width:1120px;margin:auto}pre{overflow:auto}blockquote{border-left:3px solid #c9a66b;padding-left:18px}</style></head><body><main><h1>v0.68 · 후반 난이도 비교와 패배 후 재도전 연결</h1>
+<p>2026-11-01 · IGNIS: ASHEN OATH</p>
+<p><strong>전투 기록의 동료를 눌러 준비 화면에서 바로 선택할 수 있게 했다.</strong> 후반은 정상 원정 336회와 별도 동일 투자량 비교로 점검했다. 24·29전투의 압박 완화, 25전투 정원 보스의 시간 제한 부담을 다음 조정 후보로 확인했다. 이번 버전에서 적·유닛·연구 수치와 보상은 변경하지 않았다.</p>
+<h2>패배 기록에서 실제 준비로</h2>
+<ol>
+<li>패배 결과에서 <strong>전투 기록</strong>을 연다.</li>
+<li>동료 이름을 누르면 같은 전투의 준비 화면으로 이동하고 해당 동료를 선택한다. <strong>첫 이탈 동료 배치 보기</strong> 버튼으로도 이동할 수 있다.</li>
+<li>전장에서 선택 표시·공격/지원 범위를 보고 위치를 옮기거나, 오른쪽 <strong>동료 상세</strong>에서 성장·진화 정보를 확인한다. 성장은 기존 재료와 골드를 사용하는 조작을 그대로 따른다.</li>
+<li>준비 화면의 <strong>이전 전투 기록</strong>으로 돌아가 다른 동료도 비교할 수 있다. 결과에서 일반 <strong>같은 전투 재도전</strong> 버튼을 먼저 눌러도 기록을 다시 열 수 있다.</li>
+</ol>
+<p>같은 직업이 두 명 있어도 실제 유닛 ID로 연결한다. 기록에서 선택하거나 다시 읽는 것은 골드·남은 기회·난수 상태·배치·성장을 바꾸지 않으며 전투를 자동 시작하지 않는다. 이미 결과 처리 때 소모한 기회를 다시 차감하지 않는다.</p>
+<p>전투 기록은 이번 앱 실행 중 데이터다. 앱 재실행 뒤 상세 기록이 없거나, 새 원정/새 전투로 넘어갔거나, 남은 기회를 소진했으면 잘못된 재도전 연결을 제공하지 않는다. 재도전 준비 중 재료로 소비되었거나 출전에서 뺀 동료는 이전 기록에서 바로 선택할 수 없다.</p>
+<p><img src="screenshots/retry-report.png" alt="전투 기록에서 동료를 눌러 준비로 이동"></p>
+<p><img src="screenshots/retry-first.png" alt="먼저 쓰러진 수호 기사를 선택한 준비 화면"></p>
+<p><img src="screenshots/retry-support.png" alt="기록에서 회복 동료를 다시 골라 지원 범위를 확인"></p>
+<h2>후반 비교의 범위</h2>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th align="right">규모</th>
+<th>목적</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>정상 규칙 새 원정</td>
+<td align="right"><strong>336회 · 실제 진행 전투 6,253회</strong></td>
+<td>실제 소환·성장·결합·연구 지출과 남은 기회를 사용해 어디까지 가는지 확인</td>
+</tr>
+<tr>
+<td>정상 도달 편성의 격리 재전투</td>
+<td align="right"><strong>3,938회 · 기준 편성 1,004개</strong></td>
+<td>동일 편성으로 이전/다음 적 편성 또는 밀집/분산 배치만 비교</td>
+</tr>
+<tr>
+<td>동일 투자량 편성 비교</td>
+<td align="right"><strong>10,692회</strong></td>
+<td>결합 6종·결합 없는 공격형 3종 × 동료 구성 3종 × 투자량 3단계 × 연구 6경로 × 배치 2종 × 20–30전투</td>
+</tr>
+</tbody></table>
+<p>정상 원정은 시작 편성 4종 × 운용 정책 7종 × 연구 경로 3종 × 성장 우선순위 2종 × 시드 2개다. 68101–68102를 사용했고 65/336개 조건이 완주했다. 같은 시드를 여러 정책이 공유하고 후반 도달 편성은 초중반을 통과한 집단이다. <strong>이 숫자를 일반 플레이어의 승률이나 완주 확률로 해석하면 안 된다.</strong></p>
+<p>동일 투자량 비교는 출전 5명, 소환 재료 23/27/35개, 연구 140G를 맞췄다. 결합형은 최종 진화형보다 재료가 1개 적게 들어 그 차이를 전열 기사의 군기 특성 전수에 사용했다. 원하는 동료를 얻기까지의 무작위 소환 비용이나 남는 대기석 재료까지 같다는 뜻은 아니다. 선택한 진화 분기와 두 배치만 비교했으며 최적 빌드 탐색은 아니다.</p>
+<p>처음 탐색한 7,128회 비교는 낮은 투자량만 포함했고 결합의 남는 재료를 당장 능력이 오르지 않는 성장치에 사용했다. 그 결과는 위 최종 집계에서 제외하고, 실효성 있는 특성 전수와 충분한 투자 단계를 포함한 비교로 대체했다.</p>
+<h2>20–30전투: 순서에 따른 압박</h2>
+<p>아래는 <strong>매 전투에 동일한 972개 조건</strong>을 적용한 통제 비교다. 투자량 세 단계를 섞은 결과이므로 실제로 그 전투에 도달하는 사람의 난이도와는 다르다. 평균 잔여 체력은 전멸한 동료의 0%를 포함한 5명 평균이다.</p>
+<table>
+<thead>
+<tr>
+<th>전투</th>
+<th>유형</th>
+<th align="right">승리 / 972</th>
+<th align="right">시간 초과</th>
+<th align="right">평균 잔여 체력</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>20</td>
+<td>서리 보스</td>
+<td align="right">346</td>
+<td align="right">41</td>
+<td align="right">22.9%</td>
+</tr>
+<tr>
+<td>21</td>
+<td>정원 일반</td>
+<td align="right">972</td>
+<td align="right">0</td>
+<td align="right">92.6%</td>
+</tr>
+<tr>
+<td>22</td>
+<td>정원 일반</td>
+<td align="right">946</td>
+<td align="right">0</td>
+<td align="right">76.7%</td>
+</tr>
+<tr>
+<td>23</td>
+<td>정원 일반</td>
+<td align="right">601</td>
+<td align="right">0</td>
+<td align="right">40.9%</td>
+</tr>
+<tr>
+<td>24</td>
+<td>정원 정예</td>
+<td align="right">722</td>
+<td align="right">2</td>
+<td align="right">55.7%</td>
+</tr>
+<tr>
+<td>25</td>
+<td>정원 보스</td>
+<td align="right">197</td>
+<td align="right">134</td>
+<td align="right">11.4%</td>
+</tr>
+<tr>
+<td>26</td>
+<td>왕궁 일반</td>
+<td align="right">972</td>
+<td align="right">0</td>
+<td align="right">87.5%</td>
+</tr>
+<tr>
+<td>27</td>
+<td>왕궁 일반</td>
+<td align="right">850</td>
+<td align="right">0</td>
+<td align="right">65.2%</td>
+</tr>
+<tr>
+<td>28</td>
+<td>왕궁 일반</td>
+<td align="right">416</td>
+<td align="right">0</td>
+<td align="right">29.6%</td>
+</tr>
+<tr>
+<td>29</td>
+<td>왕궁 정예</td>
+<td align="right">511</td>
+<td align="right">4</td>
+<td align="right">39.6%</td>
+</tr>
+<tr>
+<td>30</td>
+<td>마지막 용</td>
+<td align="right">262</td>
+<td align="right">65</td>
+<td align="right">20.8%</td>
+</tr>
+</tbody></table>
+<p><strong>21·26전투의 완화는 보스 직후 새 지역의 첫 전투라는 역할을 고려해야 한다.</strong> 매 전투가 앞 전투보다 무조건 더 어려워야 하는 것은 아니다. 반면 보스를 앞둔 정예전인 24·29전투가 직전 일반전보다 느슨해지는 부분은 우선 조정할 가치가 있다.</p>
+<ul>
+<li><strong>23 → 24:</strong> 동일 972조건에서 패배→승리 173개, 승리→패배 52개. 평균 잔여 체력도 14.7%p 늘었다.</li>
+<li><strong>28 → 29:</strong> 패배→승리 114개, 승리→패배 19개. 평균 잔여 체력 10.1%p 증가.</li>
+<li>편성 정의를 보면 일반전의 <strong>전열 3 + 원거리 3</strong>에서 정예전은 <strong>정예 1 + 전열 2 + 원거리 2</strong>로 바뀐다. 원거리 한 명이 줄면서 지속 압박이 낮아지는 것이 원인 후보다. 아직 이 요소 하나만 바꾼 인과 비교는 하지 않았으므로 단독 원인으로 확정하지 않는다.</li>
+</ul>
+<p>정상 도달 편성에서도 체력 기준의 완화가 보였다. 24전투 도달 편성 94개를 그대로 23전투와 비교하면 평균 잔여 체력이 60.8% → 77.2%, 29전투 도달 편성 80개를 28전투와 비교하면 43.6% → 64.1%였다. 다만 승리 수는 각각 94→92, 80→74로 줄어든다. <strong>평균적으로 여유가 늘어도 일부 편성에는 정예가 더 위험하다.</strong> 따라서 모든 결과를 한 방향의 단순 난이도 상승/하락으로 요약하지 않는다.</p>
+<h2>25전투: 정원 보스의 시간 제한 부담</h2>
+<p>충분한 투자 단계인 재료 35개 조건 324개만 보면:</p>
+<table>
+<thead>
+<tr>
+<th>같은 편성·투자량</th>
+<th align="right">승리 / 324</th>
+<th align="right">시간 초과</th>
+<th align="right">평균 잔여 체력</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>25 정원 보스</td>
+<td align="right">175</td>
+<td align="right">57</td>
+<td align="right">25.2%</td>
+</tr>
+<tr>
+<td>30 마지막 용</td>
+<td align="right">254</td>
+<td align="right">14</td>
+<td align="right">51.6%</td>
+</tr>
+</tbody></table>
+<p>정원 보스가 마지막 보스보다 항상 강하다는 뜻은 아니다. 이 조합·연구·배치 표본에서는 <strong>정원이 더 강한 화력·생존 검사를 요구했다.</strong> 정상 진행에서는 해당 구간에 도달한 편성이 이미 강해서 25전투 첫 시도 85/94승·시간 초과 0회였다. 두 결과의 차이는 도달 집단과 투자 선택의 차이이며 모순이 아니다.</p>
+<p>다음에는 정원 보스의 체력·지원 적·회복/보호 상호작용 중 하나씩 바꿔 시간 초과가 줄어드는지 확인해야 한다. 첫 비교만 보고 보스 전체를 일괄 약화하거나 제한 시간을 늘리지 않았다.</p>
+<h2>특정 결합이나 연구만 정답인가</h2>
+<p><strong>현재 표본에서 유일한 필수 결합·연구 경로는 확인되지 않았다. 투자 단계에 따른 편향은 크다.</strong></p>
+<p>재료 27개 조건의 마지막 용은 성가 기수 중심 편성에서만 8/36개 승리가 있었고 다른 8개 중심 편성은 0/36이었다. 재료 23개는 전부 패배했다. 낮은 투자량만 검사했다면 성가 기수가 필수라는 잘못된 결론을 내릴 수 있었다.</p>
+<p>재료 35개, 연구 140G 조건에서는 결합 없는 최종 진화 편성을 포함해 전부 승리 사례가 나왔다. 아래 각 행은 동료 구성 3종 × 연구 6경로 × 배치 2종, <strong>36조건</strong>이다.</p>
+<table>
+<thead>
+<tr>
+<th>중심 동료</th>
+<th align="right">25전투 승리 / 36</th>
+<th align="right">30전투 승리 / 36</th>
+<th align="right">30전투 시간 초과</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>황혼 명사수 · F-AR</td>
+<td align="right">18</td>
+<td align="right">29</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>잿불 대마법사 · F-FI</td>
+<td align="right">18</td>
+<td align="right">28</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>서리 감시자 · F-IC</td>
+<td align="right">12</td>
+<td align="right">24</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>잿불 검위 · H-01</td>
+<td align="right">24</td>
+<td align="right">32</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>광휘 성기사 · H-02</td>
+<td align="right">24</td>
+<td align="right">36</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>빙결 추적자 · H-03</td>
+<td align="right">13</td>
+<td align="right">25</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>융해술사 · H-04</td>
+<td align="right">18</td>
+<td align="right">24</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>성가 기수 · H-05</td>
+<td align="right">30</td>
+<td align="right">26</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>원정 유격대장 · H-06</td>
+<td align="right">18</td>
+<td align="right">30</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+<p>성가 기수는 낮은 투자에서 생존을 받쳐 주지만, 충분히 투자한 마지막 용에서는 시간 초과가 10조건 있었다. 광휘 성기사의 36/36 결과 역시 이 표본의 강점이며 전체 상황에서 무조건 최적이라는 증거는 아니다. 보스마다 유리한 역할이 달라지는 점은 살린다.</p>
+<p>재료 35개 조건의 여섯 연구 경로는 마지막 용에서 각각 <strong>38–45/54조건</strong>을 이겼다. 하나의 경로만 승리하는 구조는 아니었다. 지금 검사한 것은 방어/정밀/비전 두 단계와 다른 계열 첫 단계를 섞은 동일 비용 경로다. 모든 노드와 혼합 경로의 우열을 검증한 것은 아니다.</p>
+<h2>적용 범위와 검증</h2>
+<ul>
+<li>전투 수치, 골드, 보상, 소환·결합·연구 규칙은 그대로 <strong>normal-067 / Rules 6 / Run Save 14</strong>다. 기존 점수와 진행 원정의 규칙도 바꾸지 않았다.</li>
+<li>전투 기록 Core 검사 <strong>17개 통과</strong>. 같은 직업 둘 중 실제 첫 이탈 ID를 확인하는 검사를 포함한다.</li>
+<li>Unity 재도전 흐름 <strong>51개 검사 통과</strong>, Android 빌드 성공. 같은 전투 유지, 자원·난수·되돌리기 상태 보존, 중복 선택, 일반 재도전 버튼 경유, 없는 동료·승리·기회 소진·이전 원정 기록 차단을 확인했다.</li>
+<li>Buddy2 화면과 실제 터치 확인 결과는 <a href="device-verification.md">실기기 검증</a>에 기록한다. 초기 확인에서 재도전 문구와 기존 범위 설명이 겹친 부분은 한 줄 설명과 별도 기록 버튼으로 정리했다.</li>
+</ul>
+<p><a href="comparison-summary.json">전체 요약 데이터</a> · <a href="../../tests/LateGamePressure/README.md">재현 방법</a></p>
+<h2>커뮤니티 공개 준비</h2>
+<p><a href="community-posting.md">레딧 게시 방향·게시처 조건·영문 초안</a>을 함께 작성했다. 첫 영상의 구성, r/IndieDev 소개 글, 무료 테스트 모집 글, 국내 커뮤니티 소개와 예상 댓글 답변을 담았다. AI 사용·현재 한국어 UI·개발 중인 상태를 사실대로 설명한다. 실제 글은 게시하지 않았다.</p>
+<h2>다음 조정 순서</h2>
+<ol>
+<li><strong>24·29전투:</strong> 원거리 한 명 추가 또는 정예 압박 보완을 서로 별도 후보로 비교한다. 직전 일반전보다 긴장감이 늘면서 취약한 편성이 갑자기 전멸하지 않는지 본다.</li>
+<li><strong>25전투:</strong> 시간 초과 57조건을 피해·회복·보호 기여도로 나눠, 보스 체력이나 특정 상호작용 하나만 조정하는 후보를 시험한다. 마지막 용과 충분한 투자량에서 다시 비교한다.</li>
+<li><strong>외부 첫 플레이:</strong> 짧은 전투 소개 영상을 준비한 뒤, 읽을 수 있는 언어의 테스트 빌드로 “패배 후 무엇을 바꿀지 이해했는가”를 실제 사람에게 확인한다. 자동 전투 수만 늘리는 것으로 조작 이해도 검증을 대신하지 않는다.</li>
+</ol>
+</main></body></html>

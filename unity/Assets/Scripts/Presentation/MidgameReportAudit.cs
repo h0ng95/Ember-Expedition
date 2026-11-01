@@ -14,7 +14,7 @@ namespace Expedition.Presentation
     public sealed class MidgameReportAudit : MonoBehaviour
     {
         static readonly BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
-        bool manual;
+        bool manual, retry;
         static object Get(object screen, string field) { return typeof(ExpeditionScreen).GetField(field, Hidden).GetValue(screen); }
         static void Set(object screen, string field, object value) { typeof(ExpeditionScreen).GetField(field, Hidden).SetValue(screen, value); }
         static void Modal(object screen, string value)
@@ -24,9 +24,10 @@ namespace Expedition.Presentation
         {
             string flag = Path.Combine(Application.persistentDataPath, "midgame-report-audit.flag");
             if (!File.Exists(flag)) return;
-            bool manual = File.ReadAllText(flag).Trim() == "manual"; File.Delete(flag);
+            string mode=File.ReadAllText(flag).Trim(); File.Delete(flag);
             var go = new GameObject("Explicit midgame report QA"); DontDestroyOnLoad(go);
-            go.AddComponent<MidgameReportAudit>().manual = manual;
+            var audit=go.AddComponent<MidgameReportAudit>(); audit.manual=mode=="manual"||mode=="retry-manual";
+            audit.retry=mode.StartsWith("retry");
         }
         IEnumerator Start()
         {
@@ -36,7 +37,8 @@ namespace Expedition.Presentation
             if (screen == null || !(bool)Get(screen, "startupReady"))
             { Debug.LogError("MIDGAME_AUDIT startup timeout"); Destroy(gameObject); yield break; }
             var saved = new Dictionary<string, object>();
-            foreach (string field in new[] { "run", "home", "modal", "badSave", "storageBlocked", "battleReport", "battleReportRun", "battleReportComplete", "tutorialMask", "lessonMask" })
+            foreach (string field in new[] { "run", "home", "modal", "badSave", "storageBlocked", "battleReport", "battleReportRun", "battleReportComplete", "tutorialMask", "lessonMask",
+                "retryReportRun", "retryReportWave", "selectedId", "preparationSelectionId", "preparationOwner", "preparationForm", "preparationBranch", "previewFinalSkill" })
                 saved[field] = Get(screen, field);
             string directory = Path.Combine(Application.persistentDataPath, "MidgameReportAudit");
             var db = (CatalogDatabase)Get(screen, "database");
@@ -55,6 +57,27 @@ namespace Expedition.Presentation
                     Set(screen, "run", run); Set(screen, "battleReportRun", run); Set(screen, "battleReport", report);
                     Set(screen, "battleReportComplete", true); Modal(screen, "None");
                     yield return null; yield return new WaitForEndOfFrame(); Capture(directory, name + "-result"); captures++;
+                    if (retry && manual)
+                    {
+                        string target=report.FirstLostUnitId;
+                        Debug.Log("RETRY_AUDIT_OPEN_READY"); deadline=Time.realtimeSinceStartup+180;
+                        while(Get(screen,"modal").ToString()!="BattleReport"&&Time.realtimeSinceStartup<deadline)yield return null;
+                        if(Get(screen,"modal").ToString()!="BattleReport")throw new Exception("Retry report opening timed out");
+                        yield return new WaitForEndOfFrame();Capture(directory,"retry-touch-report");
+                        Debug.Log("RETRY_AUDIT_FOCUS_READY");
+                        while(run.Phase!=ExpeditionPhase.Preparation&&Time.realtimeSinceStartup<deadline)yield return null;
+                        if(run.Phase!=ExpeditionPhase.Preparation||(string)Get(screen,"preparationSelectionId")!=target)throw new Exception("Retry focus failed");
+                        yield return new WaitForEndOfFrame();Capture(directory,"retry-touch-first");
+                        Debug.Log("RETRY_AUDIT_REOPEN_READY");
+                        while(Get(screen,"modal").ToString()!="BattleReport"&&Time.realtimeSinceStartup<deadline)yield return null;
+                        if(Get(screen,"modal").ToString()!="BattleReport")throw new Exception("Previous report reopening failed");
+                        Debug.Log("RETRY_AUDIT_SECOND_READY");
+                        while((Get(screen,"modal").ToString()!="None"||(string)Get(screen,"preparationSelectionId")!=report.Allies[2].Id)&&Time.realtimeSinceStartup<deadline)yield return null;
+                        if((string)Get(screen,"preparationSelectionId")!=report.Allies[2].Id)throw new Exception("Second ally selection failed");
+                        yield return new WaitForEndOfFrame();Capture(directory,"retry-touch-support");
+                        File.WriteAllText(Path.Combine(directory,"retry-touch.txt"),"PASS result -> report -> first loss -> previous report -> healer focus");
+                        Debug.Log("RETRY_AUDIT_TOUCH_PASS");break;
+                    }
                     if (manual)
                     {
                         Debug.Log("MIDGAME_AUDIT_TOUCH_READY " + name);
@@ -68,6 +91,15 @@ namespace Expedition.Presentation
                     }
                     Modal(screen, "BattleReport");
                     yield return null; yield return new WaitForEndOfFrame(); Capture(directory, name + "-report"); captures++;
+                    if(retry&&!won)
+                    {
+                        string id=report.FirstLostUnitId??report.Allies[0].Id;
+                        if(!(bool)typeof(ExpeditionScreen).GetMethod("PrepareRetryFor",Hidden).Invoke(screen,new object[]{id}))throw new Exception("Retry focus missing");
+                        yield return null;yield return new WaitForEndOfFrame();Capture(directory,name+"-focus");captures++;
+                        Modal(screen,"BattleReport");yield return null;yield return new WaitForEndOfFrame();Capture(directory,name+"-reopened");captures++;
+                        typeof(ExpeditionScreen).GetMethod("PrepareRetryFor",Hidden).Invoke(screen,new object[]{report.Allies[2].Id});
+                        yield return null;yield return new WaitForEndOfFrame();Capture(directory,name+"-support");captures++;
+                    }
                     Set(screen, "battleReportComplete", false); Modal(screen, "BattleReport");
                     if (name == "legal-15-timeout")
                     { yield return null; yield return new WaitForEndOfFrame(); Capture(directory, "restored-no-evidence"); captures++; }

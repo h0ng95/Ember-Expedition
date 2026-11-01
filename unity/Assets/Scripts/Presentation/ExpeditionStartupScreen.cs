@@ -48,7 +48,7 @@ namespace Expedition.Presentation
             modal = Modal.None;
             error = startupError = null;
             startupCompleted = 0;
-            startupStage = "화면을 준비하고 있습니다";
+            startupStage = CatalogText.Get("text.0798");
             startupLoading = true;
             StartCoroutine(InitializeStartup());
         }
@@ -71,7 +71,7 @@ namespace Expedition.Presentation
 
         void FailStartup(Exception exception)
         {
-            startupError = "원정 자료를 열 수 없습니다: " + exception.Message;
+            startupError = CatalogText.Get("text.0799") + exception.Message;
             startupLoading = false;
             Debug.LogException(exception);
         }
@@ -79,7 +79,7 @@ namespace Expedition.Presentation
         IEnumerator InitializeStartup()
         {
             // This request can run while Unity's native splash is still visible.
-            startupStage = "시작 그림을 읽고 있습니다";
+            startupStage = CatalogText.Get("text.0800");
             ResourceRequest request = StartResource<Texture2D>(SplashPath);
             if (request == null) yield break;
             yield return request;
@@ -87,21 +87,21 @@ namespace Expedition.Presentation
             if (!Application.isEditor)
                 while (!SplashScreen.isFinished) yield return null;
 
-            startupStage = "동료 자료를 읽고 있습니다";
+            startupStage = CatalogText.Get("text.0801");
             request = StartResource<TextAsset>("Content/unit-catalog-v010");
             if (request == null) yield break;
             yield return request;
             if (!CompleteStage(() => {
                 TextAsset content = request.asset as TextAsset;
-                if (content == null) throw new InvalidOperationException("동료 자료를 찾을 수 없습니다.");
+                if (content == null) throw new InvalidOperationException(CatalogText.Get("text.0802"));
                 database = CatalogDatabase.FromJson(content.text);
-                if (database == null) throw new InvalidOperationException("동료 자료 형식을 읽을 수 없습니다.");
+                if (database == null) throw new InvalidOperationException(CatalogText.Get("text.0803"));
             })) yield break;
 
             var backgrounds = new Texture2D[StartupBackgroundPaths.Length];
             for (int i = 0; i < StartupBackgroundPaths.Length; i++)
             {
-                startupStage = "지역 그림을 읽고 있습니다 · " + (i + 1) + "/" + StartupBackgroundPaths.Length;
+                startupStage = CatalogText.Get("text.0804") + (i + 1) + "/" + StartupBackgroundPaths.Length;
                 request = StartResource<Texture2D>(StartupBackgroundPaths[i]);
                 if (request == null) yield break;
                 yield return request;
@@ -111,23 +111,23 @@ namespace Expedition.Presentation
             battlefield = backgrounds[0]; outpost = backgrounds[1]; furnace = backgrounds[2];
             frost = backgrounds[3]; garden = backgrounds[4]; palace = backgrounds[5];
 
-            startupStage = "원정 기록을 확인하고 있습니다";
+            startupStage = CatalogText.Get("text.0805");
             if (!CompleteStage(LoadJournal)) yield break;
             yield return null;
-            startupStage = "성과와 연구를 확인하고 있습니다";
+            startupStage = CatalogText.Get("text.0806");
             if (!CompleteStage(LoadProgress)) yield break;
             yield return null;
-            startupStage = "이전 원정을 확인하고 있습니다";
+            startupStage = CatalogText.Get("text.0807");
             if (!CompleteStage(LoadSave)) yield break;
             yield return null;
-            startupStage = "안내 상태를 확인하고 있습니다";
+            startupStage = CatalogText.Get("text.0808");
             if (!CompleteStage(LoadTutorial)) yield break;
             if (!CompleteStage(LoadLessons)) yield break;
             yield return null;
-            startupStage = "동료 그림을 준비하고 있습니다";
+            startupStage = CatalogText.Get("text.0809");
             if (!CompleteStage(() => art = new CatalogArtView())) yield break;
 
-            startupStage = "준비 완료";
+            startupStage = CatalogText.Get("text.0810");
             startupLoading = false;
             yield return null; // Present the completed state before entering the home screen.
             float completeUntil = Time.unscaledTime + .3f;
@@ -193,8 +193,8 @@ namespace Expedition.Presentation
             if (startupSubtitle == null)
                 startupSubtitle = Style(28, Cream, true, TextAnchor.MiddleLeft);
             DrawIgnisPixels(91, 135, 15);
-            GUI.Label(new Rect(93, 246, 570, 42), "ASHEN OATH", startupSubtitle);
-            GUI.Label(new Rect(94, 297, 535, 42), "잿빛 서약 · 왕국의 불을 찾아", body);
+            LocalizedGui.Label(new Rect(93, 246, 570, 42), "ASHEN OATH", startupSubtitle);
+            LocalizedGui.Label(new Rect(94, 297, 535, 42), CatalogText.Get("text.0811"), body);
             DrawStartupEmbers();
             Rect loadingBar = new Rect(89, 615, 1088, 8);
             Fill(loadingBar, new Color(.29f, .36f, .43f, .75f));
@@ -203,15 +203,15 @@ namespace Expedition.Presentation
                 Fill(new Rect(loadingBar.x, loadingBar.y, completedWidth, loadingBar.height), Gold);
             if (startupError == null)
             {
-                GUI.Label(new Rect(88, 565, 1070, 40), startupStage, heading);
-                GUI.Label(new Rect(88, 640, 1080, 36),
-                    "완료된 준비 " + startupCompleted + " / " + StartupStages, small);
+                LocalizedGui.Label(new Rect(88, 565, 1070, 40), startupStage, heading);
+                LocalizedGui.Label(new Rect(88, 640, 1080, 36),
+                    CatalogText.Get("text.0812") + startupCompleted + " / " + StartupStages, small);
             }
             else
             {
-                GUI.Label(new Rect(88, 558, 1020, 42), "시작 준비가 중단되었습니다", heading);
-                GUI.Label(new Rect(88, 635, 840, 60), startupError, body);
-                if (GUI.Button(new Rect(990, 642, 190, 53), "다시 시도", primary)) BeginStartup();
+                LocalizedGui.Label(new Rect(88, 558, 1020, 42), CatalogText.Get("text.0813"), heading);
+                LocalizedGui.Label(new Rect(88, 635, 840, 60), startupError, body);
+                if (LocalizedGui.Button(new Rect(990, 642, 190, 53), CatalogText.Get("text.0814"), primary)) BeginStartup();
             }
         }
     }

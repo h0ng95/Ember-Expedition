@@ -20,7 +20,11 @@ namespace Expedition.Presentation
             Current = Read(Key) ?? Read(BackupKey) ?? new ExpeditionPreferences();
             loaded = true; Apply();
         }
-        public static void Apply() { AudioListener.volume = Current.SoundVolume; }
+        public static void Apply()
+        {
+            AudioListener.volume = Current.SoundVolume;
+            CatalogText.SetLanguage(CatalogText.ResolveLanguage(Current.Language, Application.systemLanguage.ToString()));
+        }
         public static void Defaults() { Current = new ExpeditionPreferences(); Apply(); }
         public static bool TrySave()
         {

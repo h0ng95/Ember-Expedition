@@ -119,14 +119,15 @@ namespace Expedition.Presentation
         {
             EnsurePreparationArt();
             CatalogMember member = PreparationSelection();
+            Rect caption = new Rect(40, 159, RetryReportActive && HasBattleReport ? 650 : 826, 28);
             if (member == null)
             {
-                GUI.Label(new Rect(40, 159, 826, 28), "동료를 눌러 범위 확인 · 끌어서 배치", rangeCaption);
+                LocalizedGui.Label(caption, CatalogText.Get("text.0490"), rangeCaption);
                 return;
             }
-            GUI.Label(new Rect(40, 159, 826, 28),
-                SelectedSupport(member) == null ? "금색: 기본 공격 사거리 · 끌어서 배치" :
-                "금색: 선택 / 공격   ·   청록: 지원 범위   ·   번호: 동료 목록", rangeCaption);
+            LocalizedGui.Label(caption,
+                SelectedSupport(member) == null ? CatalogText.Get("text.0491") :
+                CatalogText.Get("text.0492"), rangeCaption);
             Rect clip = PreparationLayout.Board;
             Vector2 position = PreparationPosition(member);
             Vector2 center = PreparationLayout.Point(position.x, position.y) - clip.position;
@@ -177,7 +178,7 @@ namespace Expedition.Presentation
                 foreach (string id in run.DeployedIds) { if (id == member.Id) break; index++; }
                 Rect badge = new Rect(foot.x - 10, foot.y + 5, 20, 20);
                 Fill(badge, Panel); supportNumber.normal.textColor = color;
-                GUI.Label(badge, (index + 1).ToString(), supportNumber);
+                LocalizedGui.Label(badge, (index + 1).ToString(), supportNumber);
             }
         }
 

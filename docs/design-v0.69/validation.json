@@ -1,0 +1,23 @@
+{
+  "version": "0.69",
+  "verifiedAt": "2026-11-02",
+  "locales": ["ko", "en"],
+  "translationEntries": 966,
+  "headlessLocalizationChecks": 4772,
+  "pairedLocaleIndependentBattles": 12,
+  "unityChecks": 149,
+  "regressionChecks": {"accountSave": 150, "story": 62, "battleReport": 17, "unitPreview": 1917, "research": 61},
+  "device": "Galaxy Buddy2 / SM-M236L",
+  "displayPixels": [2408, 1080],
+  "uiAudit": {"screenStates": 366, "captures": 39, "measuredTextOverflows": 0, "status": "PASS"},
+  "englishTouchSave": "PASS",
+  "englishProcessRestart": "PASS",
+  "originalSaveAndPreferencesRestoredByteForByte": true,
+  "apkSha256": "311F161A4F8F711B17D183F00864A5519B7E0B2D49DFFACBB9C15805EC4F5E48",
+  "balanceRules": "normal-067 / Rules 6 / Run Save 14",
+  "limitations": [
+    "UI audit uses synthetic presentation fixtures and is not a balance test.",
+    "Measured text bounds and selected screenshot review do not cover every resolution or state combination.",
+    "Native English copy review and unaided first-player usability sessions remain."
+  ]
+}

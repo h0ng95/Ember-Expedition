@@ -7,15 +7,20 @@ namespace Expedition.Core
 {
     public sealed class CatalogForm
     {
-        public readonly string Id, Name, Tier, Family, InnateTrait, Description;
+        public readonly string Id, InnateTrait;
+        readonly string sourceName, sourceTier, sourceFamily, sourceDescription;
+        public string Name { get { return CatalogText.Resolve(sourceName); } }
+        public string Tier { get { return CatalogText.Resolve(sourceTier); } }
+        public string Family { get { return CatalogText.Resolve(sourceFamily); } }
+        public string Description { get { return CatalogText.Resolve(sourceDescription); } }
         public readonly float Hp, Power, Defense, AttackInterval, Range, MoveSpeed;
 
         internal CatalogForm(Dictionary<string, string> fields)
         {
-            Id = Text(fields, "id"); Name = Text(fields, "name"); Tier = Text(fields, "tier");
-            Family = Text(fields, "family"); InnateTrait = Text(fields, "innateTrait");
+            Id = Text(fields, "id"); sourceName = Text(fields, "name"); sourceTier = Text(fields, "tier");
+            sourceFamily = Text(fields, "family"); InnateTrait = Text(fields, "innateTrait");
             string description;
-            Description = fields.TryGetValue("description", out description) ? description : null;
+            sourceDescription = fields.TryGetValue("description", out description) ? description : null;
             Hp = Number(fields, "hp"); Power = Number(fields, "power");
             Defense = Number(fields, "defense"); AttackInterval = Number(fields, "attackInterval");
             Range = Number(fields, "range"); MoveSpeed = Number(fields, "moveSpeed");

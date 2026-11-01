@@ -30,16 +30,16 @@ namespace Expedition.Presentation
         const float GrowthHoverSeconds = .45f;
         static readonly string[] TraitIds = { "T-KN", "T-AR", "T-FI", "T-PR", "T-IC", "T-BA",
             "T-H01", "T-H02", "T-H03", "T-H04", "T-H05", "T-H06" };
-        static readonly string[] TraitNames = { "버팀", "집중", "잔불", "첫 빛", "한기", "서약",
-            "재가르기", "온기", "서리 추적", "열균열", "한마음", "전리품 보급" };
+        static readonly CatalogLocalizedStrings TraitNames = new CatalogLocalizedStrings("text.0580", "text.0581", "text.0582", "text.0583", "text.0584", "text.0585",
+            "text.0586", "text.0587", "text.0588", "text.0589", "text.0590", "text.0591");
         static readonly string[] LegacyBranches = { "tactical", "ember", "frost" };
-        static readonly string[] LegacyBranchNames = { "서약", "화염", "서리" };
+        static readonly CatalogLocalizedStrings LegacyBranchNames = new CatalogLocalizedStrings("text.0585", "text.0592", "text.0593");
         static readonly string[] TacticBranches = { "defense", "precision", "arcana" };
-        static readonly string[] TacticBranchNames = { "방어", "정밀", "술식" };
+        static readonly CatalogLocalizedStrings TacticBranchNames = new CatalogLocalizedStrings("text.0594", "text.0595", "text.0596");
         static readonly string[] FormationIds = { "standard", "tactical", "ember", "frost" };
-        static readonly string[] FormationNames = { "기본", "서약", "화염", "서리" };
-        static readonly string[] FormationUnits = { "기사 · 궁수 · 사제", "기사 · 기수 · 사제",
-            "기사 · 화염술사 · 사제", "기사 · 서리술사 · 사제" };
+        static readonly CatalogLocalizedStrings FormationNames = new CatalogLocalizedStrings("text.0597", "text.0585", "text.0592", "text.0593");
+        static readonly CatalogLocalizedStrings FormationUnits = new CatalogLocalizedStrings("text.0598", "text.0599",
+            "text.0600", "text.0601");
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
             Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter }
@@ -74,6 +74,7 @@ namespace Expedition.Presentation
         int benchPage, choosePage, combinationPage, pointerFingerId;
         Modal modal;
         GrowthAction pendingAction;
+        int presentationLanguageRevision = -1;
 
         void Awake()
         {
@@ -102,6 +103,7 @@ namespace Expedition.Presentation
             if (font != null) Destroy(font);
             ExpeditionUiTheme.Release();
             ExpeditionResearchBoard.Release();
+            LocalizedGui.ClearCache();
         }
         void OnApplicationPause(bool paused) { if (paused) { CancelPointer(); GamePreferences.TrySave(); Save(); } }
         void OnApplicationFocus(bool focused) { if (!focused) CancelPointer(); }
@@ -116,9 +118,9 @@ namespace Expedition.Presentation
             try
             {
                 string json = loadedAccount != null ? JsonUtility.ToJson(loadedAccount.Run) : PlayerPrefs.GetString(SaveKey, "");
-                if (string.IsNullOrEmpty(json)) throw new InvalidOperationException("빈 저장 내용");
+                if (string.IsNullOrEmpty(json)) throw new InvalidOperationException(CatalogText.Get("text.0602"));
                 ExpeditionRunSave state = JsonUtility.FromJson<ExpeditionRunSave>(json);
-                if (state == null) throw new InvalidOperationException("저장 형식을 읽을 수 없음");
+                if (state == null) throw new InvalidOperationException(CatalogText.Get("text.0603"));
                 run = ExpeditionRun.Restore(database, state);
                 playtest.Begin(run, null);
                 ObserveJournal();
@@ -128,7 +130,7 @@ namespace Expedition.Presentation
             {
                 badSave = true;
                 run = null;
-                error = "이전 원정 저장을 읽을 수 없습니다. 새 원정을 선택하면 확인 후 다시 시작합니다. (" +
+                error = CatalogText.Get("text.0604") +
                     exception.Message + ")";
             }
         }
@@ -147,7 +149,7 @@ namespace Expedition.Presentation
                 PersistAccount();
                 playtest.Record(diagnosticAction, run, detail, battleSeconds);
             }
-            catch (Exception exception) { Notice("저장하지 못했습니다: " + exception.Message); }
+            catch (Exception exception) { Notice(CatalogText.Get("text.0605") + exception.Message); }
             finally { savingAccount = false; }
         }
 
@@ -165,7 +167,7 @@ namespace Expedition.Presentation
                 if (state == null || state.Version != 1 || state.UnlockedIds == null) throw new InvalidDataException("Invalid story save.");
                 journal = ExpeditionJournal.Restore(state);
             }
-            catch (Exception) { storageBlocked = badProgress = true; error = "이야기 기록을 읽지 못했습니다. 기존 기록을 보관했습니다."; }
+            catch (Exception) { storageBlocked = badProgress = true; error = CatalogText.Get("text.0606"); }
         }
 
         void ObserveJournal()
@@ -175,7 +177,7 @@ namespace Expedition.Presentation
             {
                 if (journal.Observe(run)) journalDirty = true;
             }
-            catch (Exception exception) { Notice("원정 기록을 저장하지 못했습니다: " + exception.Message); }
+            catch (Exception exception) { Notice(CatalogText.Get("text.0607") + exception.Message); }
         }
 
         void LoadProgress()
@@ -187,14 +189,14 @@ namespace Expedition.Presentation
             try
             {
                 string json = PlayerPrefs.GetString(ProgressSaveKey, "");
-                if (string.IsNullOrEmpty(json)) throw new InvalidOperationException("빈 성과 기록");
+                if (string.IsNullOrEmpty(json)) throw new InvalidOperationException(CatalogText.Get("text.0608"));
                 progress = ExpeditionProgress.Restore(JsonUtility.FromJson<ExpeditionProgressSave>(json));
             }
             catch (Exception)
             {
                 badProgress = true;
                 storageBlocked = true;
-                error = "성과 기록을 읽지 못했습니다. 기존 기록을 보관했습니다.";
+                error = CatalogText.Get("text.0609");
                 progress = ExpeditionProgress.New();
             }
         }
@@ -206,7 +208,7 @@ namespace Expedition.Presentation
             {
                 if (progress.Observe(run)) progressDirty = true;
             }
-            catch (Exception exception) { Notice("원정 성과를 저장하지 못했습니다: " + exception.Message); }
+            catch (Exception exception) { Notice(CatalogText.Get("text.0610") + exception.Message); }
         }
 
         void WriteProgress()
@@ -218,7 +220,7 @@ namespace Expedition.Presentation
         void NewRun()
         {
             if (!startupReady) return;
-            if (storageBlocked) { Notice("기존 기록 복구가 필요해 새 원정을 시작할 수 없습니다."); return; }
+            if (storageBlocked) { Notice(CatalogText.Get("text.0611")); return; }
             ExpeditionRun previousRun = run;
             bool showOpening = journal != null && !journal.IsUnlocked("forest");
             ExpeditionHistorySave previousHistory = recordHistory.Capture();
@@ -253,7 +255,7 @@ namespace Expedition.Presentation
             {
                 run = previousRun;
                 recordHistory = ExpeditionHistory.Restore(database, previousHistory);
-                Notice("새 원정을 시작하지 못했습니다: " + exception.Message);
+                Notice(CatalogText.Get("text.0612") + exception.Message);
             }
         }
 
@@ -291,6 +293,13 @@ namespace Expedition.Presentation
 
         void OnGUI()
         {
+            if (presentationLanguageRevision != CatalogText.Revision)
+            {
+                presentationLanguageRevision = CatalogText.Revision;
+                infoKey = researchDetailId = null;
+                infoScroll = researchDetailScroll = journalBodyScroll = Vector2.zero;
+                toast = null;
+            }
             Rect safe = Screen.safeArea;
             float scale = Mathf.Max(.01f, Mathf.Min(safe.width / Width, safe.height / Height));
             viewport = new Rect(safe.x + (safe.width - Width * scale) * .5f,
@@ -321,7 +330,7 @@ namespace Expedition.Presentation
             if (toast != null && Time.unscaledTime < toastUntil)
             {
                 ExpeditionUiTheme.PanelBox(new Rect(340, 660, 600, 48), true);
-                GUI.Label(new Rect(350, 667, 580, 34), toast, centered);
+                LocalizedGui.Label(new Rect(350, 667, 580, 34), toast, centered);
             }
             if (GrowthRevealActive) DrawGrowthReveal();
             else { DrawTutorialSpotlight(); DrawLessonSpotlight(); }
@@ -333,11 +342,11 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.DrawBackdrop(new Rect(0, 90, Width, 630), battlefield);
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 90));
             ExpeditionUiTheme.DrawEmber(new Vector2(53, 46), 30);
-            GUI.Label(new Rect(84, 6, 875, 60), "이그니스: 잿빛 서약", title);
-            GUI.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
-            if (GUI.Button(new Rect(851, 20, 128, 49), "설정", button)) modal = Modal.Settings;
-            if (GUI.Button(new Rect(995, 20, 260, 49),
-                "이야기  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
+            LocalizedGui.Label(new Rect(84, 6, 875, 60), CatalogText.Get("text.0613"), title);
+            LocalizedGui.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
+            if (LocalizedGui.Button(new Rect(851, 20, 128, 49), CatalogText.Get("text.0363"), button)) modal = Modal.Settings;
+            if (LocalizedGui.Button(new Rect(995, 20, 260, 49),
+                CatalogText.Get("text.0614") + (journal == null ? 1 : journal.UnlockedCount) + "/" +
                 ExpeditionStory.Entries.Count, button))
                 OpenJournal(null);
             bool hasNotice = error != null || legacySave || run != null && run.UsesPreviousBalance;
@@ -346,67 +355,67 @@ namespace Expedition.Presentation
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             ExpeditionUiTheme.Window(panel);
             bool replay = journal != null && journal.IsUnlocked("palace-clear");
-            GUI.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
-            GUI.Label(new Rect(content.x, content.y + 32, content.width, 44),
-                replay ? "원정의 기록을 다시 펼치다" : "왕국의 불을 찾는 서약", heading);
-            if (GUI.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
-                "개인 기록", button))
+            LocalizedGui.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
+            LocalizedGui.Label(new Rect(content.x, content.y + 32, content.width - 448, 44),
+                replay ? CatalogText.Get("text.0615") : CatalogText.Get("text.0616"), heading);
+            if (LocalizedGui.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
+                CatalogText.Get("text.0497"), button))
             { recordsPage = 0; selectedRecord = null; modal = Modal.Records; }
-            if (GUI.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), "원정 성과", button))
+            if (LocalizedGui.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), CatalogText.Get("text.0617"), button))
                 modal = Modal.Progress;
             ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
-            GUI.Label(new Rect(content.x, content.y + 104, content.width, 64),
+            LocalizedGui.Label(new Rect(content.x, content.y + 104, content.width, 64),
                 replay ? ExpeditionStory.ReplayBrief : ExpeditionStory.HomeBrief, dialogBody);
             if (run != null)
-                GUI.Label(new Rect(content.x, content.y + 176, content.width, 33),
-                    "이어할 원정  ·  " + DifficultyLabel(run.Difficulty) + "  ·  전투 " + run.Wave +
+                LocalizedGui.Label(new Rect(content.x, content.y + 176, content.width, 33),
+                    CatalogText.Get("text.0618") + DifficultyLabel(run.Difficulty) + CatalogText.Get("text.0619") + run.Wave +
                     " / " + run.ContentWaves, hint);
             if (hasNotice)
-                GUI.Label(new Rect(content.x, footer.y - 88, content.width, 56),
-                    error ?? "이전 원정은 기존 밸런스로 이어하며, 점수도 이전 규칙 기록으로 남깁니다.\n새 원정부터 최신 밸런스를 적용하고 연구 0개로 시작합니다.", hint);
+                LocalizedGui.Label(new Rect(content.x, footer.y - 88, content.width, 56),
+                    error ?? CatalogText.Get("text.0620"), hint);
             ExpeditionUiTheme.FooterRule(panel);
             GUI.enabled = modal == Modal.None && !storageBlocked;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "새 원정", primary))
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), CatalogText.Get("text.0621"), primary))
             { selectedFormationId = "standard"; modal = Modal.NewRun; }
             GUI.enabled = modal == Modal.None && run != null;
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), "이어하기", button))
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), CatalogText.Get("text.0622"), button))
             { home = false; modal = Modal.None; playtest.Record("continue_run", run); }
             GUI.enabled = modal == Modal.None;
-            if (GUI.Button(new Rect(1020, 650, 225, 48), "개발용 전투 시험실", button)) OpenLab();
+            if (LocalizedGui.Button(new Rect(1020, 650, 225, 48), CatalogText.Get("text.0623"), button)) OpenLab();
             DrawPlaytestButton();
             if (badProgress)
             {
                 ExpeditionUiTheme.PanelBox(new Rect(155, 590, 970, 48));
-                GUI.Label(new Rect(187, 598, 900, 36),
-                    "성과 기록을 읽지 못했습니다. 원본을 보관하고 성과 갱신을 멈췄습니다.", small);
+                LocalizedGui.Label(new Rect(187, 598, 900, 36),
+                    CatalogText.Get("text.0624"), small);
             }
         }
 
         static string DifficultyLabel(ExpeditionDifficulty difficulty)
         {
-            return difficulty == ExpeditionDifficulty.Hard ? "고난도" : "일반";
+            return difficulty == ExpeditionDifficulty.Hard ? CatalogText.Get("text.0625") : CatalogText.Get("text.0626");
         }
 
         void DrawHeader(string phase)
         {
-            if (run.UsesPreviousBalance) phase = run.UsesLegacyRules ? "이전 규칙 원정" :
-                CatalogBalance.Version(run.RulesVersion).Replace("normal-0", "v0.") + " 원정";
+            if (run.UsesPreviousBalance) phase = run.UsesLegacyRules ? CatalogText.Get("text.0627") :
+                CatalogBalance.Version(run.RulesVersion).Replace("normal-0", "v0.") + CatalogText.Get("text.0628");
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 80));
-            if (GUI.Button(new Rect(18, 15, 90, 50), "거점", button)) { home = true; modal = Modal.None; Save("return_home"); }
+            if (LocalizedGui.Button(new Rect(18, 15, 90, 50), CatalogText.Get("text.0629"), button)) { home = true; modal = Modal.None; Save("return_home"); }
             ExpeditionUiTheme.DrawEmber(new Vector2(146, 40), 23);
-            GUI.Label(new Rect(168, 10, 312, 58), "잿빛 서약", title);
-            GUI.Label(new Rect(505, 5, 365, 34), DifficultyLabel(run.Difficulty) + " · 전투 " +
+            LocalizedGui.Label(new Rect(168, 10, 312, 58), CatalogText.Get("text.0630"), title);
+            LocalizedGui.Label(new Rect(505, 5, 365, 34), DifficultyLabel(run.Difficulty) + CatalogText.Get("text.0522") +
                 run.Wave + " / " + run.ContentWaves, body);
-            GUI.Label(new Rect(505, 41, 365, 28), "남은 기회 " + run.Lantern + " / 3", small);
-            GUI.Label(new Rect(880, 6, 170, 38), run.Gold + " G", heading);
+            LocalizedGui.Label(new Rect(505, 41, 365, 28), CatalogText.Get("text.0631") + run.Lantern + " / 3", small);
+            LocalizedGui.Label(new Rect(880, 6, 170, 38), run.Gold + " G", heading);
             if (!run.HasEnded)
-                GUI.Label(new Rect(880, 44, 170, 28), run.UsesLegacyRules ? "이전 규칙" : "현재 " + run.Score.ToString("N0") + "점", small);
+                LocalizedGui.Label(new Rect(880, 44, 170, 28), run.UsesLegacyRules ? CatalogText.Get("text.0632") : CatalogText.Get("text.0633") + run.Score.ToString("N0") + CatalogText.Get("text.0508"), small);
             if (run.Phase == ExpeditionPhase.Preparation)
             {
-                if (GUI.Button(PreparationLayout.Research, "원정 연구 " + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
+                if (LocalizedGui.Button(PreparationLayout.Research, CatalogText.Get("text.0634") + run.TacticIds.Count + "/" + CatalogResearch.MaxNodes, button))
                 { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
             }
-            else { ExpeditionUiTheme.PanelBox(new Rect(1070,17,188,43)); GUI.Label(new Rect(1080,21,168,33),phase,centered); }
+            else { ExpeditionUiTheme.PanelBox(new Rect(1070,17,188,43)); LocalizedGui.Label(new Rect(1080,21,168,33),phase,centered); }
         }
 
         void DrawPreparation() { DrawPreparationBoard(); }
@@ -415,39 +424,39 @@ namespace Expedition.Presentation
         {
             switch (run.Wave)
             {
-                case 1: return "기사를 앞에, 원거리·지원 동료를 뒤에 두세요.\n소환한 동료는 대기석에 합류합니다.";
-                case 2: return "가시등 짐승은 약해진 동료를 노립니다.\n전열 뒤에 원거리·지원 동료를 배치하세요.";
-                case 3: return "측면의 가시등이 후열을 노립니다.\n동료를 늘리거나 성장 2로 첫 진화를 하세요.";
-                case 4: return "정예 뿔짐승이 전열로 돌진합니다.\n기사가 버티는 동안 후열에서 공격하세요.";
-                case 5: return "직선 돌진 · 체력 절반부터 간격 단축\n전열과 후열을 같은 선에 겹치지 마세요.";
-                case 6: return "돌편 보병 뒤 석궁병이 약한 동료를 노립니다.\n새 구간의 첫 전투에서 진형을 점검하세요.";
-                case 7: return "석궁병 둘이 약한 동료를 집중 공격합니다.\n전열을 키우고 후열이 노출되지 않게 하세요.";
-                case 8: return "보병 셋과 석궁병 둘이 함께 압박합니다.\n동료의 진화·전승 상태를 점검하세요.";
-                case 9: return "갑주 석상이 돌진하고 석궁병이 약한 동료를 노립니다.\n전열과 후열을 벌리고 성장한 동료를 배치하세요.";
-                case 10: return "범위 내려찍기 · 체력 40%부터 후속파\n탱커 주변에 동료를 밀집시키지 마세요.";
-                case 11: return "잿재 채굴병은 돌진 없이 전열을 압박합니다.\n뒤의 불씨 투척병부터 견제하세요.";
-                case 12: return "불씨 투척병 둘이 약한 동료를 노립니다.\n후열을 전열에서 너무 멀리 두지 마세요.";
-                case 13: return "채굴병 셋이 전열을 묶고 투척병이 후열을 노립니다.\n보호와 회복을 나누어 배치하세요.";
-                case 14: return "감독관은 가까운 적 둘에게 4초 보호막을 줍니다.\n보호막은 7초마다 다시 생깁니다.";
-                case 15: return "폭발 화상 3초 · 체력 45%부터 후속 불씨파\n공격 동료의 성장·진화도 확인하세요. 제한 75초.";
-                case 16: return "서리 근위병이 전열을 막고 시종이 후열을 노립니다.\n회복 동료가 너무 멀리 떨어지지 않게 하세요.";
-                case 17: return "근위병 셋이 앞줄을 압박합니다.\n후열의 공격 각도와 전열의 생존을 점검하세요.";
-                case 18: return "시종 셋이 약한 동료를 함께 노립니다.\n보호와 회복을 나누어 배치하세요.";
-                case 19: return "감시자가 가까운 적 둘에게 보호막을 줍니다.\n전열이 회복·보호 범위 안에 드는지 확인하세요.";
+                case 1: return CatalogText.Get("text.0635");
+                case 2: return CatalogText.Get("text.0636");
+                case 3: return CatalogText.Get("text.0637");
+                case 4: return CatalogText.Get("text.0638");
+                case 5: return CatalogText.Get("text.0639");
+                case 6: return CatalogText.Get("text.0640");
+                case 7: return CatalogText.Get("text.0641");
+                case 8: return CatalogText.Get("text.0642");
+                case 9: return CatalogText.Get("text.0643");
+                case 10: return CatalogText.Get("text.0644");
+                case 11: return CatalogText.Get("text.0645");
+                case 12: return CatalogText.Get("text.0646");
+                case 13: return CatalogText.Get("text.0647");
+                case 14: return CatalogText.Get("text.0648");
+                case 15: return CatalogText.Get("text.0649");
+                case 16: return CatalogText.Get("text.0650");
+                case 17: return CatalogText.Get("text.0651");
+                case 18: return CatalogText.Get("text.0652");
+                case 19: return CatalogText.Get("text.0653");
                 case 20: return run.RulesVersion >= 3 ?
-                    "후열 다음 앞열에 빙결 원형 공격이 이어집니다.\n동료 간격을 벌리세요 · 각 공격 전에 원이 표시됩니다." :
-                    "서리 원형 공격은 먼 동료 위치를 예고합니다.\n맞은 동료는 잠시 얼어 공격과 이동이 멈춥니다.";
-                case 21: return "가시 근위병이 전열을 지킵니다.\n독침 사냥꾼의 사격을 받을 후열을 살피세요.";
-                case 22: return "독침 사냥꾼은 세 번째 명중에 독을 남깁니다.\n중독된 동료는 회복 효과가 줄어듭니다.";
-                case 23: return "사냥꾼의 독과 근위병의 전열 압박이 겹칩니다.\n해로운 상태가 걸린 동료의 체력을 살피세요.";
-                case 24: return "황혼정원사는 가까운 호위 둘에게 보호막을 줍니다.\n전열을 지원 범위 안에 두고 장기전에 대비하세요.";
-                case 25: return "먼 동료 최대 셋 발밑에 가시가 차례로 솟습니다.\n후열을 분산 배치하세요 · 중독 중 회복량 −35%.";
-                case 26: return "왕궁 근위병이 전열을 지킵니다.\n뒤의 석궁병에게 약한 동료가 노출되지 않게 하세요.";
-                case 27: return "왕궁 석궁병은 약해진 동료를 노립니다.\n전열과 후열의 거리를 다시 점검하세요.";
-                case 28: return "근위병과 석궁병이 함께 압박합니다.\n성장한 동료의 전승과 배치를 살펴보세요.";
-                case 29: return "집행관이 가까운 호위를 반복해서 보호합니다.\n전열을 지원 범위 안에 두고 석궁 사격을 버티세요.";
-                case 30: return "긴 예고 · 연속 불기둥\n원형 예고 · 공중 브레스\n착지 · 용의 발밑 충격파";
-                default: return "승리하면 골드를 얻습니다.\n소환한 동료는 대기석에 합류합니다.";
+                    CatalogText.Get("text.0654") :
+                    CatalogText.Get("text.0655");
+                case 21: return CatalogText.Get("text.0656");
+                case 22: return CatalogText.Get("text.0657");
+                case 23: return CatalogText.Get("text.0658");
+                case 24: return CatalogText.Get("text.0659");
+                case 25: return CatalogText.Get("text.0660");
+                case 26: return CatalogText.Get("text.0661");
+                case 27: return CatalogText.Get("text.0662");
+                case 28: return CatalogText.Get("text.0663");
+                case 29: return CatalogText.Get("text.0664");
+                case 30: return CatalogText.Get("text.0665");
+                default: return CatalogText.Get("text.0666");
             }
         }
 
@@ -461,25 +470,25 @@ namespace Expedition.Presentation
             Fill(new Rect(sprite.center.x - 28, sprite.yMax - 10, 56, 7), new Color(.02f, .025f, .035f, .75f));
             if (art != null) art.Draw(member.FormId, sprite, (int)(Time.unscaledTime * 5f) % 4);
             string label = database.Get(member.FormId).Name;
-            if (name.width > 0) GUI.Label(name, label, centered);
+            if (name.width > 0) LocalizedGui.Label(name, label, centered);
             if (member.MaterialLocked)
             {
                 Fill(new Rect(sprite.x, sprite.y + 2, 54, 24), new Color(.13f, .14f, .17f, .94f));
-                GUI.Label(new Rect(sprite.x, sprite.y, 54, 25), "보호", small);
+                LocalizedGui.Label(new Rect(sprite.x, sprite.y, 54, 25), CatalogText.Get("text.0397"), small);
             }
         }
 
         void DrawBattleResume()
         {
-            DrawHeader("전투 대기");
+            DrawHeader(CatalogText.Get("text.0667"));
             Rect panel = new Rect(185, 170, 910, 380);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 218, content.width, 62), run.EncounterName, heading);
-            GUI.Label(new Rect(content.x, 285, content.width, 92),
-                "이전 전투가 중단되었습니다. 같은 편성과 전투 시작 상태로 이어갑니다.", body);
+            LocalizedGui.Label(new Rect(content.x, 218, content.width, 62), run.EncounterName, heading);
+            LocalizedGui.Label(new Rect(content.x, 285, content.width, 92),
+                CatalogText.Get("text.0668"), body);
             ExpeditionUiTheme.FooterRule(panel);
-            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "전투 재개", primary)) StartBattle(true);
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterRect(panel), CatalogText.Get("text.0669"), primary)) StartBattle(true);
         }
 
         void DrawResult()
@@ -490,51 +499,51 @@ namespace Expedition.Presentation
             bool victory = run.Phase == ExpeditionPhase.Completed ||
                 (run.Phase == ExpeditionPhase.Result && run.LastVictory);
             StoryEntry clearStory = run.LastVictory ? ExpeditionStory.BossClear(run.Wave) : null;
-            DrawHeader(run.Phase == ExpeditionPhase.Result ? "전투 결과" : "원정 결과");
+            DrawHeader(run.Phase == ExpeditionPhase.Result ? CatalogText.Get("text.0670") : CatalogText.Get("text.0671"));
             bool failureEvidence = !victory && HasFailureEvidence;
             Rect panel = failureEvidence ? new Rect(175, 112, 930, 520) : new Rect(175, 140, 930, 430);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(failureEvidence ? new Rect(content.x, 140, content.width, 60) : clearStory == null ? new Rect(content.x, 180, content.width, 72) :
+            LocalizedGui.Label(failureEvidence ? new Rect(content.x, 140, content.width, 60) : clearStory == null ? new Rect(content.x, 180, content.width, 72) :
                 new Rect(content.x, 164, content.width, 60),
-                run.Phase == ExpeditionPhase.Completed ? "원정 완료" :
-                run.Phase == ExpeditionPhase.Defeated ? "원정 종료" : victory ? "승리" : "패배", title);
-            string outcome = run.Phase == ExpeditionPhase.Completed ? "이번 원정의 길을 돌파했습니다." :
-                run.Phase == ExpeditionPhase.Defeated ? "이번 원정은 여기서 끝납니다." :
+                run.Phase == ExpeditionPhase.Completed ? CatalogText.Get("text.0672") :
+                run.Phase == ExpeditionPhase.Defeated ? CatalogText.Get("text.0673") : victory ? CatalogText.Get("text.0004") : CatalogText.Get("text.0496"), title);
+            string outcome = run.Phase == ExpeditionPhase.Completed ? CatalogText.Get("text.0674") :
+                run.Phase == ExpeditionPhase.Defeated ? CatalogText.Get("text.0675") :
                 run.Phase == ExpeditionPhase.Result && run.Lantern <= 0 ?
-                "남은 기회를 모두 소진했습니다." : victory ?
+                CatalogText.Get("text.0676") : victory ?
                 (run.Wave == ExpeditionRun.TotalWaves ? ExpeditionStory.CompletionBrief :
-                "다음 길을 준비하세요.") :
-                "남은 기회 −1 · 편성을 바꾸고 같은 전투에 재도전하세요.";
-            GUI.Label(failureEvidence ? new Rect(content.x, 214, content.width, 82) : clearStory == null ? new Rect(content.x, 275, content.width, 92) :
+                CatalogText.Get("text.0677")) :
+                CatalogText.Get("text.0678");
+            LocalizedGui.Label(failureEvidence ? new Rect(content.x, 214, content.width, 82) : clearStory == null ? new Rect(content.x, 275, content.width, 92) :
                 new Rect(content.x, 232, content.width, 68),
-                "승리 " + run.Victories + " / " + ExpeditionRun.TotalWaves + "     남은 기회 " + run.Lantern +
+                CatalogText.Get("text.0679") + run.Victories + " / " + ExpeditionRun.TotalWaves + CatalogText.Get("text.0680") + run.Lantern +
                 "\n" + outcome, body);
             if (clearStory != null)
-                GUI.Label(new Rect(content.x, 306, content.width, 60), clearStory.Excerpt, body);
+                LocalizedGui.Label(new Rect(content.x, 306, content.width, 60), clearStory.Excerpt, body);
             if (failureEvidence) DrawFailureEvidence(new Rect(content.x, 302, content.width, 124));
             string reward = run.LastVictory && run.LastReward > 0 ?
                 "+" + run.LastReward + " G   ·   " + (run.Gold - run.LastReward) + " → " + run.Gold + " G" :
                 run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
-                ExpeditionRun.TotalWaves + "전투 돌파 · 원정 완료" :
-                "이번 전투 보상 0 G   ·   보유 " + run.Gold + " G";
+                ExpeditionRun.TotalWaves + CatalogText.Get("text.0681") :
+                CatalogText.Get("text.0682") + run.Gold + " G";
             float rewardY = failureEvidence ? 444 : clearStory == null ? 370 : 376;
-            GUI.Label(new Rect(content.x, rewardY,
+            LocalizedGui.Label(new Rect(content.x, rewardY,
                 HasBattleReport ? content.width - 210 : content.width, 43), reward, heading);
-            if (HasBattleReport && GUI.Button(new Rect(content.xMax - 195, rewardY, 195, 48), "전투 기록", button))
+            if (HasBattleReport && LocalizedGui.Button(new Rect(content.xMax - 195, rewardY, 195, 48), CatalogText.Get("text.0683"), button))
                 modal = Modal.BattleReport;
             ExpeditionUiTheme.FooterRule(panel);
             if (run.Phase == ExpeditionPhase.Result)
             {
                 Rect footer = ExpeditionUiTheme.FooterRect(panel);
-                if (clearStory != null && GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
-                    "발견한 단서 읽기", button)) OpenJournal(clearStory.Id);
+                if (clearStory != null && LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2),
+                    CatalogText.Get("text.0684"), button)) OpenJournal(clearStory.Id);
                 string next = run.Lantern <= 0 || run.LastVictory && run.Wave == ExpeditionRun.TotalWaves ?
-                    "원정 결과" : run.LastVictory ? "다음 전투 준비  ›" : "같은 전투 재도전  ›";
-                if (GUI.Button(clearStory == null ? footer : ExpeditionUiTheme.FooterButton(footer, 1, 2), next, primary))
-                { if (run.Continue()) { Save("advance"); selectedId = null; } }
+                    CatalogText.Get("text.0671") : run.LastVictory ? CatalogText.Get("text.0685") : CatalogText.Get("text.0686");
+                if (LocalizedGui.Button(clearStory == null ? footer : ExpeditionUiTheme.FooterButton(footer, 1, 2), next, primary))
+                    ContinueResultPreparation();
             }
-            else if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "거점으로", primary)) home = true;
+            else if (LocalizedGui.Button(ExpeditionUiTheme.FooterRect(panel), CatalogText.Get("text.0365"), primary)) home = true;
         }
 
         void DrawModal()
@@ -581,11 +590,11 @@ namespace Expedition.Presentation
             Rect panel = new Rect(128, 66, 1024, 588);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 98, 700, 51),
-                "원정 기록  " + (journal == null ? 1 : journal.UnlockedCount) + "/" +
+            LocalizedGui.Label(new Rect(content.x, 98, 700, 51),
+                CatalogText.Get("text.0687") + (journal == null ? 1 : journal.UnlockedCount) + "/" +
                 ExpeditionStory.Entries.Count, heading);
-            GUI.Label(new Rect(content.x + 2, 137, 680, 21), "F I E L D   J O U R N A L", small);
-            if (GUI.Button(new Rect(content.xMax - 77, 98, 77, 50), "닫기", button))
+            LocalizedGui.Label(new Rect(content.x + 2, 137, 680, 21), "F I E L D   J O U R N A L", small);
+            if (LocalizedGui.Button(new Rect(content.xMax - 77, 98, 77, 50), CatalogText.Get("text.0400"), button))
             { modal = Modal.None; return; }
             ExpeditionUiTheme.PanelBox(new Rect(content.x, 163, 320, 459));
             Rect journalViewport = new Rect(content.x + 10, 170, 300, 443);
@@ -601,17 +610,17 @@ namespace Expedition.Presentation
                 if (entry.Id == selectedStoryId)
                     Fill(new Rect(row.x - 3, row.y - 3, row.width + 6, row.height + 6),
                         new Color(.69f, .51f, .26f, .65f));
-                if (GUI.Button(row, unlocked ? entry.Title : "잠김  ·  기록 " + (i + 1).ToString("00"), button))
+                if (LocalizedGui.Button(row, unlocked ? entry.Title : CatalogText.Get("text.0688") + (i + 1).ToString("00"), button))
                 { selectedStoryId = entry.Id; journalBodyScroll = Vector2.zero; }
             }
             GUI.EndScrollView();
             ExpeditionUiTheme.ParchmentBox(new Rect(496, 163, 624, 459));
             StoryEntry selectedStory = ExpeditionStory.Get(selectedStoryId) ?? ExpeditionStory.Get("intro");
             bool selectedUnlocked = journal != null && journal.IsUnlocked(selectedStory.Id);
-            GUI.Label(new Rect(528, 190, 560, 53), selectedUnlocked ? selectedStory.Title : "아직 발견하지 못한 이야기", journalTitle);
-            GUI.Label(new Rect(529, 243, 559, 34), selectedUnlocked ? "원정대의 기록" : "아직 잠긴 기록", journalStatus);
+            LocalizedGui.Label(new Rect(528, 190, 560, 53), selectedUnlocked ? selectedStory.Title : CatalogText.Get("text.0689"), journalTitle);
+            LocalizedGui.Label(new Rect(529, 243, 559, 34), selectedUnlocked ? CatalogText.Get("text.0690") : CatalogText.Get("text.0691"), journalStatus);
             if (selectedUnlocked && selectedStory.Id == "palace-clear" &&
-                GUI.Button(new Rect(856, 242, 232, 38), "엔딩 다시 보기", button)) { OpenEnding(true); return; }
+                LocalizedGui.Button(new Rect(856, 242, 232, 38), CatalogText.Get("text.0692"), button)) { OpenEnding(true); return; }
             ExpeditionUiTheme.Rule(new Rect(528, 285, 560, 2));
             string text = selectedUnlocked ? selectedStory.Body : StoryUnlockHint(selectedStory.Id);
             Rect readingArea = new Rect(529, 306, 559, 284);
@@ -620,7 +629,7 @@ namespace Expedition.Presentation
             DragJournalPane(2, readingArea, textHeight, ref journalBodyScroll);
             journalBodyScroll = GUI.BeginScrollView(readingArea, journalBodyScroll,
                 new Rect(0, 0, textWidth, textHeight), false, textHeight > readingArea.height);
-            GUI.Label(new Rect(0, 0, textWidth, textHeight), text, journalBody);
+            LocalizedGui.Label(new Rect(0, 0, textWidth, textHeight), text, journalBody);
             GUI.EndScrollView();
         }
 
@@ -658,30 +667,30 @@ namespace Expedition.Presentation
             Rect panel = new Rect(250, 170, 780, 380);
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 202, content.width, 48), "원정 성과", heading);
-            GUI.Label(new Rect(content.x, 248, content.width, 32),
-                "현재 공개 " + ExpeditionRun.TotalWaves + "전투  ·  전체 여정 목표 30전투", hint);
+            LocalizedGui.Label(new Rect(content.x, 202, content.width, 48), CatalogText.Get("text.0617"), heading);
+            LocalizedGui.Label(new Rect(content.x, 248, content.width, 32),
+                CatalogText.Get("text.0693") + ExpeditionRun.TotalWaves + CatalogText.Get("text.0694"), hint);
             ExpeditionUiTheme.Rule(new Rect(content.x, 285, content.width, 2));
-            GUI.Label(new Rect(content.x, 300, content.width, 58), ProgressLine(), body);
+            LocalizedGui.Label(new Rect(content.x, 300, content.width, 58), ProgressLine(), body);
             ExpeditionUiTheme.Rule(new Rect(content.x, 365, content.width, 2));
-            GUI.Label(new Rect(content.x, 378, content.width, 28),
-                "일반 30전투 완료 시 고난도 도전 자격 " +
-                (badProgress ? "확인 불가" : progress != null && progress.HardUnlocked ? "획득" : "미획득") +
-                " · 고난도 전투는 준비 중", small);
+            LocalizedGui.Label(new Rect(content.x, 378, content.width, 28),
+                CatalogText.Get("text.0695") +
+                (badProgress ? CatalogText.Get("text.0696") : progress != null && progress.HardUnlocked ? CatalogText.Get("text.0697") : CatalogText.Get("text.0698")) +
+                CatalogText.Get("text.0699"), small);
             if (badProgress)
-                GUI.Label(new Rect(content.x, 407, content.width, 24),
-                    "성과 저장 오류: 기존 기록을 보관하며 갱신하지 않습니다.", small);
+                LocalizedGui.Label(new Rect(content.x, 407, content.width, 24),
+                    CatalogText.Get("text.0700"), small);
             ExpeditionUiTheme.FooterRule(panel);
-            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "닫기", button)) modal = Modal.None;
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterRect(panel), CatalogText.Get("text.0400"), button)) modal = Modal.None;
         }
 
         string ProgressLine()
         {
-            if (badProgress) return "일반  ·  성과 기록을 읽을 수 없습니다.";
+            if (badProgress) return CatalogText.Get("text.0701");
             int best = progress == null ? 0 : progress.BestWave;
             int completed = progress == null ? 0 : progress.CompletedWaves;
-            return "일반  ·  최고 격파 " + best + "전투" +
-                "\n구간 완료 " + completed + " / " + ExpeditionRun.ReleaseWaves + "전투";
+            return CatalogText.Get("text.0702") + best + CatalogText.Get("text.0703") +
+                CatalogText.Get("text.0704") + completed + " / " + ExpeditionRun.ReleaseWaves + CatalogText.Get("text.0703");
         }
 
         static bool HasId(IReadOnlyList<string> ids, string id)
@@ -710,19 +719,19 @@ namespace Expedition.Presentation
         {
             switch (id)
             {
-                case "forest": return "새 원정을 시작하면 열립니다.";
-                case "forest-clear": return "숲길 보스전을 돌파하면 열립니다.";
-                case "castle": return "전투 6에 도달하면 열립니다.";
-                case "castle-clear": return "성문 보스전을 돌파하면 열립니다.";
-                case "mine": return "전투 11에 도달하면 열립니다.";
-                case "mine-clear": return "용광로 수호자 전투를 돌파하면 열립니다.";
-                case "frost": return "전투 16에 도달하면 열립니다.";
-                case "frost-clear": return "서리의 파수꾼 전투를 돌파하면 열립니다.";
-                case "garden": return "전투 21에 도달하면 열립니다.";
-                case "garden-clear": return "가시의 군주 전투를 돌파하면 열립니다.";
-                case "palace": return "전투 26에 도달하면 열립니다.";
-                case "palace-clear": return "왕관의 수호룡 전투를 돌파하면 열립니다.";
-                default: return "원정을 진행하면 열립니다.";
+                case "forest": return CatalogText.Get("text.0705");
+                case "forest-clear": return CatalogText.Get("text.0706");
+                case "castle": return CatalogText.Get("text.0707");
+                case "castle-clear": return CatalogText.Get("text.0708");
+                case "mine": return CatalogText.Get("text.0709");
+                case "mine-clear": return CatalogText.Get("text.0710");
+                case "frost": return CatalogText.Get("text.0711");
+                case "frost-clear": return CatalogText.Get("text.0712");
+                case "garden": return CatalogText.Get("text.0713");
+                case "garden-clear": return CatalogText.Get("text.0714");
+                case "palace": return CatalogText.Get("text.0715");
+                case "palace-clear": return CatalogText.Get("text.0716");
+                default: return CatalogText.Get("text.0717");
             }
         }
 
@@ -734,14 +743,14 @@ namespace Expedition.Presentation
             Rect content = ExpeditionUiTheme.ContentRect(panel);
             Rect footer = ExpeditionUiTheme.FooterRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 107, content.width - 80, 52),
-                transfer ? "전승할 동료 선택" : "결합할 동료 선택", heading);
-            if (GUI.Button(new Rect(content.xMax - 59, 107, 59, 50), "×", button))
+            LocalizedGui.Label(new Rect(content.x, 107, content.width - 80, 52),
+                transfer ? CatalogText.Get("text.0718") : CatalogText.Get("text.0719"), heading);
+            if (LocalizedGui.Button(new Rect(content.xMax - 59, 107, 59, 50), "×", button))
             { modal = Modal.Detail; return; }
             if (transfer)
             {
-                if (GUI.Button(new Rect(content.x, 166, content.width, 48),
-                    (inheritTrait ? "✓  " : "○  ") + "재료 동료의 고유 특성도 이어받기", button))
+                if (LocalizedGui.Button(new Rect(content.x, 166, content.width, 48),
+                    (inheritTrait ? "✓  " : "○  ") + CatalogText.Get("text.0720"), button))
                     inheritTrait = !inheritTrait;
             }
             CatalogMember selected = run.Roster.Find(selectedId);
@@ -765,10 +774,10 @@ namespace Expedition.Presentation
                 string result = transfer ? null : run.Roster.HybridResult(selected.FormId, other.FormId);
                 int col = shown % 2, row = shown / 2;
                 Rect slot = new Rect(content.x + col * 401, 224 + row * 62, 385, 54);
-                string label = (IsDeployed(other.Id) ? "출전 · " : "대기 · ") + database.Get(other.FormId).Name;
+                string label = (IsDeployed(other.Id) ? CatalogText.Get("text.0721") : CatalogText.Get("text.0722")) + database.Get(other.FormId).Name;
                 if (result != null) label += "  →  " + database.Get(result).Name;
                 else label += "  ·  " + TraitName(database.Get(other.FormId).InnateTrait);
-                if (GUI.Button(slot, label, button))
+                if (LocalizedGui.Button(slot, label, button))
                 {
                     pendingAction = transfer ? GrowthAction.Transfer : GrowthAction.Combine;
                     pendingOtherId = other.Id;
@@ -778,15 +787,15 @@ namespace Expedition.Presentation
                 }
                 shown++;
             }
-            if (shown == 0) GUI.Label(new Rect(content.x, 248, content.width, 95),
-                transfer ? "전승할 다른 동료가 없습니다." : "지금 결합할 수 있는 동료가 없습니다.", body);
+            if (shown == 0) LocalizedGui.Label(new Rect(content.x, 248, content.width, 95),
+                transfer ? CatalogText.Get("text.0723") : CatalogText.Get("text.0724"), body);
             if (pages > 1)
             {
                 ExpeditionUiTheme.FooterRule(panel);
-                if (GUI.Button(new Rect(footer.x, footer.y, 112, 64), "이전", button)) choosePage--;
-                GUI.Label(new Rect(footer.center.x - 60, footer.y + 17, 120, 30),
+                if (LocalizedGui.Button(new Rect(footer.x, footer.y, 112, 64), CatalogText.Get("text.0510"), button)) choosePage--;
+                LocalizedGui.Label(new Rect(footer.center.x - 60, footer.y + 17, 120, 30),
                     (choosePage + 1) + " / " + pages, centered);
-                if (GUI.Button(new Rect(footer.xMax - 112, footer.y, 112, 64), "다음", button)) choosePage++;
+                if (LocalizedGui.Button(new Rect(footer.xMax - 112, footer.y, 112, 64), CatalogText.Get("text.0330"), button)) choosePage++;
             }
         }
 
@@ -794,7 +803,7 @@ namespace Expedition.Presentation
         {
             if (run == null || run.Phase != ExpeditionPhase.Preparation) return;
             List<CatalogCombinationOption> options = run.GetCombinationOptions();
-            if (options.Count == 0) { Notice("지금 가능한 결합이 없습니다."); return; }
+            if (options.Count == 0) { Notice(CatalogText.Get("text.0725")); return; }
             combinationPage = 0;
             modal = Modal.CombinationOptions;
         }
@@ -804,10 +813,10 @@ namespace Expedition.Presentation
             growthPreviewKey = null;
             List<CatalogCombinationOption> options = run.GetCombinationOptions();
             if (index < 0 || index >= options.Count)
-            { Notice("결합할 동료가 바뀌었습니다. 다시 선택해 주세요."); return; }
+            { Notice(CatalogText.Get("text.0726")); return; }
             CatalogCombinationOption option = options[index];
             if (!run.CanCombine(option.RecipientId, option.DonorId, option.ResultId))
-            { Notice("지금 가능한 결합이 아닙니다."); return; }
+            { Notice(CatalogText.Get("text.0727")); return; }
             selectedId = option.RecipientId;
             pendingOtherId = option.DonorId;
             pendingFormId = option.ResultId;
@@ -846,32 +855,32 @@ namespace Expedition.Presentation
                 Rect panel = new Rect(205, 70, 870, 580);
                 Rect content = ExpeditionUiTheme.ContentRect(panel);
                 ExpeditionUiTheme.Window(panel);
-                GUI.Label(new Rect(content.x, panel.y + 32, content.width, 48),
-                    "새 원정", heading);
+                LocalizedGui.Label(new Rect(content.x, panel.y + 32, content.width, 48),
+                    CatalogText.Get("text.0621"), heading);
                 string warning = savePresent ?
-                    "현재 원정을 끝내고 새로 시작합니다. 동료·골드·연구는 이월되지 않습니다." :
-                    legacySave ? "이전 6전투 원정은 별도로 보관됩니다." :
-                    "동료 3명 · 40G · 남은 기회 3회 · 연구 0개로 출발합니다.";
-                GUI.Label(new Rect(content.x, 152, content.width, 50),
-                    "현재 공개 " + ExpeditionRun.TotalWaves + "전투 · 전체 목표 30전투\n" + warning, small);
+                    CatalogText.Get("text.0728") :
+                    legacySave ? CatalogText.Get("text.0729") :
+                    CatalogText.Get("text.0730");
+                LocalizedGui.Label(new Rect(content.x, 152, content.width, 50),
+                    CatalogText.Get("text.0693") + ExpeditionRun.TotalWaves + CatalogText.Get("text.0731") + warning, small);
                 Rect normal = new Rect(content.x, 216, content.width, 62);
                 ExpeditionUiTheme.PanelBox(normal, true);
-                GUI.Label(new Rect(normal.x + 20, normal.y + 6, normal.width - 40, 28),
-                    "NORMAL · 일반  ✓", body);
-                GUI.Label(new Rect(normal.x + 20, normal.y + 34, normal.width - 40, 23),
-                    "현재 플레이 가능 · 기본 전투 규칙", small);
+                LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 6, normal.width - 40, 28),
+                    CatalogText.Get("text.0732"), body);
+                LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 34, normal.width - 40, 23),
+                    CatalogText.Get("text.0733"), small);
                 Rect locked = new Rect(content.x, 288, content.width, 62);
                 bool wasEnabled = GUI.enabled;
                 GUI.enabled = false;
-                GUI.Button(locked, "", button);
+                LocalizedGui.Button(locked, "", button);
                 GUI.enabled = wasEnabled;
-                GUI.Label(new Rect(locked.x + 20, locked.y + 6, locked.width - 40, 28),
-                    "HARD · 고난도  ·  준비 중", body);
-                GUI.Label(new Rect(locked.x + 20, locked.y + 34, locked.width - 40, 23),
+                LocalizedGui.Label(new Rect(locked.x + 20, locked.y + 6, locked.width - 40, 28),
+                    CatalogText.Get("text.0734"), body);
+                LocalizedGui.Label(new Rect(locked.x + 20, locked.y + 34, locked.width - 40, 23),
                     progress != null && progress.HardUnlocked && !badProgress ?
-                    "도전 자격 획득 · 전투는 추후 공개" :
-                    "일반 30전투 완료 후 도전 자격 · 전투는 추후 공개", small);
-                GUI.Label(new Rect(content.x, 364, content.width, 31), "시작 편성 선택", hint);
+                    CatalogText.Get("text.0735") :
+                    CatalogText.Get("text.0736"), small);
+                LocalizedGui.Label(new Rect(content.x, 364, content.width, 31), CatalogText.Get("text.0737"), hint);
                 IReadOnlyList<string> research = badProgress || progress == null ?
                     Array.Empty<string>() : progress.ResearchIds;
                 for (int i = 0; i < FormationIds.Length; i++)
@@ -883,19 +892,19 @@ namespace Expedition.Presentation
                         Fill(new Rect(card.x - 3, card.y - 3, card.width + 6, card.height + 6),
                             new Color(Gold.r, Gold.g, Gold.b, .8f));
                     GUI.enabled = wasEnabled && unlocked;
-                    if (GUI.Button(card, GUIContent.none, button)) selectedFormationId = FormationIds[i];
+                    if (LocalizedGui.Button(card, GUIContent.none, button)) selectedFormationId = FormationIds[i];
                     GUI.enabled = wasEnabled;
-                    GUI.Label(new Rect(card.x + 13, card.y + 9, card.width - 26, 31),
+                    LocalizedGui.Label(new Rect(card.x + 13, card.y + 9, card.width - 26, 31),
                         FormationNames[i], centered);
-                    GUI.Label(new Rect(card.x + 12, card.y + 45, card.width - 24, 30),
+                    LocalizedGui.Label(new Rect(card.x + 12, card.y + 39, card.width - 24, 48),
                         FormationUnits[i], small);
-                    GUI.Label(new Rect(card.x + 12, card.y + 82, card.width - 24, 24),
-                        unlocked ? selectedFormationId == FormationIds[i] ? "선택됨" : "선택 가능" :
-                        badProgress ? "기록 확인 불가" : "원정 연구 필요", small);
+                    LocalizedGui.Label(new Rect(card.x + 12, card.y + 90, card.width - 24, 22),
+                        unlocked ? selectedFormationId == FormationIds[i] ? CatalogText.Get("text.0738") : CatalogText.Get("text.0739") :
+                        badProgress ? CatalogText.Get("text.0740") : CatalogText.Get("text.0741"), small);
                 }
                 ExpeditionUiTheme.FooterRule(panel);
                 ConfirmationButtons(ExpeditionUiTheme.FooterRect(panel),
-                    "새 원정 시작", NewRun, () => modal = Modal.None);
+                    CatalogText.Get("text.0742"), NewRun, () => modal = Modal.None);
                 return;
             }
             CatalogMember selected = run.Roster.Find(selectedId);
@@ -906,20 +915,20 @@ namespace Expedition.Presentation
             Rect growthPanel = new Rect(335, chooseBranch ? 136 : 180, 610, chooseBranch ? 448 : 360);
             Rect growthContent = ExpeditionUiTheme.ContentRect(growthPanel);
             ExpeditionUiTheme.Window(growthPanel);
-            string headingText = pendingAction == GrowthAction.Transfer ? "전승 확인" :
-                pendingAction == GrowthAction.Combine ? "결합 확인" : "진화 확인";
-            GUI.Label(new Rect(growthContent.x, growthPanel.y + 32, growthContent.width, 48),
+            string headingText = pendingAction == GrowthAction.Transfer ? CatalogText.Get("text.0743") :
+                pendingAction == GrowthAction.Combine ? CatalogText.Get("text.0744") : CatalogText.Get("text.0745");
+            LocalizedGui.Label(new Rect(growthContent.x, growthPanel.y + 32, growthContent.width, 48),
                 headingText, heading);
             string selectedName = database.Get(selected.FormId).Name;
             string resultName = pendingAction == GrowthAction.Transfer ? selectedName :
                 pendingFormId == null ? "" : database.Get(pendingFormId).Name;
             string message = pendingAction == GrowthAction.Evolve ? selectedName + " → " + resultName :
-                other == null ? "동료를 다시 선택해 주세요." :
+                other == null ? CatalogText.Get("text.0746") :
                 selectedName + " + " + database.Get(other.FormId).Name + " → " + resultName +
-                "\n" + database.Get(other.FormId).Name + "은(는) 재료로 떠납니다.";
+                "\n" + database.Get(other.FormId).Name + CatalogText.Get("text.0747");
             if (pendingAction == GrowthAction.Transfer)
-                message += "\n진화 진행이 가능하면 1 증가" + (inheritTrait ? " · 고유 특성 전승" : "");
-            GUI.Label(new Rect(growthContent.x, growthPanel.y + 100, growthContent.width,
+                message += CatalogText.Get("text.0748") + (inheritTrait ? CatalogText.Get("text.0749") : "");
+            LocalizedGui.Label(new Rect(growthContent.x, growthPanel.y + 100, growthContent.width,
                 chooseBranch ? 86 : 110), message, dialogBody);
             if (chooseBranch)
             {
@@ -929,18 +938,18 @@ namespace Expedition.Presentation
                 {
                     Rect branchRow = new Rect(growthContent.x, growthPanel.y + 200,
                         growthContent.width, 56);
-                    if (GUI.Button(ExpeditionUiTheme.FooterButton(branchRow, 0, 2),
+                    if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(branchRow, 0, 2),
                         database.Get(Branches[familyIndex][0]).Name, button))
                         pendingFormId = Branches[familyIndex][0];
-                    if (GUI.Button(ExpeditionUiTheme.FooterButton(branchRow, 1, 2),
+                    if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(branchRow, 1, 2),
                         database.Get(Branches[familyIndex][1]).Name, button))
                         pendingFormId = Branches[familyIndex][1];
-                    GUI.Label(new Rect(growthContent.x, growthPanel.y + 270,
-                        growthContent.width, 30), "선택: " + database.Get(pendingFormId).Name, small);
+                    LocalizedGui.Label(new Rect(growthContent.x, growthPanel.y + 270,
+                        growthContent.width, 30), CatalogText.Get("text.0750") + database.Get(pendingFormId).Name, small);
                 }
             }
             ExpeditionUiTheme.FooterRule(growthPanel);
-            ConfirmationButtons(ExpeditionUiTheme.FooterRect(growthPanel), "실행", ExecuteGrowth,
+            ConfirmationButtons(ExpeditionUiTheme.FooterRect(growthPanel), CatalogText.Get("text.0751"), ExecuteGrowth,
                 () => modal = pendingAction == GrowthAction.Evolve && evolutionFromDrag ? Modal.None : Modal.Detail);
         }
 
@@ -952,19 +961,19 @@ namespace Expedition.Presentation
             public HybridGuidance(string skill, string role, string placement)
             {
                 Skill = skill;
-                Tactic = "역할: " + role + "\n배치: " + placement;
+                Tactic = CatalogText.Get("text.0752") + role + CatalogText.Get("text.0753") + placement;
             }
         }
 
         static string HybridSkillText(CatalogForm form, HybridGuidance guidance)
         { return string.IsNullOrEmpty(form.Description) ? guidance.Skill : form.Description; }
 
-        static readonly HybridGuidance H01Guide = new HybridGuidance("전방 화염 공격 · 적중 후 자신 보호막", "전열 범위 공격·자기 보호", "적이 모이는 앞줄");
-        static readonly HybridGuidance H02Guide = new HybridGuidance("근접 타격·주변 최대 2명 회복(자신 가능)", "전열 근접 회복", "전열 곁 · 먼 후열은 회복 불가");
-        static readonly HybridGuidance H03Guide = new HybridGuidance("직선 관통 공격과 이동 둔화", "후열 관통·이동 둔화", "적의 진로가 겹치는 뒤쪽");
-        static readonly HybridGuidance H04Guide = new HybridGuidance("범위 내 적에게 화상·둔화·피해", "후열 범위 견제", "뭉친 적을 겨냥하는 뒤쪽");
-        static readonly HybridGuidance H05Guide = new HybridGuidance("광역 회복·위급한 동료 추가 회복·공격력 강화", "위급한 동료 회복·공격 지원", "아군이 거리 4.5 안에 들어오는 중열");
-        static readonly HybridGuidance H06Guide = new HybridGuidance("표식 사격·5초 안 다음 기본공격 1회 +60%", "후열 지휘 사격·공격 지원", "본인 + 거리 3 내 가까운 아군 2명");
+        static readonly HybridGuidance H01Guide = new HybridGuidance(CatalogText.Get("text.0754"), CatalogText.Get("text.0755"), CatalogText.Get("text.0756"));
+        static readonly HybridGuidance H02Guide = new HybridGuidance(CatalogText.Get("text.0757"), CatalogText.Get("text.0758"), CatalogText.Get("text.0759"));
+        static readonly HybridGuidance H03Guide = new HybridGuidance(CatalogText.Get("text.0760"), CatalogText.Get("text.0761"), CatalogText.Get("text.0762"));
+        static readonly HybridGuidance H04Guide = new HybridGuidance(CatalogText.Get("text.0763"), CatalogText.Get("text.0764"), CatalogText.Get("text.0765"));
+        static readonly HybridGuidance H05Guide = new HybridGuidance(CatalogText.Get("text.0766"), CatalogText.Get("text.0767"), CatalogText.Get("text.0768"));
+        static readonly HybridGuidance H06Guide = new HybridGuidance(CatalogText.Get("text.0769"), CatalogText.Get("text.0770"), CatalogText.Get("text.0771"));
 
         static HybridGuidance HybridGuide(string formId)
         {
@@ -983,8 +992,8 @@ namespace Expedition.Presentation
 
         void ConfirmationButtons(Rect footer, string confirm, Action yes, Action no)
         {
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), "돌아가기", button)) no();
-            if (GUI.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), confirm, primary)) yes();
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), CatalogText.Get("text.0772"), button)) no();
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), confirm, primary)) yes();
         }
 
         void ExecuteGrowth()
@@ -996,9 +1005,9 @@ namespace Expedition.Presentation
                 run.Transfer(pendingOtherId, selectedId, inheritTrait) :
                 pendingAction == GrowthAction.Evolve ? run.Evolve(selectedId, pendingFormId) :
                 pendingAction == GrowthAction.Combine && run.Combine(selectedId, pendingOtherId, pendingFormId);
-            if (!applied) { Notice("현재 조건에서는 실행할 수 없습니다."); modal = Modal.Detail; return; }
+            if (!applied) { Notice(CatalogText.Get("text.0773")); modal = Modal.Detail; return; }
             Save(pendingAction.ToString().ToLowerInvariant(), selectedId + ":" + pendingOtherId + ":" + pendingFormId);
-            Notice("동료의 성장이 반영되었습니다. 되돌리기로 취소할 수 있습니다.");
+            Notice(CatalogText.Get("text.0774"));
             if (pendingAction == GrowthAction.Transfer)
             {
                 CatalogMember grown = run.Roster.Find(selectedId);
@@ -1015,11 +1024,11 @@ namespace Expedition.Presentation
         void Summon()
         {
             string id = run.Summon();
-            if (id == null) { Notice("지금은 소환할 수 없습니다."); return; }
+            if (id == null) { Notice(CatalogText.Get("text.0775")); return; }
             Save("summon", id);
             benchPage = Mathf.Max(0, (run.Roster.Members.Count - run.DeployedIds.Count - 1) / 5);
             CatalogMember member = run.Roster.Find(id);
-            Notice("새 동료: " + database.Get(member.FormId).Name + "  ·  대기석에 합류했습니다.");
+            Notice(CatalogText.Get("text.0776") + database.Get(member.FormId).Name + CatalogText.Get("text.0777"));
         }
 
         void StartBattle(bool resume)
@@ -1027,7 +1036,7 @@ namespace Expedition.Presentation
             try
             {
                 CatalogBattle battle = resume ? run.ResumeBattle() : run.BeginBattle();
-                if (battle == null) { Notice("전투를 시작할 수 없습니다."); return; }
+                if (battle == null) { Notice(CatalogText.Get("text.0778")); return; }
                 FinishTutorialWave(run.Wave);
                 BeginReport(battle);
                 Save(resume ? "battle_restart" : "battle_start", resume ? "Restart from saved pre-battle checkpoint." : null);
@@ -1042,7 +1051,7 @@ namespace Expedition.Presentation
                     FinishBattlePresentation);
                 lab.ConfigureExpeditionSpeed(run.BattleSpeed, value => { if (run.SetBattleSpeed(value)) Save("battle_speed", value.ToString()); });
             }
-            catch (Exception exception) { enabled = true; Notice("전투를 열지 못했습니다: " + exception.Message); }
+            catch (Exception exception) { enabled = true; Notice(CatalogText.Get("text.0779") + exception.Message); }
         }
 
         void OpenLab()
@@ -1063,15 +1072,15 @@ namespace Expedition.Presentation
         string MemberPositionLabel(string id)
         {
             for (int i = 0; i < run.DeployedIds.Count; i++)
-                if (run.DeployedIds[i] == id) return "출전 " + (i + 1);
+                if (run.DeployedIds[i] == id) return CatalogText.Get("text.0213") + (i + 1);
             int benchIndex = 0;
             foreach (CatalogMember member in run.Roster.Members)
             {
                 if (IsDeployed(member.Id)) continue;
                 benchIndex++;
-                if (member.Id == id) return "대기 " + benchIndex;
+                if (member.Id == id) return CatalogText.Get("text.0478") + benchIndex;
             }
-            return "편성 밖";
+            return CatalogText.Get("text.0780");
         }
 
         static bool ReadyToEvolve(CatalogMember member)
@@ -1095,13 +1104,13 @@ namespace Expedition.Presentation
             bool growth = run.CanTransfer(pointerId, hoverRecipientId);
             CatalogMember donor = run.Roster.Find(pointerId);
             bool quickSwap = !IsDeployed(pointerId) && IsDeployed(hoverRecipientId) && run.DeployedIds.Count >= 5;
-            string action = growth ? "성장 +1" :
-                quickSwap ? "출전 교체" : donor != null && donor.MaterialLocked ? "보호된 재료" : "성장 불가";
+            string action = growth ? CatalogText.Get("text.0781") :
+                quickSwap ? CatalogText.Get("text.0782") : donor != null && donor.MaterialLocked ? CatalogText.Get("text.0783") : CatalogText.Get("text.0784");
             ExpeditionUiTheme.PanelBox(new Rect(908,240,344,300),true);
             if(art!=null)art.Draw(resultForm,new Rect(1020,252,120,126),0);
-            GUI.Label(new Rect(924,386,312,40),action,heading);
-            GUI.Label(new Rect(924,430,312,48),growth?"진화 진행 "+recipient.Growth+" → "+(recipient.Growth+1)+" · 재료 소모":quickSwap?"빠르게 놓으면 출전 교체":"재료 보호·성장 조건을 확인하세요",small);
-            if(growth){float p=hoverArmed?1:Mathf.Clamp01((Time.unscaledTime-hoverStartTime)/GrowthHoverSeconds);Fill(new Rect(924,486,312,8),PanelLight);Fill(new Rect(924,486,312*p,8),Gold);GUI.Label(new Rect(924,501,312,28),hoverArmed?"놓으면 성장 +1":"잠시 유지 · 빠르게 놓으면 배치/교체",small);}
+            LocalizedGui.Label(new Rect(924,386,312,40),action,heading);
+            LocalizedGui.Label(new Rect(924,430,312,48),growth?CatalogText.Get("text.0785")+recipient.Growth+" → "+(recipient.Growth+1)+CatalogText.Get("text.0786"):quickSwap?CatalogText.Get("text.0787"):CatalogText.Get("text.0788"),small);
+            if(growth){float p=hoverArmed?1:Mathf.Clamp01((Time.unscaledTime-hoverStartTime)/GrowthHoverSeconds);Fill(new Rect(924,486,312,8),PanelLight);Fill(new Rect(924,486,312*p,8),Gold);LocalizedGui.Label(new Rect(924,501,312,28),hoverArmed?CatalogText.Get("text.0789"):CatalogText.Get("text.0790"),small);}
         }
 
         Rect MemberVisualRect(string id)
@@ -1125,9 +1134,9 @@ namespace Expedition.Presentation
 
         static string TraitName(string id)
         {
-            if (string.IsNullOrEmpty(id)) return "없음";
+            if (string.IsNullOrEmpty(id)) return CatalogText.Get("text.0172");
             for (int i = 0; i < TraitIds.Length; i++) if (TraitIds[i] == id) return TraitNames[i];
-            return "알 수 없음";
+            return CatalogText.Get("text.0791");
         }
 
         static Vector2 ArenaPoint(CatalogMember member) { return PreparationLayout.Point(member.X, member.Y); }
@@ -1223,15 +1232,15 @@ namespace Expedition.Presentation
                     growthPulseId = recipientId;
                     growthPulseUntil = Time.unscaledTime + .6f;
                     CatalogMember grown = run.Roster.Find(recipientId);
-                    Notice("성장 +1 · 되돌리기로 취소할 수 있습니다.");
+                    Notice(CatalogText.Get("text.0792"));
                     if (ReadyToEvolve(grown)) PrepareEvolution(grown, true);
                 }
-                else Notice("현재 조건에서는 성장시킬 수 없습니다.");
+                else Notice(CatalogText.Get("text.0793"));
                 return;
             }
             if (recipientId != null && !IsDeployed(recipientId))
             {
-                Notice("이 대상에게 성장시키려면 재료 보호와 성장 조건을 확인해 주세요.");
+                Notice(CatalogText.Get("text.0794"));
                 return;
             }
             if (PreparationLayout.Board.Contains(point))
@@ -1242,10 +1251,10 @@ namespace Expedition.Presentation
                     {
                         string replace = ActiveAt(point, id);
                         if (replace == null || !run.SwapDeployment(replace, id))
-                        { Notice("교체할 출전 동료 위에 놓아 주세요."); return; }
+                        { Notice(CatalogText.Get("text.0795")); return; }
                     }
                     else if (!run.SetDeployed(id, true))
-                    { Notice("출전은 다섯 명까지 가능합니다."); return; }
+                    { Notice(CatalogText.Get("text.0796")); return; }
                 }
                 if (run.Move(id, PreparationLayout.World(pointerCurrent).x, PreparationLayout.World(pointerCurrent).y)) Save("position", id);
                 else Save("deployment", id);
@@ -1254,7 +1263,7 @@ namespace Expedition.Presentation
             else if (point.y >= 576 && IsDeployed(id))
             {
                 if (run.SetDeployed(id, false)) Save("bench", id);
-                else Notice("대기석이 가득 찼거나 마지막 출전 동료입니다.");
+                else Notice(CatalogText.Get("text.0797"));
             }
         }
 

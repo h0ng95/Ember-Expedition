@@ -158,37 +158,37 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.PanelBox(card, true);
             if (stage == LessonStage.EvolutionChoice || stage == LessonStage.CombinationChoice)
             {
-                GUI.Label(new Rect(card.x + 12, card.y + 6, card.width - 168, 64),
+                LocalizedGui.Label(new Rect(card.x + 12, card.y + 6, card.width - 168, 64),
                     stage == LessonStage.CombinationChoice ?
-                    "첫 결합 · 두 동료가 한 명이 됩니다. 역할과 능력, 빈 출전 자리를 함께 확인하세요.\n확정할 때만 재료가 사라집니다. 두 명을 그대로 쓰는 것도 좋은 선택입니다." :
-                    "첫 진화 · 모습과 역할을 비교한 뒤 골라보세요.\n상세 능력에서 기술·연구를 확인해요. 확정 전에는 바뀌지 않습니다.", lessonText);
-                if (GUI.Button(new Rect(card.xMax - 144, card.y + 17, 132, 42), "알겠어", button)) FinishLesson(LessonFor(stage));
+                    CatalogText.Get("text.0410") :
+                    CatalogText.Get("text.0411"), lessonText);
+                if (LocalizedGui.Button(new Rect(card.xMax - 144, card.y + 17, 132, 42), CatalogText.Get("text.0412"), button)) FinishLesson(LessonFor(stage));
                 return;
             }
             if (stage == LessonStage.TacticsBoard)
             {
-                GUI.Label(new Rect(card.x + 14, card.y + 8, card.width - 190, 96),
-                    "소환과 연구는 같은 골드를 사용합니다. 현재 " + run.Gold + "G\n노드를 눌러 효과·비용·지역 조건을 비교하세요. 연구는 이번 원정에서만 유지됩니다.\n구매는 선택입니다. 소환할 돈을 남겨두어도 됩니다.", lessonText);
-                if (GUI.Button(new Rect(card.xMax - 162, card.y + 33, 148, 44), "알겠어", button)) FinishLesson(ExpeditionLesson.Tactics);
+                LocalizedGui.Label(new Rect(card.x + 14, card.y + 8, card.width - 190, 96),
+                    CatalogText.Get("text.0413") + run.Gold + CatalogText.Get("text.0414"), lessonText);
+                if (LocalizedGui.Button(new Rect(card.xMax - 162, card.y + 33, 148, 44), CatalogText.Get("text.0412"), button)) FinishLesson(ExpeditionLesson.Tactics);
                 return;
             }
             string message = stage == LessonStage.Growth ?
-                "첫 성장 · 강조된 대기 동료를\n출전 동료 위에 끌어 잠시 유지한 뒤 놓으세요.\n성장 +1 · 재료는 소모 · 준비 중 되돌리기 가능" :
+                CatalogText.Get("text.0415") :
                 stage == LessonStage.EvolutionReady ?
-                "진화할 동료가 있어요.\n모습·역할·기술을 비교한 뒤 골라보세요.\n미리보기만 열어서는 동료가 변하지 않습니다." :
+                CatalogText.Get("text.0416") :
                 stage == LessonStage.CombinationReady ?
-                "결합할 수 있는 동료가 있어요.\n두 명을 한 명으로 바꾸는 선택입니다.\n모습과 능력을 먼저 비교하세요.\n결합하지 않고 진행해도 됩니다." :
-                "연구를 선택할 수 있어요.\n소환과 같은 골드를 써서 원정 전체를 강화해요.\n먼저 효과를 살펴보고 지출을 결정하세요.";
-            GUI.Label(new Rect(card.x + 14, card.y + 16, card.width - 28, 126), message, lessonText);
-            if (stage != LessonStage.Growth && GUI.Button(new Rect(card.x + 14, card.y + 160, card.width - 28, 44),
-                stage == LessonStage.EvolutionReady ? "진화 비교하기" : stage == LessonStage.CombinationReady ? "결합 결과 보기" : "연구 살펴보기", primary))
+                CatalogText.Get("text.0417") :
+                CatalogText.Get("text.0418");
+            LocalizedGui.Label(new Rect(card.x + 14, card.y + 16, card.width - 28, 126), message, lessonText);
+            if (stage != LessonStage.Growth && LocalizedGui.Button(new Rect(card.x + 14, card.y + 160, card.width - 28, 44),
+                stage == LessonStage.EvolutionReady ? CatalogText.Get("text.0419") : stage == LessonStage.CombinationReady ? CatalogText.Get("text.0420") : CatalogText.Get("text.0421"), primary))
             {
                 CancelPointer();
                 if (stage == LessonStage.EvolutionReady) PrepareEvolution(ExpeditionLearning.EvolutionExample(run));
                 else if (stage == LessonStage.CombinationReady) OpenCombinationOptions();
                 else { selectedTacticNodeId = "bulwark"; modal = Modal.Tactics; }
             }
-            if (GUI.Button(new Rect(card.x + 14, card.y + 220, card.width - 28, 44), "건너뛰기", button))
+            if (LocalizedGui.Button(new Rect(card.x + 14, card.y + 220, card.width - 28, 44), CatalogText.Get("text.0327"), button))
             { CancelPointer(); FinishLesson(LessonFor(stage)); }
             if (stage == LessonStage.Growth && lessonHoles.Count >= 2 && !pointerDragging)
             {
@@ -206,14 +206,14 @@ namespace Expedition.Presentation
             if (lessonText == null) lessonText = Style(17, Cream, false, TextAnchor.UpperLeft);
             Rect panel = new Rect(180, 42, 920, 636), content = ExpeditionUiTheme.ContentRect(panel);
             ExpeditionUiTheme.Window(panel);
-            GUI.Label(new Rect(content.x, 74, content.width, 45), "원정 안내 · 언제든 다시 보기", heading);
-            string[] names = { "기본 조작", "성장", "진화", "결합", "원정 연구" };
+            LocalizedGui.Label(new Rect(content.x, 74, content.width, 45), CatalogText.Get("text.0422"), heading);
+            string[] names = { CatalogText.Get("text.0423"), CatalogText.Get("text.0424"), CatalogText.Get("text.0425"), CatalogText.Get("text.0426"), CatalogText.Get("text.0576") };
             string[] descriptions = {
-                "소환한 동료를 출전시키고,\n눌러서 공격·지원 범위를 확인합니다.",
-                "재료 동료를 겹쳐 잠시 유지하면 성장 +1.\n재료가 사라지며 준비 중 되돌릴 수 있습니다.",
-                "기본 성장 2 · 분기 성장 6에서 진화.\n최종 진화는 선택했던 분기 기술을 유지합니다.",
-                "두 동료를 한 명으로 바꿉니다.\n역할·능력·빈 출전 자리를 비교하세요.",
-                "소환과 같은 골드 · 최대 " + CatalogResearch.MaxNodes + "개 연구.\n선행 노드·지역 조건이 있고 새 원정에서 초기화됩니다."
+                CatalogText.Get("text.0428"),
+                CatalogText.Get("text.0429"),
+                CatalogText.Get("text.0430"),
+                CatalogText.Get("text.0431"),
+                CatalogText.Get("text.0432") + CatalogResearch.MaxNodes + CatalogText.Get("text.0433")
             };
             ExpeditionGrowthExample example = ExpeditionLearning.GrowthExample(run);
             CatalogMember evolution = ExpeditionLearning.EvolutionExample(run);
@@ -221,12 +221,12 @@ namespace Expedition.Presentation
             {
                 Rect row = new Rect(content.x, 128 + i * 91, content.width, 84);
                 ExpeditionUiTheme.PanelBox(row);
-                GUI.Label(new Rect(row.x + 14, row.y + 9, 120, 32), names[i], body);
-                GUI.Label(new Rect(row.x + 140, row.y + 8, row.width - 320, 68), descriptions[i], lessonText);
+                LocalizedGui.Label(new Rect(row.x + 14, row.y + 9, 120, 32), names[i], body);
+                LocalizedGui.Label(new Rect(row.x + 140, row.y + 8, row.width - 320, 68), descriptions[i], lessonText);
                 bool canFollow = i == 0 || i == 1 && example != null || i == 2 && evolution != null ||
                     i == 3 && run.GetCombinationOptions().Count > 0 || i == 4 && run.Wave >= 6;
                 GUI.enabled = canFollow;
-                if (GUI.Button(new Rect(row.xMax - 163, row.y + 16, 148, 52), canFollow ? "따라하기" : "조건 대기", button))
+                if (LocalizedGui.Button(new Rect(row.xMax - 163, row.y + 16, 148, 52), canFollow ? CatalogText.Get("text.0434") : CatalogText.Get("text.0435"), button))
                 {
                     modal = Modal.None; tutorialReplayWave = 0;
                     if (i == 0) { lessonReplay = ExpeditionLesson.None; tutorialReplayWave = run.Wave; tutorialRangeAcknowledged = false; }
@@ -244,7 +244,7 @@ namespace Expedition.Presentation
                 GUI.enabled = true;
             }
             ExpeditionUiTheme.FooterRule(panel);
-            if (GUI.Button(ExpeditionUiTheme.FooterRect(panel), "닫기", button)) modal = Modal.None;
+            if (LocalizedGui.Button(ExpeditionUiTheme.FooterRect(panel), CatalogText.Get("text.0400"), button)) modal = Modal.None;
         }
     }
 }

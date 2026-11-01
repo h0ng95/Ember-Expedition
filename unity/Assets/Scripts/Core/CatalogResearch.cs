@@ -11,14 +11,16 @@ namespace Expedition.Core
         public int Cost { get; private set; }
         public int UnlockWave { get; private set; }
         public int RequiredBossWave { get { return UnlockWave - 1; } }
-        public string RequiredRegion { get { return Tier == 1 ? "숲" : "성채"; } }
+        public string RequiredRegion { get { return Tier == 1 ? CatalogText.Get("text.0042") : CatalogText.Get("text.0043"); } }
         public string PrerequisiteId { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
+        string localizedTitle;
+        public string Title { get { return CatalogText.Resolve(localizedTitle); } private set { localizedTitle = value; } }
+        string localizedDescription;
+        public string Description { get { return CatalogText.Resolve(localizedDescription); } private set { localizedDescription = value; } }
         public string DescriptionForRules(int rules)
         {
-            if (rules >= 2 && Id == "spellcraft") return "동료 직접 공격 기술 피해 +30%";
-            if (rules >= 2 && Id == "cinders") return "동료 화상 피해 +50%";
+            if (rules >= 2 && Id == "spellcraft") return CatalogText.Get("text.0044");
+            if (rules >= 2 && Id == "cinders") return CatalogText.Get("text.0045");
             return Description;
         }
 
@@ -36,17 +38,17 @@ namespace Expedition.Core
         public const int MaxNodes = 3;
         static readonly CatalogResearchNode[] nodes = {
             new CatalogResearchNode("bulwark", "defense", 1, 40, 6, null,
-                "방벽 훈련", "근접 동료 최대 체력 +12%"),
+                "text.0046", "text.0047"),
             new CatalogResearchNode("shieldcraft", "defense", 2, 60, 11, "bulwark",
-                "방패술", "보호막이 있는 동료 피해 +15%"),
+                "text.0048", "text.0049"),
             new CatalogResearchNode("marksmanship", "precision", 1, 40, 6, null,
-                "정밀 사격", "원거리 동료 기본 공격 피해 +15%"),
+                "text.0050", "text.0051"),
             new CatalogResearchNode("exploitation", "precision", 2, 60, 11, "marksmanship",
-                "약점 공략", "표식 또는 둔화 적 대상 피해 +18%"),
+                "text.0052", "text.0053"),
             new CatalogResearchNode("spellcraft", "arcana", 1, 40, 6, null,
-                "술식 연구", "동료 직접 공격 기술 피해 +15%"),
+                "text.0054", "text.0055"),
             new CatalogResearchNode("cinders", "arcana", 2, 60, 11, "spellcraft",
-                "잔불 증폭", "동료 화상 피해 +30%")
+                "text.0056", "text.0057")
         };
         static readonly IReadOnlyList<CatalogResearchNode> publicNodes = Array.AsReadOnly(nodes);
         public static IReadOnlyList<CatalogResearchNode> Nodes { get { return publicNodes; } }

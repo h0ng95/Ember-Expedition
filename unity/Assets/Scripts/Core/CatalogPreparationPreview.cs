@@ -23,31 +23,31 @@ namespace Expedition.Core
     public static class CatalogPreparationPreview
     {
         static readonly CatalogSupportPreview Priest = new CatalogSupportPreview(4.5f,
-            "자신 포함 1명 보호 · 보호막이 적고 체력 비율이 낮은 순");
+            CatalogText.Get("text.0029"));
         static readonly CatalogSupportPreview Banner = new CatalogSupportPreview(2.5f,
-            "자신 + 가까운 동료 최대 2명 · 공격력 강화");
+            CatalogText.Get("text.0030"));
         static readonly CatalogSupportPreview Guardian = new CatalogSupportPreview(2f,
-            "자신 + 가장 가까운 동료 1명 · 보호막");
+            CatalogText.Get("text.0031"));
         static readonly CatalogSupportPreview ShieldPriest = new CatalogSupportPreview(4.8f,
-            "자신 포함 최대 2명 보호 · 보호막이 적고 체력 비율이 낮은 순");
+            CatalogText.Get("text.0032"));
         static readonly CatalogSupportPreview Healer = new CatalogSupportPreview(4.8f,
-            "자신 포함 부상자 1명 회복 · 체력 비율이 낮은 순");
+            CatalogText.Get("text.0033"));
         static readonly CatalogSupportPreview GuardBanner = new CatalogSupportPreview(2.8f,
-            "자신 + 가까운 동료 최대 2명 · 받는 피해 감소");
+            CatalogText.Get("text.0034"));
         static readonly CatalogSupportPreview AssaultBanner = new CatalogSupportPreview(2.8f,
-            "자신 + 가까운 동료 최대 2명 · 공격 속도 강화");
+            CatalogText.Get("text.0035"));
         static readonly CatalogSupportPreview FinalKnight = new CatalogSupportPreview(2.5f,
-            "자신 + 체력 비율이 낮은 동료 최대 2명 · 보호막");
+            CatalogText.Get("text.0036"));
         static readonly CatalogSupportPreview FinalPriest = new CatalogSupportPreview(float.PositiveInfinity,
-            "살아 있는 아군 전체 · 회복과 보호막");
+            CatalogText.Get("text.0037"));
         static readonly CatalogSupportPreview FinalBanner = new CatalogSupportPreview(float.PositiveInfinity,
-            "살아 있는 아군 전체 · 공격력 강화와 받는 피해 감소");
+            CatalogText.Get("text.0038"));
         static readonly CatalogSupportPreview Warmth = new CatalogSupportPreview(2.5f,
-            "공격 기술 적중 시 자신 포함 최대 2명 회복 · 체력 비율이 낮은 순");
+            CatalogText.Get("text.0039"));
         static readonly CatalogSupportPreview Song = new CatalogSupportPreview(4.5f,
-            "자신 + 체력 비율이 낮은 동료 최대 2명 · 회복과 공격력 강화");
+            CatalogText.Get("text.0040"));
         static readonly CatalogSupportPreview Spoils = new CatalogSupportPreview(3f,
-            "기술 적중 시 자신+가까운 동료 2명 · 다음 평타 강화");
+            CatalogText.Get("text.0041"));
 
         public static CatalogSupportPreview ForSkill(string id)
         {

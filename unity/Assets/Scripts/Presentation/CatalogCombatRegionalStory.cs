@@ -38,9 +38,9 @@ namespace Expedition.Presentation
             ignisAge = Mathf.Max(0, RegionalStoryTime - RegionalIgnisDelay);
         }
         void CompleteRegionalReveal() { if (regionalStoryActive) regionalStoryAge = RegionalStoryDuration; }
-        string RegionalStoryHint { get { return expeditionWave == 15 ? "동력관의 열기가 잦아든다" :
-            expeditionWave == 20 ? "얼음 아래 작은 흐름이 돌아온다" :
-            expeditionWave == 25 ? "빛이 다시 뿌리 쪽으로 흐른다" : "수호룡을 묶던 빛이 끊어진다"; } }
+        string RegionalStoryHint { get { return expeditionWave == 15 ? CatalogText.Get("text.0388") :
+            expeditionWave == 20 ? CatalogText.Get("text.0389") :
+            expeditionWave == 25 ? CatalogText.Get("text.0390") : CatalogText.Get("text.0391"); } }
 
         void DrawRegionalScenery()
         {

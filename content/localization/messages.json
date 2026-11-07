@@ -6136,6 +6136,114 @@
       "ko": "개인 원정 시작",
       "en": "Start local",
       "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "menu.ongoing",
+      "ko": "진행 중인 원정",
+      "en": "EXPEDITION IN PROGRESS",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.next",
+      "ko": "새로운 원정",
+      "en": "A NEW EXPEDITION",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.onward",
+      "ko": "서약은 계속된다",
+      "en": "The oath continues",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.progress",
+      "ko": "전투 {0} / {1}   ·   남은 기회 {2}",
+      "en": "Battle {0} / {1}   ·   {2} chances left",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.fresh",
+      "ko": "동료 셋과 함께, 30전투의 여정",
+      "en": "Three companions. Thirty battles ahead.",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.last_result",
+      "ko": "지난 원정 보기",
+      "en": "View last expedition",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.story",
+      "ko": "이야기",
+      "en": "Story",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.story_count",
+      "ko": "발견한 이야기 {0} / {1}",
+      "en": "Stories discovered  {0} / {1}",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.records_hint",
+      "ko": "지나온 원정과 나의 기록",
+      "en": "Your past expeditions",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.progress_hint",
+      "ko": "원정에서 이룬 성과",
+      "en": "Your expedition milestones",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.ranking_hint",
+      "ko": "최고 기록에 도전하기",
+      "en": "Chase the top score",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.party",
+      "ko": "함께하는 동료",
+      "en": "YOUR COMPANIONS",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.starting_party",
+      "ko": "첫 원정의 동료",
+      "en": "YOUR FIRST COMPANIONS",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.empty_party",
+      "ko": "준비 화면에서 출전 동료를 배치하세요.",
+      "en": "Deploy companions on the preparation screen.",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.party_hint",
+      "ko": "준비 화면에서 성장과 배치를 바꿀 수 있어요.",
+      "en": "Adjust growth and placement in preparation.",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.party_intro",
+      "ko": "소환하고, 성장시키고, 나만의 편성을 완성하세요.",
+      "en": "Summon, grow, and build your party.",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.normal_length",
+      "ko": "NORMAL  /  30전투",
+      "en": "NORMAL  /  30 BATTLES",
+      "context": "ExpeditionMenuScreen.cs"
+    },
+    {
+      "key": "menu.formation_hint",
+      "ko": "시작 동료만 달라집니다. 모든 편성은 같은 NORMAL 규칙을 따릅니다.",
+      "en": "Only your starting companions change. Every formation uses the same NORMAL rules.",
+      "context": "ExpeditionMenuScreen.cs"
     }
   ]
 }

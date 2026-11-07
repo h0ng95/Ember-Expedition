@@ -1034,6 +1034,24 @@ namespace Expedition.Core
             Add("rank.local_help", "개인 기록은 기기에 저장돼요. 순위 등록은 로그인 후 온라인으로 새 원정을 시작해주세요.", "Local runs save on this device. Sign in and start a new online expedition to rank.");
             Add("rank.start", "온라인 시작", "Start online");
             Add("rank.local_start", "개인 원정 시작", "Start local");
+            Add("menu.ongoing", "진행 중인 원정", "EXPEDITION IN PROGRESS");
+            Add("menu.next", "새로운 원정", "A NEW EXPEDITION");
+            Add("menu.onward", "서약은 계속된다", "The oath continues");
+            Add("menu.progress", "전투 {0} / {1}   ·   남은 기회 {2}", "Battle {0} / {1}   ·   {2} chances left");
+            Add("menu.fresh", "동료 셋과 함께, 30전투의 여정", "Three companions. Thirty battles ahead.");
+            Add("menu.last_result", "지난 원정 보기", "View last expedition");
+            Add("menu.story", "이야기", "Story");
+            Add("menu.story_count", "발견한 이야기 {0} / {1}", "Stories discovered  {0} / {1}");
+            Add("menu.records_hint", "지나온 원정과 나의 기록", "Your past expeditions");
+            Add("menu.progress_hint", "원정에서 이룬 성과", "Your expedition milestones");
+            Add("menu.ranking_hint", "최고 기록에 도전하기", "Chase the top score");
+            Add("menu.party", "함께하는 동료", "YOUR COMPANIONS");
+            Add("menu.starting_party", "첫 원정의 동료", "YOUR FIRST COMPANIONS");
+            Add("menu.empty_party", "준비 화면에서 출전 동료를 배치하세요.", "Deploy companions on the preparation screen.");
+            Add("menu.party_hint", "준비 화면에서 성장과 배치를 바꿀 수 있어요.", "Adjust growth and placement in preparation.");
+            Add("menu.party_intro", "소환하고, 성장시키고, 나만의 편성을 완성하세요.", "Summon, grow, and build your party.");
+            Add("menu.normal_length", "NORMAL  /  30전투", "NORMAL  /  30 BATTLES");
+            Add("menu.formation_hint", "시작 동료만 달라집니다. 모든 편성은 같은 NORMAL 규칙을 따릅니다.", "Only your starting companions change. Every formation uses the same NORMAL rules.");
         }
     }
 }

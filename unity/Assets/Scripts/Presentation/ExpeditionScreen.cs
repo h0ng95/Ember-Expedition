@@ -101,6 +101,7 @@ namespace Expedition.Presentation
             ReleasePreparationPreview();
             if (battleReport != null) battleReport.Dispose();
             if (font != null) Destroy(font);
+            ReleaseMenuArt();
             ExpeditionUiTheme.Release();
             ExpeditionResearchBoard.Release();
             LocalizedGui.ClearCache();
@@ -338,61 +339,7 @@ namespace Expedition.Presentation
             GUI.matrix = Matrix4x4.identity;
         }
 
-        void DrawHome()
-        {
-            ExpeditionUiTheme.DrawBackdrop(new Rect(0, 90, Width, 630), battlefield);
-            ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 90));
-            ExpeditionUiTheme.DrawEmber(new Vector2(53, 46), 30);
-            LocalizedGui.Label(new Rect(84, 6, 584, 60), CatalogText.Get("text.0613"), title);
-            LocalizedGui.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
-            if (LocalizedGui.Button(new Rect(690, 20, 145, 49), CloudText("account"), button)) modal = Modal.Account;
-            if (LocalizedGui.Button(new Rect(851, 20, 128, 49), CatalogText.Get("text.0363"), button)) modal = Modal.Settings;
-            if (LocalizedGui.Button(new Rect(995, 20, 260, 49),
-                CatalogText.Get("text.0614") + (journal == null ? 1 : journal.UnlockedCount) + "/" +
-                ExpeditionStory.Entries.Count, button))
-                OpenJournal(null);
-            bool hasNotice = error != null || legacySave || run != null && run.UsesPreviousBalance;
-            Rect panel = new Rect(155, hasNotice ? 144 : 176, 970, hasNotice ? 432 : 368);
-            Rect content = ExpeditionUiTheme.ContentRect(panel);
-            Rect footer = ExpeditionUiTheme.FooterRect(panel);
-            ExpeditionUiTheme.Window(panel);
-            bool replay = journal != null && journal.IsUnlocked("palace-clear");
-            LocalizedGui.Label(new Rect(content.x, content.y, content.width, 24), "I G N I S", hint);
-            LocalizedGui.Label(new Rect(content.x, content.y + 32, content.width - 448, 44),
-                replay ? CatalogText.Get("text.0615") : CatalogText.Get("text.0616"), heading);
-            if (LocalizedGui.Button(new Rect(content.xMax - 426, content.y + 16, 205, 48),
-                CatalogText.Get("text.0497"), button))
-            { recordsPage = 0; selectedRecord = null; modal = Modal.Records; }
-            if (LocalizedGui.Button(new Rect(content.xMax - 205, content.y + 16, 205, 48), CatalogText.Get("text.0617"), button))
-                modal = Modal.Progress;
-            ExpeditionUiTheme.Rule(new Rect(content.x, content.y + 88, content.width, 2));
-            LocalizedGui.Label(new Rect(content.x, content.y + 104, content.width, 64),
-                replay ? ExpeditionStory.ReplayBrief : ExpeditionStory.HomeBrief, dialogBody);
-            if (run != null)
-                LocalizedGui.Label(new Rect(content.x, content.y + 176, content.width, 33),
-                    CatalogText.Get("text.0618") + DifficultyLabel(run.Difficulty) + CatalogText.Get("text.0619") + run.Wave +
-                    " / " + run.ContentWaves, hint);
-            if (hasNotice)
-                LocalizedGui.Label(new Rect(content.x, footer.y - 88, content.width, 56),
-                    error ?? CatalogText.Get("text.0620"), hint);
-            ExpeditionUiTheme.FooterRule(panel);
-            GUI.enabled = modal == Modal.None && !storageBlocked;
-            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 0, 2), CatalogText.Get("text.0621"), primary))
-            { selectedFormationId = "standard"; modal = Modal.NewRun; }
-            GUI.enabled = modal == Modal.None && run != null;
-            if (LocalizedGui.Button(ExpeditionUiTheme.FooterButton(footer, 1, 2), CatalogText.Get("text.0622"), button))
-            { home = false; modal = Modal.None; playtest.Record("continue_run", run); }
-            GUI.enabled = modal == Modal.None;
-            if (LocalizedGui.Button(new Rect(1020, 650, 225, 48), CatalogText.Get("text.0623"), button)) OpenLab();
-            DrawPlaytestButton();
-            if (LocalizedGui.Button(new Rect(510, 650, 260, 48), RankText("title"), button)) OpenRanking();
-            if (badProgress)
-            {
-                ExpeditionUiTheme.PanelBox(new Rect(155, 590, 970, 48));
-                LocalizedGui.Label(new Rect(187, 598, 900, 36),
-                    CatalogText.Get("text.0624"), small);
-            }
-        }
+        void DrawHome() { DrawExpeditionHome(); }
 
         static string DifficultyLabel(ExpeditionDifficulty difficulty)
         {
@@ -855,62 +802,7 @@ namespace Expedition.Presentation
             { DrawEvolutionConfirmation(); return; }
             if (modal == Modal.Confirm && pendingAction == GrowthAction.Combine)
             { DrawCombinationConfirmation(); return; }
-            if (modal == Modal.NewRun)
-            {
-                Rect panel = new Rect(205, 70, 870, 580);
-                Rect content = ExpeditionUiTheme.ContentRect(panel);
-                ExpeditionUiTheme.Window(panel);
-                LocalizedGui.Label(new Rect(content.x, panel.y + 32, content.width, 48),
-                    CatalogText.Get("text.0621"), heading);
-                string warning = savePresent ?
-                    CatalogText.Get("text.0728") :
-                    legacySave ? CatalogText.Get("text.0729") :
-                    CatalogText.Get("text.0730");
-                LocalizedGui.Label(new Rect(content.x, 152, content.width, 50),
-                    CatalogText.Get("text.0693") + ExpeditionRun.TotalWaves + CatalogText.Get("text.0731") + warning, small);
-                Rect normal = new Rect(content.x, 216, content.width, 62);
-                ExpeditionUiTheme.PanelBox(normal, true);
-                LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 6, normal.width - 40, 28),
-                    CatalogText.Get("text.0732"), body);
-                LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 34, normal.width - 40, 23),
-                    RankedStartHelp, small);
-                Rect locked = new Rect(content.x, 288, content.width, 62);
-                bool wasEnabled = GUI.enabled;
-                GUI.enabled = false;
-                LocalizedGui.Button(locked, "", button);
-                GUI.enabled = wasEnabled;
-                LocalizedGui.Label(new Rect(locked.x + 20, locked.y + 6, locked.width - 40, 28),
-                    CatalogText.Get("text.0734"), body);
-                LocalizedGui.Label(new Rect(locked.x + 20, locked.y + 34, locked.width - 40, 23),
-                    progress != null && progress.HardUnlocked && !badProgress ?
-                    CatalogText.Get("text.0735") :
-                    CatalogText.Get("text.0736"), small);
-                LocalizedGui.Label(new Rect(content.x, 364, content.width, 31), CatalogText.Get("text.0737"), hint);
-                IReadOnlyList<string> research = badProgress || progress == null ?
-                    Array.Empty<string>() : progress.ResearchIds;
-                for (int i = 0; i < FormationIds.Length; i++)
-                {
-                    float cardWidth = (content.width - 3 * 12f) / 4f;
-                    Rect card = new Rect(content.x + i * (cardWidth + 12f), 402, cardWidth, 116);
-                    bool unlocked = ExpeditionRun.IsStartingFormation(FormationIds[i]);
-                    if (selectedFormationId == FormationIds[i])
-                        Fill(new Rect(card.x - 3, card.y - 3, card.width + 6, card.height + 6),
-                            new Color(Gold.r, Gold.g, Gold.b, .8f));
-                    GUI.enabled = wasEnabled && unlocked;
-                    if (LocalizedGui.Button(card, GUIContent.none, button)) selectedFormationId = FormationIds[i];
-                    GUI.enabled = wasEnabled;
-                    LocalizedGui.Label(new Rect(card.x + 13, card.y + 9, card.width - 26, 31),
-                        FormationNames[i], centered);
-                    LocalizedGui.Label(new Rect(card.x + 12, card.y + 39, card.width - 24, 48),
-                        FormationUnits[i], small);
-                    LocalizedGui.Label(new Rect(card.x + 12, card.y + 90, card.width - 24, 22),
-                        unlocked ? selectedFormationId == FormationIds[i] ? CatalogText.Get("text.0738") : CatalogText.Get("text.0739") :
-                        badProgress ? CatalogText.Get("text.0740") : CatalogText.Get("text.0741"), small);
-                }
-                ExpeditionUiTheme.FooterRule(panel);
-                DrawRankedStartButtons(panel, content);
-                return;
-            }
+            if (modal == Modal.NewRun) { DrawNewExpeditionMenu(); return; }
             CatalogMember selected = run.Roster.Find(selectedId);
             CatalogMember other = run.Roster.Find(pendingOtherId);
             if (selected == null) { modal = Modal.None; return; }

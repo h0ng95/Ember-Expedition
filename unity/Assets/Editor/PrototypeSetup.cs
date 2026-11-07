@@ -112,7 +112,9 @@ namespace Expedition.EditorTools
                 scenes = new[] { ScenePath },
                 target = BuildTarget.Android,
                 locationPathName = "Builds/Android/expedition-combat-prototype.apk",
-                options = BuildOptions.Development | BuildOptions.CleanBuildCache
+                // Opt in during visual iteration; the usual test build still clears the cache.
+                options = BuildOptions.Development | (Array.IndexOf(Environment.GetCommandLineArgs(), "-ignisIncremental") >= 0
+                    ? BuildOptions.None : BuildOptions.CleanBuildCache)
             });
             if (report.summary.result != BuildResult.Succeeded)
                 throw new InvalidOperationException("Android build failed: " + report.summary.result);

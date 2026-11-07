@@ -6,16 +6,16 @@ namespace Expedition.Presentation
     public static class ExpeditionUiTheme
     {
         public static readonly Color Background = Hex(0x0D1015);
-        public static readonly Color Panel = Hex(0x21232B);
-        public static readonly Color PanelLight = Hex(0x33343D);
+        public static readonly Color Panel = Hex(0x14252B);
+        public static readonly Color PanelLight = Hex(0x223A40);
+        public static readonly Color Teal = Hex(0x79B5AE);
         public static readonly Color Cream = Hex(0xF4E9D4);
         public static readonly Color Gold = Hex(0xF2C16B);
         public static readonly Color Muted = Hex(0xB9B1A4);
         public static readonly Color Ink = Hex(0x35281F);
         public static readonly Color FadedInk = Hex(0x755537);
-        static readonly Color Bronze = Hex(0x86704C);
+        static readonly Color Bronze = Hex(0x967D52);
         static readonly Color Edge = Hex(0x111319);
-        static Texture2D grain;
         static readonly Texture2D[] buttons = new Texture2D[6];
         public const float WindowPadding = 32f;
         public const float ActionGap = 16f;
@@ -66,42 +66,31 @@ namespace Expedition.Presentation
 
         public static void PanelBox(Rect rect, bool raised = false)
         {
-            Fill(new Rect(rect.x + 2, rect.y + 5, rect.width, rect.height), new Color(0, 0, 0, .42f));
+            Fill(new Rect(rect.x + 2, rect.y + 4, rect.width, rect.height), new Color(0, 0, 0, .32f));
             Fill(rect, Edge);
-            Fill(Inset(rect, 2), raised ? Bronze : Hex(0x524B3E));
+            Fill(Inset(rect, 1), raised ? Bronze : Hex(0x3B5357));
             Fill(Inset(rect, 3), raised ? PanelLight : Panel);
-            EnsureGrain();
-            Rect inside = Inset(rect, 5);
-            Color before = GUI.color;
-            GUI.color = new Color(1, 1, 1, raised ? .28f : .2f);
-            GUI.DrawTextureWithTexCoords(inside, grain,
-                new Rect(0, 0, inside.width / 64f, inside.height / 64f));
-            GUI.color = before;
-            Fill(new Rect(rect.x + 5, rect.y + 4, rect.width - 10, 1), new Color(1, .84f, .57f, .14f));
+            Fill(new Rect(rect.x + 5, rect.y + 4, rect.width - 10, 1), new Color(.6f, .85f, .8f, .14f));
             Fill(new Rect(rect.x + 4, rect.yMax - 5, rect.width - 8, 1), new Color(0, 0, 0, .45f));
-            Corner(rect.x + 3, rect.y + 3, 1, 1, raised);
-            Corner(rect.xMax - 3, rect.y + 3, -1, 1, raised);
-            Corner(rect.x + 3, rect.yMax - 3, 1, -1, raised);
-            Corner(rect.xMax - 3, rect.yMax - 3, -1, -1, raised);
+            if (raised)
+            {
+                Corner(rect.x + 3, rect.y + 3, 1, 1, true);
+                Corner(rect.xMax - 3, rect.y + 3, -1, 1, true);
+            }
         }
 
         public static void Window(Rect rect, string title = null)
         {
             PanelBox(rect, true);
-            // Layered metal rim with broad corner fittings, reserved for major windows.
-            Fill(new Rect(rect.x + 6, rect.y + 6, rect.width - 12, 3), Hex(0x61503B));
+            // A quiet teal field and stepped brass fittings share the knight's palette.
+            Fill(Inset(rect, 5), Panel);
+            Fill(new Rect(rect.x + 6, rect.y + 6, rect.width - 12, 3), Hex(0x526B68));
             Fill(new Rect(rect.x + 6, rect.yMax - 9, rect.width - 12, 3), Hex(0x17181E));
             MetalCorner(rect.x, rect.y, 1, 1);
             MetalCorner(rect.xMax, rect.y, -1, 1);
             MetalCorner(rect.x, rect.yMax, 1, -1);
             MetalCorner(rect.xMax, rect.yMax, -1, -1);
-            float center = rect.center.x;
-            Fill(new Rect(center - 58, rect.y - 2, 116, 9), Edge);
-            Fill(new Rect(center - 50, rect.y, 100, 3), Bronze);
-            Fill(new Rect(center - 19, rect.y - 15, 38, 32), Edge);
-            Fill(new Rect(center - 16, rect.y - 12, 32, 28), Bronze);
-            Fill(new Rect(center - 13, rect.y - 10, 26, 24), Panel);
-            DrawEmber(new Vector2(center, rect.y + 4), 19);
+            Fill(new Rect(rect.center.x - 44, rect.y + 6, 88, 3), Bronze);
             if (!string.IsNullOrEmpty(title))
             {
                 var style = new GUIStyle(GUI.skin.label) {
@@ -114,14 +103,10 @@ namespace Expedition.Presentation
 
         static void MetalCorner(float x, float y, int dx, int dy)
         {
-            float left = dx > 0 ? x : x - 27;
-            float top = dy > 0 ? y : y - 27;
-            Fill(new Rect(left, top, 27, 27), Edge);
-            Fill(new Rect(left + 2, top + 2, 23, 23), Hex(0xA0804D));
-            Fill(new Rect(left + 4, top + 4, 19, 19), Hex(0x635038));
-            Fill(new Rect(left + 5, top + 5, 17, 2), Hex(0xE3BC75));
-            Fill(new Rect(left + 10, top + 10, 7, 7), Edge);
-            Fill(new Rect(left + 11, top + 10, 5, 4), Gold);
+            float left = dx > 0 ? x : x - 22, top = dy > 0 ? y : y - 22;
+            Fill(new Rect(left, dy > 0 ? top : top + 18, 22, 4), Bronze);
+            Fill(new Rect(dx > 0 ? left : left + 18, top, 4, 22), Bronze);
+            Fill(new Rect(dx > 0 ? left + 4 : left + 10, dy > 0 ? top + 4 : top + 14, 8, 4), Gold);
         }
 
         public static void ParchmentBox(Rect rect)
@@ -211,43 +196,26 @@ namespace Expedition.Presentation
             const int size = 24;
             var texture = NewTexture(size, "Expedition button");
             var pixels = new Color[size * size];
-            Color baseColor = primary ? Hex(state == 1 ? 0xEFC477u : state == 2 ? 0xB18445u : 0xD6AA62u) :
-                Hex(state == 1 ? 0x42434Bu : state == 2 ? 0x202129u : 0x30313Bu);
+            Color baseColor = primary ? Hex(state == 1 ? 0xEAC782u : state == 2 ? 0xA77C42u : 0xD4AC68u) :
+                Hex(state == 1 ? 0x304E53u : state == 2 ? 0x102329u : 0x1F363Du);
             for (int y = 0; y < size; y++)
                 for (int x = 0; x < size; x++)
                 {
                     int edge = Mathf.Min(x, size - 1 - x, y, size - 1 - y);
                     Color color = baseColor;
                     if (edge == 0) color = Hex(0x101217);
-                    else if (edge == 1) color = primary ? Hex(0x8E6B37) : Bronze;
-                    else if (edge == 2) color = Hex(0x1B1B21);
+                    else if (edge == 1) color = primary ? Hex(0x8E6B37) : Hex(0x52716F);
+                    else if (edge == 2) color = Color.Lerp(baseColor, Edge, .35f);
                     else if (y == size - 4) color = Color.Lerp(baseColor, Cream, state == 2 ? .08f : .32f);
                     else if (y < 5) color = Color.Lerp(baseColor, Edge, .27f);
-                    if (x < 2 && y < 2 || x > size - 3 && y < 2 ||
-                        x < 2 && y > size - 3 || x > size - 3 && y > size - 3)
+                    int corner = Mathf.Min(x, size - 1 - x) + Mathf.Min(y, size - 1 - y);
+                    if (corner < 4)
                         color = Color.clear;
                     pixels[y * size + x] = color;
                 }
             texture.SetPixels(pixels);
             texture.Apply(false, true);
             return texture;
-        }
-
-        static void EnsureGrain()
-        {
-            if (grain != null) return;
-            grain = NewTexture(64, "Expedition panel grain");
-            grain.wrapMode = TextureWrapMode.Repeat;
-            var pixels = new Color[64 * 64];
-            uint state = 92517;
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                state = unchecked(state * 1664525 + 1013904223);
-                float v = .1f + (state >> 28) / 600f;
-                pixels[i] = new Color(v, v, v + .012f, 1f);
-            }
-            grain.SetPixels(pixels);
-            grain.Apply(false, true);
         }
 
         static Texture2D NewTexture(int size, string name)
@@ -275,8 +243,6 @@ namespace Expedition.Presentation
 
         public static void Release()
         {
-            if (grain != null) Object.Destroy(grain);
-            grain = null;
             for (int i = 0; i < buttons.Length; i++)
             {
                 if (buttons[i] != null) Object.Destroy(buttons[i]);

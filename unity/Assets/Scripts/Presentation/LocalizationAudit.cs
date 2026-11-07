@@ -74,7 +74,7 @@ namespace Expedition.Presentation
             var saved = new Dictionary<string, object>();
             foreach (string field in new[] { "run", "home", "modal", "badSave", "storageBlocked", "tutorialMask", "lessonMask", "selectedId", "selectedStoryId",
                 "journal", "recordHistory", "selectedRecord", "pendingAction", "pendingFormId", "pendingOtherId", "growthDetails", "growthPreviewKey", "infoTabIndex",
-                "battleReport", "battleReportRun", "battleReportComplete", "selectedTacticNodeId" }) saved[field] = Get(screen, field);
+                "battleReport", "battleReportRun", "battleReportComplete", "selectedTacticNodeId", "selectedFormationId", "savePresent" }) saved[field] = Get(screen, field);
             string language = GamePreferences.Current.Language;
             float volume = GamePreferences.Current.SoundVolume;
             CatalogCombatLab lab = null;
@@ -83,6 +83,35 @@ namespace Expedition.Presentation
                 Set(screen, "storageBlocked", true); Set(screen, "badSave", true);
                 Set(screen, "tutorialMask", 3); Set(screen, "lessonMask", 15);
                 LocalizedGui.Audit = true;
+                if (mode == "menus")
+                {
+                    // Screenshot fixtures only; the original run and write guards are restored below.
+                    foreach(string locale in new[]{"ko","en"})
+                    {
+                        GamePreferences.Current.Language=locale; GamePreferences.Apply();
+                        Set(screen,"home",true); Set(screen,"modal","None");
+                        Set(screen,"run",null); Set(screen,"savePresent",false);
+                        yield return CheckView(locale+"-menu-fresh",true);
+                        Set(screen,"run",ExpeditionRun.New(db,74001)); Set(screen,"savePresent",true);
+                        yield return CheckView(locale+"-menu-three",true);
+                        Set(screen,"run",Fixture(db,25));
+                        yield return CheckView(locale+"-menu-five",true);
+                        foreach(string formation in new[]{"standard","tactical","ember","frost"})
+                        {
+                            Set(screen,"selectedFormationId",formation); Set(screen,"modal","NewRun");
+                            yield return CheckView(locale+"-menu-"+formation,true);
+                        }
+                        foreach(string panel in new[]{"Settings","Records","Progress","Account","Rankings"})
+                        { Set(screen,"modal",panel); yield return CheckView(locale+"-menu-"+panel,true); }
+                        var ended=Fixture(db,30); ended.BeginBattle(); ended.ResolveBattle(true);
+                        Set(screen,"run",ended);Set(screen,"modal","None");
+                        yield return CheckView(locale+"-menu-completed",true);
+                    }
+                    File.WriteAllLines(Path.Combine(directory,"menu-overflows.txt"),results.ToArray());
+                    File.WriteAllText(Path.Combine(directory,"menu-result.txt"),
+                        (results.Count==0?"PASS":"BOUNDS_ISSUES")+" screens="+screens+" captures="+captures+" overflows="+results.Count);
+                    yield break;
+                }
                 if (mode == "touch" || mode == "verify")
                 {
                     Set(screen, "home", true); Set(screen, "modal", mode == "touch" ? "Settings" : "None");

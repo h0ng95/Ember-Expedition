@@ -1,0 +1,86 @@
+{
+    "complete": true,
+    "cases": [
+        {
+            "name": "boss-5-1x",
+            "damage": 131,
+            "blocks": 0,
+            "impacts": 2,
+            "flightFrames": 481,
+            "visibleLabelsPeak": 3,
+            "abilities": [
+                "BOSS_CHARGE"
+            ]
+        },
+        {
+            "name": "boss-10-2x",
+            "damage": 125,
+            "blocks": 28,
+            "impacts": 4,
+            "flightFrames": 232,
+            "visibleLabelsPeak": 3,
+            "abilities": [
+                "GOLEM_SLAM",
+                "GOLEM_AFTERSHOCK"
+            ]
+        },
+        {
+            "name": "boss-15-2x",
+            "damage": 137,
+            "blocks": 35,
+            "impacts": 4,
+            "flightFrames": 307,
+            "visibleLabelsPeak": 3,
+            "abilities": [
+                "FURNACE_BLAST",
+                "FURNACE_EMBER"
+            ]
+        },
+        {
+            "name": "boss-20-1x",
+            "damage": 123,
+            "blocks": 29,
+            "impacts": 3,
+            "flightFrames": 343,
+            "visibleLabelsPeak": 7,
+            "abilities": [
+                "FROST_NOVA"
+            ]
+        },
+        {
+            "name": "boss-25-2x",
+            "damage": 170,
+            "blocks": 48,
+            "impacts": 6,
+            "flightFrames": 231,
+            "visibleLabelsPeak": 7,
+            "abilities": [
+                "GARDEN_BRIARS"
+            ]
+        },
+        {
+            "name": "boss-30-2x",
+            "damage": 138,
+            "blocks": 38,
+            "impacts": 4,
+            "flightFrames": 231,
+            "visibleLabelsPeak": 6,
+            "abilities": [
+                "DRACONIC_BREATH",
+                "DRACONIC_BOMB",
+                "DRACONIC_LAND"
+            ]
+        },
+        {
+            "name": "boss-5-2x-reduced",
+            "damage": 119,
+            "blocks": 23,
+            "impacts": 2,
+            "flightFrames": 238,
+            "visibleLabelsPeak": 3,
+            "abilities": [
+                "BOSS_CHARGE"
+            ]
+        }
+    ]
+}

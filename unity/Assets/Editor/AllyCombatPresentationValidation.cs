@@ -43,7 +43,8 @@ namespace Expedition.EditorTools
                         if(e.SourceId==actor.Id && e.Kind==CatalogEventKind.BasicHit){row.basic++;impact=true;}
                         if(e.Kind==CatalogEventKind.Damage && e.SourceId==actor.Id && e.AbilityId=="BASIC")
                         {
-                            Check(((IList)Field(lab,"floating")).Count>0,"damage number on simulation impact "+form);
+                            Check(((IList)Field(lab,"floating")).Count==0,"basic impact does not spam numbers "+form);
+                            Check(((IList)Field(Field(lab,"battleEffects"),"effects")).Count>0,"contact sprite on simulation impact "+form);
                             Check((float)Field(view,"ReleaseAge")== (row.projectile?AllyAttackPresentation.ProjectileFlight:0f),"arrival pose "+form);
                         }
                     };

@@ -63,6 +63,7 @@ namespace Expedition.Presentation
             public float RevealUntil;
             public int State, RenderedEnemyFrame;
             public bool NewHit, NewRelease, WasWinding;
+            public float FreezeNoticeUntil, PoisonNoticeUntil;
         }
         struct DrawnCombatant
         {
@@ -470,14 +471,16 @@ namespace Expedition.Presentation
                 }
                 BattleFloatKind kind = e.AbilityId == "BURN" ? BattleFloatKind.Burn :
                     e.AbilityId == "POISON" ? BattleFloatKind.Poison : BattleFloatKind.Direct;
-                AddDamageFloat(target.Unit, kind, e.Amount);
+                // Ordinary contacts and DoT already have impact sprites, HP bars and status icons.
+                // Keep numeric callouts for skills only; never flood the arena with every tick.
+                if(kind==BattleFloatKind.Direct && e.AbilityId!="BASIC")
+                    AddCompactNumber(target.Unit,BattleFloatKind.Direct,e.Amount);
             }
-            if ((e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield) && target != null && floating.Count < 24)
-                floating.Add(new FloatText { Text = (e.Kind == CatalogEventKind.Heal ? "+" : "◇") + HudRules.NumberText(e.Amount),
-                    TargetId = target.Unit.Id,
-                    Kind = e.Kind == CatalogEventKind.Heal ? BattleFloatKind.Heal : BattleFloatKind.Shield,
-                    Position = new Vector2(target.Unit.X, target.Unit.Y), Color = e.Kind == CatalogEventKind.Heal ?
-                    new Color(.55f, 1f, .64f) : new Color(.5f, .84f, 1f), Lift = FloatLift(target.Unit) });
+            // Routine regeneration uses the green effect and HP bar. A sizeable recovery
+            // from low health gets one merged number, rather than five repeating + labels.
+            if(e.Kind==CatalogEventKind.Heal && target!=null && e.Amount>=target.Unit.MaxHp*.08f &&
+                target.Unit.Hp-e.Amount<target.Unit.MaxHp*.4f)
+                AddCompactNumber(target.Unit,BattleFloatKind.Heal,e.Amount);
             if (e.Kind == CatalogEventKind.Shield && e.AbilityId == "MINE_GUARD" && source != null)
             {
                 source.ReleaseRemaining = .18f;
@@ -496,15 +499,57 @@ namespace Expedition.Presentation
                 target.NewHit = false;
                 target.ReleaseRemaining = 0f;
                 target.NewRelease = false;
-                if (floating.Count < 24)
+                if (e.Time>=target.FreezeNoticeUntil)
+                {
+                    target.FreezeNoticeUntil=e.Time+2f;
+                    ReserveFloatSlot();
                     floating.Add(new FloatText { Text = CatalogText.Get("text.0356"), Kind = BattleFloatKind.Freeze,
+                        TargetId=target.Unit.Id,
                         Position = new Vector2(target.Unit.X, target.Unit.Y),
                         Color = new Color(.59f, .88f, 1f), Lift = FloatLift(target.Unit) });
+                }
             }
-            if (e.Kind == CatalogEventKind.Poison && target != null && floating.Count < 24)
+            if (e.Kind == CatalogEventKind.Poison && target != null && e.Time>=target.PoisonNoticeUntil)
+            {
+                target.PoisonNoticeUntil=e.Time+3f;
+                ReserveFloatSlot();
                 floating.Add(new FloatText { Text = CatalogText.Get("text.0357"), Kind = BattleFloatKind.PoisonApplied,
+                    TargetId=target.Unit.Id,
                     Position = new Vector2(target.Unit.X, target.Unit.Y),
                     Color = new Color(.73f, 1f, .42f), Lift = FloatLift(target.Unit) });
+            }
+        }
+
+        void ReserveFloatSlot()
+        {
+            if(floating.Count<8)return;
+            int numeric=floating.FindIndex(t=>t.Kind==BattleFloatKind.Direct || t.Kind==BattleFloatKind.Heal);
+            floating.RemoveAt(numeric>=0 ? numeric : 0);
+        }
+
+        void AddCompactNumber(CatalogBattleUnit target,BattleFloatKind kind,float amount)
+        {
+            if(amount<=0)return;
+            for(int i=floating.Count-1;i>=0;i--)
+                if(floating[i].Kind==kind && floating[i].TargetId==target.Id)
+                {
+                    if(floating[i].Age<=.55f)
+                    {
+                        floating[i].Amount+=amount;
+                        floating[i].Text=kind==BattleFloatKind.Heal ? "+"+HudRules.NumberText(floating[i].Amount) :
+                            HudRules.DamageText(kind,floating[i].Amount);
+                        return;
+                    }
+                    floating.RemoveAt(i);
+                }
+            // Status labels take priority when the screen is already busy.
+            if(floating.Count>=8 && !floating.Exists(t=>t.Kind==BattleFloatKind.Direct || t.Kind==BattleFloatKind.Heal))return;
+            ReserveFloatSlot();
+            floating.Add(new FloatText {Kind=kind,TargetId=target.Id,Amount=amount,
+                Text=kind==BattleFloatKind.Heal ? "+"+HudRules.NumberText(amount) : HudRules.DamageText(kind,amount),
+                Position=new Vector2(target.X,target.Y),Lift=FloatLift(target),
+                Color=kind==BattleFloatKind.Heal ? new Color(.55f,1f,.64f) :
+                    target.Team==CatalogTeam.Ally ? new Color(1f,.53f,.47f) : Gold});
         }
 
         void AddDamageFloat(CatalogBattleUnit target, BattleFloatKind kind, float amount)
@@ -971,9 +1016,6 @@ namespace Expedition.Presentation
                 GUI.EndGroup();
                 GUI.color=prior;
                 DrawAllyBadge(new Rect(row.x+3,row.y+22,19,20),index,identity);
-                bool acting=unit.IsAlive && unit.FrozenRemaining<=0 &&
-                    (view.ReleaseRemaining>0 || AllyAttackPresentation.InFlight(unit));
-                if(acting)Fill(new Rect(row.x+1,row.y+1,3,row.height-2),identity);
                 float ratio=unit.Hp/unit.MaxHp;
                 CombatHud.Meter(new Rect(row.x+58,row.y+28,98,8),ratio,
                     Mathf.Max(ratio,view.Health.Value),unit.Shield/unit.MaxHp,true);

@@ -130,7 +130,9 @@ namespace Expedition.EditorTools
             bool ignisCore = assetPath == "Assets/Resources/Art/Ignis/ignis-living-core.png";
             bool storyProp = assetPath.StartsWith("Assets/Resources/Art/Story/", StringComparison.Ordinal);
             bool bossEffect = assetPath.StartsWith("Assets/Resources/Art/Effects/v039/", StringComparison.Ordinal) ||
-                assetPath.StartsWith("Assets/Resources/Art/Effects/v049/", StringComparison.Ordinal);
+                assetPath.StartsWith("Assets/Resources/Art/Effects/v049/", StringComparison.Ordinal) ||
+                assetPath.StartsWith("Assets/Resources/Art/Effects/v070/", StringComparison.Ordinal) ||
+                assetPath.StartsWith("Assets/Resources/Art/Effects/v071/", StringComparison.Ordinal);
             bool frostFloating = assetPath.StartsWith("Assets/Resources/Art/Enemies/v039/frost-boss-floating", StringComparison.Ordinal) ||
                 assetPath == "Assets/Resources/Art/Enemies/v039/frost-boss-full-motion.png" ||
                 assetPath == "Assets/Resources/Art/Enemies/v063/frost-warden.png" ||

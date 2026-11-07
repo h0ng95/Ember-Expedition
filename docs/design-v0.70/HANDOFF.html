@@ -1,0 +1,11 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>v0.70 · PixelFX 전투 효과</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#12191f;color:#e9e5db;font:16px/1.8 system-ui}main{max-width:1100px;margin:auto;padding:32px 24px}h1{font-size:30px}h2{margin-top:36px;border-top:1px solid #44515a;padding-top:20px;color:#e3c48c}a{color:#c7dcd5}video,img{max-width:100%;height:auto;border:1px solid #45515a}td,th{border:1px solid #465158;padding:12px;text-align:left}table{border-collapse:collapse;width:100%}code{color:#e9ce9b}.muted{color:#b1bdc2}</style>
+<main><p class="muted">IGNIS: ASHEN OATH · 2026-11-07</p><h1>v0.70 · PixelFX 전투 효과 3종</h1>
+<p>검 타격·회복·빙결을 게임에 시험 적용했다. <a href="effects-preview.html">기존 / 적용 애니메이션 비교 화면</a>에서 속도와 배경을 바꿔 볼 수 있다.</p>
+<video controls preload="metadata" src="device-evidence/pixelfx-buddy2.mp4"></video><p class="muted">Galaxy Buddy2 실제 촬영 · 18초 · 체력을 높인 QA 편성으로 전투 밸런스와 무관하다.</p>
+<table><tr><th>효과</th><th>달라진 점</th></tr><tr><td>근접 타격</td><td>금빛 궤적 8프레임. 실제 명중에 맞춰 0.24초 재생하며 좌우 방향을 반영한다.</td></tr><tr><td>회복</td><td>연녹색 입자 16프레임, 0.64초. 대상의 이동을 따라가고 보호막과 구분한다.</td></tr><tr><td>빙결</td><td>중심을 비운 회청색 결정. 실제 빙결 상태에서만 표시하며 모션 줄이기는 정지 프레임으로 처리한다.</td></tr></table>
+<h2>검증 결과</h2><p>40개 프레임·투명 셀 경계·텍스처 임포트·회복/보호막 구분·일시정지·만료 검사를 통과했다. Android IL2CPP APK를 빌드하고 Buddy2에 설치했다.</p>
+<p>1×·2×·섬광/모션 줄이기 2×에서 각각 시뮬레이션 32초를 실행했다. 모두 기본 공격 147회, 회복 31회, 빙결 8회였으며 런타임 예외는 없었다. 기존 저장 파일과 PlayerPrefs도 복원 확인했다. 녹화와 화면 캡처가 포함되어 성능 벤치마크로 해석하지 않는다.</p>
+<img src="device-evidence/normal-2x-heal.png" alt="2배속 실제 전투에서 회복 입자와 금빛 타격 궤적">
+<h2>아트와 출처</h2><p>PNG 3개 합계 약 38.5 KiB, 비압축 RGBA 약 1.32 MiB. 텍스처를 캐시하고 프레임 UV를 선택한다. <a href="https://github.com/patch-gg/pixelfx">PixelFX</a>의 검·회복 효과를 조정하고 빙결은 PixelFX 도형으로 구성했다. 기본 샘플 캐릭터나 갤러리 폰트는 가져오지 않았다. MIT 라이선스와 저작권 고지를 포함했다.</p>
+<h2>후속 수정</h2><p>사용자 요청에 따라 왼쪽 아군 목록에서 공격마다 깜빡이는 색 띠를 제거했다. 고정 번호·고유 색, 체력·보호막·상태 이상, 눌렀을 때 동료 위치 강조는 유지한다. 위 영상과 캡처는 이 수정 전의 PixelFX 검증 자료다.</p><p>검 궤적은 현재 근접 타격 공통 표시이며 맞은 대상 위치에 나온다. 아군이 공격하면 적에게, 적이 공격하면 아군에게 표시된다. 무기별 효과 구분은 아직 적용하지 않았다.</p><p><a href="HANDOFF.md">상세 작업 기록</a> · <a href="device-evidence/report.json">실기기 결과</a></p></main></html>

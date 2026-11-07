@@ -72,8 +72,10 @@ namespace Expedition.EditorTools
                 Check(Mathf.Abs((float)Field(targetView, "HitTime") - .13f) < .0001f &&
                     !(bool)Field(targetView, "NewHit"),
                     "periodic ticks leave an existing direct-hit timer untouched");
-                Check(((IList)Field(lab, "floating")).Count >= 2,
-                    "periodic damage retains visible numbers");
+                foreach(object text in (IList)Field(lab,"floating"))
+                    Check((CatalogCombatLab.BattleFloatKind)Field(text,"Kind")!=CatalogCombatLab.BattleFloatKind.Burn &&
+                        (CatalogCombatLab.BattleFloatKind)Field(text,"Kind")!=CatalogCombatLab.BattleFloatKind.Poison,
+                        "periodic damage keeps HP/effects without numeric spam");
 
                 MethodInfo alpha = typeof(CatalogCombatLab).GetMethod("CorpseAlpha",
                     BindingFlags.Static | BindingFlags.NonPublic);

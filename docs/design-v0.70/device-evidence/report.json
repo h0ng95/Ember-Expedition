@@ -1,0 +1,32 @@
+{
+    "complete": true,
+    "cases": [
+        {
+            "name": "normal-1x",
+            "basic": 147,
+            "heal": 31,
+            "freeze": 8,
+            "frames": 1938,
+            "seconds": 33.12805938720703,
+            "maxFrameMs": 383.1290588378906
+        },
+        {
+            "name": "normal-2x",
+            "basic": 147,
+            "heal": 31,
+            "freeze": 8,
+            "frames": 980,
+            "seconds": 16.868953704833986,
+            "maxFrameMs": 249.95323181152345
+        },
+        {
+            "name": "reduced-2x",
+            "basic": 147,
+            "heal": 31,
+            "freeze": 8,
+            "frames": 976,
+            "seconds": 16.838035583496095,
+            "maxFrameMs": 233.22116088867188
+        }
+    ]
+}

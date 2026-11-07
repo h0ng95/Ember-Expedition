@@ -8,7 +8,7 @@ namespace Expedition.Presentation
     // Bounded effect records; boss animation sheets are cached and drawn by UV.
     internal sealed class CatalogBattleEffects : IDisposable
     {
-        enum EffectKind { Impact, Slash, Support, GroundImpact, RootBurst, Breath, PillarLine,
+        enum EffectKind { Impact, Slash, WeaponImpact, ShieldBlock, Support, Heal, GroundImpact, RootBurst, Breath, PillarLine,
             ChargeDust, GolemCrack, FurnacePillar, FurnaceEmber, FrostSpire, DrakeLand }
         sealed class Effect
         {
@@ -17,6 +17,7 @@ namespace Expedition.Presentation
             public Vector2 EndPoint;
             public Color Color;
             public EffectKind Kind;
+            public CombatEffectStyle Style;
             public float Age, Duration, Size, BodyOffset, HalfWidth;
             public int Direction;
             public bool HasBreathAnchor;
@@ -25,6 +26,8 @@ namespace Expedition.Presentation
 
         readonly List<Effect> effects = new List<Effect>(24);
         readonly BossSpriteEffects spriteEffects = new BossSpriteEffects();
+        readonly PixelBattleEffects pixelEffects = new PixelBattleEffects();
+        readonly CombatSpriteEffects combatSprites = new CombatSpriteEffects();
         readonly AudioSource[] voices = new AudioSource[4];
         readonly AudioClip hit, arrow, launch;
         readonly HashSet<string> launched = new HashSet<string>();
@@ -69,9 +72,8 @@ namespace Expedition.Presentation
 
         static bool IsArrow(CatalogBattleUnit unit)
         {
-            return unit.EnemyRole == CatalogEnemyRole.Raider ||
-                unit.EnemyRole == CatalogEnemyRole.GardenSpitter || unit.FormId.Contains("-AR") ||
-                unit.FormId == "H-03" || unit.FormId == "H-06";
+            CombatEffectStyle style=CombatEffectProfile.Basic(unit);
+            return style==CombatEffectStyle.Arrow || style==CombatEffectStyle.FrostArrow;
         }
 
         static bool IsProjectile(CatalogBattleUnit unit) { return AllyAttackPresentation.Projectile(unit); }
@@ -95,12 +97,12 @@ namespace Expedition.Presentation
         }
 
         void Add(EffectKind kind, CatalogBattleUnit unit, Color color, float size, float duration,
-            int direction, float animationTime)
+            int direction, float animationTime, CombatEffectStyle style = CombatEffectStyle.Blunt)
         {
             if (unit == null) return;
             if (effects.Count == 24) effects.RemoveAt(0);
-            effects.Add(new Effect { Point = new Vector2(unit.X, unit.Y), Color = color,
-                Kind = kind, Size = size, Duration = duration, Direction = direction,
+            effects.Add(new Effect { SourceId = unit.Id, Point = new Vector2(unit.X, unit.Y), Color = color,
+                Kind = kind, Style = style, Size = size, Duration = duration, Direction = direction,
                 BodyOffset = unit.EnemyRole == CatalogEnemyRole.CrownDrake ?
                     150f +
                     PalaceEnemyArt.VisualFlightLift(DrakeAttackPresentation.FlightLift(unit), unit.Y, animationTime) : 57f });
@@ -151,17 +153,23 @@ namespace Expedition.Presentation
                     Size = .6f, Duration = .38f,
                     Color = new Color(.74f, .55f, .34f) });
             }
-            if ((e.Kind == CatalogEventKind.BasicHit || e.Kind == CatalogEventKind.SkillUsed) &&
-                source != null && target != null && !IsProjectile(source) &&
-                (e.Kind == CatalogEventKind.BasicHit || source.Team != target.Team))
-                Add(EffectKind.Slash, target, color, e.Kind == CatalogEventKind.SkillUsed ? 40 : 27, .18f, direction, battle.Time);
             if (e.Kind == CatalogEventKind.Damage && target != null)
             {
                 bool periodic = e.AbilityId == "BURN" || e.AbilityId == "POISON";
                 bool strong = !periodic && e.AbilityId != "BASIC";
                 Color impact = e.AbilityId == "BURN" ? new Color(1f, .5f, .18f) :
                     e.AbilityId == "POISON" ? new Color(.72f, .96f, .36f) : color;
-                Add(EffectKind.Impact, target, impact, periodic ? 9 : strong ? 35 : 20, .23f, direction, battle.Time);
+                // Damage is the authoritative contact event. BasicHit/SkillUsed can be
+                // emitted before contact or for non-damaging support skills.
+                CombatEffectStyle style=CombatEffectProfile.Impact(source,e.AbilityId);
+                if(periodic)
+                    Add(EffectKind.Impact,target,impact,9,.23f,direction,battle.Time);
+                else if(style==CombatEffectStyle.Blade)
+                    Add(EffectKind.Slash,target,color,strong ? 40 : 27,PixelBattleEffects.SlashDuration,
+                        direction,battle.Time,style);
+                else
+                    Add(EffectKind.WeaponImpact,target,color,strong ? 35 : 20,combatSprites.HitDuration(style),
+                        direction,battle.Time,style);
                 if (!periodic)
                 {
                     Play(source != null && IsProjectile(source) ? arrow : hit, strong ? .85f : .65f);
@@ -169,9 +177,14 @@ namespace Expedition.Presentation
                     { HitStopRemaining = .035f; hitStopCooldown = .22f; }
                 }
             }
-            if (e.Kind == CatalogEventKind.Heal || e.Kind == CatalogEventKind.Shield)
-                Add(EffectKind.Support, target, e.Kind == CatalogEventKind.Heal ?
-                    new Color(.45f, 1f, .6f) : new Color(.5f, .8f, 1f), 32, .4f, 1, battle.Time);
+            if (e.Kind == CatalogEventKind.Heal)
+                Add(EffectKind.Heal, target, new Color(.45f, 1f, .6f), 32,
+                    PixelBattleEffects.HealDuration, 1, battle.Time);
+            if (e.Kind == CatalogEventKind.Shield)
+                Add(EffectKind.Support, target, new Color(.5f, .8f, 1f), 32, .4f, 1, battle.Time);
+            if (e.Kind == CatalogEventKind.ShieldBlocked)
+                Add(EffectKind.ShieldBlock,target,Color.white,24,.25f,
+                    target != null && target.Team==CatalogTeam.Ally ? -1 : 1,battle.Time);
             if (e.Kind == CatalogEventKind.Poison)
                 Add(EffectKind.Impact, target, new Color(.75f, 1f, .35f), 27, .35f, 1, battle.Time);
         }
@@ -267,6 +280,9 @@ namespace Expedition.Presentation
                             Line(Vector2.Lerp(project(origin), project(end), i / 7f),
                                 Vector2.Lerp(project(origin), project(end), (i + .45f) / 7f),
                                 3, new Color(1f, .76f, .3f, .8f));
+                        for(int i=0;i<DrakeAttackPresentation.PillarCount;i++)
+                            combatSprites.GroundCharge(project(DrakeAttackPresentation.PillarPoint(origin,end,i)),
+                                unit.BreathHalfWidth*scaleX,battle.Time,new Color(1f,.68f,.38f));
                     }
                 }
                 if (unit.SlamWarningRemaining > 0)
@@ -290,6 +306,7 @@ namespace Expedition.Presentation
                         new Color(.65f, .36f, .78f, .9f) : warning, 1);
                     Line(center - new Vector2(10, 0), center + new Vector2(10, 0), 3, warning);
                     Line(center - new Vector2(0, 6), center + new Vector2(0, 6), 3, warning);
+                    combatSprites.GroundCharge(center,unit.SlamRadius*scaleX,battle.Time,warning);
                 }
                 if (unit.ChargeWarningRemaining <= 0 && !unit.IsCharging) continue;
                 Vector2 from = project(new Vector2(unit.X, unit.Y));
@@ -345,7 +362,8 @@ namespace Expedition.Presentation
             {
                 if (!unit.IsAlive) continue;
                 Vector2 foot = project(new Vector2(unit.X, unit.Y));
-                if (unit.FrozenRemaining > 0f)
+                if (unit.FrozenRemaining > 0f &&
+                    !pixelEffects.Frozen(foot, battle.Time, unit.FrozenRemaining))
                 {
                     Color ice = new Color(.59f, .87f, 1f, .85f);
                     Ring(foot + new Vector2(0, -8), 28, 9, ice, 2);
@@ -387,6 +405,7 @@ namespace Expedition.Presentation
                     if (mouth.HasValue) spriteEffects.DrawDrakeFirebolt(mouth.Value,to,progress);
                     continue;
                 }
+                if(combatSprites.Projectile(CombatEffectProfile.Basic(unit),from,to,progress,battle.Time))continue;
                 Vector2 point = Vector2.Lerp(from, to, progress);
                 Vector2 direction = (to - from).normalized;
                 Color color = AttackColor(unit);
@@ -407,6 +426,11 @@ namespace Expedition.Presentation
             foreach (Effect effect in effects)
             {
                 float t = Mathf.Clamp01(effect.Age / effect.Duration);
+                // Contact debris belongs to the real impact footprint, not to the boss's body.
+                if(effect.Kind==EffectKind.GolemCrack || effect.Kind==EffectKind.FrostSpire ||
+                    effect.Kind==EffectKind.RootBurst || effect.Kind==EffectKind.FurnacePillar ||
+                    effect.Kind==EffectKind.FurnaceEmber || effect.Kind==EffectKind.DrakeLand)
+                    combatSprites.GroundContact(project(effect.Point),effect.Size*scaleX,effect.Age,effect.Color);
                 if (effect.Kind == EffectKind.GroundImpact)
                 {
                     Color impactColor = effect.Color;
@@ -456,6 +480,7 @@ namespace Expedition.Presentation
                     {
                         int index = reverse ? DrakeAttackPresentation.PillarCount - 1 - n : n;
                         Vector2 ground = project(DrakeAttackPresentation.PillarPoint(effect.Point, effect.EndPoint, index));
+                        combatSprites.GroundContact(ground,effect.HalfWidth*scaleX,effect.Age,effect.Color);
                         spriteEffects.DrawPillar(ground, effect.HalfWidth * scaleX,
                             DrakeAttackPresentation.PillarProgress(effect.Age, index));
                     }
@@ -470,6 +495,7 @@ namespace Expedition.Presentation
                 }
                 if (effect.Kind == EffectKind.ChargeDust)
                 {
+                    combatSprites.GroundContact(project(effect.EndPoint),effect.Size*scaleX,effect.Age,effect.Color);
                     spriteEffects.DrawCharge(project(effect.EndPoint), effect.Size, t);
                     continue;
                 }
@@ -495,8 +521,12 @@ namespace Expedition.Presentation
                 if (GamePreferences.Current.ReduceFlashes) color *= new Color(.65f, .65f, .65f, 1f);
                 color.a = 1 - t;
                 float radius = effect.Size * (.3f + t);
+                if(effect.Kind==EffectKind.WeaponImpact &&
+                    combatSprites.Impact(effect.Style,point,effect.Size>=35,t,effect.Direction))continue;
+                if(effect.Kind==EffectKind.ShieldBlock && combatSprites.Block(point,t,effect.Direction))continue;
                 if (effect.Kind == EffectKind.Slash)
                 {
+                    if (pixelEffects.Slash(point, effect.Size, t, effect.Direction)) continue;
                     Vector2 previous = point + new Vector2(-radius * effect.Direction, -radius);
                     for (int i = 1; i <= 6; i++)
                     {
@@ -506,8 +536,14 @@ namespace Expedition.Presentation
                         previous = next;
                     }
                 }
-                else if (effect.Kind == EffectKind.Support)
+                else if (effect.Kind == EffectKind.Support || effect.Kind == EffectKind.Heal)
                 {
+                    if (effect.Kind == EffectKind.Heal)
+                    {
+                        CatalogBattleUnit healed = battle.Get(effect.SourceId);
+                        if (healed == null || !healed.IsAlive) continue;
+                        if (pixelEffects.Heal(project(new Vector2(healed.X, healed.Y)), t)) continue;
+                    }
                     Ring(point, radius, radius * .8f, color, 2);
                     Line(point + new Vector2(-7, -t * 20), point + new Vector2(7, -t * 20), 3, color);
                     Line(point + new Vector2(0, -7 - t * 20), point + new Vector2(0, 7 - t * 20), 3, color);

@@ -1,0 +1,294 @@
+{
+  "upstream": "https://github.com/patch-gg/pixelfx",
+  "revision": "a84159688af3ca37a4be05a0d422b94451b2e24e",
+  "effects": [
+    {
+      "id": "arrow",
+      "frameSize": [
+        112,
+        32
+      ],
+      "pivot": [
+        92,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.6,
+      "loop": true,
+      "bytes": 1332,
+      "sha256": "f50958796d12bbf383bd12a1cdbbb389d376f157edcfc8f749a6718b8fa8cb42"
+    },
+    {
+      "id": "firebolt",
+      "frameSize": [
+        136,
+        56
+      ],
+      "pivot": [
+        112,
+        28
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 1.2,
+      "loop": true,
+      "bytes": 18352,
+      "sha256": "3ac040d3fc4a6d74cca396b1af2caf7b44b0cbe047ec0df63bcd2e7b551aa006"
+    },
+    {
+      "id": "icebolt",
+      "frameSize": [
+        176,
+        64
+      ],
+      "pivot": [
+        146,
+        32
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.8,
+      "loop": true,
+      "bytes": 12516,
+      "sha256": "eeb91d88fbb20d14d1b8c18a49f91d90647f8bba118f498bfe5bae43ccb01450"
+    },
+    {
+      "id": "holybolt",
+      "frameSize": [
+        64,
+        32
+      ],
+      "pivot": [
+        48,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 1,
+      "loop": true,
+      "bytes": 1010,
+      "sha256": "aa389d1ad1fb4903c03c870abf2451c9ed3cfda149567f1e44e09e32d0196758"
+    },
+    {
+      "id": "venombolt",
+      "frameSize": [
+        64,
+        32
+      ],
+      "pivot": [
+        48,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 1,
+      "loop": true,
+      "bytes": 1014,
+      "sha256": "ba44ca1686db972cc078b6e71602f3d9a3917c7ee9a93f4c36ec94abb2e5d527"
+    },
+    {
+      "id": "stone",
+      "frameSize": [
+        64,
+        32
+      ],
+      "pivot": [
+        48,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 1,
+      "loop": true,
+      "bytes": 501,
+      "sha256": "469bcab134113d1bf59390c745914e3eb645baf5595a4fbcb5089349f19fc7d8"
+    },
+    {
+      "id": "blunt-hit",
+      "frameSize": [
+        128,
+        96
+      ],
+      "pivot": [
+        64,
+        48
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.25,
+      "loop": false,
+      "bytes": 23659,
+      "sha256": "c9af21e4f64e6f8f4d8f1fdd15d6b5cc11fd733bee6223fe5cbb1eb5de9e23fb"
+    },
+    {
+      "id": "pierce-hit",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.22,
+      "loop": false,
+      "bytes": 1716,
+      "sha256": "200bfe948b670c60c58983eaace42258e36719acc1a9cb509211f430d933fc69"
+    },
+    {
+      "id": "ice-hit",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.28,
+      "loop": false,
+      "bytes": 1686,
+      "sha256": "807dcd09df1c64f75d156c49bc5b9ac9f2b4c511695262d6184e8ea21569dd6a"
+    },
+    {
+      "id": "holy-hit",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.25,
+      "loop": false,
+      "bytes": 1777,
+      "sha256": "0ace812b01c329fac38bb2f88c2346ae13acd81b744383ee7b461ac6d52267ed"
+    },
+    {
+      "id": "venom-hit",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.25,
+      "loop": false,
+      "bytes": 1753,
+      "sha256": "86f40aaf8563e0ac244d18167cf634b62329fb3935267acf8a0163c8994aaaf1"
+    },
+    {
+      "id": "fire-hit",
+      "frameSize": [
+        80,
+        96
+      ],
+      "pivot": [
+        40,
+        58
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.28,
+      "loop": false,
+      "bytes": 708,
+      "sha256": "a65fffae3cd2bb20cb59d1a984070fdb3892182c5bc9566492b085ec71897319"
+    },
+    {
+      "id": "claw-hit",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.2,
+      "loop": false,
+      "bytes": 1227,
+      "sha256": "46d36b49c11dd480328374febabcfc24590b82ff0f6f25460a27ddc257ef236d"
+    },
+    {
+      "id": "shield-block",
+      "frameSize": [
+        80,
+        80
+      ],
+      "pivot": [
+        40,
+        40
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.25,
+      "loop": false,
+      "bytes": 1445,
+      "sha256": "8cac89ae0afbe3d195b62633654b73e9793860b1c8f9c39ef6f3f8e1602253e3"
+    },
+    {
+      "id": "ground-contact",
+      "frameSize": [
+        80,
+        48
+      ],
+      "pivot": [
+        40,
+        28
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.32,
+      "loop": false,
+      "bytes": 1086,
+      "sha256": "a1974ccd6ba6868af8df64165b371fbcf17fb2abdf63c37368a9097eee54fcb4"
+    },
+    {
+      "id": "ground-charge",
+      "frameSize": [
+        80,
+        48
+      ],
+      "pivot": [
+        40,
+        28
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 1,
+      "loop": false,
+      "bytes": 858,
+      "sha256": "9c156df6179b070656f3d2393c53e6800785209c70ce5429b6c90279d3d50d2b"
+    }
+  ]
+}

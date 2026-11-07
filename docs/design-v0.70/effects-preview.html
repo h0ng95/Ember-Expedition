@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IGNIS · PixelFX 비교</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#12181d;color:#eee8da;font:16px/1.65 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:36px 24px 64px}small,.eyebrow{color:#d5b77b;letter-spacing:.12em}h1{margin:8px 0;font-size:32px}p{color:#b4bfc3}.controls{position:sticky;top:0;z-index:2;background:#192229f5;border:1px solid #495155;padding:12px 18px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;border-radius:8px}button,select{font:inherit;color:#f5ead7;background:#29363c;border:1px solid #8e7d59;border-radius:5px;padding:6px 14px}label{white-space:nowrap}article{margin-top:28px;border:1px solid #3d494e;background:#1a242b;border-radius:10px;overflow:hidden}h2{margin:18px 24px 6px;font-size:21px}article p{margin:0 24px 20px;font-size:14px}.labels{display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:13px;color:#c6c9be;padding:12px;background:#222d33}.labels span+span{color:#f4d193}canvas{display:block;width:100%;image-rendering:pixelated}.notice{font-size:13px}a{color:#e0be7b}#state{color:#c3b286;font-size:13px}
+</style>
+<main><div class="eyebrow">IGNIS: ASHEN OATH / EFFECT STUDY 0.70</div><h1>타격은 선명하게, 동료는 가리지 않게.</h1>
+<p>PixelFX로 만든 첫 세 가지 효과. 같은 방패 기사와 같은 배경에서 기존 선 효과와 비교합니다.<br>이 페이지는 표현 비교용이며, 전투 타격 판정은 게임의 실제 이벤트를 따릅니다.</p>
+<div class="controls"><button id="pause">일시정지</button><label>속도 <select id="speed"><option value="1">1×</option><option value="2">2×</option></select></label><label>배경 <select id="bg"><option value="dark">어두운 전장</option><option value="light">밝은 바탕</option></select></label><label><input type="checkbox" id="reduced"> 섬광·모션 줄이기</label><span id="state">불러오는 중</span></div>
+<article><h2>01 / 검 타격</h2><p>금빛 칼날 궤적과 작은 파편. 실제 명중에 맞춰 시작하고 0.24초 안에 사라집니다.</p><div class="labels"><span>기존 · 선으로 그린 호</span><span>적용 · 8프레임 타격</span></div><canvas id="slash" width="1000" height="270"></canvas></article>
+<article><h2>02 / 회복</h2><p>발밑에서 위로 흐르는 연녹색 회복 입자. 보호막 효과와 구분하며 회복받은 동료를 따라갑니다.</p><div class="labels"><span>기존 · 원 + 십자</span><span>적용 · 16프레임 회복</span></div><canvas id="heal" width="1000" height="270"></canvas></article>
+<article><h2>03 / 빙결</h2><p>얼굴과 몸 중심을 비워둔 얼음 결정. 실제 빙결 상태 동안만 유지하고 해제될 때 사라집니다.</p><div class="labels"><span>기존 · 외곽 선</span><span>적용 · 16프레임 상태 효과</span></div><canvas id="frost" width="1000" height="270"></canvas></article>
+<p class="notice">아래 효과는 신규 원본 이미지 생성이 아닌 <a href="https://github.com/patch-gg/pixelfx">PixelFX</a> 코드 기반 렌더링입니다. 검·회복은 기존 효과를 조정했고, 빙결은 PixelFX 도형으로 게임에 맞게 구성했습니다. 캐릭터·전투 규칙은 유지합니다. <a href="HANDOFF.html">적용 및 검증 기록</a></p></main>
+<script>
+const base='../../unity/Assets/Resources/',imgs={};
+const files={unit:'Art/Units/v010/B-KN.png',slash:'Art/Effects/v070/sword-hit.png',heal:'Art/Effects/v070/healing.png',frost:'Art/Effects/v070/frozen.png'};
+let t=0,last=0,paused=false;const query=new URLSearchParams(location.search);
+if(query.has('time')){t=Number(query.get('time'));paused=true;pause.textContent='재생'}
+pause.onclick=()=>{paused=!paused;pause.textContent=paused?'재생':'일시정지'};
+function line(c,ax,ay,bx,by,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(ax,ay);c.lineTo(bx,by);c.stroke()}
+function ring(c,x,y,rx,ry,color){c.strokeStyle=color;c.lineWidth=2;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.stroke()}
+function sheet(c,id,w,h,n,pivot,x,y,width,progress,alpha=1){const idx=Math.min(n-1,Math.floor(progress*n)),s=width/w;c.save();c.globalAlpha=alpha*(reduced.checked?.65:1);c.drawImage(imgs[id],idx%4*w,Math.floor(idx/4)*h,w,h,Math.round(x-pivot[0]*s),Math.round(y-pivot[1]*s),width,h*s);c.restore()}
+function draw(){for(const id of ['slash','heal','frost']){
+ const canvas=document.getElementById(id),c=canvas.getContext('2d');c.imageSmoothingEnabled=false;
+ c.fillStyle=bg.value==='dark'?'#19282d':'#d8d9d2';c.fillRect(0,0,1000,270);
+ c.fillStyle=bg.value==='dark'?'#293a38':'#bfc5b9';c.fillRect(0,205,1000,65);line(c,500,0,500,270,1,'#56605a');
+ const age=t%1.6;
+ for(let side=0;side<2;side++){
+  const x=250+side*500,y=212,s=96/148;
+  c.fillStyle='#00000033';c.beginPath();c.ellipse(x,y-1,32,8,0,0,Math.PI*2);c.fill();
+  c.drawImage(imgs.unit,59,72,147,178,Math.round(x-69*s),Math.round(y-175*s),147*s,178*s);
+  if(id==='slash'&&age<.24){const p=age/.24;if(side)sheet(c,id,144,128,8,[72,64],x,y-57,144,p);else{
+    let r=27*(.3+p),px=x-r,py=y-57-r;c.globalAlpha=(1-p)*(reduced.checked?.65:1);
+    for(let i=1;i<=6;i++){let a=-1.3+2.6*i/6,nx=x+Math.cos(a)*r,ny=y-57+Math.sin(a)*r;line(c,px,py,nx,ny,4*(1-p)+1,'#ffe085');px=nx;py=ny;}c.globalAlpha=1;}}
+  if(id==='heal'&&age<(side?.64:.4)){let p=age/(side?.64:.4);if(side)sheet(c,id,80,104,16,[40,92],x,y,96,p,1-Math.max(0,(p-.8)/.2));else{
+   c.globalAlpha=1-p;let r=32*(.3+p);ring(c,x,y-57,r,r*.8,'#73ff99');line(c,x-7,y-57-p*20,x+7,y-57-p*20,3,'#73ff99');line(c,x,y-64-p*20,x,y-50-p*20,3,'#73ff99');c.globalAlpha=1;}}
+  if(id==='frost'&&age<1.2){if(side)sheet(c,id,64,64,16,[32,56],x,y,96,reduced.checked?.25:age%1,Math.min(1,(1.2-age)/.12));else{ring(c,x,y-8,28,9,'#96deff');line(c,x-25,y-10,x-18,y-58,3,'#96deff');line(c,x+24,y-10,x+17,y-66,3,'#96deff');line(c,x-18,y-58,x-9,y-73,2,'#96deff');line(c,x+17,y-66,x+8,y-79,2,'#96deff')}}
+ }
+}}
+Promise.all(Object.entries(files).map(async([key,path])=>{let img=new Image;img.src=base+path;await img.decode();imgs[key]=img})).then(()=>{state.textContent='같은 몸 크기 · 실제 적용 시트';requestAnimationFrame(function loop(now){if(last&&!paused)t+=Math.min(.1,(now-last)/1000)*Number(speed.value);last=now;draw();requestAnimationFrame(loop)})}).catch(e=>{state.textContent='이미지 로드 실패: '+e.message});
+</script></html>

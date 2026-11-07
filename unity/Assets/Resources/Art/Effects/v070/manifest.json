@@ -1,0 +1,60 @@
+{
+  "upstream": "https://github.com/patch-gg/pixelfx",
+  "revision": "a84159688af3ca37a4be05a0d422b94451b2e24e",
+  "effects": [
+    {
+      "id": "sword-hit",
+      "frameSize": [
+        144,
+        128
+      ],
+      "pivot": [
+        72,
+        64
+      ],
+      "frames": 8,
+      "columns": 4,
+      "rows": 2,
+      "duration": 0.24,
+      "loop": false,
+      "bytes": 10499,
+      "sha256": "c17d8b5724578cc33ce206f18d71908355de6adb20313bfa69dfff9ba5248c13"
+    },
+    {
+      "id": "healing",
+      "frameSize": [
+        80,
+        104
+      ],
+      "pivot": [
+        40,
+        92
+      ],
+      "frames": 16,
+      "columns": 4,
+      "rows": 4,
+      "duration": 0.64,
+      "loop": false,
+      "bytes": 23671,
+      "sha256": "67d447a706aa377461c5c5f874ae09074481c74e61b1e6b3f348bb511fe53111"
+    },
+    {
+      "id": "frozen",
+      "frameSize": [
+        64,
+        64
+      ],
+      "pivot": [
+        32,
+        56
+      ],
+      "frames": 16,
+      "columns": 4,
+      "rows": 4,
+      "duration": 1,
+      "loop": true,
+      "bytes": 5232,
+      "sha256": "db2486814a670a6a4307e97285f8ec02fa9e2e645b6fcd3a3d219656d2b63cf1"
+    }
+  ]
+}

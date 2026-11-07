@@ -39,7 +39,7 @@ namespace Expedition.Presentation
         }
         void TickCloudAccount()
         {
-            if (!startupReady || cloudConfig == null || !cloudConfig.IsReady || cloudBusy || storageBlocked ||
+            if (!startupReady || cloudConfig == null || !cloudConfig.IsReady || cloudBusy || rankingBusy || storageBlocked ||
                 Time.realtimeSinceStartup < cloudNextAttempt || run != null && run.Phase == ExpeditionPhase.Battle) return;
             if (Application.internetReachability == NetworkReachability.NotReachable) return;
             if ((!cloudAttemptedResume || (cloudFailures > 0 || cloudSync != null) && !UgsAccountBackend.Linked) && PlayerPrefs.GetInt(CloudOptInKey, 0) == 1)
@@ -118,6 +118,7 @@ namespace Expedition.Presentation
             GoogleAccountSignIn.ClearSession();
             PlayerPrefs.SetInt(CloudOptInKey, 0); PlayerPrefs.Save();
             cloudSync = null; cloudDirty = false; cloudStatus = "cloud.guest"; cloudConfirmSignOut = false;
+            rankingPage = null; rankingOwner = null;
             // Keep the receipt and local progress. Another identity cannot auto-upload it.
         }
         static string CloudText(string suffix) { return CatalogText.Get("cloud." + suffix); }
@@ -154,7 +155,9 @@ namespace Expedition.Presentation
                 string stamp = receipt == null || receipt.Version != 1 ? CloudText("never_synced") : CloudText("last_sync") + " " +
                     new DateTime(receipt.SyncedUtcTicks, DateTimeKind.Utc).ToLocalTime().ToString("yyyy-MM-dd HH:mm");
                 LocalizedGui.Label(new Rect(content.x, content.y + 234, content.width, 34), stamp, small);
-                LocalizedGui.Label(new Rect(content.x, content.y + 278, content.width, 52), CloudText("ranking_later"), small);
+                LocalizedGui.Label(new Rect(content.x, content.y + 278, content.width - 220, 52), RankText("account_help"), small);
+                GUI.enabled = !cloudBusy;
+                if (LocalizedGui.Button(new Rect(content.xMax - 204, content.y + 278, 204, 52), RankText("title"), button)) OpenRanking();
                 GUI.enabled = !cloudBusy && cloudConfig != null && cloudConfig.IsReady && !storageBlocked;
                 if (LocalizedGui.Button(new Rect(content.x, content.y + 354, 402, 58),
                     linked ? CloudText("sync_now") : CloudText("google"), primary))

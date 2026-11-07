@@ -5986,6 +5986,156 @@
       "key": "cloud.progress_summary",
       "ko": "최고 도달: {0}전투",
       "en": "Best progress: battle {0}"
+    },
+    {
+      "key": "rank.title",
+      "ko": "온라인 순위",
+      "en": "Online rankings",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.description",
+      "ko": "상위 20명 · 동일한 NORMAL 규칙 · 계정별 최고 점수\n승리 × 10,000 + 완주 30,000 + 남은 기회 × 1,000 · 동점은 서버 순서로 표시",
+      "en": "Top 20 · Same NORMAL rules · Best score per account\nWins × 10,000 + clear bonus 30,000 + chances left × 1,000. Ties follow server order.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.account_help",
+      "ko": "로그인 후 온라인으로 시작한 원정은 종료 뒤 점수를 검증해 순위에 등록할 수 있어요.",
+      "en": "Start online after signing in, then submit a finished expedition for score verification.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.help",
+      "ko": "종료한 현재 원정을 등록할 수 있어요. 과거·개인 원정은 개인 기록에 남아요.",
+      "en": "Submit your current finished expedition. Older and local runs stay in Personal Records.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.loading",
+      "ko": "서버에서 기록을 확인하고 있어요…",
+      "en": "Checking records with the server…",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.failed",
+      "ko": "서버 연결 또는 기록 검증에 실패했어요. 다시 시도하거나 개인 원정을 진행할 수 있어요.",
+      "en": "Connection or verification failed. Retry, or continue with a local expedition.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.guest",
+      "ko": "Google 로그인 후 순위를 확인할 수 있어요.",
+      "en": "Sign in with Google to view rankings.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.guest_help",
+      "ko": "GUEST는 로그인 없이 플레이할 수 있어요. 온라인 순위와 클라우드 복원은 Google 계정이 필요해요.",
+      "en": "Guests can play without signing in. Google sign-in is required for rankings and cloud recovery.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.no_score",
+      "ko": "내 순위: 아직 등록된 점수가 없어요.",
+      "en": "My rank: no submitted score yet.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.mine",
+      "ko": "내 순위  {0}위  ·  {1}점  ·  {2}",
+      "en": "My rank  #{0}  ·  {1} pts  ·  {2}",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.position",
+      "ko": "순위",
+      "en": "Rank",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.name",
+      "ko": "원정대",
+      "en": "Expedition",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.score",
+      "ko": "점수",
+      "en": "Score",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.you",
+      "ko": "나",
+      "en": "You",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.empty",
+      "ko": "아직 등록된 원정이 없어요.\n온라인으로 새 원정을 시작해 첫 기록을 남겨보세요.",
+      "en": "No expeditions have been submitted yet.\nStart a new online expedition to set the first score.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.submit",
+      "ko": "점수 등록",
+      "en": "Submit score",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.refresh",
+      "ko": "새로고침",
+      "en": "Refresh",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.next",
+      "ko": "다음 페이지",
+      "en": "Next page",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.submitted",
+      "ko": "서버 검증을 통과했어요. 계정의 최고 점수가 순위에 반영돼요.",
+      "en": "Verified. Your account's best score is used for rankings.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.ineligible",
+      "ko": "온라인으로 시작해 종료한 현재 원정만 등록할 수 있어요.",
+      "en": "Only your current finished expedition started online can be submitted.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.resolve_cloud",
+      "ko": "먼저 계정 화면에서 클라우드 저장 선택을 마쳐주세요.",
+      "en": "Resolve the cloud save choice in Account first.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.start_help",
+      "ko": "같은 NORMAL 규칙 · 온라인 시작 기록만 순위 등록 · 미완료 원정은 교체돼요.",
+      "en": "Same NORMAL rules. Online starts can rank. Any unfinished run will be replaced.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.local_help",
+      "ko": "개인 기록은 기기에 저장돼요. 순위 등록은 로그인 후 온라인으로 새 원정을 시작해주세요.",
+      "en": "Local runs save on this device. Sign in and start a new online expedition to rank.",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.start",
+      "ko": "온라인 시작",
+      "en": "Start online",
+      "context": "ExpeditionRankings.cs"
+    },
+    {
+      "key": "rank.local_start",
+      "ko": "개인 원정 시작",
+      "en": "Start local",
+      "context": "ExpeditionRankings.cs"
     }
   ]
 }

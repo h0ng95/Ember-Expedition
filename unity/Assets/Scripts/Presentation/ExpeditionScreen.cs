@@ -42,7 +42,7 @@ namespace Expedition.Presentation
             "text.0600", "text.0601");
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter, Account }
+            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter, Account, Rankings }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -217,7 +217,7 @@ namespace Expedition.Presentation
             PersistAccount();
         }
 
-        void NewRun()
+        void StartNewRun(RankedRunTicket rankedTicket = null)
         {
             if (!startupReady) return;
             if (storageBlocked) { Notice(CatalogText.Get("text.0611")); return; }
@@ -227,9 +227,10 @@ namespace Expedition.Presentation
             try
             {
                 ObserveProgress();
-                uint seed = unchecked((uint)DateTime.UtcNow.Ticks);
+                uint seed = rankedTicket == null ? unchecked((uint)DateTime.UtcNow.Ticks) : rankedTicket.Seed;
                 ExpeditionRun nextRun = ExpeditionRun.New(database, seed,
                     ExpeditionDifficulty.Normal, startFormationId: selectedFormationId);
+                if (rankedTicket != null) nextRun.AttachRankedTicket(rankedTicket);
                 recordHistory.Observe(run, true);
                 if (run != null && run.Phase != ExpeditionPhase.Completed && run.Phase != ExpeditionPhase.Defeated)
                     playtest.Record("run_replaced", run, "Player chose a new expedition; not a battle defeat.");
@@ -319,12 +320,12 @@ namespace Expedition.Presentation
             { ending.Draw(); GUI.matrix = Matrix4x4.identity; return; }
             if (!GrowthRevealActive) { FilterTutorialGuiEvent(); FilterLessonGuiEvent(); }
             Fill(new Rect(0, 0, Width, Height), Background);
-            GUI.enabled = modal == Modal.None && !GrowthRevealActive && !cloudBusy;
+            GUI.enabled = modal == Modal.None && !GrowthRevealActive && !cloudBusy && !rankingBusy;
             if (home || run == null) DrawHome();
             else if (run.Phase == ExpeditionPhase.Preparation) DrawPreparation();
             else if (run.Phase == ExpeditionPhase.Battle) DrawBattleResume();
             else DrawResult();
-            GUI.enabled = !GrowthRevealActive;
+            GUI.enabled = !GrowthRevealActive && !rankingBusy;
             if (modal != Modal.None && !GrowthRevealActive) DrawModal();
             GUI.enabled = true;
             if (toast != null && Time.unscaledTime < toastUntil)
@@ -384,6 +385,7 @@ namespace Expedition.Presentation
             GUI.enabled = modal == Modal.None;
             if (LocalizedGui.Button(new Rect(1020, 650, 225, 48), CatalogText.Get("text.0623"), button)) OpenLab();
             DrawPlaytestButton();
+            if (LocalizedGui.Button(new Rect(510, 650, 260, 48), RankText("title"), button)) OpenRanking();
             if (badProgress)
             {
                 ExpeditionUiTheme.PanelBox(new Rect(155, 590, 970, 48));
@@ -549,6 +551,7 @@ namespace Expedition.Presentation
 
         void DrawModal()
         {
+            if (modal == Modal.Rankings) { DrawRankingPanel(); return; }
             if (modal == Modal.Account) { DrawAccountPanel(); return; }
             if (modal == Modal.Settings) { if (GameSettingsPanel.Draw(font)) modal = Modal.None; return; }
             Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
@@ -870,7 +873,7 @@ namespace Expedition.Presentation
                 LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 6, normal.width - 40, 28),
                     CatalogText.Get("text.0732"), body);
                 LocalizedGui.Label(new Rect(normal.x + 20, normal.y + 34, normal.width - 40, 23),
-                    CatalogText.Get("text.0733"), small);
+                    RankedStartHelp, small);
                 Rect locked = new Rect(content.x, 288, content.width, 62);
                 bool wasEnabled = GUI.enabled;
                 GUI.enabled = false;
@@ -905,8 +908,7 @@ namespace Expedition.Presentation
                         badProgress ? CatalogText.Get("text.0740") : CatalogText.Get("text.0741"), small);
                 }
                 ExpeditionUiTheme.FooterRule(panel);
-                ConfirmationButtons(ExpeditionUiTheme.FooterRect(panel),
-                    CatalogText.Get("text.0742"), NewRun, () => modal = Modal.None);
+                DrawRankedStartButtons(panel, content);
                 return;
             }
             CatalogMember selected = run.Roster.Find(selectedId);

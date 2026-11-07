@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework><AssemblyName>IgnisRankings</AssemblyName><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable><CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Com.Unity.Services.CloudCode.Core" Version="0.0.9" />
+    <PackageReference Include="Com.Unity.Services.CloudCode.Apis" Version="0.0.27" />
+    <Compile Include="../../unity/Assets/Scripts/Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="../../unity/Assets/Resources/Content/unit-catalog-v010.json" LogicalName="catalog.json" />
+  </ItemGroup>
+</Project>

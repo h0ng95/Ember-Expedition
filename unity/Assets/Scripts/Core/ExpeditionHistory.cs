@@ -48,6 +48,9 @@ namespace Expedition.Core
                 Abandoned = !run.HasEnded, Score = run.UsesLegacyRules || !run.HasEnded ? 0 : run.Score,
                 ScoreVersion = ScoreVersion, BalanceVersion = CatalogBalance.Version(run.RulesVersion),
                 FinalRun = run.Capture() };
+            // Only the currently active server ticket can be submitted. Do not duplicate large proofs
+            // into every history entry or the best-record archive; the current run retains its proof.
+            record.FinalRun.RankedProof = null;
             recent.Insert(0, record);
             if (recent.Count > Limit) recent.RemoveAt(recent.Count - 1);
             if (record.Ranked) KeepBest(record);

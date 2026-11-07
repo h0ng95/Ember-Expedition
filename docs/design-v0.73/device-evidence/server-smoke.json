@@ -1,0 +1,14 @@
+{
+    "Checks": [
+        "Google read: PASS",
+        "Start retry: PASS",
+        "Forged victory rejected: PASS",
+        "Android/server replay and submit retry: PASS; score=30000",
+        "Own rank and top list: PASS",
+        "Direct read/write denied: PASS",
+        "Anonymous GetRanking rejected: PASS (422)",
+        "Anonymous StartRun rejected: PASS (422)",
+        "Anonymous SubmitRun rejected: PASS (422)",
+        "ALL_PASS"
+    ]
+}

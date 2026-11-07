@@ -19,6 +19,9 @@ unity/*.suo
 tests/**/bin/
 tests/**/obj/
 tests/**/out/
+server/**/bin/
+server/**/obj/
+server/**/*.ccm
 *.keystore
 *.jks
 

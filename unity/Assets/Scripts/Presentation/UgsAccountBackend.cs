@@ -16,6 +16,7 @@ namespace Expedition.Presentation
     public sealed class CloudAccountConfig
     {
         public bool Enabled;
+        public bool RankingsEnabled;
         public string EnvironmentName, GoogleWebClientId;
         public static CloudAccountConfig Load()
         {

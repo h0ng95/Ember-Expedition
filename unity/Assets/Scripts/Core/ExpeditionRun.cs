@@ -47,9 +47,10 @@ namespace Expedition.Core
         public string[] DeployedIds;
         // Most recent preparation action first. Summons are written into every older entry.
         public ExpeditionPreparationSave[] UndoHistory;
+        public RankedRunProof RankedProof;
     }
 
-    public sealed class ExpeditionRun
+    public sealed partial class ExpeditionRun
     {
         public const int TotalWaves = 30;
         public const int ReleaseWaves = 30;
@@ -221,6 +222,7 @@ namespace Expedition.Core
             CatalogResearchNode node = CatalogResearch.Get(id);
             tacticIds.Add(id);
             Gold -= node.Cost;
+            Trace("research", id);
             // A confirmed research purchase is outside preparation Undo, like a summon.
             return true;
         }
@@ -256,6 +258,7 @@ namespace Expedition.Core
                 snapshot.Roster.Members = members.ToArray();
                 snapshot.Roster.SupplyUsed++;
             }
+            Trace("summon");
             return id;
         }
 
@@ -301,6 +304,7 @@ namespace Expedition.Core
                 return false;
             SavePreparation();
             if (deployed) deployedIds.Add(id); else deployedIds.Remove(id);
+            Trace("deploy", id, flag:deployed);
             return true;
         }
 
@@ -312,6 +316,7 @@ namespace Expedition.Core
             if (slot < 0) return false;
             SavePreparation();
             deployedIds[slot] = benchId;
+            Trace("swap", activeId, benchId);
             return true;
         }
 
@@ -323,6 +328,7 @@ namespace Expedition.Core
                 member.X == x && member.Y == y) return false;
             SavePreparation();
             member.X = x; member.Y = y;
+            Trace("move", id, x:x, y:y);
             return true;
         }
 
@@ -333,6 +339,7 @@ namespace Expedition.Core
             foreach (var snapshot in history)
                 foreach (var member in snapshot.Roster.Members)
                     if (member.Id == id) member.MaterialLocked = locked;
+            Trace("lock", id, flag:locked);
             return true;
         }
 
@@ -384,6 +391,7 @@ namespace Expedition.Core
             history.Push(before);
             ReplaceConsumedDeployment(donorId, recipientId);
             Roster.CommitPreparation();
+            Trace("transfer", donorId, recipientId, flag:replaceTrait);
             return true;
         }
 
@@ -394,6 +402,7 @@ namespace Expedition.Core
             if (!Roster.Evolve(memberId, nextFormId)) return false;
             history.Push(before);
             Roster.CommitPreparation();
+            Trace("evolve", memberId, nextFormId);
             return true;
         }
 
@@ -405,6 +414,7 @@ namespace Expedition.Core
             history.Push(before);
             ReplaceConsumedDeployment(otherId, anchorId);
             Roster.CommitPreparation();
+            Trace("combine", anchorId, otherId, resultId);
             return true;
         }
 
@@ -424,6 +434,7 @@ namespace Expedition.Core
             Roster.CommitPreparation();
             deployedIds.Clear();
             deployedIds.AddRange(previous.DeployedIds);
+            Trace("undo");
             return true;
         }
 
@@ -674,6 +685,7 @@ namespace Expedition.Core
             else { Lantern--; LastReward = 0; }
             battle = null;
             Phase = ExpeditionPhase.Result;
+            Trace("fight", flag:victory);
             return true;
         }
 
@@ -689,6 +701,7 @@ namespace Expedition.Core
                 if (LastVictory) Wave++;
                 Phase = ExpeditionPhase.Preparation;
             }
+            if (!HasEnded) Trace("continue");
             return true;
         }
 
@@ -701,6 +714,7 @@ namespace Expedition.Core
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             return new ExpeditionRunSave { Version = UsesLegacyRules ? 8 : RulesVersion + 8, Difficulty = Difficulty,
                 RulesVersion = RulesVersion, RunId = RunId, InitialSeed = InitialSeed,
+                RankedProof = rankedProof == null ? null : rankedProof.Copy(),
                 CombatSeconds = CombatSeconds,
                 ContentWaves = ContentWaves, PreviousClearWaves = PreviousClearWaves,
                 TacticIds = tacticIds.ToArray(), LegacyResearchIds = legacyResearchIds.ToArray(),
@@ -833,6 +847,7 @@ namespace Expedition.Core
                 run.history.Push(new ExpeditionPreparationSave { Roster = oldRoster.Capture(),
                     DeployedIds = (string[])item.DeployedIds.Clone() });
             }
+            run.rankedProof = save.RankedProof == null ? null : save.RankedProof.Copy();
             // Convert only after the complete old save has passed its original rules.
             // Current-content captures include prior expansion grants, preventing duplicates on reload.
             if (saveWaves < TotalWaves && save.Wave == saveWaves && save.LastVictory &&

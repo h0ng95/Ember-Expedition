@@ -1009,6 +1009,31 @@ namespace Expedition.Core
             Add("cloud.no_run", "진행 중인 원정 없음", "No active expedition");
             Add("cloud.run_summary", "전투 {0} / 30 · {1} G", "Battle {0} / 30 · {1} G");
             Add("cloud.progress_summary", "최고 도달: {0}전투", "Best progress: battle {0}");
+            Add("rank.title", "온라인 순위", "Online rankings");
+            Add("rank.description", "상위 20명 · 동일한 NORMAL 규칙 · 계정별 최고 점수\n승리 × 10,000 + 완주 30,000 + 남은 기회 × 1,000 · 동점은 서버 순서로 표시", "Top 20 · Same NORMAL rules · Best score per account\nWins × 10,000 + clear bonus 30,000 + chances left × 1,000. Ties follow server order.");
+            Add("rank.account_help", "로그인 후 온라인으로 시작한 원정은 종료 뒤 점수를 검증해 순위에 등록할 수 있어요.", "Start online after signing in, then submit a finished expedition for score verification.");
+            Add("rank.help", "종료한 현재 원정을 등록할 수 있어요. 과거·개인 원정은 개인 기록에 남아요.", "Submit your current finished expedition. Older and local runs stay in Personal Records.");
+            Add("rank.loading", "서버에서 기록을 확인하고 있어요…", "Checking records with the server…");
+            Add("rank.failed", "서버 연결 또는 기록 검증에 실패했어요. 다시 시도하거나 개인 원정을 진행할 수 있어요.", "Connection or verification failed. Retry, or continue with a local expedition.");
+            Add("rank.guest", "Google 로그인 후 순위를 확인할 수 있어요.", "Sign in with Google to view rankings.");
+            Add("rank.guest_help", "GUEST는 로그인 없이 플레이할 수 있어요. 온라인 순위와 클라우드 복원은 Google 계정이 필요해요.", "Guests can play without signing in. Google sign-in is required for rankings and cloud recovery.");
+            Add("rank.no_score", "내 순위: 아직 등록된 점수가 없어요.", "My rank: no submitted score yet.");
+            Add("rank.mine", "내 순위  {0}위  ·  {1}점  ·  {2}", "My rank  #{0}  ·  {1} pts  ·  {2}");
+            Add("rank.position", "순위", "Rank");
+            Add("rank.name", "원정대", "Expedition");
+            Add("rank.score", "점수", "Score");
+            Add("rank.you", "나", "You");
+            Add("rank.empty", "아직 등록된 원정이 없어요.\n온라인으로 새 원정을 시작해 첫 기록을 남겨보세요.", "No expeditions have been submitted yet.\nStart a new online expedition to set the first score.");
+            Add("rank.submit", "점수 등록", "Submit score");
+            Add("rank.refresh", "새로고침", "Refresh");
+            Add("rank.next", "다음 페이지", "Next page");
+            Add("rank.submitted", "서버 검증을 통과했어요. 계정의 최고 점수가 순위에 반영돼요.", "Verified. Your account's best score is used for rankings.");
+            Add("rank.ineligible", "온라인으로 시작해 종료한 현재 원정만 등록할 수 있어요.", "Only your current finished expedition started online can be submitted.");
+            Add("rank.resolve_cloud", "먼저 계정 화면에서 클라우드 저장 선택을 마쳐주세요.", "Resolve the cloud save choice in Account first.");
+            Add("rank.start_help", "같은 NORMAL 규칙 · 온라인 시작 기록만 순위 등록 · 미완료 원정은 교체돼요.", "Same NORMAL rules. Online starts can rank. Any unfinished run will be replaced.");
+            Add("rank.local_help", "개인 기록은 기기에 저장돼요. 순위 등록은 로그인 후 온라인으로 새 원정을 시작해주세요.", "Local runs save on this device. Sign in and start a new online expedition to rank.");
+            Add("rank.start", "온라인 시작", "Start online");
+            Add("rank.local_start", "개인 원정 시작", "Start local");
         }
     }
 }

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://ugs-config-schemas.unity3d.com/v1/leaderboards.schema.json",
+  "Name": "NORMAL Rules 6 Verified Runs",
+  "SortOrder": "desc",
+  "UpdateType": "keepBest"
+}

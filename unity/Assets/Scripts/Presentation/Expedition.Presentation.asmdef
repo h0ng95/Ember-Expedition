@@ -1,5 +1,5 @@
 {
   "name": "Expedition.Presentation",
   "rootNamespace": "Expedition.Presentation",
-  "references": ["Expedition.Core", "Unity.Services.Core", "Unity.Services.Core.Environments", "Unity.Services.Authentication", "Unity.Services.CloudSave"]
+  "references": ["Expedition.Core", "Unity.Services.Core", "Unity.Services.Core.Environments", "Unity.Services.Authentication", "Unity.Services.CloudSave", "Unity.Services.CloudCode"]
 }

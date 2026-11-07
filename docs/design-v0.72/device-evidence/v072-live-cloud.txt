@@ -1,0 +1,1 @@
+PASS development: anonymous authentication, Cloud Save write/read, stale-write rejection. Synthetic probe only; Google login not covered.

@@ -971,6 +971,44 @@ namespace Expedition.Core
             Add("research.requirement", "{0} {1}전투 돌파 {2} · {3}G", "Clear {0}, battle {1}: {2} · {3}G");
             Add("report.ally", "출전 {0} · {1}", "{0} · {1}");
             Add("unit.H-06.short", "원정 유격대장", "Ranger Captain");
+            Add("cloud.account", "계정", "Account");
+            Add("cloud.title", "계정 · 클라우드 저장", "Account · Cloud Save");
+            Add("cloud.guest", "게스트 · 이 기기에 저장", "Guest · Saved on this device");
+            Add("cloud.setup", "클라우드 연결을 준비하고 있어요", "Cloud connection is being prepared");
+            Add("cloud.working", "계정과 저장 데이터를 확인하는 중…", "Checking your account and saves…");
+            Add("cloud.synced", "동기화 완료", "Synced");
+            Add("cloud.pending", "기기에 저장됨 · 업로드 대기", "Saved on device · Upload pending");
+            Add("cloud.cancelled", "로그인을 취소했어요. 기기의 기록은 그대로예요.", "Sign-in cancelled. Your local progress is unchanged.");
+            Add("cloud.failed", "연결하지 못했어요. 기기에 저장된 기록은 안전해요.", "Could not connect. Your local save is safe.");
+            Add("cloud.future", "새 버전의 저장이에요. 게임을 업데이트해 주세요.", "This save needs a newer game version. Please update.");
+            Add("cloud.changed", "다른 기기의 저장이 바뀌었어요. 다시 확인해 주세요.", "The save changed on another device. Please check again.");
+            Add("cloud.invalid", "저장 내용을 확인할 수 없어요. 덮어쓰지 않았어요.", "Could not validate the save. Nothing was overwritten.");
+            Add("cloud.signin_required", "Google 계정에 다시 로그인해 주세요.", "Please sign in with Google again.");
+            Add("cloud.restore_available", "클라우드에 이어할 수 있는 기록이 있어요", "A cloud save is available to continue");
+            Add("cloud.conflict", "기기와 클라우드의 진행이 달라요", "Device and cloud progress are different");
+            Add("cloud.remote_missing", "이전에 저장한 클라우드 기록을 찾지 못했어요", "The previous cloud save could not be found");
+            Add("cloud.device", "이 기기", "This device");
+            Add("cloud.cloud_copy", "클라우드", "Cloud");
+            Add("cloud.choose_help", "이어갈 기록을 선택해 주세요. 골드·연구·편성은 합쳐지지 않아요.", "Choose which save to continue. Gold, research and units are not combined.");
+            Add("cloud.replace_confirm", "기기 기록을 클라우드에 올릴까요? 클라우드의 현재 진행이 교체돼요.", "Upload the device save? This replaces the current cloud progress.");
+            Add("cloud.replace_cloud", "이 기록으로 클라우드 교체", "Replace cloud save");
+            Add("cloud.use_device", "기기 기록 선택", "Use device save");
+            Add("cloud.use_cloud", "클라우드 기록 불러오기", "Load cloud save");
+            Add("cloud.linked_help", "Google 계정에 연결됐어요. 마지막 동기화 기록은 재설치하거나 다른 기기에서도 불러올 수 있어요.", "Connected to Google. Restore your last synced progress after reinstalling or on another device.");
+            Add("cloud.guest_help", "로그인 없이 계속 플레이할 수 있어요. Google 계정에 연결하면 진행을 백업하고 다시 불러올 수 있어요.\n게스트 기록은 앱이나 데이터를 지우면 사라질 수 있어요.", "You can keep playing as a guest. Connect Google to back up and restore your progress.\nGuest saves may be lost if you uninstall or clear app data.");
+            Add("cloud.last_sync", "마지막 동기화", "Last synced");
+            Add("cloud.never_synced", "아직 클라우드에 동기화한 기록이 없어요", "No cloud backup yet");
+            Add("cloud.ranking_later", "온라인 순위표는 준비 중이에요. 지금은 계정 연결과 저장·복원부터 확인하고 있어요.", "Online rankings are coming later. Account linking and save recovery are being tested first.");
+            Add("cloud.google", "Google로 로그인", "Sign in with Google");
+            Add("cloud.sync_now", "지금 동기화", "Sync now");
+            Add("cloud.signout", "로그아웃", "Sign out");
+            Add("cloud.signout_confirm", "로그아웃 확인", "Confirm sign out");
+            Add("cloud.signout_help", "기기 기록은 남고 자동 백업은 멈춰요. 업로드 대기 중인 진행은 복원되지 않아요.", "Local progress stays; auto-backup stops. Unsynced changes cannot be restored.");
+            Add("cloud.back", "돌아가기", "Back");
+            Add("cloud.empty", "저장된 기록 없음", "No saved progress");
+            Add("cloud.no_run", "진행 중인 원정 없음", "No active expedition");
+            Add("cloud.run_summary", "전투 {0} / 30 · {1} G", "Battle {0} / 30 · {1} G");
+            Add("cloud.progress_summary", "최고 도달: {0}전투", "Best progress: battle {0}");
         }
     }
 }

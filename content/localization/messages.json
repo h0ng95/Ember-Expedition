@@ -5796,6 +5796,196 @@
       "ko": "원정 유격대장",
       "en": "Ranger Captain",
       "context": "Compact combat HUD; full name in details and fusion"
+    },
+    {
+      "key": "cloud.account",
+      "ko": "계정",
+      "en": "Account"
+    },
+    {
+      "key": "cloud.title",
+      "ko": "계정 · 클라우드 저장",
+      "en": "Account · Cloud Save"
+    },
+    {
+      "key": "cloud.guest",
+      "ko": "게스트 · 이 기기에 저장",
+      "en": "Guest · Saved on this device"
+    },
+    {
+      "key": "cloud.setup",
+      "ko": "클라우드 연결을 준비하고 있어요",
+      "en": "Cloud connection is being prepared"
+    },
+    {
+      "key": "cloud.working",
+      "ko": "계정과 저장 데이터를 확인하는 중…",
+      "en": "Checking your account and saves…"
+    },
+    {
+      "key": "cloud.synced",
+      "ko": "동기화 완료",
+      "en": "Synced"
+    },
+    {
+      "key": "cloud.pending",
+      "ko": "기기에 저장됨 · 업로드 대기",
+      "en": "Saved on device · Upload pending"
+    },
+    {
+      "key": "cloud.cancelled",
+      "ko": "로그인을 취소했어요. 기기의 기록은 그대로예요.",
+      "en": "Sign-in cancelled. Your local progress is unchanged."
+    },
+    {
+      "key": "cloud.failed",
+      "ko": "연결하지 못했어요. 기기에 저장된 기록은 안전해요.",
+      "en": "Could not connect. Your local save is safe."
+    },
+    {
+      "key": "cloud.future",
+      "ko": "새 버전의 저장이에요. 게임을 업데이트해 주세요.",
+      "en": "This save needs a newer game version. Please update."
+    },
+    {
+      "key": "cloud.changed",
+      "ko": "다른 기기의 저장이 바뀌었어요. 다시 확인해 주세요.",
+      "en": "The save changed on another device. Please check again."
+    },
+    {
+      "key": "cloud.invalid",
+      "ko": "저장 내용을 확인할 수 없어요. 덮어쓰지 않았어요.",
+      "en": "Could not validate the save. Nothing was overwritten."
+    },
+    {
+      "key": "cloud.signin_required",
+      "ko": "Google 계정에 다시 로그인해 주세요.",
+      "en": "Please sign in with Google again."
+    },
+    {
+      "key": "cloud.restore_available",
+      "ko": "클라우드에 이어할 수 있는 기록이 있어요",
+      "en": "A cloud save is available to continue"
+    },
+    {
+      "key": "cloud.conflict",
+      "ko": "기기와 클라우드의 진행이 달라요",
+      "en": "Device and cloud progress are different"
+    },
+    {
+      "key": "cloud.remote_missing",
+      "ko": "이전에 저장한 클라우드 기록을 찾지 못했어요",
+      "en": "The previous cloud save could not be found"
+    },
+    {
+      "key": "cloud.device",
+      "ko": "이 기기",
+      "en": "This device"
+    },
+    {
+      "key": "cloud.cloud_copy",
+      "ko": "클라우드",
+      "en": "Cloud"
+    },
+    {
+      "key": "cloud.choose_help",
+      "ko": "이어갈 기록을 선택해 주세요. 골드·연구·편성은 합쳐지지 않아요.",
+      "en": "Choose which save to continue. Gold, research and units are not combined."
+    },
+    {
+      "key": "cloud.replace_confirm",
+      "ko": "기기 기록을 클라우드에 올릴까요? 클라우드의 현재 진행이 교체돼요.",
+      "en": "Upload the device save? This replaces the current cloud progress."
+    },
+    {
+      "key": "cloud.replace_cloud",
+      "ko": "이 기록으로 클라우드 교체",
+      "en": "Replace cloud save"
+    },
+    {
+      "key": "cloud.use_device",
+      "ko": "기기 기록 선택",
+      "en": "Use device save"
+    },
+    {
+      "key": "cloud.use_cloud",
+      "ko": "클라우드 기록 불러오기",
+      "en": "Load cloud save"
+    },
+    {
+      "key": "cloud.linked_help",
+      "ko": "Google 계정에 연결됐어요. 마지막 동기화 기록은 재설치하거나 다른 기기에서도 불러올 수 있어요.",
+      "en": "Connected to Google. Restore your last synced progress after reinstalling or on another device."
+    },
+    {
+      "key": "cloud.guest_help",
+      "ko": "로그인 없이 계속 플레이할 수 있어요. Google 계정에 연결하면 진행을 백업하고 다시 불러올 수 있어요.\n게스트 기록은 앱이나 데이터를 지우면 사라질 수 있어요.",
+      "en": "You can keep playing as a guest. Connect Google to back up and restore your progress.\nGuest saves may be lost if you uninstall or clear app data."
+    },
+    {
+      "key": "cloud.last_sync",
+      "ko": "마지막 동기화",
+      "en": "Last synced"
+    },
+    {
+      "key": "cloud.never_synced",
+      "ko": "아직 클라우드에 동기화한 기록이 없어요",
+      "en": "No cloud backup yet"
+    },
+    {
+      "key": "cloud.ranking_later",
+      "ko": "온라인 순위표는 준비 중이에요. 지금은 계정 연결과 저장·복원부터 확인하고 있어요.",
+      "en": "Online rankings are coming later. Account linking and save recovery are being tested first."
+    },
+    {
+      "key": "cloud.google",
+      "ko": "Google로 로그인",
+      "en": "Sign in with Google"
+    },
+    {
+      "key": "cloud.sync_now",
+      "ko": "지금 동기화",
+      "en": "Sync now"
+    },
+    {
+      "key": "cloud.signout",
+      "ko": "로그아웃",
+      "en": "Sign out"
+    },
+    {
+      "key": "cloud.signout_confirm",
+      "ko": "로그아웃 확인",
+      "en": "Confirm sign out"
+    },
+    {
+      "key": "cloud.signout_help",
+      "ko": "기기 기록은 남고 자동 백업은 멈춰요. 업로드 대기 중인 진행은 복원되지 않아요.",
+      "en": "Local progress stays; auto-backup stops. Unsynced changes cannot be restored."
+    },
+    {
+      "key": "cloud.back",
+      "ko": "돌아가기",
+      "en": "Back"
+    },
+    {
+      "key": "cloud.empty",
+      "ko": "저장된 기록 없음",
+      "en": "No saved progress"
+    },
+    {
+      "key": "cloud.no_run",
+      "ko": "진행 중인 원정 없음",
+      "en": "No active expedition"
+    },
+    {
+      "key": "cloud.run_summary",
+      "ko": "전투 {0} / 30 · {1} G",
+      "en": "Battle {0} / 30 · {1} G"
+    },
+    {
+      "key": "cloud.progress_summary",
+      "ko": "최고 도달: {0}전투",
+      "en": "Best progress: battle {0}"
     }
   ]
 }

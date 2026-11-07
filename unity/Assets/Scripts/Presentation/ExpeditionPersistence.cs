@@ -48,9 +48,11 @@ namespace Expedition.Presentation
                 Progress = progress.Capture(), Journal = journal.Capture(), TutorialMask = tutorialMask, LessonMask = lessonMask & 7,
                 CombinationGuideSeen = (lessonMask & (int)ExpeditionLesson.Combination) != 0,
                 History = recordHistory.Capture() };
-            accountStore.Commit(JsonUtility.ToJson(snapshot));
+            string payload = JsonUtility.ToJson(snapshot);
+            accountStore.Commit(payload);
             journalDirty = progressDirty = false;
             savePresent = run != null;
+            CloudSavedLocally(payload);
         }
         void SaveGuidePreferences()
         {

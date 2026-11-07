@@ -42,7 +42,7 @@ namespace Expedition.Presentation
             "text.0600", "text.0601");
 
         enum Modal { None, Detail, ChooseDonor, ChoosePartner, CombinationOptions, Confirm, NewRun,
-            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter }
+            Journal, Progress, Tactics, Effects, BattleReport, Playtest, GuideMenu, Settings, Records, Encounter, Account }
         enum GrowthAction { None, Transfer, Evolve, Combine }
 
         CatalogDatabase database;
@@ -319,7 +319,7 @@ namespace Expedition.Presentation
             { ending.Draw(); GUI.matrix = Matrix4x4.identity; return; }
             if (!GrowthRevealActive) { FilterTutorialGuiEvent(); FilterLessonGuiEvent(); }
             Fill(new Rect(0, 0, Width, Height), Background);
-            GUI.enabled = modal == Modal.None && !GrowthRevealActive;
+            GUI.enabled = modal == Modal.None && !GrowthRevealActive && !cloudBusy;
             if (home || run == null) DrawHome();
             else if (run.Phase == ExpeditionPhase.Preparation) DrawPreparation();
             else if (run.Phase == ExpeditionPhase.Battle) DrawBattleResume();
@@ -342,8 +342,9 @@ namespace Expedition.Presentation
             ExpeditionUiTheme.DrawBackdrop(new Rect(0, 90, Width, 630), battlefield);
             ExpeditionUiTheme.DrawHeaderPlate(new Rect(0, 0, Width, 90));
             ExpeditionUiTheme.DrawEmber(new Vector2(53, 46), 30);
-            LocalizedGui.Label(new Rect(84, 6, 875, 60), CatalogText.Get("text.0613"), title);
+            LocalizedGui.Label(new Rect(84, 6, 584, 60), CatalogText.Get("text.0613"), title);
             LocalizedGui.Label(new Rect(87, 62, 500, 21), "I G N I S :  A S H E N  O A T H", small);
+            if (LocalizedGui.Button(new Rect(690, 20, 145, 49), CloudText("account"), button)) modal = Modal.Account;
             if (LocalizedGui.Button(new Rect(851, 20, 128, 49), CatalogText.Get("text.0363"), button)) modal = Modal.Settings;
             if (LocalizedGui.Button(new Rect(995, 20, 260, 49),
                 CatalogText.Get("text.0614") + (journal == null ? 1 : journal.UnlockedCount) + "/" +
@@ -548,6 +549,7 @@ namespace Expedition.Presentation
 
         void DrawModal()
         {
+            if (modal == Modal.Account) { DrawAccountPanel(); return; }
             if (modal == Modal.Settings) { if (GameSettingsPanel.Draw(font)) modal = Modal.None; return; }
             Fill(new Rect(0, 0, Width, Height), new Color(.005f, .008f, .015f, .84f));
             if (modal == Modal.Records) DrawRecords();
@@ -1143,6 +1145,7 @@ namespace Expedition.Presentation
 
         void Update()
         {
+            TickCloudAccount();
             if (ending != null)
             {
                 if (ending.Active) { ending.Tick(Time.unscaledDeltaTime); CancelPointer(); return; }
@@ -1150,7 +1153,7 @@ namespace Expedition.Presentation
             }
             PresentationPerformanceProbe.Mark(!startupReady ? "startup" : home ? "home" :
                 run != null && run.Phase != ExpeditionPhase.Preparation ? "result" : modal == Modal.None ? "preparation" : "dialog");
-            if (!startupReady || home || run == null || run.Phase != ExpeditionPhase.Preparation ||
+            if (!startupReady || cloudBusy || home || run == null || run.Phase != ExpeditionPhase.Preparation ||
                 modal != Modal.None || GrowthRevealActive || viewport.width <= 0) { CancelPointer(); return; }
             bool down = false, held = false, up = false, canceled = false;
             Vector2 screen;

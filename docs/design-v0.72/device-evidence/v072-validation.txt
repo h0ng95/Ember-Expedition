@@ -1,0 +1,1 @@
+PASS 32 checks; Unity JSON, unchanged local format, Korean/English panel layout.

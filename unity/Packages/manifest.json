@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.unity.services.core": "1.18.0",
+    "com.unity.services.authentication": "3.8.1",
+    "com.unity.services.cloudsave": "3.4.2",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",

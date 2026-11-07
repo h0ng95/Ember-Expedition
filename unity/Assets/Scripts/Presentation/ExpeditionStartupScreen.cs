@@ -134,6 +134,7 @@ namespace Expedition.Presentation
             while (Time.unscaledTime < completeUntil) yield return null;
             startupReady = true;
             FinalizeAccountLoad();
+            InitializeCloudAccount();
         }
 
         static void DrawStartupGradient(bool vertical, float start, float length, int bands, float firstAlpha, float lastAlpha)
